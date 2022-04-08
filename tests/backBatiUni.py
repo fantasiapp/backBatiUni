@@ -34,7 +34,7 @@ def queryForToken(userName, password):
   return dictResponse['token']
 
 def getDocStr(index = 0):
-  file = ["./files/documents/Qualibat.jpeg", "./files/documents/Kbis.png", "./files/documents/Plan.png", "./files/documents/IMG_2465.HEIC", "./files/documents/etex.svg", "./files/documents/batiUni.png", "./files/documents/Fantasiapp.png"]
+  file = ["./files/documents/Qualibat.jpeg", "./files/documents/Kbis.png", "./files/documents/Plan.png", "./files/documents/IMG_2465.HEIC", "./files/documents/etex.svg", "./files/documents/batiUni.png", "./files/documents/Fantasiapp.png", "./files/documents/logoFantasiapp.png"]
   with open(file[index], "rb") as fileData:
     encoded_string = base64.b64encode(fileData.read())
   return encoded_string.decode("utf-8")
@@ -85,7 +85,7 @@ def executeQuery():
     elif query == "modifyUser":
       now = "2022-01-12"
       post1 = {'action': 'modifyUser', 'UserProfile': {'id': 3, 'cellPhone': '06 29 35 04 18', 'Company': {'capital': '307130', 'companyPhone': '08 92 97 64 15', "allQualifications":True, 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]]}}}
-      post2 = {'action': 'modifyUser', 'UserProfile': {'id': 5, 'cellPhone': '06 28 34 03 17', 'Company': {'capital': '207130', 'companyPhone': '08 91 96 63 14', "allQualifications":True, 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]]}}}
+      post2 = {'action': 'modifyUser', 'UserProfile': {'id': 6, 'cellPhone': '06 28 34 03 17', 'Company': {'capital': '207130', 'companyPhone': '08 91 96 63 14', "allQualifications":True, 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]]}}}
       requests.post(url, headers=headers, json=post1)
       response = requests.post(url, headers=headers, json=post2)
     elif query == "changeUserImage":
@@ -93,14 +93,19 @@ def executeQuery():
       headersPme = {'Authorization': f'Token {tokenPme}'}
       post = {'action':"changeUserImage", "ext":"png", "name":"BatiUni_1", "imageBase64":getDocStr(5)}
       requests.post(url, headers=headersPme, json=post)
+      tokenPme = queryForToken("st2", "pwd")
+      headersSt2 = {'Authorization': f'Token {tokenPme}'}
+      post = {'action':"changeUserImage", "ext":"png", "name":"SousTtraitant2_1", "imageBase64":getDocStr(7)}
+      response = requests.post(url, headers=headersSt2, json=post)
       post = {'action':"changeUserImage", "ext":"png", "name":"Fantasiapp_1", "imageBase64":getDocStr(6)}
-      response = requests.post(url, headers=headers, json=post)
+      requests.post(url, headers=headers, json=post)
     elif query == "uploadPost":
       post1 = {'action':"uploadPost", "longitude":2.237779 , "latitude":48.848776, "address":"128 rue de Paris 92100 Boulogne", "Job":6, "numberOfPeople":3, "dueDate":"2022-04-15", "startDate":"2022-02-16", "endDate":"2022-02-28", "DatePost":["2022-03-16", "2022-03-17", "2022-02-18"], "manPower":True, "counterOffer":True, "hourlyStart":"7:30", "hourlyEnd":"17:30", "currency":"€", "description":"Première description d'un chantier", "amount":65243.10, "DetailedPost":["lavabo", "baignoire"]}
-      post2 = {'action':"uploadPost", "longitude":2.324877 , "latitude":48.841625, "address":"106 rue du Cherche-Midi 75006 Paris", "Job":5, "numberOfPeople":1, "dueDate":"2022-03-15", "startDate":"2022-03-16", "endDate":"2022-04-28", "DatePost":["2022-05-16", "2022-05-17", "2022-05-18"], "manPower":False, "counterOffer":False, "hourlyStart":"7:00", "hourlyEnd":"17:00", "currency":"€", "description":"Deuxième description d'un chantier", "amount":23456.10, "DetailedPost":["radiateur", "Chaudière"]}
-      post3 = {'action':"uploadPost", "longitude":2.326877 , "latitude":48.841625, "address":"36 rue Dauphine 75006 Paris", "Job":10, "numberOfPeople":1, "dueDate":"2022-03-15", "startDate":"2022-03-16", "endDate":"2022-04-28", "DatePost":["2022-04-16", "2022-04-17", "2022-04-18"], "manPower":True, "counterOffer":True, "hourlyStart":"7:00", "hourlyEnd":"17:00", "currency":"€", "description":"troisième description d'un chantier", "amount":12345.10, "DetailedPost":["doublage", "cloison"]}
-      post4 = {'action':"uploadPost", "longitude":2.325877 , "latitude":48.841625, "address":"28 rue de Fleurus 75006 Paris", "Job":10, "numberOfPeople":2, "dueDate":"2022-03-15", "startDate":"2022-03-16", "endDate":"2022-04-28", "DatePost":["2022-03-16", "2022-03-17", "2022-03-18"], "manPower":True, "counterOffer":False, "hourlyStart":"7:00", "hourlyEnd":"17:00", "currency":"€", "description":"quatrième description d'un chantier", "amount":1300.10, "DetailedPost":["doublage", "cloison", "pose", "mesure"]}
-      for post in [post1, post2, post3, post4]:
+      post2 = {'action':"uploadPost", "longitude":2.324877 , "latitude":48.841625, "address":"106 rue du Cherche-Midi 75006 Paris", "Job":5, "numberOfPeople":1, "dueDate":"2022-04-15", "startDate":"2022-03-16", "endDate":"2022-04-28", "DatePost":["2022-05-16", "2022-05-17", "2022-05-18"], "manPower":False, "counterOffer":True, "hourlyStart":"7:00", "hourlyEnd":"17:00", "currency":"€", "description":"Deuxième description d'un chantier", "amount":23456.10, "DetailedPost":["radiateur", "Chaudière"]}
+      post3 = {'action':"uploadPost", "longitude":2.326881 , "latitude":48.841626, "address":"36 rue Dauphine 75006 Paris", "Job":10, "numberOfPeople":1, "dueDate":"2022-04-15", "startDate":"2022-03-16", "endDate":"2022-04-28", "DatePost":["2022-04-16", "2022-04-17", "2022-04-18"], "manPower":True, "counterOffer":True, "hourlyStart":"7:00", "hourlyEnd":"17:00", "currency":"€", "description":"troisième description d'un chantier", "amount":12345.10, "DetailedPost":["doublage", "cloison"]}
+      post4 = {'action':"uploadPost", "longitude":2.325883 , "latitude":48.841627, "address":"28 rue de Fleurus 75006 Paris", "Job":10, "numberOfPeople":2, "dueDate":"2022-04-18", "startDate":"2022-03-16", "endDate":"2022-04-28", "DatePost":["2022-03-16", "2022-03-17", "2022-03-18"], "manPower":True, "counterOffer":False, "hourlyStart":"7:00", "hourlyEnd":"17:00", "currency":"€", "description":"quatrième description d'un chantier", "amount":1300.10, "DetailedPost":["doublage", "cloison", "pose", "mesure"]}
+      post5 = {'action':"uploadPost", "longitude":2.325885 , "latitude":48.841628, "address":"34 rue Guynemer 75006 Paris", "Job":10, "numberOfPeople":1, "dueDate":"2022-04-21", "startDate":"2022-04-16", "endDate":"2022-04-28", "DatePost":["2022-04-16", "2022-04-17", "2022-04-18"], "manPower":True, "counterOffer":False, "hourlyStart":"8:00", "hourlyEnd":"17:00", "currency":"€", "description":"cinquième description d'un chantier", "amount":1300.10, "DetailedPost":["cuisine", "salle de bain", "salon", "Chambre"]}
+      for post in [post1, post2, post3, post4, post5]:
         response = requests.post(url, headers=headers, json=post)
     elif query == "modifyPost":
       post = {'action':"modifyPost", "id":1, "address":"126 rue de Paris 92100 Boulogne", "Job":5, "numberOfPeople":2, "dueDate":"2022-03-15", "startDate":"2022-03-16", "endDate":"2022-04-28", "manPower":False, "counterOffer":False, "hourlyStart":"7:00", "hourlyEnd":"17:00", "currency":"€", "description":"Deuxième description d'un chantier", "amount":24456.10, "DetailedPost":["salle de bain", "douche", "lavabo"], "DatePost":["2022-03-15", "2022-03-16", "2022-03-17"]}
@@ -142,10 +147,11 @@ def executeQuery():
     elif query == "applyPost":
       requests.get(url, headers=headers, params={'action':"applyPost", "Post":2, "amount":800, "devis":"Par Jour"})
       requests.get(url, headers=headers, params={'action':"applyPost", "Post":3, "amount":1000, "devis":"Par Jour"})
-      response = requests.get(url, headers=headers, params={'action':"applyPost", "Post":4, "amount":1200, "devis":"Par Jour"})
+      requests.get(url, headers=headers, params={'action':"applyPost", "Post":4, "amount":1200, "devis":"Par Jour"})
+      requests.get(url, headers=headers, params={'action':"applyPost", "Post":5})
       tokenSt2 = queryForToken("st2", "pwd")
       headers = {'Authorization': f'Token {tokenSt2}'}
-      requests.get(url, headers=headers, params={'action':"applyPost", "Post":2, "amount":1500, "devis":"Par Jour"})
+      response = requests.get(url, headers=headers, params={'action':"applyPost", "Post":2, "amount":1500, "devis":"Par Jour"})
     elif query == "handleCandidateForPost":
       requests.get(url, headers=headers, params={'action':"handleCandidateForPost", "Candidate":2, "response":"true"})
       response = requests.get(url, headers=headers, params={'action':"handleCandidateForPost", "Candidate":3, "response":"true"})
