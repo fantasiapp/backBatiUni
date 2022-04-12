@@ -164,7 +164,8 @@ class Company(CommonModel):
   revenue = models.FloatField("Capital de l'entreprise", null=True, default=None)
   logo = models.CharField("Path du logo de l'entreprise", max_length=256, null=True, default=None)
   webSite = models.CharField("Url du site Web", max_length=256, null=True, default=None)
-  stars = models.IntegerField("Notation sous forme d'étoile", null=True, default=None)
+  starsST = models.IntegerField("Notation sous forme d'étoile", null=False, default=0.0)
+  starsPME = models.IntegerField("Notation sous forme d'étoile", null=False, default=0.0)
   companyPhone = models.CharField("Téléphone du standard", max_length=128, blank=False, null=True, default=None)
   amount = models.FloatField("Montant sous-traitant", null=True, default=None)
   unity = models.CharField("Unité du montant", max_length=64, null=True, default=None)
@@ -371,6 +372,14 @@ class Post(CommonModel):
   securityComment = models.TextField("Respect de la sécurité et de la propreté du chantier Commentaire", blank=False, null=False, default="")
   organisation = models.IntegerField("Organisation", blank=False, null=False, default=0)
   organisationComment = models.TextField("Organisation Commentaire", blank=False, null=False, default="")
+
+  vibeST = models.IntegerField("Ambiance sur le chantier ST", blank=False, null=False, default=0)
+  vibeCommentST = models.TextField("Ambiance sur le chantier ST Commentaire", blank=False, null=False, default="")
+  securityST = models.IntegerField("Respect de la sécurité et de la propreté du chantier ST", blank=False, null=False, default=0)
+  securityCommentST = models.TextField("Respect de la sécurité et de la propreté du chantier ST Commentaire", blank=False, null=False, default="")
+  organisationST = models.IntegerField("Organisation", blank=False, null=False, default=0)
+  organisationCommentST = models.TextField("Organisation Commentaire", blank=False, null=False, default="")
+
   isClosed = models.BooleanField("Fin de la mission", null=False, default=False)
 
   contract = models.IntegerField("Image du contrat", blank=False, null=True, default=None)
@@ -382,7 +391,7 @@ class Post(CommonModel):
   @classmethod
   def listFields(cls):
       superList = super().listFields()
-      for fieldName in ["signedByCompany", "signedBySubContractor", "contract", "Supervision", "subContractorContact", "subContractorName", "quality", "qualityComment", "security", "securityComment", "organisation", "organisationComment", "isClosed"]:
+      for fieldName in ["signedByCompany", "signedBySubContractor", "contract", "Supervision", "subContractorContact", "subContractorName", "quality", "qualityComment", "security", "securityComment", "organisation", "organisationComment", "vibeST", "vibeCommentST", "securityST", "securityCommentST", "organisationST", "organisationCommentST", "isClosed"]:
         index = superList.index(fieldName)
         del superList[index]
       return superList
@@ -461,7 +470,7 @@ class Candidate(CommonModel):
   isRefused = models.BooleanField("Sous traitant refusé", null=True, default=False)
   date = models.DateField(verbose_name="Date de candidature ou date d'acceptation", null=False, default=timezone.now)
   amount = models.FloatField("Prix unitaire", null=False, default=0.0)
-  unitOfTime = models.CharField("Unité de temps", max_length=128, null=True, default="Prix Journalier")
+  unitOfTime = models.CharField("Unité de temps", max_length=128, null=True, default="Prix Total")
 
   class Meta:
     unique_together = ('Post', 'Mission', 'Company')

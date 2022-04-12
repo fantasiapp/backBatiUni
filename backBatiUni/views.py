@@ -32,7 +32,7 @@ class Data(DefaultView):
       if action == "signContract": return Response(DataAccessor.signContract(request.GET["missionId"], request.GET["view"], currentUser))
       if action == "switchDraft": return Response(DataAccessor.switchDraft(request.GET["id"], currentUser))
       if action == "duplicatePost": return Response(DataAccessor.duplicatePost(request.GET["id"], currentUser))
-      if action == "applyPost": return Response(DataAccessor.applyPost(request.GET["Post"], request.GET["amount"], request.GET["devis"], currentUser))
+      if action == "applyPost": return Response(DataAccessor.applyPost(request.GET["Post"], request.GET["amount"] if "amount" in request.GET else 0.0, request.GET["devis"] if "devis" in request.GET else "Prix Total", currentUser))
       if action == "setFavorite": return Response(DataAccessor.setFavorite(request.GET["Post"], request.GET["value"], currentUser))
       if action == "isViewed": return Response(DataAccessor.isViewed(request.GET["Post"], currentUser))
       return Response({"data GET":"Error", "messages":{"action":action}})

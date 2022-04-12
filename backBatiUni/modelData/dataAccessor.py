@@ -1,5 +1,6 @@
 from asyncio import subprocess
 from asyncio.unix_events import _UnixSelectorEventLoop
+from lzma import is_check_supported
 from re import sub
 from ..models import *
 from django.contrib.auth.models import User, UserManager
@@ -132,9 +133,9 @@ class DataAccessor():
       elif data["action"] == "deleteSupervision": return cls.__deleteSupervision(data, currentUser)
       elif data["action"] == "uploadFile": return cls.__uploadFile(data, currentUser)
       elif data["action"] == "modifyDisponibility": return cls.__modifyDisponibility(data["disponibility"], currentUser)
-      # elif data["action"] == "uploadSupervision": return cls.uploadSupervision(data["detailedPost"], data["comment"], currentUser)
       elif data["action"] == "uploadImageSupervision": return cls.__uploadImageSupervision(data, currentUser)
       elif data["action"] == "closeMission": return cls.__closeMission(data, currentUser)
+      elif data["action"] == "closeMissionST": return cls.__closeMissionST(data, currentUser)
       return {"dataPost":"Error", "messages":f"unknown action in post {data['action']}"}
     return {"dataPost":"Error", "messages":"no action in post"}
 
@@ -496,7 +497,22 @@ class DataAccessor():
     mission.organisationComment = data["organisationComment"]
     mission.isClosed = True
     mission.save()
+    cls.__newStars(mission)
     return {"switchDraft":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
+
+  @classmethod
+  def __newStars(cls, mission):
+    candidate = Candidate.objects.filter(isChoosen=True, Mission=mission)
+    subContractor = candidate[0].Company
+    company = mission.Company
+    print("__newStars", subContractor.name, company.name)
+    listMission = [(candidate.Mission.quality + candidate.Mission.security + candidate.Mission.organisation) / 3 for candidate in Candidate.objects.filter(Company = subContractor, isChoosen = True) if candidate.Mission.isClosed]
+    print("newStars", listMission)
+    subContractor.starsST = round(sum(listMission)/len(listMission)) if len(listMission) else 0
+    subContractor.save()
+
+
+    print("newStars", subContractor.name, subContractor.stars)
 
   @classmethod
   def duplicatePost(cls, id, currentUser):
