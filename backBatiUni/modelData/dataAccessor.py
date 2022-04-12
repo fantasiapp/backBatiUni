@@ -497,22 +497,38 @@ class DataAccessor():
     mission.organisationComment = data["organisationComment"]
     mission.isClosed = True
     mission.save()
-    cls.__newStars(mission)
-    return {"switchDraft":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
+    cls.__newStars(mission, "st")
+    return {"closeMission":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
 
   @classmethod
-  def __newStars(cls, mission):
+  def __closeMissionST(cls, data, currentUser):
+    mission = Mission.objects.get(id=data["missionId"])
+    print("closeMissionST", data)
+    mission.vibeST = data["vibeSTStars"]
+    mission.vibeCommentST = data["vibeSTComment"]
+    mission.securityST = data["securitySTStars"]
+    mission.securityCommentST = data["securitySTComment"]
+    mission.organisationST = data["organisationSTStars"]
+    mission.organisationCommentST = data["organisationSTComment"]
+    mission.save()
+    cls.__newStars(mission, "pme")
+    return {"closeMissionST":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
+
+  @classmethod
+  def __newStars(cls, mission, companyRole):
     candidate = Candidate.objects.filter(isChoosen=True, Mission=mission)
     subContractor = candidate[0].Company
     company = mission.Company
-    print("__newStars", subContractor.name, company.name)
-    listMission = [(candidate.Mission.quality + candidate.Mission.security + candidate.Mission.organisation) / 3 for candidate in Candidate.objects.filter(Company = subContractor, isChoosen = True) if candidate.Mission.isClosed]
-    print("newStars", listMission)
-    subContractor.starsST = round(sum(listMission)/len(listMission)) if len(listMission) else 0
-    subContractor.save()
-
-
-    print("newStars", subContractor.name, subContractor.stars)
+    if companyRole == "st":
+      listMission = [(candidate.Mission.quality + candidate.Mission.security + candidate.Mission.organisation) / 3 for candidate in Candidate.objects.filter(Company = subContractor, isChoosen = True) if candidate.Mission.isClosed]
+      subContractor.starsST = round(sum(listMission)/len(listMission)) if len(listMission) else 0
+      subContractor.save()
+    else:
+      listMission = [(mission.vibeST + mission.securityST + mission.organisationST) / 3 for mission in Mission.objects.filter(Company=company, isClosed=True)]
+      company.starsPME = round(sum(listMission)/len(listMission)) if len(listMission) else 0
+      company.save()
+      print("newStars listMission", listMission)
+    print("newStars", subContractor.name, subContractor.starsPME)
 
   @classmethod
   def duplicatePost(cls, id, currentUser):
