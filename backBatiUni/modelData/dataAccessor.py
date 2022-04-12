@@ -1,7 +1,3 @@
-from asyncio import subprocess
-from asyncio.unix_events import _UnixSelectorEventLoop
-from lzma import is_check_supported
-from re import sub
 from ..models import *
 from django.contrib.auth.models import User, UserManager
 from django.contrib.auth.hashers import check_password, make_password
