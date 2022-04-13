@@ -256,6 +256,7 @@ class CreateNewDataBase:
   def fillupFavoritePost(self, table):return {}
   def fillupViewPost(self, table):return {}
   def fillupDatePost(self, table): return {}
+  def fillupNotification(self, table): return {}
 
   def fillupJob(self, table):
     for job in self.listJobs:
