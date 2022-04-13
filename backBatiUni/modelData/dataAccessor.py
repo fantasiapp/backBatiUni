@@ -1,13 +1,11 @@
 from ..models import *
-from django.contrib.auth.models import User, UserManager
-from django.contrib.auth.hashers import check_password, make_password
+from django.contrib.auth.models import User
 from django.utils import timezone
 from django.apps import apps
-from operator import attrgetter
 import sys
 import os
 import shutil
-from datetime import datetime, timedelta
+from datetime import datetime
 import base64
 from django.core.files.base import ContentFile
 from ..smtpConnector import SmtpConnector
@@ -523,8 +521,6 @@ class DataAccessor():
       listMission = [(mission.vibeST + mission.securityST + mission.organisationST) / 3 for mission in Mission.objects.filter(Company=company, isClosed=True)]
       company.starsPME = round(sum(listMission)/len(listMission)) if len(listMission) else 0
       company.save()
-      print("newStars listMission", listMission)
-    print("newStars", subContractor.name, subContractor.starsPME)
 
   @classmethod
   def duplicatePost(cls, id, currentUser):

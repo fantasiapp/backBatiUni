@@ -67,7 +67,7 @@ def executeQuery():
     if query in ["emptyDB", "buildDB"]:
       token = queryForToken("jlw", "pwd")
       print("user jlw")
-    elif query in ["uploadPost" , "modifyPost", "getPost", "switchDraft", "handleCandidateForPost", "getUserData"]:
+    elif query in ["uploadPost" , "modifyPost", "getPost", "switchDraft", "handleCandidateForPost", "getUserData", "closeMission"]:
       print("user pme")
       token = queryForToken("pme", "pwd")
     else:
@@ -102,11 +102,11 @@ def executeQuery():
       post = {'action':"changeUserImage", "ext":"png", "name":"Fantasiapp_1", "imageBase64":getDocStr(6)}
       requests.post(url, headers=headers, json=post)
     elif query == "uploadPost":
-      post1 = {'action':"uploadPost", "longitude":2.237779 , "latitude":48.848776, "address":"128 rue de Paris 92100 Boulogne", "Job":6, "numberOfPeople":3, "dueDate":"2022-04-15", "startDate":"2022-02-16", "endDate":"2022-02-28", "DatePost":["2022-03-16", "2022-03-17", "2022-02-18"], "manPower":True, "counterOffer":True, "hourlyStart":"7:30", "hourlyEnd":"17:30", "currency":"€", "description":"Première description d'un chantier", "amount":65243.10, "DetailedPost":["lavabo", "baignoire"]}
-      post2 = {'action':"uploadPost", "longitude":2.324877 , "latitude":48.841625, "address":"106 rue du Cherche-Midi 75006 Paris", "Job":5, "numberOfPeople":1, "dueDate":"2022-04-15", "startDate":"2022-03-16", "endDate":"2022-04-28", "DatePost":["2022-05-16", "2022-05-17", "2022-05-18"], "manPower":False, "counterOffer":True, "hourlyStart":"7:00", "hourlyEnd":"17:00", "currency":"€", "description":"Deuxième description d'un chantier", "amount":23456.10, "DetailedPost":["radiateur", "Chaudière"]}
-      post3 = {'action':"uploadPost", "longitude":2.326881 , "latitude":48.841626, "address":"36 rue Dauphine 75006 Paris", "Job":10, "numberOfPeople":1, "dueDate":"2022-04-15", "startDate":"2022-03-16", "endDate":"2022-04-28", "DatePost":["2022-04-16", "2022-04-17", "2022-04-18"], "manPower":True, "counterOffer":True, "hourlyStart":"7:00", "hourlyEnd":"17:00", "currency":"€", "description":"troisième description d'un chantier", "amount":12345.10, "DetailedPost":["doublage", "cloison"]}
-      post4 = {'action':"uploadPost", "longitude":2.325883 , "latitude":48.841627, "address":"28 rue de Fleurus 75006 Paris", "Job":10, "numberOfPeople":2, "dueDate":"2022-04-18", "startDate":"2022-03-16", "endDate":"2022-04-28", "DatePost":["2022-03-16", "2022-03-17", "2022-03-18"], "manPower":True, "counterOffer":False, "hourlyStart":"7:00", "hourlyEnd":"17:00", "currency":"€", "description":"quatrième description d'un chantier", "amount":1300.10, "DetailedPost":["doublage", "cloison", "pose", "mesure"]}
-      post5 = {'action':"uploadPost", "longitude":2.325885 , "latitude":48.841628, "address":"34 rue Guynemer 75006 Paris", "Job":10, "numberOfPeople":1, "dueDate":"2022-04-21", "startDate":"2022-04-16", "endDate":"2022-04-28", "DatePost":["2022-04-16", "2022-04-17", "2022-04-18"], "manPower":True, "counterOffer":False, "hourlyStart":"8:00", "hourlyEnd":"17:00", "currency":"€", "description":"cinquième description d'un chantier", "amount":1300.10, "DetailedPost":["cuisine", "salle de bain", "salon", "Chambre"]}
+      post1 = {'action':"uploadPost", "longitude":2.237779 , "latitude":48.848776, "address":"128 rue de Paris 92100 Boulogne", "Job":6, "numberOfPeople":3, "dueDate":"2022-04-15", "startDate":"2022-02-16", "endDate":"2022-02-28", "DatePost":["2022-03-16", "2022-03-17", "2022-02-18"], "manPower":True, "counterOffer":True, "hourlyStart":"07:30", "hourlyEnd":"17:30", "currency":"€", "description":"Première description d'un chantier", "amount":65243.10, "DetailedPost":["lavabo", "baignoire"]}
+      post2 = {'action':"uploadPost", "longitude":2.324877 , "latitude":48.841625, "address":"106 rue du Cherche-Midi 75006 Paris", "Job":5, "numberOfPeople":1, "dueDate":"2022-04-15", "startDate":"2022-03-16", "endDate":"2022-04-28", "DatePost":["2022-05-16", "2022-05-17", "2022-05-18"], "manPower":False, "counterOffer":True, "hourlyStart":"07:00", "hourlyEnd":"17:00", "currency":"€", "description":"Deuxième description d'un chantier", "amount":23456.10, "DetailedPost":["radiateur", "Chaudière"]}
+      post3 = {'action':"uploadPost", "longitude":2.326881 , "latitude":48.841626, "address":"36 rue Dauphine 75006 Paris", "Job":10, "numberOfPeople":1, "dueDate":"2022-04-15", "startDate":"2022-03-16", "endDate":"2022-04-28", "DatePost":["2022-04-16", "2022-04-17", "2022-04-18"], "manPower":True, "counterOffer":True, "hourlyStart":"07:00", "hourlyEnd":"17:00", "currency":"€", "description":"troisième description d'un chantier", "amount":12345.10, "DetailedPost":["doublage", "cloison"]}
+      post4 = {'action':"uploadPost", "longitude":2.325883 , "latitude":48.841627, "address":"28 rue de Fleurus 75006 Paris", "Job":10, "numberOfPeople":2, "dueDate":"2022-04-18", "startDate":"2022-03-16", "endDate":"2022-04-28", "DatePost":["2022-03-16", "2022-03-17", "2022-03-18"], "manPower":True, "counterOffer":False, "hourlyStart":"07:00", "hourlyEnd":"17:00", "currency":"€", "description":"quatrième description d'un chantier", "amount":1300.10, "DetailedPost":["doublage", "cloison", "pose", "mesure"]}
+      post5 = {'action':"uploadPost", "longitude":2.325885 , "latitude":48.841628, "address":"34 rue Guynemer 75006 Paris", "Job":10, "numberOfPeople":1, "dueDate":"2022-04-21", "startDate":"2022-04-16", "endDate":"2022-04-28", "DatePost":["2022-04-16", "2022-04-17", "2022-04-18"], "manPower":True, "counterOffer":False, "hourlyStart":"08:00", "hourlyEnd":"17:00", "currency":"€", "description":"cinquième description d'un chantier", "amount":1300.10, "DetailedPost":["cuisine", "salle de bain", "salon", "Chambre"]}
       for post in [post1, post2, post3, post4, post5]:
         response = requests.post(url, headers=headers, json=post)
     elif query == "modifyPost":
@@ -176,6 +176,7 @@ def executeQuery():
       post2 = {'action':"createSupervision", "detailedPostId":8, "comment":"Tout est parfait, merci."}
       post3 = {'action':"createSupervision", "detailedPostId":10, "comment":"Attention aux finitions."}
       post4 = {'action':"createSupervision", "detailedPostId":9, "comment":"Le travail est fini, Youpi."}
+      post4 = {'action':"createSupervision", "missionId":3, "date":"2022-04-16", "comment":"Attention au travail de ce jour."}
       for post in [post1, post2, post3, post4]:
         response = requests.post(url, headers=headersPme, json=post)
     elif query == "switchDraft":
@@ -200,7 +201,9 @@ def executeQuery():
       post2 = {"action":"modifyDetailedPost", "detailedPost":{"id":7, "date":"2022-03-17", "validated":True}}
       post3 = {"action":"modifyDetailedPost", "detailedPost":{"id":8, "date":"2022-03-17", "validated":True}}
       post4 = {"action":"modifyDetailedPost", "detailedPost":{"id":10, "date":"2022-03-16", "validated":True}}
-      for post in [post4, post2, post3, post1]:
+      post5 = {"action":"modifyDetailedPost", "detailedPost":{"id":5, "date":"2022-04-16", "validated":False}}
+      post6 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "date":"2022-04-17", "validated":False}}
+      for post in [post4, post2, post3, post1, post5, post6]:
         response = requests.post(url, headers=headers, json=post)
       data = json.loads(response.text)
       response = requests.post(url, headers=headers, json=post2)
@@ -210,6 +213,9 @@ def executeQuery():
     elif query == "closeMission":
       post = {"action":"closeMission", "missionId": 4, "qualityStars":4, "qualityComment":"très bon travail", "securityStars":4, "securityComment":"Un vrai sous-traitant qualibat", "organisationStars":5, "organisationComment":"Une organisation parfaite"}
       response = requests.post(url, headers=headers, json=post)
+    elif query == "closeMissionST":
+      post = {"action":"closeMissionST", "missionId": 4, "vibeSTStars":2, "vibeSTComment":"Ambiance moyenne", "securitySTStars":2, "securitySTComment":"une sécurité faible", "organisationSTStars":2, "organisationSTComment":"Une organisation inexistante"}
+      response = requests.post(url, headers=headers, json=post)
   if response and query != "downloadFile":
     data = json.loads(response.text)
     print("data", data)
@@ -218,7 +224,7 @@ def executeQuery():
   else:
     print("no answer")
 if query == "all":
-  keys = ["buildDB", "register", "registerConfirm", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "uploadFile", "downloadFile", "switchDraft", "applyPost", "handleCandidateForPost", "signContract", "modifyDetailedPost", "createSupervision", "closeMission"]
+  keys = ["buildDB", "register", "registerConfirm", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "uploadFile", "downloadFile", "switchDraft", "applyPost", "handleCandidateForPost", "signContract", "modifyDetailedPost", "createSupervision", "closeMission", "closeMissionST"]
   # for key in ["buildDB", "register", "registerConfirm", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "switchDraft", "uploadFile", "downloadFile", "deleteFile", "modifyDisponibility", "setFavorite", "isviewed", "applyPost", "handleCandidateForPost", "closeMission"]: #, "createSupervision", "createDetailedPost", "modifyDetailedPost" , "deleteDetailedPost"
   for key in keys: #, "modifyPost"
     query = key
