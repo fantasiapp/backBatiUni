@@ -383,7 +383,7 @@ class Post(CommonModel):
   isClosed = models.BooleanField("Fin de la mission", null=False, default=False)
 
   contract = models.IntegerField("Image du contrat", blank=False, null=True, default=None)
-  manyToManyObject = ["DetailedPost", "File", "Candidate", "DatePost", "Supervision"]
+  manyToManyObject = ["DetailedPost", "File", "Candidate", "DatePost", "Supervision", "Notification"]
 
   class Meta:
     verbose_name = "Post"
@@ -459,6 +459,12 @@ class DatePost(CommonModel):
         index = superList.index(fieldName)
         del superList[index]
     return superList
+
+class Notification(CommonModel):
+  Post = models.ForeignKey(Post, verbose_name='Annonce associée', related_name='PostNotification', on_delete=models.CASCADE, null=True, default=None)
+  Mission = models.ForeignKey(Mission, verbose_name='Mission associée', related_name='MissionNotification', on_delete=models.CASCADE, null=True, default=None)
+  timestamp = models.DateField(verbose_name="Date du chantier", null=False, default=timezone.now)
+  content = models.CharField("Contenu du Post", max_length=128, null=False, default="")
 
 
 class Candidate(CommonModel):

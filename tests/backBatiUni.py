@@ -67,7 +67,7 @@ def executeQuery():
     if query in ["emptyDB", "buildDB"]:
       token = queryForToken("jlw", "pwd")
       print("user jlw")
-    elif query in ["uploadPost" , "modifyPost", "getPost", "switchDraft", "handleCandidateForPost", "getUserData", "closeMission"]:
+    elif query in ["uploadPost" , "modifyPost", "getPost", "switchDraft", "handleCandidateForPost", "modifyMissionDate", "getUserData", "closeMission"]:
       print("user pme")
       token = queryForToken("pme", "pwd")
     else:
@@ -210,6 +210,9 @@ def executeQuery():
     elif query == "deleteDetailedPost":
       post = {"action":"deleteDetailedPost", "detailedPostId":9}
       response = requests.post(url, headers=headers, json=post)
+    elif query == "modifyMissionDate":
+      post = {"action":"modifyMissionDate", "missionId": 4, "hourlyStart":"06:02", "hourlyEnd":"19:02", "calendar":['2022-04-16', '2022-04-17', '2022-04-18', '2022-04-19']}
+      response = requests.post(url, headers=headers, json=post)
     elif query == "closeMission":
       post = {"action":"closeMission", "missionId": 4, "qualityStars":4, "qualityComment":"très bon travail", "securityStars":4, "securityComment":"Un vrai sous-traitant qualibat", "organisationStars":5, "organisationComment":"Une organisation parfaite"}
       response = requests.post(url, headers=headers, json=post)
@@ -224,7 +227,7 @@ def executeQuery():
   else:
     print("no answer")
 if query == "all":
-  keys = ["buildDB", "register", "registerConfirm", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "uploadFile", "downloadFile", "switchDraft", "applyPost", "handleCandidateForPost", "signContract", "modifyDetailedPost", "createSupervision", "closeMission", "closeMissionST"]
+  keys = ["buildDB", "register", "registerConfirm", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "uploadFile", "downloadFile", "switchDraft", "applyPost", "handleCandidateForPost", "signContract", "modifyDetailedPost", "createSupervision", "modifyMissionDate", "closeMission", "closeMissionST"]
   # for key in ["buildDB", "register", "registerConfirm", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "switchDraft", "uploadFile", "downloadFile", "deleteFile", "modifyDisponibility", "setFavorite", "isviewed", "applyPost", "handleCandidateForPost", "closeMission"]: #, "createSupervision", "createDetailedPost", "modifyDetailedPost" , "deleteDetailedPost"
   for key in keys: #, "modifyPost"
     query = key

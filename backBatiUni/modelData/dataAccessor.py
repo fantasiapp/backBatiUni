@@ -21,7 +21,7 @@ if os.getenv('PATH_MIDDLE'):
 
 
 class DataAccessor():
-  loadTables = {"user":[UserProfile, Company, JobForCompany, LabelForCompany, File, Post, Candidate, DetailedPost, DatePost, Mission, Disponibility, Supervision], "general":[Job, Role, Label]}
+  loadTables = {"user":[UserProfile, Company, JobForCompany, LabelForCompany, File, Post, Candidate, DetailedPost, DatePost, Mission, Disponibility, Supervision, Notification], "general":[Job, Role, Label]}
   dictTable = {}
   portSmtp = os.getenv('PORT_SMTP')
 
@@ -148,6 +148,7 @@ class DataAccessor():
   @classmethod
   def __uploadPost(cls, dictData, currentUser):
     kwargs, listObject = cls.__createPostKwargs(dictData, currentUser)
+    print("uploadPost", kwargs)
     if "uploadPost" in kwargs and kwargs["uploadPost"] == "Error":
       return kwargs
     objectPost = Post.objects.create(**kwargs)
@@ -173,6 +174,7 @@ class DataAccessor():
 
   @classmethod
   def __createPostKwargs(cls, dictData, currentUser):
+    print("dictData", dictData)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     kwargs, listFields, listObject = {"Company":userProfile.Company, "startDate":None, "endDate":None, "subContractorName":None}, Post.listFields(), []
     for fieldName, value in dictData.items():
@@ -201,6 +203,7 @@ class DataAccessor():
         if fieldName in Post.manyToManyObject:
           modelObject = apps.get_model(app_label='backBatiUni', model_name=fieldName)
           for content in value:
+            print("pb", content, fieldName)
             if fieldName == "DatePost":
               cls.__computeStartEndDate(kwargs, content)
               listObject.append(modelObject.objects.create(date=content))
@@ -312,7 +315,7 @@ class DataAccessor():
       PorM = detailedPost.Post if detailedPost.Post else detailedPost.Mission
       dumpPorM = PorM.computeValues(PorM.listFields(), currentUser, True)
       return {"modifyDetailedPost":"OK", PorM.id:dumpPorM}
-    return {"modifyDetailedPost":"Error", "messages":f"No Detailed Post with id {data['detailedPostId']}"}
+    return {"modifyDetailedPost":"Error", "messages":f"No Detailed Post with id {data['id']}"}
 
   @classmethod
   def __deleteDetailedPost(cls, data, currentUser):
@@ -326,7 +329,7 @@ class DataAccessor():
         return {"deleteDetailedPost":"OK", post.id:post.computeValues(post.listFields(), currentUser, True)}
       if mission:
         return {"deleteDetailedPost":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, True)}
-    return {"deleteDetailedPost":"Error", "messages":f"No Detailed Post with id {data['detailedPostId']}"}
+    return {"deleteDetailedPost":"Error", "messages":f"No Detailed Post with id {data['detailedPost']['id']}"}
 
   @classmethod
   def __createSupervision(cls, data, currentUser):
@@ -424,11 +427,22 @@ class DataAccessor():
       candidate.Mission.subContractorName = candidate.Company.name
       candidate.Mission.subContractorContact = candidate.contact
       candidate.Mission.contract = contractImage.id
+      cls.__updateDatePost(candidate.Mission)
       candidate.Mission.save()
       return {"handleCandidateForPost":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
     candidate.save()
     post = candidate.Post
     return {"handleCandidateForPost":"OK", post.id:post.computeValues(post.listFields(), currentUser, dictFormat=True)}
+
+
+  @classmethod
+  def __updateDatePost(cls, mission):
+    listdatePost = DatePost.objects.filter(Post=mission)
+    for datePost in listdatePost:
+      datePost.Post = None
+      datePost.Mission = mission
+      datePost.save()
+
 
 
   @classmethod
@@ -483,29 +497,19 @@ class DataAccessor():
 
   @classmethod
   def __modifyMissionDate(cls, data, currentUser):
-    print("modifyMissionDate", data)
     mission = Mission.objects.get(id=data["missionId"])
     mission.hourlyStart = data["hourlyStart"]
     mission.hourlyEnd = data["hourlyEnd"]
     mission.save()
     existingDateMission = DatePost.objects.filter(Mission=mission)
-    print("existingDateMission", existingDateMission)
     for task in existingDateMission:
       if task.date:
         strDate = task.date.strftime("%Y-%m-%d")
-        print("strDate all", strDate, type(strDate), data["calendar"])
         if strDate in data["calendar"]:
-          del existingDateMission[task]
-          print("task deleted")
-    print("strDate end", existingDateMission)
-      # if not strDate in data["calendar"]:
-      #   print("detailPost to suppress", strDate, task.id)
-      # print("check task", task.date, data["calendar"])
-    # date = datetime.strptime(listValue[1], "%Y-%m-%d") if listValue[1] else None
-    #   labelForCompany = LabelForCompany.objects.create(Label=label, date=date, Company=company)
-    #   date = labelForCompany.date.strftime("%Y-%m-%d") if labelForCompany.date else ""
-    # for detailPost in DetailedPost.objects.filter(Post=post):
-    #       DetailedPost.objects.create(Post=duplicate, content=detailPost.content)
+          data["calendar"].remove(strDate)
+    for strDate in data["calendar"]:
+      date = datetime.strptime(strDate, "%Y-%m-%d")
+      DatePost.objects.create(Mission=mission, date=date)
     return {"modifyMissionDate":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
 
   @classmethod
