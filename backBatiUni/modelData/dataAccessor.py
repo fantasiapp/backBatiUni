@@ -128,6 +128,7 @@ class DataAccessor():
       elif data["action"] == "uploadFile": return cls.__uploadFile(data, currentUser)
       elif data["action"] == "modifyDisponibility": return cls.__modifyDisponibility(data["disponibility"], currentUser)
       elif data["action"] == "uploadImageSupervision": return cls.__uploadImageSupervision(data, currentUser)
+      elif data["action"] == "modifyMissionDate": return cls.__modifyMissionDate(data, currentUser)
       elif data["action"] == "closeMission": return cls.__closeMission(data, currentUser)
       elif data["action"] == "closeMissionST": return cls.__closeMissionST(data, currentUser)
       return {"dataPost":"Error", "messages":f"unknown action in post {data['action']}"}
@@ -479,6 +480,33 @@ class DataAccessor():
         return {"switchDraft":"OK", post.id:post.computeValues(post.listFields(), currentUser, dictFormat=True)}
       return {"switchDraft":"Error", "messages":f"{currentUser.username} does not belongs to {company.name}"}
     return {"switchDraft":"Error", "messages":f"{id} does not exist"}
+
+  @classmethod
+  def __modifyMissionDate(cls, data, currentUser):
+    print("modifyMissionDate", data)
+    mission = Mission.objects.get(id=data["missionId"])
+    mission.hourlyStart = data["hourlyStart"]
+    mission.hourlyEnd = data["hourlyEnd"]
+    mission.save()
+    existingDateMission = DatePost.objects.filter(Mission=mission)
+    print("existingDateMission", existingDateMission)
+    for task in existingDateMission:
+      if task.date:
+        strDate = task.date.strftime("%Y-%m-%d")
+        print("strDate all", strDate, type(strDate), data["calendar"])
+        if strDate in data["calendar"]:
+          del existingDateMission[task]
+          print("task deleted")
+    print("strDate end", existingDateMission)
+      # if not strDate in data["calendar"]:
+      #   print("detailPost to suppress", strDate, task.id)
+      # print("check task", task.date, data["calendar"])
+    # date = datetime.strptime(listValue[1], "%Y-%m-%d") if listValue[1] else None
+    #   labelForCompany = LabelForCompany.objects.create(Label=label, date=date, Company=company)
+    #   date = labelForCompany.date.strftime("%Y-%m-%d") if labelForCompany.date else ""
+    # for detailPost in DetailedPost.objects.filter(Post=post):
+    #       DetailedPost.objects.create(Post=duplicate, content=detailPost.content)
+    return {"modifyMissionDate":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
 
   @classmethod
   def __closeMission(cls, data, currentUser):
