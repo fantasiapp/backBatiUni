@@ -173,7 +173,7 @@ class Company(CommonModel):
   longitude = models.FloatField("Longitude", null=True, default=None)
   saturdayDisponibility = models.BooleanField("Disponibilité le Samedi", null=False, default=False)
   allQualifications = models.BooleanField("Tous corps d'état", null=False, default=False)
-  manyToManyObject = ["JobForCompany", "LabelForCompany", "File", "Post", "Mission", "Disponibility"]
+  manyToManyObject = ["JobForCompany", "LabelForCompany", "File", "Post", "Mission", "Disponibility", "Notification"]
 
   class Meta:
     verbose_name = "Company"
@@ -365,7 +365,7 @@ class Post(CommonModel):
   signedByCompany = models.BooleanField("Signature de la PME", null=False, default=False)
   signedBySubContractor = models.BooleanField("Signature du ST", null=False, default=False)
   subContractorContact = models.CharField("Contact chez le sous traitant", max_length=128, null=True, default=None)
-  subContractorName = models.CharField("Nom le sous traitant", max_length=128, null=True, default=None)
+  subContractorName = models.CharField("Nom du sous traitant", max_length=128, null=True, default=None)
   quality = models.IntegerField("Qualité du travail fourni", blank=False, null=False, default=0)
   qualityComment = models.TextField("Qualité du travail fourni Commentaire", blank=False, null=False, default="")
   security = models.IntegerField("Respect de la sécurité et de la propreté du chantier", blank=False, null=False, default=0)
@@ -383,7 +383,7 @@ class Post(CommonModel):
   isClosed = models.BooleanField("Fin de la mission", null=False, default=False)
 
   contract = models.IntegerField("Image du contrat", blank=False, null=True, default=None)
-  manyToManyObject = ["DetailedPost", "File", "Candidate", "DatePost", "Supervision", "Notification"]
+  manyToManyObject = ["DetailedPost", "File", "Candidate", "DatePost", "Supervision"]
 
   class Meta:
     verbose_name = "Post"
@@ -461,10 +461,24 @@ class DatePost(CommonModel):
     return superList
 
 class Notification(CommonModel):
-  Post = models.ForeignKey(Post, verbose_name='Annonce associée', related_name='PostNotification', on_delete=models.CASCADE, null=True, default=None)
-  Mission = models.ForeignKey(Mission, verbose_name='Mission associée', related_name='MissionNotification', on_delete=models.CASCADE, null=True, default=None)
-  timestamp = models.DateField(verbose_name="Date du chantier", null=False, default=timezone.now)
+  Post = models.ForeignKey(Post, verbose_name='Annonce associée', related_name='PostNotification', on_delete=models.PROTECT, null=True, default=None)
+  Mission = models.ForeignKey(Mission, verbose_name='Mission associée', related_name='MissionNotification', on_delete=models.PROTECT, null=True, default=None)
+  Company = models.ForeignKey(Company, verbose_name="Société associé", related_name='CompanyNotification', on_delete=models.PROTECT, null=True, default=None)
+  Role = models.CharField("Rôle effectif durant la notation", max_length=64, null=False, default="PME")
+  timestamp = models.FloatField(verbose_name="Timestamp de mise à jour", null=False, default=datetime.datetime.now().timestamp())
   content = models.CharField("Contenu du Post", max_length=128, null=False, default="")
+  hasBeenViewed = models.BooleanField("A été vu", null=False, default=False)
+
+  class Meta:
+    verbose_name = "Notification"
+  
+  @classmethod
+  def listFields(cls):
+    superList= super().listFields()
+    for fieldName in ["Company"]:
+        index = superList.index(fieldName)
+        del superList[index]
+    return superList
 
 
 class Candidate(CommonModel):

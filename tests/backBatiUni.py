@@ -107,7 +107,8 @@ def executeQuery():
       post3 = {'action':"uploadPost", "longitude":2.326881 , "latitude":48.841626, "address":"36 rue Dauphine 75006 Paris", "Job":10, "numberOfPeople":1, "dueDate":"2022-04-15", "startDate":"2022-03-16", "endDate":"2022-04-28", "DatePost":["2022-04-16", "2022-04-17", "2022-04-18"], "manPower":True, "counterOffer":True, "hourlyStart":"07:00", "hourlyEnd":"17:00", "currency":"€", "description":"troisième description d'un chantier", "amount":12345.10, "DetailedPost":["doublage", "cloison"]}
       post4 = {'action':"uploadPost", "longitude":2.325883 , "latitude":48.841627, "address":"28 rue de Fleurus 75006 Paris", "Job":10, "numberOfPeople":2, "dueDate":"2022-04-18", "startDate":"2022-03-16", "endDate":"2022-04-28", "DatePost":["2022-03-16", "2022-03-17", "2022-03-18"], "manPower":True, "counterOffer":False, "hourlyStart":"07:00", "hourlyEnd":"17:00", "currency":"€", "description":"quatrième description d'un chantier", "amount":1300.10, "DetailedPost":["doublage", "cloison", "pose", "mesure"]}
       post5 = {'action':"uploadPost", "longitude":2.325885 , "latitude":48.841628, "address":"34 rue Guynemer 75006 Paris", "Job":10, "numberOfPeople":1, "dueDate":"2022-04-21", "startDate":"2022-04-16", "endDate":"2022-04-28", "DatePost":["2022-04-16", "2022-04-17", "2022-04-18"], "manPower":True, "counterOffer":False, "hourlyStart":"08:00", "hourlyEnd":"17:00", "currency":"€", "description":"cinquième description d'un chantier", "amount":1300.10, "DetailedPost":["cuisine", "salle de bain", "salon", "Chambre"]}
-      for post in [post1, post2, post3, post4, post5]:
+      post6 = {'action':"uploadPost", "longitude":2.324877 , "latitude":48.841625, "address":"108 rue du Cherche-Midi 75006 Paris", "Job":5, "numberOfPeople":1, "dueDate":"2022-04-15", "startDate":"2022-04-16", "endDate":"2022-04-28", "DatePost":["2022-04-16", "2022-04-17", "2022-04-18"], "manPower":False, "counterOffer":True, "hourlyStart":"07:00", "hourlyEnd":"17:00", "currency":"€", "description":"Sixième description d'un chantier", "amount":23456.10, "DetailedPost":["radiateur", "Chaudière"]}
+      for post in [post1, post2, post3, post4, post5, post6]:
         response = requests.post(url, headers=headers, json=post)
     elif query == "modifyPost":
       post = {'action':"modifyPost", "id":1, "address":"126 rue de Paris 92100 Boulogne", "Job":5, "numberOfPeople":2, "dueDate":"2022-03-15", "startDate":"2022-03-16", "endDate":"2022-04-28", "manPower":False, "counterOffer":False, "hourlyStart":"7:00", "hourlyEnd":"17:00", "currency":"€", "description":"Deuxième description d'un chantier", "amount":24456.10, "DetailedPost":["salle de bain", "douche", "lavabo"], "DatePost":["2022-03-15", "2022-03-16", "2022-03-17"]}
@@ -182,6 +183,7 @@ def executeQuery():
     elif query == "switchDraft":
       requests.get(url, headers=headers, params={"action":"switchDraft", "id":2})
       requests.get(url, headers=headers, params={"action":"switchDraft", "id":3})
+      requests.get(url, headers=headers, params={"action":"switchDraft", "id":6})
       response = requests.get(url, headers=headers, params={"action":"switchDraft", "id":4})
     elif query == "duplicatePost":
       response = requests.get(url, headers=headers, params={"action":"duplicatePost", "id":1})
@@ -211,7 +213,7 @@ def executeQuery():
       post = {"action":"deleteDetailedPost", "detailedPostId":9}
       response = requests.post(url, headers=headers, json=post)
     elif query == "modifyMissionDate":
-      post = {"action":"modifyMissionDate", "missionId": 4, "hourlyStart":"06:02", "hourlyEnd":"19:02", "calendar":['2022-04-16', '2022-04-17', '2022-04-18', '2022-04-19']}
+      post = {"action":"modifyMissionDate", "missionId": 3, "hourlyStart":"06:02", "hourlyEnd":"19:02", "calendar":['2022-04-16', '2022-04-17', '2022-04-18', '2022-04-19']}
       response = requests.post(url, headers=headers, json=post)
     elif query == "closeMission":
       post = {"action":"closeMission", "missionId": 4, "qualityStars":4, "qualityComment":"très bon travail", "securityStars":4, "securityComment":"Un vrai sous-traitant qualibat", "organisationStars":5, "organisationComment":"Une organisation parfaite"}
@@ -227,7 +229,7 @@ def executeQuery():
   else:
     print("no answer")
 if query == "all":
-  keys = ["buildDB", "register", "registerConfirm", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "uploadFile", "downloadFile", "switchDraft", "applyPost", "handleCandidateForPost", "signContract", "modifyDetailedPost", "createSupervision", "modifyMissionDate"] #, "closeMission", "closeMissionST"
+  keys = ["buildDB", "register", "registerConfirm", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "uploadFile", "downloadFile", "switchDraft", "applyPost", "handleCandidateForPost", "signContract", "modifyDetailedPost", "createSupervision", "modifyMissionDate", "closeMission", "closeMissionST"]
   # for key in ["buildDB", "register", "registerConfirm", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "switchDraft", "uploadFile", "downloadFile", "deleteFile", "modifyDisponibility", "setFavorite", "isviewed", "applyPost", "handleCandidateForPost", "closeMission"]: #, "createSupervision", "createDetailedPost", "modifyDetailedPost" , "deleteDetailedPost"
   for key in keys: #, "modifyPost"
     query = key

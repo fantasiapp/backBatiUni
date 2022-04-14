@@ -21,7 +21,7 @@ if os.getenv('PATH_MIDDLE'):
 
 
 class DataAccessor():
-  loadTables = {"user":[UserProfile, Company, JobForCompany, LabelForCompany, File, Post, Candidate, DetailedPost, DatePost, Mission, Disponibility, Supervision, Notification], "general":[Job, Role, Label]}
+  loadTables = {"user":[Notification, UserProfile, Company, JobForCompany, LabelForCompany, File, Post, Candidate, DetailedPost, DatePost, Mission, Disponibility, Supervision, Notification], "general":[Job, Role, Label]}
   dictTable = {}
   portSmtp = os.getenv('PORT_SMTP')
 
@@ -131,6 +131,7 @@ class DataAccessor():
       elif data["action"] == "modifyMissionDate": return cls.__modifyMissionDate(data, currentUser)
       elif data["action"] == "closeMission": return cls.__closeMission(data, currentUser)
       elif data["action"] == "closeMissionST": return cls.__closeMissionST(data, currentUser)
+      elif data["action"] == "notificationViewed": return cls.__notificationViewed(data, currentUser)
       return {"dataPost":"Error", "messages":f"unknown action in post {data['action']}"}
     return {"dataPost":"Error", "messages":"no action in post"}
 
@@ -265,6 +266,7 @@ class DataAccessor():
     if exists:
       return {"applyPost":"Warning", "messages":f"Le sous-traitant {subContractor.name} a déjà postulé."}
     candidate = Candidate.objects.create(Post=post, Company=subContractor, amount=amount, contact=contact, unitOfTime=unitOfTime)
+    Notification.objects.create(Post=post, Company=company, Role="PME", content=f"Un nouveau sous traitant : {subContractor.name} pour le chantier du {post.address} a postulé.")
     return {"applyPost":"OK", candidate.id:candidate.computeValues(candidate.listFields(), currentUser, True)}
 
   @classmethod
@@ -362,11 +364,22 @@ class DataAccessor():
 
   @classmethod
   def __modifySupervision(cls, data, currentUser):
-    pass
+    print("modifySupervision", data, currentUser.id)
+    return {"modifySupervision":"Warning", "messages":"Work in progress"}
 
   @classmethod
   def __deleteSupervision(cls, data, currentUser):
-    pass
+    print("deleteSupervision", data, currentUser.id)
+    supervision = Supervision.objects.get(id=data["supervisionId"])
+    if supervision.SupervisionAssociated:
+      return {"deleteSupervision":"Warning", "messages":"Ce post possède des messages associés"}
+    files = File.objects.filter(Supervision=supervision)
+    for file in files:
+      file.delete()
+    mission = supervision.Mission
+    supervision.delete()
+    return {"deleteSupervision":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, True)}
+
 
   @classmethod
   def setFavorite(cls, postId, value, currentUser):
@@ -429,8 +442,10 @@ class DataAccessor():
       candidate.Mission.contract = contractImage.id
       cls.__updateDatePost(candidate.Mission)
       candidate.Mission.save()
+      Notification.objects.create(Mission=candidate.Mission, Company=candidate.Company, Role="ST", content=f"Votre candidature pour le chantier du {candidate.Mission.address} a été retenue.")
       return {"handleCandidateForPost":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
     candidate.save()
+    Notification.objects.create(Post=candidate.Post, Company=candidate.Company, Role="ST", content=f"Votre candidature pour le chantier du {candidate.Mission.address} n'a pas été retenue.")
     post = candidate.Post
     return {"handleCandidateForPost":"OK", post.id:post.computeValues(post.listFields(), currentUser, dictFormat=True)}
 
@@ -498,18 +513,29 @@ class DataAccessor():
   @classmethod
   def __modifyMissionDate(cls, data, currentUser):
     mission = Mission.objects.get(id=data["missionId"])
-    mission.hourlyStart = data["hourlyStart"]
+    candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
+    subContractor = candidate.Company
+    roleST = "ST"
+    if mission.hourlyStart != data["hourlyStart"]:
+      mission.hourlyStart = data["hourlyStart"]
+      Notification.objects.create(Mission=mission, Company=subContractor, Role=roleST, content=f"Votre horaire de départ pour le chantier du {mission.address} a changé et est maintenant {mission.hourlyStart}.")
+    if mission.hourlyEnd != data["hourlyEnd"]:
+      mission.hourlyEnd = data["hourlyEnd"]
+      Notification.objects.create(Mission=mission, Company=subContractor, Role=roleST, content=f"Votre horaire de fin de journée pour le chantier du {mission.address} a changé et est maintenant {mission.hourlyEnd}.")
     mission.hourlyEnd = data["hourlyEnd"]
     mission.save()
     existingDateMission = DatePost.objects.filter(Mission=mission)
     for task in existingDateMission:
       if task.date:
         strDate = task.date.strftime("%Y-%m-%d")
-        if strDate in data["calendar"]:
+        if not strDate in data["calendar"]:
+          Notification.objects.create(Mission=mission, Company=subContractor, Role=roleST, content=f"Votre journée de travail du {strDate} pour le chantier du {mission.address} a été supprimée.")
+        else:
           data["calendar"].remove(strDate)
     for strDate in data["calendar"]:
       date = datetime.strptime(strDate, "%Y-%m-%d")
       DatePost.objects.create(Mission=mission, date=date)
+      Notification.objects.create(Mission=mission, Company=subContractor, Role=roleST, content=f"Une journée de travail pour le chantier du {mission.address} a été ajoutée le {strDate}.")
     return {"modifyMissionDate":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
 
   @classmethod
@@ -539,6 +565,18 @@ class DataAccessor():
     mission.save()
     cls.__newStars(mission, "pme")
     return {"closeMissionST":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
+
+  @classmethod
+  def __notificationViewed(cls, data, currentUser):
+    print("notificationViewed", data)
+    company = Company.objects.get(id=data["companyId"])
+    notifications = Notification.objects.filter(Company=company, Role=data["role"])
+    print("notificationViewed", notifications)
+    for notification in notifications:
+      notification.hasBeenViewed = True
+      notification.save()
+    return {"notificationViewed":"OK", company.id:company.computeValues(company.listFields(), currentUser, dictFormat=True)}
+
 
   @classmethod
   def __newStars(cls, mission, companyRole):
