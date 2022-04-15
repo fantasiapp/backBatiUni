@@ -440,6 +440,8 @@ class DataAccessor():
       candidate.Mission.subContractorName = candidate.Company.name
       candidate.Mission.subContractorContact = candidate.contact
       candidate.Mission.contract = contractImage.id
+      if candidate.Mission.counterOffer:
+        candidate.Mission.amount = candidate.amount
       cls.__updateDatePost(candidate.Mission)
       candidate.Mission.save()
       Notification.objects.create(Mission=candidate.Mission, Company=candidate.Company, Role="ST", content=f"Votre candidature pour le chantier du {candidate.Mission.address} a été retenue.")
