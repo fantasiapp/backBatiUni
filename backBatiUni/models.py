@@ -650,11 +650,10 @@ class File(CommonModel):
       endName += '_' + str(detailedPost.id) if detailedPost else '_N'
       endName += '_' + str(supervision.id) if supervision else '_N'
       objectFiles = File.objects.filter(nature=nature, Supervision=supervision)
-      endName += "_" + len(objectFiles)
+      endName += "_" + str(len(objectFiles))
       name +=  endName
       print("endName", endName, name)
       path = cls.dictPath[nature] + name + '.' + ext
-
     if nature == "contract":
       mission = post
       post = None
