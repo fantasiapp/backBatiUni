@@ -670,12 +670,12 @@ class DataAccessor():
 
   @classmethod
   def __uploadImageSupervision(cls, data, currentUser):
-    print("__uploadImageSupervision", data.keys(), currentUser, data["taskId"], data["missionId"])
+    print("uploadImageSupervision", data.keys(), currentUser, data["taskId"], data["missionId"])
     if not data['ext'] in File.authorizedExtention:
-      return {"uploadSupervision":"Warning", "messages":f"L'extention {data['ext']} n'est pas traitée"}
+      return {"uploadImageSupervision":"Warning", "messages":f"L'extention {data['ext']} n'est pas traitée"}
     fileStr = data["imageBase64"]
     if not fileStr:
-      return {"uploadSupervision":"Error", "messages":"field fileBase64 is empty"}
+      return {"uploadImageSupervision":"Error", "messages":"field fileBase64 is empty"}
     name = "supervision"
     if data["taskId"]:
       detailedPost = DetailedPost.objects.get(id=data["taskId"])
@@ -685,11 +685,11 @@ class DataAccessor():
       detailedPost = None
       mission = Mission.objects.get(id=data["missionId"])
       supervisions = Supervision.objects.filter(Mission=mission)
-      print("uploadSupervision", supervisions)
+      print("uploadImageSupervision", supervisions)
       if supervisions:
         supervision = supervisions[len(supervisions) - 1]
       else:
-        return {"uploadSupervision":"Error", "messages":f"No supervision associated to mission id {mission.id}"}
+        return {"uploadImageSupervision":"Error", "messages":f"No supervision associated to mission id {mission.id}"}
 
     objectFile = File.createFile("supervision", name, data['ext'], currentUser, post=None, mission=mission, detailedPost=detailedPost, supervision=supervision)
     file = None
@@ -697,7 +697,7 @@ class DataAccessor():
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path + data['ext']) if data['ext'] != "txt" else fileStr
       with open(objectFile.path, "wb") as outfile:
           outfile.write(file.file.getbuffer())
-      return {"uploadSupervision":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)[:-1]}
+      return {"uploadImageSupervision":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)[:-1]}
     except:
       if file: file.delete()
       return {"uploadImageSupervision":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
