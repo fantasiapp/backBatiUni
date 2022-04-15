@@ -259,7 +259,7 @@ class DataAccessor():
       return {"applyPost":"Warning", "messages":f"Le sous-traitant {subContractor.name} ne peut pas être l'entreprise commanditaire."}
     if subContractor.Role.id == 1:
       return {"applyPost":"Warning", "messages":f"La société {subContractor.name} n'est pas sous-traitante."}
-    tce = Job.objects.get(name= "TCE (Tout Corps d'Etat)")
+   # tce = Job.objects.get(name= "TCE (Tout Corps d'Etat)")
     # if not(post.Job in subContractor.jobs or subContractor.allQualifications):
     #   return {"applyPost":"Warning", "messages":f"Le métier {post.Job.name} n'est pas une compétence du sous-traitant {subContractor.name}."}
     exists = Candidate.objects.filter(Post=post, Company=subContractor)
@@ -672,10 +672,10 @@ class DataAccessor():
   def __uploadImageSupervision(cls, data, currentUser):
     print("__uploadImageSupervision", data.keys(), currentUser, data["taskId"], data["missionId"])
     if not data['ext'] in File.authorizedExtention:
-      return {"uploadFile":"Warning", "messages":f"L'extention {data['ext']} n'est pas traitée"}
+      return {"uploadSupervision":"Warning", "messages":f"L'extention {data['ext']} n'est pas traitée"}
     fileStr = data["imageBase64"]
     if not fileStr:
-      return {"uploadFile":"Error", "messages":"field fileBase64 is empty"}
+      return {"uploadSupervision":"Error", "messages":"field fileBase64 is empty"}
     name = "supervision"
     if data["taskId"]:
       detailedPost = DetailedPost.objects.get(id=data["taskId"])
@@ -685,11 +685,11 @@ class DataAccessor():
       detailedPost = None
       mission = Mission.objects.get(id=data["missionId"])
       supervisions = Supervision.objects.filter(Mission=mission)
-      print("supervisions", supervisions)
+      print("uploadSupervision", supervisions)
       if supervisions:
         supervision = supervisions[len(supervisions) - 1]
       else:
-        return {"uploadFile":"Error", "messages":f"No supervision associated to mission id {mission.id}"}
+        return {"uploadSupervision":"Error", "messages":f"No supervision associated to mission id {mission.id}"}
 
     objectFile = File.createFile("supervision", name, data['ext'], currentUser, post=None, mission=mission, detailedPost=detailedPost, supervision=supervision)
     file = None
@@ -700,7 +700,7 @@ class DataAccessor():
       return {"uploadSupervision":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)[:-1]}
     except:
       if file: file.delete()
-      return {"uploadSupervision":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
+      return {"uploadImageSupervision":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
 
   @classmethod
   def getEnterpriseDataFrom(cls, request):
