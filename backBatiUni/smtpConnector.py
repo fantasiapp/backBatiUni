@@ -17,7 +17,6 @@ class SmtpConnector:
     
     if (firstName == "Augustin" and lastName == "Alleaume") or (firstName == "a" and lastName == "a") or (lastName == "Traitant") or (firstName == "Eric" and lastName == "Entreprise"):
       # hack pour passer la sécurité
-      print("hack successfull", firstName, lastName)
       return "A secret code to check 9243672519"
     params = {"action":"mailConfirmation", "firstName":firstName, "lastName":lastName, "mail":email}
     try:
