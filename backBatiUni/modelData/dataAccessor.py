@@ -514,6 +514,7 @@ class DataAccessor():
 
   @classmethod
   def __modifyMissionDate(cls, data, currentUser):
+    print("modifyMissionDate", data)
     mission = Mission.objects.get(id=data["missionId"])
     candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
     subContractor = candidate.Company
@@ -528,6 +529,7 @@ class DataAccessor():
     mission.save()
     existingDateMission = DatePost.objects.filter(Mission=mission)
     for task in existingDateMission:
+      print("modifyMissionDate", task.date)
       if task.date:
         strDate = task.date.strftime("%Y-%m-%d")
         if not strDate in data["calendar"]:
@@ -538,7 +540,7 @@ class DataAccessor():
       date = datetime.strptime(strDate, "%Y-%m-%d")
       DatePost.objects.create(Mission=mission, date=date)
       notification = Notification.objects.create(Mission=mission, Company=subContractor, Role=roleST, content=f"Une journée de travail pour le chantier du {mission.address} a été ajoutée le {strDate}.")
-      print(notification.timestamp)
+      print("timestamp", notification.timestamp)
     return {"modifyMissionDate":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
 
   @classmethod
