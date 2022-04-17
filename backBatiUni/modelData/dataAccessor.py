@@ -266,7 +266,7 @@ class DataAccessor():
     if exists:
       return {"applyPost":"Warning", "messages":f"Le sous-traitant {subContractor.name} a déjà postulé."}
     candidate = Candidate.objects.create(Post=post, Company=subContractor, amount=amount, contact=contact, unitOfTime=unitOfTime)
-    Notification.objects.create(Post=post, Company=company, Role="PME", content=f"Un nouveau sous traitant : {subContractor.name} pour le chantier du {post.address} a postulé.")
+    Notification.objects.create(Post=post, Company=company, Role="PME", content=f"Un nouveau sous traitant : {subContractor.name} pour le chantier du {post.address} a postulé.", timpestamp=datetime.now().timestamp())
     return {"applyPost":"OK", candidate.id:candidate.computeValues(candidate.listFields(), currentUser, True)}
 
   @classmethod
@@ -444,10 +444,10 @@ class DataAccessor():
         candidate.Mission.amount = candidate.amount
       cls.__updateDatePost(candidate.Mission)
       candidate.Mission.save()
-      Notification.objects.create(Mission=candidate.Mission, Company=candidate.Company, Role="ST", content=f"Votre candidature pour le chantier du {candidate.Mission.address} a été retenue.")
+      Notification.objects.create(Mission=candidate.Mission, Company=candidate.Company, Role="ST", content=f"Votre candidature pour le chantier du {candidate.Mission.address} a été retenue.", timpestamp=datetime.now().timestamp())
       return {"handleCandidateForPost":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
     candidate.save()
-    Notification.objects.create(Post=candidate.Post, Company=candidate.Company, Role="ST", content=f"Votre candidature pour le chantier du {candidate.Mission.address} n'a pas été retenue.")
+    Notification.objects.create(Post=candidate.Post, Company=candidate.Company, Role="ST", content=f"Votre candidature pour le chantier du {candidate.Mission.address} n'a pas été retenue.", timpestamp=datetime.now().timestamp())
     post = candidate.Post
     return {"handleCandidateForPost":"OK", post.id:post.computeValues(post.listFields(), currentUser, dictFormat=True)}
 
@@ -521,10 +521,10 @@ class DataAccessor():
     roleST = "ST"
     if mission.hourlyStart != data["hourlyStart"]:
       mission.hourlyStart = data["hourlyStart"]
-      Notification.objects.create(Mission=mission, Company=subContractor, Role=roleST, content=f"Votre horaire de départ pour le chantier du {mission.address} a changé et est maintenant {mission.hourlyStart}.")
+      Notification.objects.create(Mission=mission, Company=subContractor, Role=roleST, content=f"Votre horaire de départ pour le chantier du {mission.address} a changé et est maintenant {mission.hourlyStart}.", timpestamp=datetime.now().timestamp())
     if mission.hourlyEnd != data["hourlyEnd"]:
       mission.hourlyEnd = data["hourlyEnd"]
-      Notification.objects.create(Mission=mission, Company=subContractor, Role=roleST, content=f"Votre horaire de fin de journée pour le chantier du {mission.address} a changé et est maintenant {mission.hourlyEnd}.")
+      Notification.objects.create(Mission=mission, Company=subContractor, Role=roleST, content=f"Votre horaire de fin de journée pour le chantier du {mission.address} a changé et est maintenant {mission.hourlyEnd}.", timpestamp=datetime.now().timestamp())
     mission.hourlyEnd = data["hourlyEnd"]
     mission.save()
     existingDateMission = DatePost.objects.filter(Mission=mission)
@@ -533,7 +533,7 @@ class DataAccessor():
       if task.date:
         strDate = task.date.strftime("%Y-%m-%d")
         if not strDate in data["calendar"]:
-          Notification.objects.create(Mission=mission, Company=subContractor, Role=roleST, content=f"Votre journée de travail du {strDate} pour le chantier du {mission.address} a été supprimée.")
+          Notification.objects.create(Mission=mission, Company=subContractor, Role=roleST, content=f"Votre journée de travail du {strDate} pour le chantier du {mission.address} a été supprimée.", timpestamp=datetime.now().timestamp())
         else:
           data["calendar"].remove(strDate)
     print("modifyMissionDate dataCalendar", data["calendar"])
@@ -543,7 +543,7 @@ class DataAccessor():
       DatePost.objects.create(Mission=mission, date=date)
       notificationStart = Notification.objects.all()[0]
       print("start", notificationStart.timestamp, "now", datetime.now().timestamp())
-      notification = Notification.objects.create(Mission=mission, Company=subContractor, Role=roleST, content=f"Une journée de travail pour le chantier du {mission.address} a été ajoutée le {strDate}.")
+      notification = Notification.objects.create(Mission=mission, Company=subContractor, Role=roleST, content=f"Une journée de travail pour le chantier du {mission.address} a été ajoutée le {strDate}.", timpestamp=datetime.now().timestamp())
       print("timestamp", notification.timestamp, "start", notificationStart.timestamp)
     return {"modifyMissionDate":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
 
