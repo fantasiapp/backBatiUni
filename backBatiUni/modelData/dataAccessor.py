@@ -541,7 +541,7 @@ class DataAccessor():
       print("modifyMissionDate strDate", strDate)
       date = datetime.strptime(strDate, "%Y-%m-%d")
       DatePost.objects.create(Mission=mission, date=date)
-      notificationStart = Notification.object.all()[0]
+      notificationStart = Notification.objects.all()[0]
       print("start", notificationStart.timestamp)
       notification = Notification.objects.create(Mission=mission, Company=subContractor, Role=roleST, content=f"Une journée de travail pour le chantier du {mission.address} a été ajoutée le {strDate}.")
       print("timestamp", notification.timestamp, "start", notificationStart.timestamp)
