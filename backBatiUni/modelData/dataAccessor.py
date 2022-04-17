@@ -537,7 +537,8 @@ class DataAccessor():
     for strDate in data["calendar"]:
       date = datetime.strptime(strDate, "%Y-%m-%d")
       DatePost.objects.create(Mission=mission, date=date)
-      Notification.objects.create(Mission=mission, Company=subContractor, Role=roleST, content=f"Une journée de travail pour le chantier du {mission.address} a été ajoutée le {strDate}.")
+      notification = Notification.objects.create(Mission=mission, Company=subContractor, Role=roleST, content=f"Une journée de travail pour le chantier du {mission.address} a été ajoutée le {strDate}.")
+      print(notification.timestamp)
     return {"modifyMissionDate":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
 
   @classmethod

@@ -78,8 +78,9 @@ def executeQuery():
     url = f'{address}/data/'
     headers = {'Authorization': f'Token {token}'}
     if query == "getUserData":
-      # token = queryForToken("st", "pwd")
-      # headers = {'Authorization': f'Token {token}'}
+      token = queryForToken("st", "pwd")
+      headers = {'Authorization': f'Token {token}'}
+      print("user = st")
       response = requests.get(url, headers=headers, params={"action":"getUserData"})
     elif query == "postModifyPwd":
       post = {"action":"modifyPwd", "oldPwd":"pwd", "newPwd":"pwd"}
