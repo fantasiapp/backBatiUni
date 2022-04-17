@@ -1,5 +1,3 @@
-from calendar import c
-from logging.config import listen
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -7,9 +5,10 @@ import os
 import base64
 import datetime
 from django.apps import apps
-from pdf2image import convert_from_path
+import time
 
-import io
+
+from pdf2image import convert_from_path
 import whatimage
 import pyheif
 from PIL import Image
@@ -465,7 +464,8 @@ class Notification(CommonModel):
   Mission = models.ForeignKey(Mission, verbose_name='Mission associée', related_name='MissionNotification', on_delete=models.PROTECT, null=True, default=None)
   Company = models.ForeignKey(Company, verbose_name="Société associé", related_name='CompanyNotification', on_delete=models.PROTECT, null=True, default=None)
   Role = models.CharField("Rôle effectif durant la notation", max_length=64, null=False, default="PME")
-  timestamp = models.FloatField(verbose_name="Timestamp de mise à jour", null=False, default=datetime.datetime.now().timestamp())
+  # timestamp = models.FloatField(verbose_name="Timestamp de mise à jour", null=False, default=datetime.datetime.now().timestamp())
+  timestamp = models.FloatField(verbose_name="Timestamp de mise à jour", null=False, default=time.time())
   content = models.CharField("Contenu du Post", max_length=128, null=False, default="")
   hasBeenViewed = models.BooleanField("A été vu", null=False, default=False)
 
