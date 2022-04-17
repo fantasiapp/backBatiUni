@@ -536,7 +536,9 @@ class DataAccessor():
           Notification.objects.create(Mission=mission, Company=subContractor, Role=roleST, content=f"Votre journée de travail du {strDate} pour le chantier du {mission.address} a été supprimée.")
         else:
           data["calendar"].remove(strDate)
+    print("modifyMissionDate dataCalendar", data["calendar"])
     for strDate in data["calendar"]:
+      print("modifyMissionDate strDate", strDate)
       date = datetime.strptime(strDate, "%Y-%m-%d")
       DatePost.objects.create(Mission=mission, date=date)
       notification = Notification.objects.create(Mission=mission, Company=subContractor, Role=roleST, content=f"Une journée de travail pour le chantier du {mission.address} a été ajoutée le {strDate}.")
