@@ -45,7 +45,7 @@ def executeQuery():
   now, data, response, url , headers = "2022/01/12", None, None, f'{address}/initialize/', {"content-type":"Application/Json"}
   if query == "register":
     headers = {}
-    post1 = {"firstname":"Augustin","lastname":"Alleaume","email":"walter.jeanluc@gmail.com","password":"pwd","company":{'id': 2, 'name': 'BATIUNI', 'address': '9 rue Vintimille Paris 75009', 'activity': 'Activité inconnue', 'siret': '40422352100018', 'ntva': 'FR49404223521'},"Role":3,"proposer":"","jobs":[1,2,80]}
+    post1 = {"firstname":"Augustin","lastname":"Alleaume","email":"aa","password":"pwd","company":{'id': 2, 'name': 'BATIUNI', 'address': '9 rue Vintimille Paris 75009', 'activity': 'Activité inconnue', 'siret': '40422352100018', 'ntva': 'FR49404223521'},"Role":3,"proposer":"","jobs":[1,2,80]}
     post2 = {"firstname":"Théophile","lastname":"Traitant","email":"st","password":"pwd","company":{'id': 3, 'name': 'Sous-traitant', 'address': '74 ave des Sous-traitants Paris 75008', 'activity': 'Activité inconnue', 'siret': '40422352100021', 'ntva': 'FR49404223522'},"Role":2,"proposer":"","jobs":[1,2,80]}
     post3 = {"firstname":"Eric","lastname":"Entreprise","email":"pme","password":"pwd","company":{'id': 4, 'name': 'PME', 'address': '74 ave des PME Paris 75008', 'activity': 'Activité inconnue', 'siret': '40422352100019', 'ntva': 'FR49404223523'},"Role":1,"proposer":"","jobs":[1,2,9]}
     post4 = {"firstname":"a","lastname":"a","email":"both","password":"pwd","company":{'id': 5, 'name': 'both', 'address': '74 ave des deux Paris 75008', 'activity': 'Activité inconnue', 'siret': '40422352100020', 'ntva': 'FR4940422352'},"Role":3,"proposer":"","jobs":[1,2,80]}
@@ -72,7 +72,6 @@ def executeQuery():
       token = queryForToken("pme", "pwd")
     else:
       token = queryForToken("st", "pwd")
-      print("user st")
     if query == "token":
       print("token", token)
     url = f'{address}/data/'

@@ -39,10 +39,11 @@ class DataAccessor():
   @classmethod
   def register(cls, data):
     message = cls.__registerCheck(data, {})
+    print("register", data)
     if message:
       return {"register":"Warning", "messages":message}
     token = SmtpConnector(cls.portSmtp).register(data["firstname"], data["lastname"], data["email"])
-    if token != "token not received" or data["email"] == "walter.jeanluc@gmail.com":
+    if token != "token not received" or data["email"] == "jeanluc":
       cls.__registerAction(data, token)
       return {"register":"OK"}
     cls.__registerAction(data, "empty token")
@@ -549,7 +550,6 @@ class DataAccessor():
 
   @classmethod
   def __closeMission(cls, data, currentUser):
-    print("closeMission", data)
     mission = Mission.objects.get(id=data["missionId"])
     mission.quality = data["qualityStars"]
     mission.qualityComment = data["qualityComment"]
@@ -565,7 +565,6 @@ class DataAccessor():
   @classmethod
   def __closeMissionST(cls, data, currentUser):
     mission = Mission.objects.get(id=data["missionId"])
-    print("closeMissionST", data)
     mission.vibeST = data["vibeSTStars"]
     mission.vibeCommentST = data["vibeSTComment"]
     mission.securityST = data["securitySTStars"]
@@ -578,10 +577,8 @@ class DataAccessor():
 
   @classmethod
   def __notificationViewed(cls, data, currentUser):
-    print("notificationViewed", data)
     company = Company.objects.get(id=data["companyId"])
     notifications = Notification.objects.filter(Company=company, Role=data["role"])
-    print("notificationViewed", notifications)
     for notification in notifications:
       notification.hasBeenViewed = True
       notification.save()
