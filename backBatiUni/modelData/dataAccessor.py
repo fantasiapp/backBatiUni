@@ -43,6 +43,7 @@ class DataAccessor():
     if message:
       return {"register":"Warning", "messages":message}
     token = SmtpConnector(cls.portSmtp).register(data["firstname"], data["lastname"], data["email"])
+    print("register", token)
     if token != "token not received" or data["email"] == "jeanluc":
       cls.__registerAction(data, token)
       return {"register":"OK"}
