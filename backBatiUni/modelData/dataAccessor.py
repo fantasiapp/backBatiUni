@@ -271,6 +271,18 @@ class DataAccessor():
     Notification.objects.create(Post=post, Company=company, Role="PME", content=f"Un nouveau sous traitant : {subContractor.name} pour le chantier du {post.address} a postulé.", timestamp=datetime.now().timestamp())
     return {"applyPost":"OK", candidate.id:candidate.computeValues(candidate.listFields(), currentUser, True)}
 
+
+  @classmethod
+  def candidateViewed(cls, candidateId, currentUser):
+    print("candidateViewed", candidateId)
+    candidate = Candidate.objects.get(id=candidateId)
+    candidate.isViewed = True
+    candidate.save()
+    post = candidate.Post
+    return {"candidateViewed":"OK", post.id:post.computeValues(post.listFields(), currentUser, True)}
+
+
+
   @classmethod
   def __createDetailedPost(cls, data, currentUser):
     kwargs, post, mission = {"Post":None, "Mission":None, "content":None, "date":None, "validated":False}, None, None
