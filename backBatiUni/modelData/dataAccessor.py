@@ -97,6 +97,7 @@ class DataAccessor():
 
   @classmethod
   def registerConfirm(cls, token):
+    print("start", len(UserProfile.objects.all()))
     for user in UserProfile.objects.all():
       if user.token:
         print("userTested", user.token)
