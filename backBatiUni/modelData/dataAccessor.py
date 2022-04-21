@@ -461,7 +461,7 @@ class DataAccessor():
       Notification.objects.create(Mission=candidate.Mission, Company=candidate.Company, Role="ST", content=f"Votre candidature pour le chantier du {candidate.Mission.address} a été retenue.", timestamp=datetime.now().timestamp())
       return {"handleCandidateForPost":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
     candidate.save()
-    Notification.objects.create(Post=candidate.Post, Company=candidate.Company, Role="ST", content=f"Votre candidature pour le chantier du {candidate.Mission.address} n'a pas été retenue.", timestamp=datetime.now().timestamp())
+    Notification.objects.create(Post=candidate.Post, Company=candidate.Company, Role="ST", content=f"Votre candidature pour le chantier du {candidate.Post.address} n'a pas été retenue.", timestamp=datetime.now().timestamp())
     post = candidate.Post
     return {"handleCandidateForPost":"OK", post.id:post.computeValues(post.listFields(), currentUser, dictFormat=True)}
 
@@ -619,7 +619,8 @@ class DataAccessor():
     if post:
       post = post[0]
       if company == post.Company:
-        kwargs = {field.name:getattr(post, field.name) for field in Post._meta.fields[1:]}
+        exceptionField = ['signedByCompany', 'signedBySubContractor', 'subContractorContact', 'subContractorName', 'quality', 'qualityComment', 'security', 'securityComment', 'organisation', 'organisationComment', 'vibeST',  'vibeCommentST',  'securityST',  'securityCommentST',  'signedByCompany',  'organisationST',  'organisationCommentST',  'isClosed', 'contract']
+        kwargs = {field.name:getattr(post, field.name) for field in Post._meta.fields[1:] if not field in exceptionField}
         kwargs["draft"] = True
         duplicate = Post.objects.create(**kwargs)
         for detailPost in DetailedPost.objects.filter(Post=post):
