@@ -478,6 +478,32 @@ class Notification(CommonModel):
         del superList[index]
     return superList
 
+  @classmethod
+  def filter(cls, user):
+    print("filter notification")
+    userProfile = UserProfile.objects.get(userNameInternal=user)
+    company = userProfile.Company
+    notifications = []
+    for notification in Notification.objects.all():
+      if notification.Post:
+        if notification.Role == "PME" and company == notification.Post.Company:
+          notifications.append(notification)
+          print("post PME", notification.content, f"company: { notification.Company.name }", f"role {company.Role.name} {notification.Role}")
+        if notification.Role == "ST":
+          candidates = Candidate.objects.filter(Company=company)
+          for candidate in candidates:
+            if candidate.Company == company and candidate.Post == notification.Post:
+              print("post st", candidate)
+              notifications.append(notification)
+        if notification.Mission:
+          if notification.Role == "PME" and company == notification.Mission.Company:
+            notifications.append(notification)
+          if notification.Role == "ST":
+            candidate = Candidate.objects.get(Mission=notification.Mission, isChoosen=True)
+        # print("post", f" user company: { company.id }", f"notification company {notification.Post.Company.id}")
+    print("Notifications", notifications)
+    return notifications
+
 
 class Candidate(CommonModel):
   Post = models.ForeignKey(Post, verbose_name='Annonce associée', on_delete=models.CASCADE, null=True, default=None)
