@@ -6,7 +6,8 @@
       "Role",
       "timestamp",
       "content",
-      "hasBeenViewed"
+      "hasBeenViewed",
+      "nature"
    ],
    "NotificationIndices": [
       0,
@@ -17,89 +18,127 @@
          2,
          "",
          "PME",
-         1650446085.05541,
-         "Un nouveau sous traitant : Sous-traitant pour le chantier du 106 rue du Cherche-Midi 75006 Paris a postul\u00e9.",
-         true
+         1650614566.11724,
+         "Un nouveau sous traitant : Sous-traitant pour le chantier du 106 Rue du Cherche-Midi 75006 Paris a postul\u00e9.",
+         false,
+         "ST"
       ],
       "2": [
          3,
          "",
          "PME",
-         1650446085.06691,
-         "Un nouveau sous traitant : Sous-traitant pour le chantier du 36 rue Dauphine 75006 Paris a postul\u00e9.",
-         true
+         1650614566.183641,
+         "Un nouveau sous traitant : Sous-traitant pour le chantier du 36 Rue Dauphine 75006 Paris a postul\u00e9.",
+         false,
+         "ST"
       ],
       "3": [
          4,
          "",
          "PME",
-         1650446085.07806,
-         "Un nouveau sous traitant : Sous-traitant pour le chantier du 28 rue de Fleurus 75006 Paris a postul\u00e9.",
-         true
+         1650614566.384063,
+         "Un nouveau sous traitant : Sous-traitant pour le chantier du 28 Rue de Fleurus 75006 Paris a postul\u00e9.",
+         false,
+         "ST"
       ],
       "4": [
          5,
          "",
          "PME",
-         1650446085.089918,
-         "Un nouveau sous traitant : Sous-traitant pour le chantier du 34 rue Guynemer 75006 Paris a postul\u00e9.",
-         true
+         1650614566.457208,
+         "Un nouveau sous traitant : Sous-traitant pour le chantier du 34 Rue Guynemer 75006 Paris a postul\u00e9.",
+         false,
+         "ST"
       ],
       "5": [
          2,
          "",
          "PME",
-         1650446085.249031,
-         "Un nouveau sous traitant : Sous-traitant 2 pour le chantier du 106 rue du Cherche-Midi 75006 Paris a postul\u00e9.",
-         true
+         1650614566.773297,
+         "Un nouveau sous traitant : Sous-traitant 2 pour le chantier du 106 Rue du Cherche-Midi 75006 Paris a postul\u00e9.",
+         false,
+         "ST"
       ],
       "6": [
          "",
          3,
          "ST",
-         1650446085.441834,
-         "Votre candidature pour le chantier du 36 rue Dauphine 75006 Paris a \u00e9t\u00e9 retenue.",
-         false
+         1650614567.099297,
+         "Votre candidature pour le chantier du 36 Rue Dauphine 75006 Paris a \u00e9t\u00e9 retenue.",
+         false,
+         "ST"
       ],
       "7": [
          "",
          4,
          "ST",
-         1650446085.501613,
-         "Votre candidature pour le chantier du 28 rue de Fleurus 75006 Paris a \u00e9t\u00e9 retenue.",
-         false
+         1650614567.223557,
+         "Votre candidature pour le chantier du 28 Rue de Fleurus 75006 Paris a \u00e9t\u00e9 retenue.",
+         false,
+         "ST"
       ],
       "8": [
          "",
-         3,
-         "ST",
-         1650446087.060642,
-         "Votre horaire de d\u00e9part pour le chantier du 36 rue Dauphine 75006 Paris a chang\u00e9 et est maintenant 06:02.",
-         false
+         4,
+         "PME",
+         1650614567.509985,
+         "Le contrat pour le chantier du 28 Rue de Fleurus 75006 Paris  a \u00e9t\u00e9 sign\u00e9.",
+         false,
+         "PME"
       ],
       "9": [
          "",
-         3,
+         4,
          "ST",
-         1650446087.061456,
-         "Votre horaire de fin de journ\u00e9e pour le chantier du 36 rue Dauphine 75006 Paris a chang\u00e9 et est maintenant 19:02.",
-         false
+         1650614567.828228,
+         "Le contrat pour le chantier du 28 Rue de Fleurus 75006 Paris  a \u00e9t\u00e9 sign\u00e9.",
+         false,
+         "ST"
       ],
       "10": [
          "",
          3,
          "ST",
-         1650446087.064346,
-         "Une journ\u00e9e de travail pour le chantier du 36 rue Dauphine 75006 Paris a \u00e9t\u00e9 ajout\u00e9e le 2022-04-19.",
-         false
+         1650614570.431183,
+         "Votre horaire de d\u00e9part pour le chantier du 36 Rue Dauphine 75006 Paris a chang\u00e9 et est maintenant 06:02.",
+         false,
+         "ST"
       ],
       "11": [
-         2,
          "",
+         3,
          "ST",
-         1650446332.628065,
-         "Votre candidature pour le chantier du 106 rue du Cherche-Midi 75006 Paris n'a pas \u00e9t\u00e9 retenue.",
-         true
+         1650614570.432304,
+         "Votre horaire de fin de journ\u00e9e pour le chantier du 36 Rue Dauphine 75006 Paris a chang\u00e9 et est maintenant 19:02.",
+         false,
+         "ST"
+      ],
+      "12": [
+         "",
+         3,
+         "ST",
+         1650614570.43738,
+         "Une journ\u00e9e de travail pour le chantier du 36 Rue Dauphine 75006 Paris a \u00e9t\u00e9 ajout\u00e9e le 2022-04-19.",
+         false,
+         "ST"
+      ],
+      "13": [
+         "",
+         4,
+         "ST",
+         1650614570.795165,
+         "La mission 28 Rue de Fleurus 75006 Paris a \u00e9t\u00e9 ferm\u00e9e.",
+         false,
+         "ST"
+      ],
+      "14": [
+         "",
+         4,
+         "PME",
+         1650614571.106892,
+         "La mission 28 Rue de Fleurus 75006 Paris a \u00e9t\u00e9 ferm\u00e9e.",
+         false,
+         "PME"
       ]
    },
    "UserProfileFields": [
@@ -130,9 +169,7 @@
          "pme",
          "",
          [],
-         [
-            1
-         ]
+         []
       ]
    },
    "CompanyFields": [
@@ -208,7 +245,7 @@
          "BATIUNI",
          3,
          "40422352100018",
-         "9 rue Vintimille Paris 75009",
+         "9 Rue de Vintimille 75009 Paris",
          "Activit\u00e9 inconnue",
          "FR49404223521",
          null,
@@ -220,8 +257,8 @@
          null,
          null,
          null,
-         0.0,
-         0.0,
+         48.882438,
+         2.329094,
          false,
          false,
          [
@@ -240,7 +277,7 @@
          "Sous-traitant",
          2,
          "40422352100021",
-         "74 ave des Sous-traitants Paris 75008",
+         "74 Avenue des Champs Elys\u00e9es 75008 Paris",
          "Activit\u00e9 inconnue",
          "FR49404223522",
          307130,
@@ -252,8 +289,8 @@
          "08 92 97 64 15",
          null,
          null,
-         0.0,
-         0.0,
+         48.871092,
+         2.304626,
          false,
          true,
          [
@@ -276,16 +313,18 @@
          [
             6,
             7,
-            8,
             9,
-            10
+            10,
+            11,
+            12,
+            13
          ]
       ],
       "4": [
          "PME",
          1,
          "40422352100019",
-         "74 ave des PME Paris 75008",
+         "74 Rue de Rome 75008 Paris",
          "Activit\u00e9 inconnue",
          "FR49404223523",
          null,
@@ -297,8 +336,8 @@
          null,
          null,
          null,
-         0.0,
-         0.0,
+         48.880817,
+         2.321305,
          false,
          false,
          [
@@ -328,14 +367,16 @@
             2,
             3,
             4,
-            5
+            5,
+            8,
+            14
          ]
       ],
       "5": [
          "both",
          3,
          "40422352100020",
-         "74 ave des deux Paris 75008",
+         "Rue des Deux Avenues 75013 Paris",
          "Activit\u00e9 inconnue",
          "FR4940422352",
          null,
@@ -347,8 +388,8 @@
          null,
          null,
          null,
-         0.0,
-         0.0,
+         48.82792,
+         2.357653,
          false,
          false,
          [
@@ -367,7 +408,7 @@
          "Sous-traitant 2",
          2,
          "40422352100048",
-         "78 rue des Sous-traitants Paris 75008",
+         "78 Rue de Courcelles 75008 Paris",
          "Activit\u00e9 inconnue",
          "FR49404223553",
          207130,
@@ -379,8 +420,8 @@
          "08 91 96 63 14",
          null,
          null,
-         0.0,
-         0.0,
+         48.877896,
+         2.305792,
          false,
          true,
          [
@@ -395,9 +436,7 @@
          [],
          [],
          [],
-         [
-            11
-         ]
+         []
       ]
    },
    "JobForCompanyFields": [
@@ -504,7 +543,7 @@
          "BatiUni_1",
          "png",
          "",
-         1650445106.671267,
+         1650614477.590449,
          ""
       ],
       "2": [
@@ -512,7 +551,7 @@
          "SousTtraitant2_1",
          "png",
          "",
-         1650445106.671267,
+         1650614477.590449,
          ""
       ],
       "3": [
@@ -520,7 +559,7 @@
          "Fantasiapp_1",
          "png",
          "",
-         1650445106.671267,
+         1650614477.590449,
          ""
       ],
       "4": [
@@ -528,7 +567,7 @@
          "Qualibat",
          "png",
          "2022-02-12",
-         1650445106.671267,
+         1650614477.590449,
          ""
       ],
       "5": [
@@ -536,7 +575,7 @@
          "Kbis",
          "png",
          "2022-02-12",
-         1650445106.671267,
+         1650614477.590449,
          ""
       ],
       "6": [
@@ -544,7 +583,7 @@
          "Document technique",
          "svg",
          "",
-         1650445106.671267,
+         1650614477.590449,
          ""
       ],
       "7": [
@@ -552,7 +591,7 @@
          "Plan",
          "pdf",
          "",
-         1650445106.671267,
+         1650614477.590449,
          ""
       ],
       "8": [
@@ -560,7 +599,7 @@
          "contract",
          "png",
          "",
-         1650445106.671267,
+         1650614477.590449,
          ""
       ],
       "9": [
@@ -568,7 +607,7 @@
          "contract",
          "png",
          "",
-         1650446085.858024,
+         1650614567.825424,
          ""
       ]
    },
@@ -610,9 +649,9 @@
          4,
          5,
          2,
-         "126 rue de Paris 92100 Boulogne",
-         0.0,
-         0.0,
+         "126 Rue de Paris 92100 Boulogne-Billancourt",
+         48.841608,
+         2.23792,
          "Eric Entreprise",
          true,
          false,
@@ -643,9 +682,9 @@
          4,
          5,
          1,
-         "106 rue du Cherche-Midi 75006 Paris",
-         48.841625,
-         2.324877,
+         "106 Rue du Cherche-Midi 75006 Paris",
+         48.846822,
+         2.321208,
          "Eric Entreprise",
          false,
          false,
@@ -681,9 +720,9 @@
          4,
          10,
          1,
-         "34 rue Guynemer 75006 Paris",
-         48.841628,
-         2.325885,
+         "34 Rue Guynemer 75006 Paris",
+         48.845948,
+         2.332246,
          "Eric Entreprise",
          true,
          true,
@@ -717,9 +756,9 @@
          4,
          5,
          1,
-         "108 rue du Cherche-Midi 75006 Paris",
-         48.841625,
-         2.324877,
+         "108 Rue du Cherche-Midi 75006 Paris",
+         48.846754,
+         2.321079,
          "Eric Entreprise",
          false,
          false,
@@ -766,7 +805,7 @@
          false,
          false,
          false,
-         "2022-04-20",
+         "2022-04-22",
          800.0,
          "Par Jour"
       ],
@@ -776,7 +815,7 @@
          true,
          false,
          false,
-         "2022-04-20",
+         "2022-04-22",
          1000.0,
          "Par Jour"
       ],
@@ -786,7 +825,7 @@
          true,
          false,
          false,
-         "2022-04-20",
+         "2022-04-22",
          1200.0,
          "Par Jour"
       ],
@@ -796,7 +835,7 @@
          false,
          false,
          false,
-         "2022-04-20",
+         "2022-04-22",
          0.0,
          "Prix Total"
       ],
@@ -804,9 +843,9 @@
          6,
          "Tanguy Traitant",
          false,
-         true,
-         true,
-         "2022-04-20",
+         false,
+         false,
+         "2022-04-22",
          1500.0,
          "Par Jour"
       ]
@@ -1033,9 +1072,9 @@
          4,
          10,
          1,
-         "36 rue Dauphine 75006 Paris",
-         48.841626,
-         2.326881,
+         "36 Rue Dauphine 75006 Paris",
+         48.854448,
+         2.339018,
          "Eric Entreprise",
          false,
          true,
@@ -1089,9 +1128,9 @@
          4,
          10,
          2,
-         "28 rue de Fleurus 75006 Paris",
-         48.841627,
-         2.325883,
+         "28 Rue de Fleurus 75006 Paris",
+         48.847029,
+         2.329298,
          "Eric Entreprise",
          false,
          true,
@@ -1162,7 +1201,7 @@
       "1": [
          "Th\u00e9ophile Traitant",
          3,
-         "2022-04-20",
+         "2022-04-22",
          "J'ai fini.",
          [],
          []
@@ -1170,7 +1209,7 @@
       "2": [
          "Th\u00e9ophile Traitant",
          3,
-         "2022-04-20",
+         "2022-04-22",
          "OK pour les t\u00e2ches du jour.",
          [],
          []
@@ -1178,7 +1217,7 @@
       "3": [
          "Th\u00e9ophile Traitant",
          3,
-         "2022-04-20",
+         "2022-04-22",
          "Pas de souci aujourd'hui.",
          [],
          []
@@ -1186,7 +1225,7 @@
       "4": [
          "Th\u00e9ophile Traitant",
          3,
-         "2022-04-20",
+         "2022-04-22",
          "Le chantier est termin\u00e9.",
          [],
          []
@@ -1194,7 +1233,7 @@
       "5": [
          "Eric Entreprise",
          4,
-         "2022-04-20",
+         "2022-04-22",
          "Les t\u00e2ches du jour sont bien faites.",
          [],
          []
@@ -1202,7 +1241,7 @@
       "6": [
          "Eric Entreprise",
          4,
-         "2022-04-20",
+         "2022-04-22",
          "Tout est parfait, merci.",
          [],
          []
@@ -1210,7 +1249,7 @@
       "7": [
          "Eric Entreprise",
          4,
-         "2022-04-20",
+         "2022-04-22",
          "Attention aux finitions.",
          [],
          []
