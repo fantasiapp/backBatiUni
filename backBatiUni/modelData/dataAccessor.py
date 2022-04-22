@@ -448,7 +448,7 @@ class DataAccessor():
       candidate.date = timezone.now()
       candidate.save()
       mission = candidate.Mission
-      for model in [DetailedPost, File]:
+      for model in [DetailedPost, File, Notification]:
         for modelObject in model.objects.all():
           if modelObject.Post and modelObject.Post.id == postId:
             modelObject.Post = None
