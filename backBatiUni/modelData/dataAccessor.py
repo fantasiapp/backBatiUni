@@ -597,7 +597,7 @@ class DataAccessor():
     mission.organisationCommentST = data["organisationSTComment"]
     mission.save()
     cls.__newStars(mission, "pme")
-    Notification.objects.create(Mission=mission, nature="PME", Company=mission.company, Role="PME", content=f"La mission {mission.address} a été fermée.", timestamp=datetime.now().timestamp())
+    Notification.objects.create(Mission=mission, nature="PME", Company=mission.Company, Role="PME", content=f"La mission {mission.address} a été fermée.", timestamp=datetime.now().timestamp())
     return {"closeMissionST":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
 
   @classmethod
