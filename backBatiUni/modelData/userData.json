@@ -14,14 +14,59 @@
       1
    ],
    "NotificationValues": {
-      "11": [
-         2,
+      "6": [
          "",
+         3,
          "ST",
-         1650446332.628065,
-         "Votre candidature pour le chantier du 106 rue du Cherche-Midi 75006 Paris n'a pas \u00e9t\u00e9 retenue.",
-         true,
-         "other"
+         1650638114.078209,
+         "Votre candidature pour le chantier du 36 rue Dauphine 75006 Paris a \u00e9t\u00e9 retenue.",
+         false,
+         "PME"
+      ],
+      "8": [
+         "",
+         4,
+         "ST",
+         1650638114.180417,
+         "Votre candidature pour le chantier du 28 rue de Fleurus 75006 Paris a \u00e9t\u00e9 retenue.",
+         false,
+         "PME"
+      ],
+      "10": [
+         "",
+         4,
+         "ST",
+         1650638114.538989,
+         "Le contrat pour le chantier du 28 rue de Fleurus 75006 Paris  a \u00e9t\u00e9 sign\u00e9.",
+         false,
+         "PME"
+      ],
+      "11": [
+         "",
+         3,
+         "ST",
+         1650638115.686085,
+         "Votre horaire de d\u00e9part pour le chantier du 36 rue Dauphine 75006 Paris a chang\u00e9 et est maintenant 06:02.",
+         false,
+         "alert"
+      ],
+      "12": [
+         "",
+         3,
+         "ST",
+         1650638115.686756,
+         "Votre horaire de fin de journ\u00e9e pour le chantier du 36 rue Dauphine 75006 Paris a chang\u00e9 et est maintenant 19:02.",
+         false,
+         "alert"
+      ],
+      "13": [
+         "",
+         3,
+         "ST",
+         1650638115.689648,
+         "Une journ\u00e9e de travail pour le chantier du 36 rue Dauphine 75006 Paris a \u00e9t\u00e9 ajout\u00e9e le 2022-04-19.",
+         false,
+         "alert"
       ]
    },
    "UserProfileFields": [
@@ -52,9 +97,7 @@
          "st",
          "",
          [],
-         [
-            3
-         ]
+         []
       ]
    },
    "CompanyFields": [
@@ -195,7 +238,14 @@
          [],
          [],
          [],
-         []
+         [
+            6,
+            8,
+            10,
+            11,
+            12,
+            13
+         ]
       ],
       "4": [
          "PME",
@@ -305,9 +355,7 @@
          [],
          [],
          [],
-         [
-            11
-         ]
+         []
       ]
    },
    "JobForCompanyFields": [
@@ -414,7 +462,7 @@
          "BatiUni_1",
          "png",
          "",
-         1650445106.671267,
+         1650637709.410251,
          ""
       ],
       "2": [
@@ -422,7 +470,7 @@
          "SousTtraitant2_1",
          "png",
          "",
-         1650445106.671267,
+         1650637709.410251,
          ""
       ],
       "3": [
@@ -430,7 +478,7 @@
          "Fantasiapp_1",
          "png",
          "",
-         1650445106.671267,
+         1650637709.410251,
          ""
       ],
       "4": [
@@ -438,7 +486,7 @@
          "Qualibat",
          "png",
          "2022-02-12",
-         1650445106.671267,
+         1650637709.410251,
          ""
       ],
       "5": [
@@ -446,7 +494,7 @@
          "Kbis",
          "png",
          "2022-02-12",
-         1650445106.671267,
+         1650637709.410251,
          ""
       ],
       "6": [
@@ -454,7 +502,7 @@
          "Document technique",
          "svg",
          "",
-         1650445106.671267,
+         1650637709.410251,
          ""
       ],
       "7": [
@@ -462,7 +510,7 @@
          "Plan",
          "pdf",
          "",
-         1650445106.671267,
+         1650637709.410251,
          ""
       ],
       "8": [
@@ -470,7 +518,7 @@
          "contract",
          "png",
          "",
-         1650445106.671267,
+         1650637709.410251,
          ""
       ],
       "9": [
@@ -478,7 +526,7 @@
          "contract",
          "png",
          "",
-         1650446085.858024,
+         1650638114.53126,
          ""
       ]
    },
@@ -676,7 +724,7 @@
          false,
          false,
          false,
-         "2022-04-20",
+         "2022-04-22",
          800.0,
          "Par Jour"
       ],
@@ -686,7 +734,7 @@
          true,
          false,
          false,
-         "2022-04-20",
+         "2022-04-22",
          1000.0,
          "Par Jour"
       ],
@@ -696,7 +744,7 @@
          true,
          false,
          false,
-         "2022-04-20",
+         "2022-04-22",
          1200.0,
          "Par Jour"
       ],
@@ -706,7 +754,7 @@
          false,
          false,
          false,
-         "2022-04-20",
+         "2022-04-22",
          0.0,
          "Prix Total"
       ],
@@ -715,8 +763,8 @@
          "Tanguy Traitant",
          false,
          true,
-         true,
-         "2022-04-20",
+         false,
+         "2022-04-22",
          1500.0,
          "Par Jour"
       ]
@@ -1072,7 +1120,7 @@
       "1": [
          "Th\u00e9ophile Traitant",
          3,
-         "2022-04-20",
+         "2022-04-22",
          "J'ai fini.",
          [],
          []
@@ -1080,7 +1128,7 @@
       "2": [
          "Th\u00e9ophile Traitant",
          3,
-         "2022-04-20",
+         "2022-04-22",
          "OK pour les t\u00e2ches du jour.",
          [],
          []
@@ -1088,7 +1136,7 @@
       "3": [
          "Th\u00e9ophile Traitant",
          3,
-         "2022-04-20",
+         "2022-04-22",
          "Pas de souci aujourd'hui.",
          [],
          []
@@ -1096,7 +1144,7 @@
       "4": [
          "Th\u00e9ophile Traitant",
          3,
-         "2022-04-20",
+         "2022-04-22",
          "Le chantier est termin\u00e9.",
          [],
          []
@@ -1104,7 +1152,7 @@
       "5": [
          "Eric Entreprise",
          4,
-         "2022-04-20",
+         "2022-04-22",
          "Les t\u00e2ches du jour sont bien faites.",
          [],
          []
@@ -1112,7 +1160,7 @@
       "6": [
          "Eric Entreprise",
          4,
-         "2022-04-20",
+         "2022-04-22",
          "Tout est parfait, merci.",
          [],
          []
@@ -1120,7 +1168,7 @@
       "7": [
          "Eric Entreprise",
          4,
-         "2022-04-20",
+         "2022-04-22",
          "Attention aux finitions.",
          [],
          []
