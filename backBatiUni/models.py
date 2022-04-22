@@ -499,7 +499,14 @@ class Notification(CommonModel):
           if notification.Role == "PME" and company == notification.Mission.Company:
             notifications.append(notification)
           if notification.Role == "ST":
-            candidate = Candidate.objects.get(Mission=notification.Mission, isChoosen=True)
+            candidate = Candidate.objects.filter(Mission=notification.Mission, isChoosen=True, Company=candidate.Company)
+            if candidate:
+              notifications.append(notification)
+            candidate = Candidate.objects.filter(Mission=notification.Mission, isRefused=True, Company=candidate.Company)
+            if candidate:
+              notifications.append(notification)
+
+
         # print("post", f" user company: { company.id }", f"notification company {notification.Post.Company.id}")
     print("Notifications", notifications)
     return notifications
