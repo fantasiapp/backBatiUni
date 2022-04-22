@@ -465,6 +465,7 @@ class Notification(CommonModel):
   timestamp = models.FloatField(verbose_name="Timestamp de mise à jour", null=False, default=datetime.datetime.now().timestamp())
   content = models.CharField("Contenu du Post", max_length=128, null=False, default="")
   hasBeenViewed = models.BooleanField("A été vu", null=False, default=False)
+  nature = models.CharField("Nature de la notification", max_length=64, null=False, default="other")
 
   class Meta:
     verbose_name = "Notification"
@@ -527,7 +528,6 @@ class Supervision(CommonModel):
   Mission = models.ForeignKey(Mission, verbose_name='Mission associée', on_delete=models.PROTECT, null=True, default=None)
   DetailedPost = models.ForeignKey(DetailedPost, verbose_name='Tâche associée', on_delete=models.PROTECT, null=True, default=None)
   SupervisionAssociated = models.ForeignKey('self', verbose_name='Supervision associée', related_name='associatedSupervision', on_delete=models.PROTECT, null=True, default=None)
-  # superVisionId = models.IntegerField("id de la supervision dans le cas d'une réponse", blank=False, null=False, default=-1)
   author = models.CharField("Nom de l'auteur du message", max_length=256, null=True, default=None)
   companyId = models.IntegerField("Id de la companie emettrice", blank=True, null=False, default=None)
   date = models.DateField(verbose_name="Date du suivi", null=False, default=timezone.now)
