@@ -851,7 +851,7 @@ class DataAccessor():
     company, messages = UserProfile.objects.get(userNameInternal=user).Company, {}
     if company.Role.id == 1:
       return {"modifyDisponibility":"Error", "messages":f"User company is not sub contractor {company.name}"}
-    Disponibility.objects.all().delete()
+    Disponibility.objects.filter(Company=company).delete()
     for date, nature in listValue:
       if not nature in ["Disponible", "Disponible Sous Conditions", "Non Disponible"]:
         messages[date] = f"nature incorrect: {nature} replaced by Disponible"
