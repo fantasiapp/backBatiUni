@@ -77,9 +77,9 @@ def executeQuery():
     url = f'{address}/data/'
     headers = {'Authorization': f'Token {token}'}
     if query == "getUserData":
-      token = queryForToken("st", "pwd")
-      headers = {'Authorization': f'Token {token}'}
-      print("user = st")
+      # token = queryForToken("st", "pwd")
+      # headers = {'Authorization': f'Token {token}'}
+      # print("user = st")
       response = requests.get(url, headers=headers, params={"action":"getUserData"})
     elif query == "postModifyPwd":
       post = {"action":"modifyPwd", "oldPwd":"pwd", "newPwd":"pwd"}
@@ -231,7 +231,6 @@ def executeQuery():
     print("no answer")
 if query == "all":
   keys = ["buildDB", "register", "registerConfirm", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "uploadFile", "downloadFile", "switchDraft", "applyPost", "handleCandidateForPost", "signContract", "modifyDetailedPost", "createSupervision", "modifyMissionDate", "closeMission", "closeMissionST"]
-  # for key in ["buildDB", "register", "registerConfirm", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "switchDraft", "uploadFile", "downloadFile", "deleteFile", "modifyDisponibility", "setFavorite", "isviewed", "applyPost", "handleCandidateForPost", "closeMission"]: #, "createSupervision", "createDetailedPost", "modifyDetailedPost" , "deleteDetailedPost"
   for key in keys: #, "modifyPost"
     query = key
     executeQuery()

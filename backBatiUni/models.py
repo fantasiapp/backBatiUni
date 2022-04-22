@@ -460,7 +460,8 @@ class DatePost(CommonModel):
 class Notification(CommonModel):
   Post = models.ForeignKey(Post, verbose_name='Annonce associée', related_name='PostNotification', on_delete=models.PROTECT, null=True, default=None)
   Mission = models.ForeignKey(Mission, verbose_name='Mission associée', related_name='MissionNotification', on_delete=models.PROTECT, null=True, default=None)
-  Company = models.ForeignKey(Company, verbose_name="Société associé", related_name='CompanyNotification', on_delete=models.PROTECT, null=True, default=None)
+  subContractor = models.ForeignKey(Company, verbose_name="Société destinatrice", related_name='SubContractorAuthor', on_delete=models.PROTECT, null=True, default=None)
+  Company = models.ForeignKey(Company, verbose_name="Sous traitant associé", related_name='CompanyNotification', on_delete=models.PROTECT, null=True, default=None)
   Role = models.CharField("Rôle effectif durant la notation", max_length=64, null=False, default="PME")
   timestamp = models.FloatField(verbose_name="Timestamp de mise à jour", null=False, default=datetime.datetime.now().timestamp())
   content = models.CharField("Contenu du Post", max_length=128, null=False, default="")
@@ -481,8 +482,7 @@ class Notification(CommonModel):
   @classmethod
   def filter(cls, user):
     userProfile = UserProfile.objects.get(userNameInternal=user)
-    company = userProfile.Company
-    return [notification for notification in Notification.objects.filter(Company=company)]
+    return [notification for notification in Notification.objects.filter(Company=userProfile.Company)]
 
 
 class Candidate(CommonModel):

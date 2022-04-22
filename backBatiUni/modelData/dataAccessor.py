@@ -21,7 +21,7 @@ if os.getenv('PATH_MIDDLE'):
 
 
 class DataAccessor():
-  loadTables = {"user":[Notification, UserProfile, Company, JobForCompany, LabelForCompany, File, Post, Candidate, DetailedPost, DatePost, Mission, Disponibility, Supervision, Notification], "general":[Job, Role, Label]}
+  loadTables = {"user":[UserProfile, Company, JobForCompany, LabelForCompany, File, Post, Candidate, DetailedPost, DatePost, Mission, Disponibility, Supervision, Notification], "general":[Job, Role, Label]}
   dictTable = {}
   portSmtp = os.getenv('PORT_SMTP')
 
@@ -272,7 +272,7 @@ class DataAccessor():
     if exists:
       return {"applyPost":"Warning", "messages":f"Le sous-traitant {subContractor.name} a déjà postulé."}
     candidate = Candidate.objects.create(Post=post, Company=subContractor, amount=amount, contact=contact, unitOfTime=unitOfTime)
-    Notification.objects.create(Post=post, Company=company, nature="ST", Role="PME", content=f"Un nouveau sous traitant : {subContractor.name} pour le chantier du {post.address} a postulé.", timestamp=datetime.now().timestamp())
+    Notification.objects.create(Post=post, Company=company, subContractor=subContractor, nature="ST", Role="PME", content=f"Un nouveau sous traitant : {subContractor.name} pour le chantier du {post.address} a postulé.", timestamp=datetime.now().timestamp())
     return {"applyPost":"OK", candidate.id:candidate.computeValues(candidate.listFields(), currentUser, True)}
 
 
@@ -506,7 +506,7 @@ class DataAccessor():
       Notification.objects.create(Mission=mission, nature="PME", Company=subContractor, Role="ST", content=f"Le contrat pour le chantier du {mission.address}  a été signé.", timestamp=datetime.now().timestamp())
       mission.signedByCompany = True
     else:
-      Notification.objects.create(Mission=mission, nature="ST", Company=mission.Company, Role="PME", content=f"Le contrat pour le chantier du {mission.address}  a été signé.", timestamp=datetime.now().timestamp())
+      Notification.objects.create(Mission=mission, subContractor=subContractor, nature="ST", Company=mission.Company, Role="PME", content=f"Le contrat pour le chantier du {mission.address}  a été signé.", timestamp=datetime.now().timestamp())
       mission.signedBySubContractor = True
     mission.save()
     return {"signContract":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
@@ -565,7 +565,6 @@ class DataAccessor():
       print("modifyMissionDate strDate", strDate)
       date = datetime.strptime(strDate, "%Y-%m-%d")
       DatePost.objects.create(Mission=mission, date=date)
-      notificationStart = Notification.objects.all()[0]
       Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role=roleST, content=f"Une journée de travail pour le chantier du {mission.address} a été ajoutée le {strDate}.", timestamp=datetime.now().timestamp())
     return {"modifyMissionDate":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
 
@@ -596,7 +595,9 @@ class DataAccessor():
     mission.organisationCommentST = data["organisationSTComment"]
     mission.save()
     cls.__newStars(mission, "pme")
-    Notification.objects.create(Mission=mission, nature="ST", Company=mission.Company, Role="PME", content=f"La mission {mission.address} a été fermée.", timestamp=datetime.now().timestamp())
+    userProfile = UserProfile.objects.get(userNameInternal=currentUser)
+    subContractor = userProfile.Company
+    Notification.objects.create(Mission=mission, subContractor=subContractor, nature="ST", Company=mission.Company, Role="PME", content=f"La mission du {mission.address} a été notée.", timestamp=datetime.now().timestamp())
     return {"closeMissionST":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
 
   @classmethod
