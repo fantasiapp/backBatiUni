@@ -500,13 +500,12 @@ class DataAccessor():
     shutil.copy2(source, dest)
     contractImage.timestamp = datetime.now().timestamp()
     contractImage.save()
+    candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
     if view == "PME" :
-      candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
-      subContractor = candidate.Company
-      Notification.objects.create(Mission=mission, nature="PME", Company=subContractor, Role="ST", content=f"Le contrat pour le chantier du {mission.address}  a été signé.", timestamp=datetime.now().timestamp())
+      Notification.objects.create(Mission=mission, nature="PME", Company=candidate.Company, Role="ST", content=f"Le contrat pour le chantier du {mission.address}  a été signé.", timestamp=datetime.now().timestamp())
       mission.signedByCompany = True
     else:
-      Notification.objects.create(Mission=mission, subContractor=subContractor, nature="ST", Company=mission.Company, Role="PME", content=f"Le contrat pour le chantier du {mission.address}  a été signé.", timestamp=datetime.now().timestamp())
+      Notification.objects.create(Mission=mission, subContractor=candidate.Company, nature="ST", Company=mission.Company, Role="PME", content=f"Le contrat pour le chantier du {mission.address}  a été signé.", timestamp=datetime.now().timestamp())
       mission.signedBySubContractor = True
     mission.save()
     return {"signContract":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
@@ -558,6 +557,9 @@ class DataAccessor():
         strDate = task.date.strftime("%Y-%m-%d")
         if not strDate in data["calendar"]:
           Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role=roleST, content=f"Votre journée de travail du {strDate} pour le chantier du {mission.address} a été supprimée.", timestamp=datetime.now().timestamp())
+          date = datetime.strptime(strDate, "%Y-%m-%d")
+          datePost = DatePost.objects.filter(Mission=mission, date=date)
+          datePost[0].delete()
         else:
           data["calendar"].remove(strDate)
     print("modifyMissionDate dataCalendar", data["calendar"])
