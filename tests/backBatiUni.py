@@ -111,7 +111,7 @@ def executeQuery():
       for post in [post1, post2, post3, post4, post5, post6]:
         response = requests.post(url, headers=headers, json=post)
     elif query == "modifyPost":
-      post = {'action':"modifyPost", "id":1, "address":"126 rue de Paris 92100 Boulogne", "Job":5, "numberOfPeople":2, "dueDate":"2022-03-15", "startDate":"2022-03-16", "endDate":"2022-04-28", "manPower":False, "counterOffer":False, "hourlyStart":"7:00", "hourlyEnd":"17:00", "currency":"€", "description":"Deuxième description d'un chantier", "amount":24456.10, "DetailedPost":["salle de bain", "douche", "lavabo"], "DatePost":["2022-03-15", "2022-03-16", "2022-03-17"]}
+      post = {'action':"modifyPost", "id":1, "address":"126 rue de Paris 92100 Boulogne", "Job":5, "numberOfPeople":2, "dueDate":"2022-03-15", "startDate":"2022-03-16", "endDate":"2022-04-28", "manPower":False, "counterOffer":False, "hourlyStart":"07:00", "hourlyEnd":"17:00", "currency":"€", "description":"Deuxième description d'un chantier", "amount":24456.10, "DetailedPost":["salle de bain", "douche", "lavabo"], "DatePost":["2022-03-15", "2022-03-16", "2022-03-17"]}
       response = requests.post(url, headers=headers, json=post)
     elif query == "setFavorite":
       requests.get(url, headers=headers, params={'action':"setFavorite", "value":"true", "Post":2})

@@ -39,11 +39,9 @@ class DataAccessor():
   @classmethod
   def register(cls, data):
     message = cls.__registerCheck(data, {})
-    print("register", data)
     if message:
       return {"register":"Warning", "messages":message}
     token = SmtpConnector(cls.portSmtp).register(data["firstname"], data["lastname"], data["email"])
-    print("register", token)
     if token != "token not received" or data["email"] == "jeanluc":
       cls.__registerAction(data, token)
       return {"register":"OK"}
@@ -463,6 +461,8 @@ class DataAccessor():
       cls.__updateDatePost(candidate.Mission)
       candidate.Mission.save()
       Notification.objects.create(Mission=candidate.Mission, nature="PME", Company=candidate.Company, Role="ST", content=f"Votre candidature pour le chantier du {candidate.Mission.address} a été retenue.", timestamp=datetime.now().timestamp())
+      response = mission.computeValues(mission.listFields(), currentUser, dictFormat=True)
+      print("handleCandidateForPost", response[39], len(response))
       return {"handleCandidateForPost":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
     candidate.save()
     Notification.objects.create(Post=candidate.Post, nature="PME", Company=candidate.Company, Role="ST", content=f"Votre candidature pour le chantier du {candidate.Post.address} n'a pas été retenue.", timestamp=datetime.now().timestamp())
@@ -538,6 +538,7 @@ class DataAccessor():
   @classmethod
   def __modifyMissionDate(cls, data, currentUser):
     print("modifyMissionDate", data)
+    data["calendar"] = [date for date in data["calendar"] if date]
     mission = Mission.objects.get(id=data["missionId"])
     candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
     subContractor = candidate.Company

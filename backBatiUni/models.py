@@ -89,11 +89,7 @@ class CommonModel(models.Model):
       elif field in self.manyToManyObject:
         model = apps.get_model(app_label='backBatiUni', model_name=field)
         listFieldsModel = model.listFields()
-        if field == "DatePost":
-          listModel = [objectModel.date.strftime("%Y-%m-%d") for objectModel in DatePost.objects.filter(Post=self)]
-          if not listModel:
-            listModel = [objectModel.date.strftime("%Y-%m-%d") for objectModel in DatePost.objects.filter(Mission=self)]
-        elif field == "ViewPost":
+        if field == "ViewPost":
           listModel = [view.id for view in ViewPost.objects.filter(UserProfile=self)]
         elif field == "FavoritePost":
           listModel = [favorite.id for favorite in FavoritePost.objects.filter(UserProfile=self)]
@@ -427,7 +423,6 @@ class Mission(Post):
 
   @classmethod
   def filter(cls, user):
-    userProfile = UserProfile.objects.get(userNameInternal=user)
     return [candidate.Mission for candidate in Candidate.objects.all() if candidate.Mission != None]
 
 
@@ -640,7 +635,6 @@ class File(CommonModel):
 
   @classmethod
   def createFile(cls, nature, name, ext, user, expirationDate = None, post=None, mission=None, detailedPost=None, supervision=None):
-    print("createFile name", name)
     userProfile = UserProfile.objects.get(userNameInternal=user)
     objectFile, mission = None, None
     if nature == "userImage":
@@ -656,7 +650,6 @@ class File(CommonModel):
       objectFiles = File.objects.filter(nature=nature, Supervision=supervision)
       endName += "_" + str(len(objectFiles))
       name +=  endName
-      print("endName", endName, name)
       path = cls.dictPath[nature] + name + '.' + ext
     if nature == "contract":
       mission = post
