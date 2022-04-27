@@ -32,6 +32,7 @@ class DataAccessor():
     dictAnswer = {"currentUser":UserProfile.objects.get(userNameInternal=user).id} if profile == "user" else {}
     for table in cls.loadTables[profile]:
       dictAnswer.update(table.dumpStructure(user))
+    print("getData1", os.listdir('.'))
     with open(f"./backBatiUni/modelData/{profile}Data.json", 'w') as jsonFile:
       json.dump(dictAnswer, jsonFile, indent = 3)
     return dictAnswer
