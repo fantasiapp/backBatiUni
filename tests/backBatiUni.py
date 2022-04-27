@@ -54,11 +54,11 @@ def executeQuery():
       response = requests.post(url, headers=headers, json=post)
   elif query == "registerConfirm":
       print("registerConfirm", url)
-      requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
-      requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
-      requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
-      requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
-      response = requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
+      requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"6b82575b048e103a9471b6655f86264a"})
+      # requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
+      # requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
+      # requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
+      # response = requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
   elif query == "getGeneralData":
     response = requests.get(url, headers=headers, params={"action":"getGeneralData"})
   elif query == "forgetPassword":

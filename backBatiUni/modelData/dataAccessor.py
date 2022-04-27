@@ -95,10 +95,10 @@ class DataAccessor():
 
   @classmethod
   def registerConfirm(cls, token):
-    print("start", len(UserProfile.objects.all()))
+    print("registerConfirm token", token)
     for user in UserProfile.objects.all():
       if user.token:
-        print("userTested", user.token)
+        print("user pending", user.token)
     userProfile = UserProfile.objects.filter(token=token)
     print("registerConfirm token", token, userProfile)
     if userProfile:
