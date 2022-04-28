@@ -215,6 +215,7 @@ class CreateNewDataBase:
         else:
           os.remove(os.path.join(dir, file))
     for table in CreateNewDataBase.listTable.values():
+      print("empty", table)
       table.objects.all().delete()
       tableName = table.objects.model._meta.db_table
       self.cursor.execute(f"ALTER TABLE {tableName} AUTO_INCREMENT=1;")
