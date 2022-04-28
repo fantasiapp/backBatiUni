@@ -8,7 +8,7 @@ from .modelData.dataAccessor import DataAccessor
 import json
 
 class DefaultView(APIView):
-  os.chdir('/Desktop/batiUni/back')
+  os.chdir('/var/fantasiapp/batiUni/back')
   permission_classes = (IsAuthenticated,)
 
   def confirmToken(self, user):

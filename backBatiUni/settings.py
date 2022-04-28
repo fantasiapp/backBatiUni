@@ -14,7 +14,7 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
-dotenv_path = Path('/Desktop/batiUni/back/.env')
+dotenv_path = Path('/var/fantasiapp/batiUni/back/.env')
 load_dotenv(dotenv_path=dotenv_path)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.

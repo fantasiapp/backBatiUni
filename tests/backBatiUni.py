@@ -16,11 +16,7 @@ arguments = sys.argv
 if len(arguments) > 1:
     host = arguments[1]
     if host == "local": address = 'http://localhost:8000'
-    elif host == "temp": address = 'https://batiuni.fantasiapp.tech:5004'
-    elif host == "work": address = 'https://batiuni.fantasiapp.tech:5001'
-    elif host == "current": address = 'https://batiuni.fantasiapp.tech:5002'
-    elif host == "distrib": address = 'https://batiuni.fantasiapp.tech:5003'
-    elif host == "distrib2": address = 'https://batiuni.fantasiapp.tech:5005'
+    elif host == "batiuni": address = 'https://batiuni.fantasiapp.com:5004'
 if len(arguments) > 2:
   query = arguments[2]
 

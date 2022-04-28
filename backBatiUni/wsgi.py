@@ -14,7 +14,7 @@ from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backBatiUni.settings')
 
-sys.path.append('/Desktop/batiUni/back/');
-sys.path.append('/Desktop/batiUni/back/backBatiUni');
+sys.path.append('/var/fantasiapp/batiUni/back/');
+sys.path.append('/var/fantasiapp/batiUni/back/backBatiUni');
 
 application = get_wsgi_application()
