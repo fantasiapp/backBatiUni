@@ -194,8 +194,10 @@ def executeQuery():
       url = f'{address}/createBase/'
       response = requests.get(url, headers=headers, params={"action":"reload"})
     elif query == "emptyDB":
+      print("start", url, headers)
       url = f'{address}/createBase/'
       response = requests.get(url, headers=headers, params={"action":"emptyDB"})
+      print("emptyDB response", response)
     elif query == "createDetailedPost":
       post = {"action":"createDetailedPost", "missionId":1, "content":"Réparer le lavabo une nouvelle fois", "date":"2022-03-17"}
       response = requests.post(url, headers=headers, json=post)

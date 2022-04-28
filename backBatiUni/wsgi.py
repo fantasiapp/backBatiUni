@@ -8,9 +8,13 @@ https://docs.djangoproject.com/en/4.0/howto/deployment/wsgi/
 """
 
 import os
+import sys
 
 from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backBatiUni.settings')
+
+sys.path.append('/Desktop/batiUni/back/');
+sys.path.append('/Desktop/batiUni/back/backBatiUni');
 
 application = get_wsgi_application()

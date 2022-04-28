@@ -14,7 +14,8 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+dotenv_path = Path('/Desktop/batiUni/back/.env')
+load_dotenv(dotenv_path=dotenv_path)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -61,7 +62,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CSRF_TRUSTED_ORIGINS = ['https://*.127.0.0.1', 'https://*.fantasiapp:5001', 'https://*.fantasiapp:5002', 'https://*.fantasiapp:5003', 'https://*.fantasiapp:5004', 'https://*.fantasiapp:5005']
+CSRF_TRUSTED_ORIGINS = ['https://*','http://*', 'https://*.127.0.0.1', 'https://*.fantasiapp.com:5004',]
 
 ROOT_URLCONF = 'backBatiUni.urls'
 

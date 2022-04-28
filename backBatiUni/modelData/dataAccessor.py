@@ -10,10 +10,12 @@ import base64
 from django.core.files.base import ContentFile
 from ..smtpConnector import SmtpConnector
 import json
-
+from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
+dotenv_path = Path('/Users/divyaurquijo/Desktop/batiUni/back/.env')
+load_dotenv(dotenv_path=dotenv_path)
+
 if os.getenv('PATH_MIDDLE'):
   sys.path.append(os.getenv('PATH_MIDDLE'))
   from profileScraping import getEnterpriseDataFrom
