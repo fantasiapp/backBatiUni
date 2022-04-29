@@ -350,6 +350,8 @@ class Post(CommonModel):
   endDate = models.DateField(verbose_name="Date de fin de chantier", null=True, default=None)
   hourlyStart = models.CharField("Horaire de début de chantier", max_length=128, null=True, default=None)
   hourlyEnd = models.CharField("Horaire de fin de chantier", max_length=128, null=True, default=None)
+  hourlyStartChange = models.CharField("Horaire de début de chantier proposé en modification", max_length=128, null=True, default=None)
+  hourlyEndChange = models.CharField("Horaire de fin de chantier proposé en modificatio", max_length=128, null=True, default=None)
   amount = models.FloatField("Montant du chantier", null=False, default=0.0)
   currency = models.CharField("Unité monétaire", max_length=128, null=True, default="€")
   unitOfTime = models.CharField("Unité de temps", max_length=128, null=True, default="Prix Journalier")
@@ -459,7 +461,7 @@ class Notification(CommonModel):
   Company = models.ForeignKey(Company, verbose_name="Sous traitant associé", related_name='CompanyNotification', on_delete=models.PROTECT, null=True, default=None)
   Role = models.CharField("Rôle effectif durant la notation", max_length=64, null=False, default="PME")
   timestamp = models.FloatField(verbose_name="Timestamp de mise à jour", null=False, default=datetime.datetime.now().timestamp())
-  content = models.CharField("Contenu du Post", max_length=128, null=False, default="")
+  content = models.CharField("Contenu du Post", max_length=1024, null=False, default="")
   hasBeenViewed = models.BooleanField("A été vu", null=False, default=False)
   nature = models.CharField("Nature de la notification", max_length=64, null=False, default="other")
 
@@ -545,6 +547,15 @@ class Supervision(CommonModel):
         index = superList.index(fieldName)
         del superList[index]
       return superList
+
+class InviteFriend(CommonModel):
+  invitationAuthor = models.ForeignKey(UserProfile, on_delete=models.PROTECT, null=True, default=None)
+  emailTarget = models.CharField('email du destinataire', max_length=256, null=False, default="")
+  token = models.CharField('token', max_length=64, null=False, default="")
+  used = models.BooleanField("A été utilisé", null=False, default=False)
+
+  class Meta:
+    verbose_name = "InviteFriend"
 
 
 class File(CommonModel):

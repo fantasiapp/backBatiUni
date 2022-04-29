@@ -10,6 +10,7 @@ import base64
 from django.core.files.base import ContentFile
 from ..smtpConnector import SmtpConnector
 import json
+import secrets
 
 from dotenv import load_dotenv
 
@@ -374,7 +375,6 @@ class DataAccessor():
     supervision = Supervision.objects.create(**kwargs)
     if supervision:
       return {"createSupervision":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, True)}
-      # return {"createSupervision":"OK", supervision.id:supervision.computeValues(supervision.listFields(), currentUser, True)}
     return {"createSupervision":"Warning", "messages":"La supervision n'a pas été créée"}
 
   @classmethod
@@ -511,8 +511,6 @@ class DataAccessor():
     mission.save()
     return {"signContract":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
 
-
-
   @classmethod
   def uploadSupervision(cls, detailedPostId, comment, currentUser):
     print("uploadSupervision", detailedPostId, comment, currentUser)
@@ -545,11 +543,11 @@ class DataAccessor():
     subContractor = candidate.Company
     roleST = "ST"
     if mission.hourlyStart != data["hourlyStart"]:
-      mission.hourlyStart = data["hourlyStart"]
-      Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role=roleST, content=f"Votre horaire de départ pour le chantier du {mission.address} a changé et est maintenant {mission.hourlyStart}.", timestamp=datetime.now().timestamp())
+      mission.hourlyStartChange = data["hourlyStart"]
+      Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role=roleST, content=f"Votre horaire de départ pour le chantier du {mission.address} va changé et pour {mission.hourlyStart}, à vous de valider la modification.", timestamp=datetime.now().timestamp())
     if mission.hourlyEnd != data["hourlyEnd"]:
-      mission.hourlyEnd = data["hourlyEnd"]
-      Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role=roleST, content=f"Votre horaire de fin de journée pour le chantier du {mission.address} a changé et est maintenant {mission.hourlyEnd}.", timestamp=datetime.now().timestamp())
+      mission.hourlyEndChange = data["hourlyEnd"]
+      Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role=roleST, content=f"Votre horaire de fin de journée pour le chantier du {mission.address} va changer et pour {mission.hourlyEnd}, à vous de valider la modification.", timestamp=datetime.now().timestamp())
     mission.hourlyEnd = data["hourlyEnd"]
     mission.save()
     existingDateMission = DatePost.objects.filter(Mission=mission)
@@ -877,6 +875,14 @@ class DataAccessor():
       userProfile.save()
       return {"forgetPassword":"Warning", "messages":"work in progress"}
     return {"forgetPassword":"Warning", "messages":f"L'adressse du couriel {email} n'est pas reconnue"}
+
+  @classmethod
+  def inviteFriend(cls, email, currentUser):
+    userProfile = UserProfile.objects.get(userNameInternal=currentUser)
+    token = secrets.token_urlsafe(16)
+    SmtpConnector(cls.portSmtp).inviteFriend(email, token, userProfile.firstName, userProfile.lastName, userProfile.Company.name)
+    return {"forgetPassword":"Warning", "messages":f"Work in progress {email}"}
+
 
   @classmethod
   def newPassword(cls, data):

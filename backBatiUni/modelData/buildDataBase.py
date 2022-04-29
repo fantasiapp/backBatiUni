@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 
 class CreateNewDataBase:
-  listTable = {"Notification":Notification, "File":File, "Supervision":Supervision, "ViewPost":ViewPost, "FavoritePost":FavoritePost, "UserProfile":UserProfile, "JobForCompany":JobForCompany, "LabelForCompany":LabelForCompany, "Disponibility":Disponibility,"Candidate":Candidate, "DetailedPost":DetailedPost, "DatePost":DatePost, "Supervision":Supervision, "Post":Post,  "Company":Company, "Job":Job, "Role":Role, "Label":Label}
+  listTable = {"Notification":Notification, "File":File, "Supervision":Supervision, "ViewPost":ViewPost, "FavoritePost":FavoritePost, "InviteFriend":InviteFriend, "UserProfile":UserProfile, "JobForCompany":JobForCompany, "LabelForCompany":LabelForCompany, "Disponibility":Disponibility,"Candidate":Candidate, "DetailedPost":DetailedPost, "DatePost":DatePost, "Supervision":Supervision, "Post":Post,  "Company":Company, "Job":Job, "Role":Role, "Label":Label}
   dictLabels = {
     "Qualibat":["Cet organisme apporte des réponses précises aux maitres d’œuvre et aux clients sur la capacité professionnelle de l’entreprise en explorant trois domaines précis : la situation administrative, l’envergure financière et les compétences techniques. Il délivre plusieurs certifications.","https://www.qualibat.com/",True],
     "Qualif'elec":["Si vous relevez du génie électrique et énergétique, Qualifelec est la certification qu’il vous faut obtenir absolument. Elle couvre 8 domaines d’activités précis : installations électriques., chauffage, ventilation, climatisation., branchements et réseaux., bâtiment communicant., éclairage public, courant faible., maintenance d’installations électriques., antenne.",	"https://www.qualifelec.fr/", True],
@@ -257,6 +257,7 @@ class CreateNewDataBase:
   def fillupViewPost(self, table):return {}
   def fillupDatePost(self, table): return {}
   def fillupNotification(self, table): return {}
+  def fillupInviteFriend(self, table): return {}
 
   def fillupJob(self, table):
     for job in self.listJobs:
@@ -274,7 +275,3 @@ class CreateNewDataBase:
     for label in self.dictLabels.keys():
       table.objects.create(name=label)
     return {"fillupLabel":"OK"}
-
-
-
-

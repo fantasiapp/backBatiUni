@@ -21,21 +21,22 @@ class Data(DefaultView):
     if 'action' in request.GET and self.confirmToken(request.user):
       currentUser = request.user
       action = request.GET["action"]
-      if action == "getUserData":
-        return Response(DataAccessor.getData("user", currentUser))
-      if action == "getEnterpriseDataFrom": return Response(DataAccessor.getEnterpriseDataFrom(request, currentUser))
-      if action == "deletePost": return Response(DataAccessor.deletePost(request.GET["id"]))
-      if action == "downloadFile": return Response(DataAccessor.downloadFile(request.GET["id"], currentUser))
-      if action == "deleteFile": return Response(DataAccessor.deleteFile(request.GET["id"]))
-      if action == "getPost": return Response(DataAccessor.getPost(currentUser))
-      if action == "handleCandidateForPost": return Response(DataAccessor.handleCandidateForPost(request.GET["Candidate"], request.GET["response"], currentUser))
-      if action == "signContract": return Response(DataAccessor.signContract(request.GET["missionId"], request.GET["view"], currentUser))
-      if action == "switchDraft": return Response(DataAccessor.switchDraft(request.GET["id"], currentUser))
-      if action == "duplicatePost": return Response(DataAccessor.duplicatePost(request.GET["id"], currentUser))
-      if action == "candidateViewed": return Response(DataAccessor.candidateViewed(request.GET["candidateId"], currentUser))
-      if action == "applyPost": return Response(DataAccessor.applyPost(request.GET["Post"], request.GET["amount"] if "amount" in request.GET else 0.0, request.GET["devis"] if "devis" in request.GET else "Prix Total", currentUser))
-      if action == "setFavorite": return Response(DataAccessor.setFavorite(request.GET["Post"], request.GET["value"], currentUser))
-      if action == "isViewed": return Response(DataAccessor.isViewed(request.GET["Post"], currentUser))
+      print("action", action)
+      if action == "getUserData": return Response(DataAccessor.getData("user", currentUser))
+      elif action == "getEnterpriseDataFrom": return Response(DataAccessor.getEnterpriseDataFrom(request, currentUser))
+      elif action == "deletePost": return Response(DataAccessor.deletePost(request.GET["id"]))
+      elif action == "downloadFile": return Response(DataAccessor.downloadFile(request.GET["id"], currentUser))
+      elif action == "deleteFile": return Response(DataAccessor.deleteFile(request.GET["id"]))
+      elif action == "getPost": return Response(DataAccessor.getPost(currentUser))
+      elif action == "handleCandidateForPost": return Response(DataAccessor.handleCandidateForPost(request.GET["Candidate"], request.GET["response"], currentUser))
+      elif action == "signContract": return Response(DataAccessor.signContract(request.GET["missionId"], request.GET["view"], currentUser))
+      elif action == "switchDraft": return Response(DataAccessor.switchDraft(request.GET["id"], currentUser))
+      elif action == "duplicatePost": return Response(DataAccessor.duplicatePost(request.GET["id"], currentUser))
+      elif action == "candidateViewed": return Response(DataAccessor.candidateViewed(request.GET["candidateId"], currentUser))
+      elif action == "applyPost": return Response(DataAccessor.applyPost(request.GET["Post"], request.GET["amount"] if "amount" in request.GET else 0.0, request.GET["devis"] if "devis" in request.GET else "Prix Total", currentUser))
+      elif action == "setFavorite": return Response(DataAccessor.setFavorite(request.GET["Post"], request.GET["value"], currentUser))
+      elif action == "isViewed": return Response(DataAccessor.isViewed(request.GET["Post"], currentUser))
+      elif action == "inviteFriend": return Response(DataAccessor.inviteFriend(request.GET["emailAddress"], currentUser))
       return Response({"data GET":"Error", "messages":{"action":action}})
     return Response({"data GET":"Warning", "messages":"La confirmation par mail n'est pas réalisée."})
 
@@ -57,10 +58,10 @@ class Initialize(APIView):
       print("initialize action", action)
       if action == "getGeneralData":
         return Response(DataAccessor().getData("general", False))
-      if action == "registerConfirm":
+      elif action == "registerConfirm":
         return Response(DataAccessor().registerConfirm(request.GET["token"]))
-      if action == "getEnterpriseDataFrom": return Response(DataAccessor.getEnterpriseDataFrom(request))
-      if action == "forgetPassword": return Response(DataAccessor.forgetPassword(request.GET["email"]))
+      elif action == "getEnterpriseDataFrom": return Response(DataAccessor.getEnterpriseDataFrom(request))
+      elif action == "forgetPassword": return Response(DataAccessor.forgetPassword(request.GET["email"]))
     return Response({"Initialize GET":"OK"})
 
   def post(self, request):
