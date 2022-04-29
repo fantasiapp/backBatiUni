@@ -218,6 +218,13 @@ def executeQuery():
     elif query == "modifyMissionDate":
       post = {"action":"modifyMissionDate", "missionId": 3, "hourlyStart":"06:02", "hourlyEnd":"19:02", "calendar":['2022-04-16', '2022-04-17', '2022-04-18', '2022-04-19']}
       response = requests.post(url, headers=headers, json=post)
+    elif query == "validateMissionDate":
+      post1 = {'action':"validateMissionDate", "missionId": 3, "field":"hourlyStart", "state":True, "date":""}
+      post2 = {'action':"validateMissionDate", "missionId": 3, "field":"hourlyEnd", "state":False, "date":""}
+      post3 = {'action':"validateMissionDate", "missionId": 3, "field":"date", "state":False, "date":"2022-04-15"}
+      post4 = {'action':"validateMissionDate", "missionId": 3, "field":"date", "state":True, "date":"2022-04-19"}
+      for post in [post1, post2, post3, post4]:
+        response = requests.post(url, headers=headers, json=post)
     elif query == "closeMission":
       post = {"action":"closeMission", "missionId": 4, "qualityStars":4, "qualityComment":"très bon travail", "securityStars":4, "securityComment":"Un vrai sous-traitant qualibat", "organisationStars":5, "organisationComment":"Une organisation parfaite"}
       response = requests.post(url, headers=headers, json=post)
@@ -232,7 +239,7 @@ def executeQuery():
   else:
     print("no answer")
 if query == "all":
-  keys = ["buildDB", "register", "registerConfirm", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "uploadFile", "downloadFile", "applyPost", "switchDraft", "handleCandidateForPost", "signContract", "modifyDetailedPost", "createSupervision", "modifyMissionDate", "closeMission", "closeMissionST"]
+  keys = ["buildDB", "register", "registerConfirm", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "uploadFile", "downloadFile", "applyPost", "switchDraft", "handleCandidateForPost", "signContract", "modifyDetailedPost", "createSupervision", "modifyMissionDate", "validateMissionDate", "closeMission", "closeMissionST"]
   for key in keys: #, "modifyPost"
     query = key
     executeQuery()

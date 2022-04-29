@@ -583,49 +583,47 @@ class DataAccessor():
     print("validateMissionDate", data)
     mission, subContractor, answer = cls.__validateMissionTimeTable(data)
     if answer:
-      return {"modifyMissionDate":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
+      return {"validateMissionDate":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
     return cls.__validateMissionDateAction(data, currentUser, mission, subContractor)
     
   @classmethod
   def __validateMissionTimeTable(cls, data):
     mission = Mission.objects.get(id=data["missionId"])
-    candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
-    subContractor = candidate.Company
     answer = False
     if data["field"] == "hourlyStart":
       answer = True
       if data["state"]:
-        Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role="ST", content=f"Votre horaire de début pour le chantier du {mission.address} est maintenant validée et est {mission.hourlyStart}.", timestamp=datetime.now().timestamp())
+        Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"Votre horaire de début pour le chantier du {mission.address} est maintenant validée et est {mission.hourlyStart}.", timestamp=datetime.now().timestamp())
         mission.hourlyStart = mission.hourlyStartChange
       else:
-        Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role="ST", content=f"Votre horaire de début pour le chantier du {mission.address} a été refusée.", timestamp=datetime.now().timestamp())
+        Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"Votre horaire de début pour le chantier du {mission.address} a été refusée.", timestamp=datetime.now().timestamp())
       mission.hourlyStartChange = ''
     elif data["field"] == "hourlyEnd" and data["state"]:
       answer = True
       if data["state"]:
-        Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role="ST", content=f"Votre horaire de fin de journée pour le chantier du {mission.address} est maintenant validée et est {mission.hourlyStart}.", timestamp=datetime.now().timestamp())
+        Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"Votre horaire de fin de journée pour le chantier du {mission.address} est maintenant validée et est {mission.hourlyStart}.", timestamp=datetime.now().timestamp())
         mission.hourlyEnd = mission.hourlyEndChange
       else:
-         Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role="ST", content=f"Votre horaire de fin de journée pour le chantier du {mission.address} a été refusée.", timestamp=datetime.now().timestamp())
+         Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"Votre horaire de fin de journée pour le chantier du {mission.address} a été refusée.", timestamp=datetime.now().timestamp())
       mission.hourlyEndChange = ''
     mission.save()
-    return mission, subContractor, answer
+    return mission, answer
 
   @classmethod
-  def __validateMissionDateAction(cls, data, currentUser, mission, subContractor):
+  def __validateMissionDateAction(cls, data, currentUser, mission):
     if data["field"] == "date":
       date = datetime.strptime(data["date"], "%Y-%m-%d")
       datePost = DatePost.objects.get(Mission=mission, date=date)
       if data["state"]:
         if datePost.deleted:
           datePost.delete()
-          Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role="ST", content=f"La journée de travail du {data['date']} pour le chantier du {mission.address} a été refusée.", timestamp=datetime.now().timestamp())
+          Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"La journée de travail du {data['date']} pour le chantier du {mission.address} a été refusée.", timestamp=datetime.now().timestamp())
         else:
           datePost.validated = True
           datePost.save()
-          Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role="ST", content=f"La journée de travail du {data['date']} pour le chantier du {mission.address} est maintenant validée.", timestamp=datetime.now().timestamp())
-      return {"modifyMissionDate":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
-    return {"modifyMissionDate":"Error", "messages":f'field {data["field"]} is not recognize'}
+          Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"La journée de travail du {data['date']} pour le chantier du {mission.address} est maintenant validée.", timestamp=datetime.now().timestamp())
+      return {"validateMissionDate":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
+    return {"validateMissionDate":"Error", "messages":f'field {data["field"]} is not recognize'}
 
 
 
