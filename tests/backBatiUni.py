@@ -231,6 +231,9 @@ def executeQuery():
     elif query == "closeMissionST":
       post = {"action":"closeMissionST", "missionId": 4, "vibeSTStars":2, "vibeSTComment":"Ambiance moyenne", "securitySTStars":2, "securitySTComment":"une sécurité faible", "organisationSTStars":2, "organisationSTComment":"Une organisation inexistante"}
       response = requests.post(url, headers=headers, json=post)
+    elif query == "notificationViewed":
+      post = {"action":"notificationViewed", "companyId": 4, "role":"PME"}
+      response = requests.post(url, headers=headers, json=post)
   if response and query != "downloadFile":
     data = json.loads(response.text)
     print("data", data)

@@ -102,6 +102,7 @@ class CommonModel(models.Model):
       else:
         value = getattr(self, field, "")
         values.append(value)
+      print("computeValues", values)
     return values
 
   @classmethod

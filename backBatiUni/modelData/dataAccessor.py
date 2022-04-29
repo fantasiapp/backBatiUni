@@ -581,10 +581,10 @@ class DataAccessor():
   @classmethod
   def __validateMissionDate(cls, data, currentUser):
     print("validateMissionDate", data)
-    mission, subContractor, answer = cls.__validateMissionTimeTable(data)
+    mission, answer = cls.__validateMissionTimeTable(data)
     if answer:
       return {"validateMissionDate":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
-    return cls.__validateMissionDateAction(data, currentUser, mission, subContractor)
+    return cls.__validateMissionDateAction(data, currentUser, mission)
     
   @classmethod
   def __validateMissionTimeTable(cls, data):
