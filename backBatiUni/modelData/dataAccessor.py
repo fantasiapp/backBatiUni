@@ -135,6 +135,7 @@ class DataAccessor():
       elif data["action"] == "modifyDisponibility": return cls.__modifyDisponibility(data["disponibility"], currentUser)
       elif data["action"] == "uploadImageSupervision": return cls.__uploadImageSupervision(data, currentUser)
       elif data["action"] == "modifyMissionDate": return cls.__modifyMissionDate(data, currentUser)
+      elif data["action"] == "validateMissionDate": return cls.__validateMissionDate(data, currentUser)
       elif data["action"] == "closeMission": return cls.__closeMission(data, currentUser)
       elif data["action"] == "closeMissionST": return cls.__closeMissionST(data, currentUser)
       elif data["action"] == "notificationViewed": return cls.__notificationViewed(data, currentUser)
