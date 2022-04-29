@@ -102,7 +102,6 @@ class CommonModel(models.Model):
       else:
         value = getattr(self, field, "")
         values.append(value)
-      print("computeValues", values)
     return values
 
   @classmethod
@@ -482,7 +481,8 @@ class Notification(CommonModel):
   @classmethod
   def filter(cls, user):
     userProfile = UserProfile.objects.get(userNameInternal=user)
-    return [notification for notification in Notification.objects.filter(Company=userProfile.Company)]
+    print("filter", userProfile.Company, len(Notification.objects.filter(Company=userProfile.Company)))
+    return Notification.objects.filter(Company=userProfile.Company)
 
 
 class Candidate(CommonModel):
