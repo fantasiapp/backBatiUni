@@ -536,6 +536,32 @@ class DataAccessor():
 
   @classmethod
   def __modifyMissionDate(cls, data, currentUser):
+    mission, subContractor = cls.__modifyMissionTimeTable(data)
+    return cls.__modifyMissionDateAction(data, currentUser, mission, subContractor)
+
+  @classmethod
+  def __modifyMissionDateAction(cls, data, currentUser, mission, subContractor):
+    existingDateMission = DatePost.objects.filter(Mission=mission)
+    for task in existingDateMission:
+      if task.date:
+        strDate = task.date.strftime("%Y-%m-%d")
+        if not strDate in data["calendar"]:
+          Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role="ST", content=f"Votre journée de travail du {strDate} pour le chantier du {mission.address} est proposée à la suppression, à vous de valider la modification.", timestamp=datetime.now().timestamp())
+          date = datetime.strptime(strDate, "%Y-%m-%d")
+          datePost = DatePost.objects.get(Mission=mission, date=date)
+          datePost.deleted = True
+          datePost.validated = False
+          datePost.save()
+        else:
+          data["calendar"].remove(strDate)
+    for strDate in data["calendar"]:
+      date = datetime.strptime(strDate, "%Y-%m-%d")
+      DatePost.objects.create(Mission=mission, date=date, validated=False)
+      Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role="ST", content=f"Une journée de travail pour le chantier du {mission.address} vous est proposée {strDate}, à vous de valider la proposition.", timestamp=datetime.now().timestamp())
+    return {"modifyMissionDate":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
+
+  @classmethod
+  def __modifyMissionTimeTable(cls, data):
     print("modifyMissionDate", data)
     data["calendar"] = [date for date in data["calendar"] if date]
     mission = Mission.objects.get(id=data["missionId"])
@@ -548,30 +574,8 @@ class DataAccessor():
     if mission.hourlyEnd != data["hourlyEnd"]:
       mission.hourlyEndChange = data["hourlyEnd"]
       Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role=roleST, content=f"Votre horaire de fin de journée pour le chantier du {mission.address} va changer et pour {mission.hourlyEnd}, à vous de valider la modification.", timestamp=datetime.now().timestamp())
-    mission.hourlyEnd = data["hourlyEnd"]
     mission.save()
-    existingDateMission = DatePost.objects.filter(Mission=mission)
-    for task in existingDateMission:
-      print("modifyMissionDate", task.date)
-      if task.date:
-        strDate = task.date.strftime("%Y-%m-%d")
-        if not strDate in data["calendar"]:
-          print("modifyMissionDate delete", task.date)
-          Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role=roleST, content=f"Votre journée de travail du {strDate} pour le chantier du {mission.address} est proposée à la suppression, à vous de valider la modification.", timestamp=datetime.now().timestamp())
-          date = datetime.strptime(strDate, "%Y-%m-%d")
-          datePost = DatePost.objects.get(Mission=mission, date=date)
-          datePost.deleted = True
-          datePost.validated = False
-          datePost.save()
-        else:
-          data["calendar"].remove(strDate)
-    print("modifyMissionDate dataCalendar", data["calendar"])
-    for strDate in data["calendar"]:
-      print("modifyMissionDate strDate create", strDate)
-      date = datetime.strptime(strDate, "%Y-%m-%d")
-      DatePost.objects.create(Mission=mission, date=date, validated=False)
-      Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role=roleST, content=f"Une journée de travail pour le chantier du {mission.address} vous est proposée {strDate}, à vous de valider la proposition.", timestamp=datetime.now().timestamp())
-    return {"modifyMissionDate":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
+    return mission, subContractor
 
   @classmethod
   def __closeMission(cls, data, currentUser):
