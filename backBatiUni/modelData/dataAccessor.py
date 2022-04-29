@@ -556,18 +556,19 @@ class DataAccessor():
       if task.date:
         strDate = task.date.strftime("%Y-%m-%d")
         if not strDate in data["calendar"]:
-          Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role=roleST, content=f"Votre journée de travail du {strDate} pour le chantier du {mission.address} a été supprimée.", timestamp=datetime.now().timestamp())
+          Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role=roleST, content=f"Votre journée de travail du {strDate} pour le chantier du {mission.address} est proposée à la suppression, à vous de valider la modification.", timestamp=datetime.now().timestamp())
           date = datetime.strptime(strDate, "%Y-%m-%d")
-          datePost = DatePost.objects.filter(Mission=mission, date=date)
-          datePost[0].delete()
+          datePost = DatePost.objects.get(Mission=mission, date=date)
+          datePost.deleted = True
+          datePost.validated = False
         else:
           data["calendar"].remove(strDate)
     print("modifyMissionDate dataCalendar", data["calendar"])
     for strDate in data["calendar"]:
       print("modifyMissionDate strDate", strDate)
       date = datetime.strptime(strDate, "%Y-%m-%d")
-      DatePost.objects.create(Mission=mission, date=date)
-      Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role=roleST, content=f"Une journée de travail pour le chantier du {mission.address} a été ajoutée le {strDate}.", timestamp=datetime.now().timestamp())
+      DatePost.objects.create(Mission=mission, date=date, validated=False)
+      Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role=roleST, content=f"Une journée de travail pour le chantier du {mission.address} vous est proposée {strDate}, à vous de valider la proposition.", timestamp=datetime.now().timestamp())
     return {"modifyMissionDate":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
 
   @classmethod

@@ -441,6 +441,8 @@ class DatePost(CommonModel):
   Post = models.ForeignKey(Post, verbose_name='Annonce associée', related_name='PostDate', on_delete=models.CASCADE, null=True, default=None)
   Mission = models.ForeignKey(Mission, verbose_name='Mission associée', related_name='MissionDate', on_delete=models.CASCADE, null=True, default=None)
   date = models.DateField(verbose_name="Date du chantier", null=False, default=timezone.now)
+  deleted = models.BooleanField("A été effacé", null=False, default=False)
+  validated = models.BooleanField("A été effacé", null=False, default=True)
 
   class Meta:
     unique_together = ('Post', 'Mission', 'date')
