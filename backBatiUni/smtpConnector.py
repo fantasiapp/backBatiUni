@@ -63,17 +63,19 @@ class SmtpConnector:
 
   def inviteFriend(self, mail, token, firstName, lastName, company):
     params = {
-      "action": "forgetPassword",
-      "mail": mail
+      "action": "inviteFriend",
+      "mail": mail,
+      "token": token,
+      "firstName": firstName,
+      "lastName": lastName,
+      "company": company,
     }
     try:
       response = requests.get(url=self.url, headers=self.headers, params=params)
       data = json.loads(response.text)
-      if "token" in data:
-        print("data")
-        return data["token"]
+      return data
     except:
-      data = {"inviteFriend":"Error"}
+      data = {"inviteFriend":"Error", "messages":"work in progress"}
     return data
 
 
