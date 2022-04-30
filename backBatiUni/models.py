@@ -481,7 +481,6 @@ class Notification(CommonModel):
   @classmethod
   def filter(cls, user):
     userProfile = UserProfile.objects.get(userNameInternal=user)
-    print("filter", userProfile.Company, len(Notification.objects.filter(Company=userProfile.Company)))
     return Notification.objects.filter(Company=userProfile.Company)
 
 

@@ -598,7 +598,7 @@ class DataAccessor():
       else:
         Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"Votre horaire de début pour le chantier du {mission.address} a été refusée.", timestamp=datetime.now().timestamp())
       mission.hourlyStartChange = ''
-    elif data["field"] == "hourlyEnd" and data["state"]:
+    elif data["field"] == "hourlyEnd":
       answer = True
       if data["state"]:
         Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"Votre horaire de fin de journée pour le chantier du {mission.address} est maintenant validée et est {mission.hourlyStart}.", timestamp=datetime.now().timestamp())
@@ -614,14 +614,23 @@ class DataAccessor():
     if data["field"] == "date":
       date = datetime.strptime(data["date"], "%Y-%m-%d")
       datePost = DatePost.objects.get(Mission=mission, date=date)
+      stillExist = True
       if data["state"]:
+        stillExist = False
         if datePost.deleted:
           datePost.delete()
           Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"La journée de travail du {data['date']} pour le chantier du {mission.address} a été refusée.", timestamp=datetime.now().timestamp())
         else:
-          datePost.validated = True
-          datePost.save()
           Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"La journée de travail du {data['date']} pour le chantier du {mission.address} est maintenant validée.", timestamp=datetime.now().timestamp())
+      else:
+        if datePost.deleted:
+          Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"Le retrait de la journée de travail du {data['date']} pour le chantier du {mission.address} a été refusé.", timestamp=datetime.now().timestamp())
+          datePost.deleted = False
+        else:
+          Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"La journée supplémentaire de travail du {data['date']} pour le chantier du {mission.address} a été refusé.", timestamp=datetime.now().timestamp())
+      if stillExist:
+        datePost.validated = True
+        datePost.save()
       return {"validateMissionDate":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
     return {"validateMissionDate":"Error", "messages":f'field {data["field"]} is not recognize'}
 
@@ -640,7 +649,6 @@ class DataAccessor():
     mission.save()
     cls.__newStars(mission, "st")
     candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
-    subContractor = candidate.Company
     return {"closeMission":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
 
   @classmethod
@@ -666,7 +674,9 @@ class DataAccessor():
     for notification in notifications:
       notification.hasBeenViewed = True
       notification.save()
-    return {"notificationViewed":"OK", company.id:company.computeValues(company.listFields(), currentUser, dictFormat=True)}
+    response = {notification.id:notification.computeValues(notification.listFields(), currentUser, dictFormat=True) for notification in notifications}
+    response["notificationViewed"] = "OK"
+    return response
 
 
   @classmethod
@@ -937,8 +947,9 @@ class DataAccessor():
   def inviteFriend(cls, email, currentUser):
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     token = secrets.token_urlsafe(16)
-    SmtpConnector(cls.portSmtp).inviteFriend(email, token, userProfile.firstName, userProfile.lastName, userProfile.Company.name)
-    return {"forgetPassword":"Warning", "messages":f"Work in progress {email}"}
+    response = SmtpConnector(cls.portSmtp).inviteFriend(email, token, userProfile.firstName, userProfile.lastName, userProfile.Company.name)
+    print("inviteFriend", response)
+    return {"inviteFriend":"Warning", "messages":f"Work in progress {email}"}
 
 
   @classmethod
