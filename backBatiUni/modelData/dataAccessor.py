@@ -949,13 +949,13 @@ class DataAccessor():
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     exists = InviteFriend.objects.filter(emailTarget=email)
     if exists:
-      return {"inviteFriend":"Warning", "messages":f"Une invitation a déjà été envoyé à l'adresse {email}"}
+      return {"inviteFriend":"Warning", "messages":f"Une invitation a déjà été envoyé"}
     token = secrets.token_urlsafe(10)
     response = SmtpConnector(cls.portSmtp).inviteFriend(email, token, userProfile.firstName, userProfile.lastName, userProfile.Company.name)
     if "status" in response and response["status"]:
       InviteFriend.objects.create(invitationAuthor=userProfile, emailTarget=email, token=token)
-      return  {"inviteFriend":"OK", "messages": f"mail envoyé à {email}"}
-    return {"inviteFriend":"Warning", "messages":f"Echec de l'envoi à l'adresse {email}"}
+      return  {"inviteFriend":"OK", "messages": f"Invitation envoyé"}
+    return {"inviteFriend":"Warning", "messages":f"Echec de l'envoi"}
 
 
   @classmethod

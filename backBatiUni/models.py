@@ -483,7 +483,6 @@ class Notification(CommonModel):
     userProfile = UserProfile.objects.get(userNameInternal=user)
     return Notification.objects.filter(Company=userProfile.Company)
 
-
 class Candidate(CommonModel):
   Post = models.ForeignKey(Post, verbose_name='Annonce associée', on_delete=models.CASCADE, null=True, default=None)
   Mission = models.ForeignKey(Mission, verbose_name='Mission associée', related_name='selectedMission', on_delete=models.CASCADE, null=True, default=None)
@@ -558,6 +557,7 @@ class InviteFriend(CommonModel):
 
   class Meta:
     verbose_name = "InviteFriend"
+    unique_together = ('emailTarget')
 
 
 class File(CommonModel):
