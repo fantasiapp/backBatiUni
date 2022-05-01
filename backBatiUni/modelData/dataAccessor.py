@@ -129,7 +129,7 @@ class DataAccessor():
 
       inviteFriend =  InviteFriend.objects.filter(invitedUser=userProfile)
       if inviteFriend:
-        company = inviteFriend.invitationAuthor.Company
+        company = inviteFriend[0].invitationAuthor.Company
         role = "ST" if company.Role.id == 2 else "PME"
         Notification.objects.create(Company=company, nature="alert", Role=role, content=f"{userProfile.firstName} {userProfile.lastName} de la société {userProfile.Company.name} s'est inscrit sur BatiUni. Vous êtes son parrain.", timestamp=datetime.now().timestamp())
         Notification.objects.create(Company=userProfile.Company, nature="alert", Role=role, content=f"{userProfile.firstName} {userProfile.lastName} de la société {userProfile.Company.name} s'est inscrit sur BatiUni. Vous êtes son parrain.", timestamp=datetime.now().timestamp())
