@@ -948,7 +948,7 @@ class DataAccessor():
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     token = secrets.token_urlsafe(16)
     response = SmtpConnector(cls.portSmtp).inviteFriend(email, token, userProfile.firstName, userProfile.lastName, userProfile.Company.name)
-    print("inviteFriend", response)
+    print("inviteFriend back", response)
     return {"inviteFriend":"Warning", "messages":f"Work in progress {email}"}
 
 
