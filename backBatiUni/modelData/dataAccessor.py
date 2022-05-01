@@ -1,3 +1,4 @@
+from django.forms import EmailInput
 from ..models import *
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -946,10 +947,15 @@ class DataAccessor():
   @classmethod
   def inviteFriend(cls, email, currentUser):
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
-    token = secrets.token_urlsafe(16)
+    exists = InviteFriend.objects.filter(emailTarget=email)
+    if exists:
+      return {"inviteFriend":"Warning", "messages":f"Une invitation a déjà été envoyé à l'adresse {email}"}
+    token = secrets.token_urlsafe(10)
     response = SmtpConnector(cls.portSmtp).inviteFriend(email, token, userProfile.firstName, userProfile.lastName, userProfile.Company.name)
-    print("inviteFriend back", response, cls.portSmtp)
-    return {"inviteFriend":"Warning", "messages":f"Work in progress {email}"}
+    if "status" in response and response["status"]:
+      InviteFriend.objects.create(invitationAuthor=userProfile, emailTarget=email, token=token)
+      return  {"inviteFriend":"OK", "messages": f"mail envoyé à {email}"}
+    return {"inviteFriend":"Warning", "messages":f"Echec de l'envoi à l'adresse {email}"}
 
 
   @classmethod
