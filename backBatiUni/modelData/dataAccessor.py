@@ -1,3 +1,4 @@
+from lib2to3.pgen2 import token
 from django.forms import EmailInput
 from ..models import *
 from django.contrib.auth.models import User
@@ -34,7 +35,6 @@ class DataAccessor():
     dictAnswer = {"currentUser":UserProfile.objects.get(userNameInternal=user).id} if profile == "user" else {}
     for table in cls.loadTables[profile]:
       dictAnswer.update(table.dumpStructure(user))
-    print("getData1", os.listdir('.'))
     with open(f"./backBatiUni/modelData/{profile}Data.json", 'w') as jsonFile:
       json.dump(dictAnswer, jsonFile, indent = 3)
     return dictAnswer
@@ -46,10 +46,24 @@ class DataAccessor():
       return {"register":"Warning", "messages":message}
     token = SmtpConnector(cls.portSmtp).register(data["firstname"], data["lastname"], data["email"])
     if token != "token not received" or data["email"] == "jeanluc":
-      cls.__registerAction(data, token)
+      userProfile = cls.__registerAction(data, token)
+      cls.__checkIfHaveBeenInvited(userProfile, data['proposer'], data['email'])
       return {"register":"OK"}
     cls.__registerAction(data, "empty token")
     return {"register":"Error", "messages":"token not received"} 
+
+  @classmethod
+  def __checkIfHaveBeenInvited(cls, userProfile, tokenReceived, emailReceived):
+    inviteFriend =  None
+    if InviteFriend.objects.filter(emailTarget=emailReceived):
+      inviteFriend = InviteFriend.objects.get(emailTarget=emailReceived)
+    elif InviteFriend.objects.filter(token=tokenReceived):
+      inviteFriend = InviteFriend.objects.get(token=tokenReceived)
+    if inviteFriend:
+      inviteFriend.invitedUser = userProfile
+      inviteFriend.date = timezone.now
+      inviteFriend.save()
+
 
   @classmethod
   def __registerCheck(cls, data, message):
@@ -95,15 +109,14 @@ class DataAccessor():
         if not jobCompany:
           JobForCompany.objects.create(Job=job, Company=company, number=1)
     userProfile.save()
+    return userProfile
 
   @classmethod
   def registerConfirm(cls, token):
-    print("registerConfirm token", token)
     for user in UserProfile.objects.all():
       if user.token:
         print("user pending", user.token)
     userProfile = UserProfile.objects.filter(token=token)
-    print("registerConfirm token", token, userProfile)
     if userProfile:
       userProfile = userProfile[0]
       user = User.objects.create(username=userProfile.email, email=userProfile.email)
@@ -113,6 +126,13 @@ class DataAccessor():
       userProfile.token = None
       userProfile.password = None
       userProfile.save()
+
+      inviteFriend =  InviteFriend.objects.filter(invitedUser=userProfile)
+      if inviteFriend:
+        company = inviteFriend.invitationAuthor.Company
+        role = "ST" if company.Role.id == 2 else "PME"
+        Notification.objects.create(Company=company, nature="alert", Role=role, content=f"{userProfile.firstName} {userProfile.lastName} de la société {userProfile.Company.name} s'est inscrit sur BatiUni. Vous êtes son parrain.", timestamp=datetime.now().timestamp())
+        Notification.objects.create(Company=userProfile.Company, nature="alert", Role=role, content=f"{userProfile.firstName} {userProfile.lastName} de la société {userProfile.Company.name} s'est inscrit sur BatiUni. Vous êtes son parrain.", timestamp=datetime.now().timestamp())
       return {"registerConfirm":"OK"}
     return {"registerConfirm":"Error", "messages":"wrong token or email"}
 

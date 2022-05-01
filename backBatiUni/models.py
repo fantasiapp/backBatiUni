@@ -550,14 +550,15 @@ class Supervision(CommonModel):
       return superList
 
 class InviteFriend(CommonModel):
-  invitationAuthor = models.ForeignKey(UserProfile, on_delete=models.PROTECT, null=True, default=None)
+  invitationAuthor = models.ForeignKey(UserProfile, related_name='Author', on_delete=models.PROTECT, null=True, default=None)
   emailTarget = models.CharField('email du destinataire', max_length=256, null=False, default="")
   token = models.CharField('token', max_length=64, null=False, default="")
-  used = models.BooleanField("A été utilisé", null=False, default=False)
+  invitedUser = models.ForeignKey(UserProfile, related_name='Invited', on_delete=models.PROTECT, null=True, default=None)
+  date = models.DateField(verbose_name="Date de l'inscription", null=True, default=None)
+
 
   class Meta:
     verbose_name = "InviteFriend"
-    unique_together = ('emailTarget')
 
 
 class File(CommonModel):
