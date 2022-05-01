@@ -61,7 +61,7 @@ class DataAccessor():
       inviteFriend = InviteFriend.objects.get(token=tokenReceived)
     if inviteFriend:
       inviteFriend.invitedUser = userProfile
-      inviteFriend.date = timezone.now
+      inviteFriend.date = timezone.now()
       inviteFriend.save()
 
 
