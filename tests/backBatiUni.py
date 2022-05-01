@@ -239,6 +239,9 @@ def executeQuery():
     print("data", data)
   elif query == "downloadFile":
     print("downloadFile: not checked")
+  elif query == "inviteFriend":
+    print("headers", headers)
+    response = requests.get(url, headers=headers, params={"action":"inviteFriend", "mail":"jeanluc.walter@fantasiapp.com"})
   else:
     print("no answer")
 if query == "all":
