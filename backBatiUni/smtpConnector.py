@@ -71,7 +71,7 @@ class SmtpConnector:
       "company": company,
     }
     try:
-      print("smtpConnector", params)
+      print("smtpConnector", params, self.url)
       response = requests.get(url=self.url, headers=self.headers, params=params)
       data = json.loads(response.text)
       return data
