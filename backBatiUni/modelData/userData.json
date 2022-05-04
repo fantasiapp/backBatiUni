@@ -1,5 +1,5 @@
 {
-   "currentUser": 4,
+   "currentUser": 3,
    "UserProfileFields": [
       "userName",
       "Company",
@@ -18,17 +18,23 @@
       9
    ],
    "UserProfileValues": {
-      "4": [
-         "pme",
-         4,
-         "Eric",
-         "Entreprise",
-         null,
-         null,
-         "pme",
+      "3": [
+         "st",
+         3,
+         "Th\u00e9ophile",
+         "Traitant",
          "",
-         [],
-         []
+         "06 29 35 04 18",
+         "st",
+         "Directeur G\u00e9n\u00e9ral",
+         [
+            2,
+            1
+         ],
+         [
+            3,
+            5
+         ]
       ]
    },
    "CompanyFields": [
@@ -74,20 +80,20 @@
          "CARREFOUR",
          2,
          "123456789",
-         null,
          "",
-         null,
+         "",
+         "",
          123456,
          654321.22,
-         null,
+         "",
          "https://stackoverflow.com",
-         0,
-         0,
-         null,
-         null,
-         null,
-         null,
-         null,
+         "",
+         "",
+         "",
+         "",
+         "",
+         "",
+         "",
          false,
          false,
          [
@@ -107,17 +113,17 @@
          "9 rue Vintimille Paris 75009",
          "Activit\u00e9 inconnue",
          "FR49404223521",
-         null,
-         null,
-         null,
-         null,
-         0,
-         0,
-         null,
-         null,
-         null,
-         0.0,
-         0.0,
+         "",
+         "",
+         "",
+         "",
+         "",
+         "",
+         "",
+         "",
+         "",
+         "",
+         "",
          false,
          false,
          [
@@ -140,17 +146,17 @@
          "Activit\u00e9 inconnue",
          "FR49404223522",
          307130,
-         null,
-         null,
-         null,
+         12345.0,
+         "",
+         "fantasiapp.com",
          4,
-         0,
+         "",
          "08 92 97 64 15",
-         null,
-         null,
-         0.0,
-         0.0,
-         false,
+         25.0,
+         "",
+         "",
+         "",
+         true,
          true,
          [
             20,
@@ -169,7 +175,15 @@
          [],
          [],
          [],
-         []
+         [
+            6,
+            8,
+            10,
+            11,
+            12,
+            13,
+            14
+         ]
       ],
       "4": [
          "PME",
@@ -178,17 +192,17 @@
          "74 ave des PME Paris 75008",
          "Activit\u00e9 inconnue",
          "FR49404223523",
-         null,
-         null,
-         null,
-         null,
-         0,
+         "",
+         "",
+         "",
+         "",
+         "",
          2,
-         null,
-         null,
-         null,
-         0.0,
-         0.0,
+         "",
+         "",
+         "",
+         "",
+         "",
          false,
          false,
          [
@@ -206,26 +220,15 @@
             1,
             2,
             5,
-            6
+            6,
+            9
          ],
          [
             3,
             4
          ],
          [],
-         [
-            1,
-            2,
-            3,
-            4,
-            5,
-            9,
-            15,
-            16,
-            17,
-            18,
-            19
-         ]
+         []
       ],
       "5": [
          "both",
@@ -234,17 +237,17 @@
          "74 ave des deux Paris 75008",
          "Activit\u00e9 inconnue",
          "FR4940422352",
-         null,
-         null,
-         null,
-         null,
-         0,
-         0,
-         null,
-         null,
-         null,
-         0.0,
-         0.0,
+         "",
+         "",
+         "",
+         "",
+         "",
+         "",
+         "",
+         "",
+         "",
+         "",
+         "",
          false,
          false,
          [
@@ -267,16 +270,16 @@
          "Activit\u00e9 inconnue",
          "FR49404223553",
          207130,
-         null,
-         null,
-         null,
-         0,
-         0,
+         "",
+         "",
+         "",
+         "",
+         "",
          "08 91 96 63 14",
-         null,
-         null,
-         0.0,
-         0.0,
+         "",
+         "",
+         "",
+         "",
          false,
          true,
          [
@@ -398,7 +401,7 @@
          "BatiUni_1",
          "png",
          "",
-         1651325953.762481,
+         1651675979.544831,
          ""
       ],
       "2": [
@@ -406,7 +409,7 @@
          "SousTtraitant2_1",
          "png",
          "",
-         1651325953.762481,
+         1651675979.544831,
          ""
       ],
       "3": [
@@ -414,7 +417,7 @@
          "Fantasiapp_1",
          "png",
          "",
-         1651325953.762481,
+         1651675979.544831,
          ""
       ],
       "4": [
@@ -422,7 +425,7 @@
          "Qualibat",
          "png",
          "2022-02-12",
-         1651325953.762481,
+         1651675979.544831,
          ""
       ],
       "5": [
@@ -430,7 +433,7 @@
          "Kbis",
          "png",
          "2022-02-12",
-         1651325953.762481,
+         1651675979.544831,
          ""
       ],
       "6": [
@@ -438,7 +441,7 @@
          "Document technique",
          "svg",
          "",
-         1651325953.762481,
+         1651675979.544831,
          ""
       ],
       "7": [
@@ -446,7 +449,7 @@
          "Plan",
          "pdf",
          "",
-         1651325953.762481,
+         1651675979.544831,
          ""
       ],
       "8": [
@@ -454,7 +457,7 @@
          "contract",
          "png",
          "",
-         1651325953.762481,
+         1651675979.544831,
          ""
       ],
       "9": [
@@ -462,7 +465,7 @@
          "contract",
          "png",
          "",
-         1651329327.739283,
+         1651676334.732204,
          ""
       ]
    },
@@ -507,8 +510,8 @@
          5,
          2,
          "126 rue de Paris 92100 Boulogne",
-         0.0,
-         0.0,
+         "",
+         "",
          "Eric Entreprise",
          true,
          false,
@@ -517,8 +520,8 @@
          "2022-04-28",
          "07:00",
          "17:00",
-         null,
-         null,
+         "",
+         "",
          24456.1,
          "\u20ac",
          "Prix Journalier",
@@ -552,8 +555,8 @@
          "2022-05-18",
          "07:00",
          "17:00",
-         null,
-         null,
+         "",
+         "",
          23456.1,
          "\u20ac",
          "Prix Journalier",
@@ -592,8 +595,8 @@
          "2022-04-28",
          "08:00",
          "17:00",
-         null,
-         null,
+         "",
+         "",
          1300.1,
          "\u20ac",
          "Prix Journalier",
@@ -630,8 +633,8 @@
          "2022-04-28",
          "07:00",
          "17:00",
-         null,
-         null,
+         "",
+         "",
          23456.1,
          "\u20ac",
          "Prix Journalier",
@@ -647,6 +650,39 @@
             17,
             18,
             19
+         ]
+      ],
+      "9": [
+         4,
+         4,
+         1,
+         "1 Rue Joliot Curie, 91190 Gif-sur-Yvette",
+         "",
+         "",
+         "Eric Entreprise",
+         false,
+         true,
+         "2022-01-24",
+         "2022-05-10",
+         "2022-05-12",
+         "07:30:00",
+         "17:30:00",
+         "",
+         "",
+         321.0,
+         "\u20ac",
+         "Prix Journalier",
+         false,
+         "test",
+         [
+            23
+         ],
+         [],
+         [],
+         [
+            36,
+            37,
+            38
          ]
       ]
    },
@@ -670,7 +706,7 @@
          false,
          false,
          false,
-         "2022-04-30",
+         "2022-05-04",
          800.0,
          "Par Jour"
       ],
@@ -680,7 +716,7 @@
          true,
          false,
          false,
-         "2022-04-30",
+         "2022-05-04",
          1000.0,
          "Par Jour"
       ],
@@ -690,7 +726,7 @@
          true,
          false,
          false,
-         "2022-04-30",
+         "2022-05-04",
          1200.0,
          "Par Jour"
       ],
@@ -700,8 +736,8 @@
          false,
          false,
          false,
-         "2022-04-30",
-         0.0,
+         "2022-05-04",
+         "",
          "Prix Total"
       ],
       "5": [
@@ -710,7 +746,7 @@
          false,
          true,
          false,
-         "2022-04-30",
+         "2022-05-04",
          1500.0,
          "Par Jour"
       ]
@@ -855,6 +891,27 @@
          false,
          false,
          []
+      ],
+      "23": [
+         "Trois",
+         "",
+         false,
+         false,
+         []
+      ],
+      "24": [
+         "doublage",
+         "2022-04-15",
+         false,
+         false,
+         []
+      ],
+      "25": [
+         "doublage",
+         "2022-04-15",
+         false,
+         false,
+         []
       ]
    },
    "DatePostFields": [
@@ -962,6 +1019,21 @@
          "2022-04-19",
          false,
          false
+      ],
+      "36": [
+         "2022-05-11",
+         false,
+         true
+      ],
+      "37": [
+         "2022-05-10",
+         false,
+         true
+      ],
+      "38": [
+         "2022-05-12",
+         false,
+         true
       ]
    },
    "MissionFields": [
@@ -1047,23 +1119,25 @@
          false,
          "Th\u00e9ophile Traitant",
          "Sous-traitant",
-         0,
          "",
-         0,
          "",
-         0,
          "",
-         0,
          "",
-         0,
          "",
-         0,
+         "",
+         "",
+         "",
+         "",
+         "",
+         "",
          "",
          false,
          8,
          [
             5,
-            6
+            6,
+            24,
+            25
          ],
          [
             8
@@ -1076,7 +1150,10 @@
             23
          ],
          [
-            8
+            8,
+            9,
+            10,
+            11
          ],
          3
       ],
@@ -1095,8 +1172,8 @@
          "2022-04-28",
          "07:00",
          "17:00",
-         null,
-         null,
+         "",
+         "",
          1300.1,
          "\u20ac",
          "Prix Journalier",
@@ -1159,7 +1236,7 @@
       "1": [
          "Th\u00e9ophile Traitant",
          3,
-         "2022-04-30",
+         "2022-05-04",
          "J'ai fini.",
          [],
          []
@@ -1167,7 +1244,7 @@
       "2": [
          "Th\u00e9ophile Traitant",
          3,
-         "2022-04-30",
+         "2022-05-04",
          "OK pour les t\u00e2ches du jour.",
          [],
          []
@@ -1175,7 +1252,7 @@
       "3": [
          "Th\u00e9ophile Traitant",
          3,
-         "2022-04-30",
+         "2022-05-04",
          "Pas de souci aujourd'hui.",
          [],
          []
@@ -1183,7 +1260,7 @@
       "4": [
          "Th\u00e9ophile Traitant",
          3,
-         "2022-04-30",
+         "2022-05-04",
          "Le chantier est termin\u00e9.",
          [],
          []
@@ -1191,7 +1268,7 @@
       "5": [
          "Eric Entreprise",
          4,
-         "2022-04-30",
+         "2022-05-04",
          "Les t\u00e2ches du jour sont bien faites.",
          [],
          []
@@ -1199,7 +1276,7 @@
       "6": [
          "Eric Entreprise",
          4,
-         "2022-04-30",
+         "2022-05-04",
          "Tout est parfait, merci.",
          [],
          []
@@ -1207,7 +1284,7 @@
       "7": [
          "Eric Entreprise",
          4,
-         "2022-04-30",
+         "2022-05-04",
          "Attention aux finitions.",
          [],
          []
@@ -1217,6 +1294,30 @@
          4,
          "2022-04-16",
          "Attention au travail de ce jour.",
+         [],
+         []
+      ],
+      "9": [
+         "Eric Entreprise",
+         4,
+         "2022-04-15",
+         "J'ajoute un commentaire\n",
+         [],
+         []
+      ],
+      "10": [
+         "Eric Entreprise",
+         4,
+         "2022-04-17",
+         "Un nouveau commentaire\n",
+         [],
+         []
+      ],
+      "11": [
+         "Eric Entreprise",
+         4,
+         "2022-04-18",
+         "J'ajoute un commentaire\n",
          [],
          []
       ]
@@ -1237,115 +1338,75 @@
       2
    ],
    "NotificationValues": {
-      "1": [
-         2,
+      "6": [
          "",
          3,
-         "PME",
-         1651329326.201343,
-         "Un nouveau sous traitant : Sous-traitant pour le chantier du 106 rue du Cherche-Midi 75006 Paris a postul\u00e9.",
-         true,
-         "ST"
-      ],
-      "2": [
          "",
-         3,
-         3,
-         "PME",
-         1651329326.232448,
-         "Un nouveau sous traitant : Sous-traitant pour le chantier du 36 rue Dauphine 75006 Paris a postul\u00e9.",
-         true,
-         "ST"
+         "ST",
+         1651676334.153272,
+         "Votre candidature pour le chantier du 36 rue Dauphine 75006 Paris a \u00e9t\u00e9 retenue.",
+         false,
+         "PME"
       ],
-      "3": [
+      "8": [
          "",
          4,
-         3,
-         "PME",
-         1651329326.246784,
-         "Un nouveau sous traitant : Sous-traitant pour le chantier du 28 rue de Fleurus 75006 Paris a postul\u00e9.",
-         true,
-         "ST"
-      ],
-      "4": [
-         5,
          "",
-         3,
-         "PME",
-         1651329326.25853,
-         "Un nouveau sous traitant : Sous-traitant pour le chantier du 34 rue Guynemer 75006 Paris a postul\u00e9.",
-         true,
-         "ST"
+         "ST",
+         1651676334.301441,
+         "Votre candidature pour le chantier du 28 rue de Fleurus 75006 Paris a \u00e9t\u00e9 retenue.",
+         false,
+         "PME"
       ],
-      "5": [
-         2,
-         "",
-         6,
-         "PME",
-         1651329326.420217,
-         "Un nouveau sous traitant : Sous-traitant 2 pour le chantier du 106 rue du Cherche-Midi 75006 Paris a postul\u00e9.",
-         true,
-         "ST"
-      ],
-      "9": [
+      "10": [
          "",
          4,
-         3,
-         "PME",
-         1651329327.551747,
+         "",
+         "ST",
+         1651676334.741618,
          "Le contrat pour le chantier du 28 rue de Fleurus 75006 Paris  a \u00e9t\u00e9 sign\u00e9.",
-         true,
-         "ST"
+         false,
+         "PME"
       ],
-      "15": [
+      "11": [
          "",
          3,
          "",
-         "PME",
-         1651329329.30725,
-         "Votre horaire de d\u00e9but pour le chantier du 36 rue Dauphine 75006 Paris est maintenant valid\u00e9e et est 07:00.",
-         true,
+         "ST",
+         1651676336.117519,
+         "Votre horaire de d\u00e9part pour le chantier du 36 rue Dauphine 75006 Paris va chang\u00e9 et pour 07:00, \u00e0 vous de valider la modification.",
+         false,
          "alert"
       ],
-      "16": [
+      "12": [
          "",
          3,
          "",
-         "PME",
-         1651329329.364648,
-         "Votre horaire de fin de journ\u00e9e pour le chantier du 36 rue Dauphine 75006 Paris a \u00e9t\u00e9 refus\u00e9e.",
-         true,
+         "ST",
+         1651676336.119736,
+         "Votre horaire de fin de journ\u00e9e pour le chantier du 36 rue Dauphine 75006 Paris va changer et pour 17:00, \u00e0 vous de valider la modification.",
+         false,
          "alert"
       ],
-      "17": [
+      "13": [
          "",
          3,
          "",
-         "PME",
-         1651329329.415046,
-         "Le retrait de la journ\u00e9e de travail du 2022-04-15 pour le chantier du 36 rue Dauphine 75006 Paris a \u00e9t\u00e9 refus\u00e9.",
-         true,
+         "ST",
+         1651676336.124035,
+         "Votre journ\u00e9e de travail du 2022-04-15 pour le chantier du 36 rue Dauphine 75006 Paris est propos\u00e9e \u00e0 la suppression, \u00e0 vous de valider la modification.",
+         false,
          "alert"
       ],
-      "18": [
+      "14": [
          "",
          3,
          "",
-         "PME",
-         1651329329.46482,
-         "La journ\u00e9e de travail du 2022-04-19 pour le chantier du 36 rue Dauphine 75006 Paris est maintenant valid\u00e9e.",
-         true,
+         "ST",
+         1651676336.126904,
+         "Une journ\u00e9e de travail pour le chantier du 36 rue Dauphine 75006 Paris vous est propos\u00e9e 2022-04-19, \u00e0 vous de valider la proposition.",
+         false,
          "alert"
-      ],
-      "19": [
-         "",
-         4,
-         3,
-         "PME",
-         1651329329.91949,
-         "La mission du 28 rue de Fleurus 75006 Paris a \u00e9t\u00e9 not\u00e9e.",
-         true,
-         "ST"
       ]
    }
 }

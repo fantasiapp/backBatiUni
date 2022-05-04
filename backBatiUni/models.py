@@ -92,7 +92,7 @@ class CommonModel(models.Model):
         if field == "ViewPost":
           listModel = [view.id for view in ViewPost.objects.filter(UserProfile=self)]
         elif field == "FavoritePost":
-          listModel = [favorite.id for favorite in FavoritePost.objects.filter(UserProfile=self)]
+          listModel = [favorite.postId for favorite in FavoritePost.objects.filter(UserProfile=self)]
         elif dictFormat:
           listModel = {objectModel.id:objectModel.computeValues(listFieldsModel, user, dictFormat=True) for objectModel in model.filter(user) if getattr(objectModel, self.__class__.__name__, False) == self}
           listModel = {key:valueList if len(valueList) != 1 else valueList[0] for key, valueList in listModel.items()}
@@ -100,7 +100,7 @@ class CommonModel(models.Model):
           listModel = [objectModel.id for objectModel in model.filter(user) if getattr(objectModel, self.__class__.__name__, False) == self]
         values.append(listModel)
       else:
-        value = getattr(self, field, "")
+        value = getattr(self, field, "") if getattr(self, field, None) else ""
         values.append(value)
     return values
 

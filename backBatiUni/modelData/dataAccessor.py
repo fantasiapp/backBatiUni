@@ -426,7 +426,9 @@ class DataAccessor():
     favorite = FavoritePost.objects.filter(UserProfile=userProfile, postId=postId)
     if favorite and value == "false":
         favorite[0].delete()
+        print("favoritePost deleted", postId, value, UserProfile.id)
     elif value == "true" and not favorite:
+      print("favoritePost created", postId, value, UserProfile.id)
       FavoritePost.objects.create(UserProfile=userProfile, postId=postId)
     return {"setFavorite":"OK"}
 
