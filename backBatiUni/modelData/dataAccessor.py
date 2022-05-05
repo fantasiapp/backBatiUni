@@ -341,7 +341,7 @@ class DataAccessor():
     if detailedPost:
       detailedPost = detailedPost[0]
       if "date" in data and data["date"]:
-        if data["unset"]:
+        if not "unset" in data or not data["unset"]:
           date = datetime.strptime(data["date"], "%Y-%m-%d")
           dateNowString = detailedPost.date.strftime("%Y-%m-%d") if detailedPost.date else None
           if dateNowString != data["date"] and dateNowString:

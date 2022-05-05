@@ -207,9 +207,9 @@ def executeQuery():
       post3 = {"action":"modifyDetailedPost", "detailedPost":{"id":8, "date":"2022-03-17", "validated":True, "unset":False}}
       post4 = {"action":"modifyDetailedPost", "detailedPost":{"id":10, "date":"2022-03-16", "validated":True, "unset":False}}
       post5 = {"action":"modifyDetailedPost", "detailedPost":{"id":5, "date":"2022-04-16", "validated":False, "unset":False}}
-      post6 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "date":"2022-04-17", "validated":False, "unset":False}}
-      post6 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "date":"2022-04-17", "validated":False, "unset":True}}
       post6 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "date":"2022-04-16", "validated":False, "unset":False}}
+      post6 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "date":"2022-04-16", "validated":False, "unset":True}}
+      post6 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "date":"2022-04-17", "validated":False, "unset":False}}
       for post in [post4, post2, post3, post1, post5, post6]:
         response = requests.post(url, headers=headers, json=post)
       data = json.loads(response.text)
