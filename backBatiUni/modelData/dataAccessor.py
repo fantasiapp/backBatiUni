@@ -293,6 +293,7 @@ class DataAccessor():
     exists = Candidate.objects.filter(Post=post, Company=subContractor)
     if exists:
       return {"applyPost":"Warning", "messages":f"Le sous-traitant {subContractor.name} a déjà postulé."}
+    amount = 0.0 if amount == "undefined" else amount
     candidate = Candidate.objects.create(Post=post, Company=subContractor, amount=amount, contact=contact, unitOfTime=unitOfTime)
     Notification.objects.create(Post=post, Company=company, subContractor=subContractor, nature="ST", Role="PME", content=f"Un nouveau sous traitant : {subContractor.name} pour le chantier du {post.address} a postulé.", timestamp=datetime.now().timestamp())
     return {"applyPost":"OK", candidate.id:candidate.computeValues(candidate.listFields(), currentUser, True)}
@@ -320,7 +321,7 @@ class DataAccessor():
       kwargs["Mission"] = mission
     if "content" in data:
       kwargs["content"] = data["content"]
-    if "date" in data:
+    if "date" in data and isinstance(data["date"], str):
       kwargs["date"] = datetime.strptime(data["date"], "%Y-%m-%d")
     if "validated" in data:
       kwargs["validated"] = data["validated"]
@@ -336,7 +337,6 @@ class DataAccessor():
   def __modifyDetailedPost(cls, data, currentUser):
     print("modifyDetailedPost", data)
     data = data["detailedPost"]
-    # return {"modifyDetailedPost":"OK", "d":["a", "b", "c"]}
     detailedPost = DetailedPost.objects.filter(id=data["id"])
     if detailedPost:
       detailedPost = detailedPost[0]
@@ -350,6 +350,8 @@ class DataAccessor():
               PorM = detailedPost.Post if detailedPost.Post else detailedPost.Mission
               return {"modifyDetailedPost":"OK", PorM.id:PorM.computeValues(PorM.listFields(), currentUser, True)}
         else:
+          if Supervision.objects.filter(DetailedPost=detailedPost):
+            return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche du {data['date']} est commentée"}
           detailedPost.date = None
           detailedPost.save()
           PorM = detailedPost.Post if detailedPost.Post else detailedPost.Mission
