@@ -202,12 +202,14 @@ def executeQuery():
       post = {"action":"createDetailedPost", "missionId":1, "content":"Réparer le lavabo une nouvelle fois", "date":"2022-03-17"}
       response = requests.post(url, headers=headers, json=post)
     elif query == "modifyDetailedPost":
-      post1 = {"action":"modifyDetailedPost", "detailedPost":{"id":9, "date":"2022-03-18", "content":"Nettoyer le chantier", "validated":True}}
-      post2 = {"action":"modifyDetailedPost", "detailedPost":{"id":7, "date":"2022-03-17", "validated":True}}
-      post3 = {"action":"modifyDetailedPost", "detailedPost":{"id":8, "date":"2022-03-17", "validated":True}}
-      post4 = {"action":"modifyDetailedPost", "detailedPost":{"id":10, "date":"2022-03-16", "validated":True}}
-      post5 = {"action":"modifyDetailedPost", "detailedPost":{"id":5, "date":"2022-04-16", "validated":False}}
-      post6 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "date":"2022-04-17", "validated":False}}
+      post1 = {"action":"modifyDetailedPost", "detailedPost":{"id":9, "date":"2022-03-18", "content":"Nettoyer le chantier", "validated":True, "unset":False}}
+      post2 = {"action":"modifyDetailedPost", "detailedPost":{"id":7, "date":"2022-03-17", "validated":True, "unset":False}}
+      post3 = {"action":"modifyDetailedPost", "detailedPost":{"id":8, "date":"2022-03-17", "validated":True, "unset":False}}
+      post4 = {"action":"modifyDetailedPost", "detailedPost":{"id":10, "date":"2022-03-16", "validated":True, "unset":False}}
+      post5 = {"action":"modifyDetailedPost", "detailedPost":{"id":5, "date":"2022-04-16", "validated":False, "unset":False}}
+      post6 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "date":"2022-04-17", "validated":False, "unset":False}}
+      post6 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "date":"2022-04-17", "validated":False, "unset":True}}
+      post6 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "date":"2022-04-16", "validated":False, "unset":False}}
       for post in [post4, post2, post3, post1, post5, post6]:
         response = requests.post(url, headers=headers, json=post)
       data = json.loads(response.text)

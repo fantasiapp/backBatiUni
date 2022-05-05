@@ -341,15 +341,19 @@ class DataAccessor():
     if detailedPost:
       detailedPost = detailedPost[0]
       if "date" in data and data["date"]:
-        date = datetime.strptime(data["date"], "%Y-%m-%d")
-        dateNowString = detailedPost.date.strftime("%Y-%m-%d") if detailedPost.date else None
-        if dateNowString != data["date"] and dateNowString:
-          detailedPost = DetailedPost.objects.create(Post=detailedPost.Post, Mission=detailedPost.Mission, content=detailedPost.content, date=date, validated=detailedPost.validated)
-          if detailedPost:
-            PorM = detailedPost.Post if detailedPost.Post else detailedPost.Mission
-            return {"modifyDetailedPost":"OK", PorM.id:PorM.computeValues(PorM.listFields(), currentUser, True)}
+        if data["unset"]:
+          date = datetime.strptime(data["date"], "%Y-%m-%d")
+          dateNowString = detailedPost.date.strftime("%Y-%m-%d") if detailedPost.date else None
+          if dateNowString != data["date"] and dateNowString:
+            detailedPost = DetailedPost.objects.create(Post=detailedPost.Post, Mission=detailedPost.Mission, content=detailedPost.content, date=date, validated=detailedPost.validated)
+            if detailedPost:
+              PorM = detailedPost.Post if detailedPost.Post else detailedPost.Mission
+              return {"modifyDetailedPost":"OK", PorM.id:PorM.computeValues(PorM.listFields(), currentUser, True)}
         else:
-          detailedPost.date = date
+          detailedPost.date = None
+          detailedPost.save()
+          PorM = detailedPost.Post if detailedPost.Post else detailedPost.Mission
+          return {"modifyDetailedPost":"OK", PorM.id:PorM.computeValues(PorM.listFields(), currentUser, True)}
       for field in ["content", "validated", "refused"]:
         if field in data:
           setattr(detailedPost, field, data[field])
