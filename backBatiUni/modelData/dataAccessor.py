@@ -344,7 +344,9 @@ class DataAccessor():
       detailedPost = detailedPost[0]
       PorM = detailedPost.Post if detailedPost.Post else detailedPost.Mission
       if not unset:
+        print("unset")
         if date:
+          print(date, data["date"])
           dateNowString = detailedPost.date.strftime("%Y-%m-%d") if detailedPost.date else None
           if dateNowString != data["date"]:
             detailedPost = DetailedPost.objects.create(Post=detailedPost.Post, Mission=detailedPost.Mission, content=detailedPost.content, date=date, validated=detailedPost.validated)
