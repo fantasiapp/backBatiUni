@@ -340,11 +340,12 @@ class DataAccessor():
     data = data["detailedPost"]
     date = datetime.strptime(data["date"], "%Y-%m-%d") if "date" in data and data["date"] else None
     detailedPost = DetailedPost.objects.filter(id=data["id"])
+    print("detailPostId", detailedPost.id)
     if detailedPost:
       detailedPost = detailedPost[0]
       PorM = detailedPost.Post if detailedPost.Post else detailedPost.Mission
+      print("unset", unset)
       if not unset:
-        print("unset")
         if date:
           print(date, data["date"])
           dateNowString = detailedPost.date.strftime("%Y-%m-%d") if detailedPost.date else None
