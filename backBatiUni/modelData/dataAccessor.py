@@ -349,12 +349,12 @@ class DataAccessor():
           if dateNowString != data["date"]:
             detailedPost = DetailedPost.objects.create(Post=detailedPost.Post, Mission=detailedPost.Mission, content=detailedPost.content, date=date, validated=detailedPost.validated)
             """Il faut toujours avoir un modèle sans date pour le front"""
+            print("exist", DetailedPost.objects.filter(Mission = PorM, date=None, content=detailedPost.content))
             if not DetailedPost.objects.filter(Mission = PorM, date=None, content=detailedPost.content):
               detailedPost = DetailedPost.objects.create(Mission=detailedPost.Mission, content=detailedPost.content)
         for field in ["content", "validated", "refused"]:
           if field in data:
             setattr(detailedPost, field, data[field])
-
       else:
         if Supervision.objects.filter(DetailedPost=detailedPost):
           return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche du {data['date']} est commentée"}
