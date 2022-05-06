@@ -359,6 +359,8 @@ class DataAccessor():
         if Supervision.objects.filter(DetailedPost=detailedPost):
           return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche du {data['date']} est commentée"}
         detailedPost.delete()
+        details = DetailedPost.objects.filter(Mission=PorM)
+        print("number", len(details))
       return {"modifyDetailedPost":"OK", PorM.id:PorM.computeValues(PorM.listFields(), currentUser, True)}
     return {"modifyDetailedPost":"Error", "messages":f"No Detailed Post with id {data['id']}"}
 
