@@ -344,7 +344,8 @@ class DataAccessor():
         if not "unset" in data or not data["unset"]:
           date = datetime.strptime(data["date"], "%Y-%m-%d")
           dateNowString = detailedPost.date.strftime("%Y-%m-%d") if detailedPost.date else None
-          if dateNowString != data["date"] and dateNowString:
+          # print("modify", date, dateNowString)
+          if dateNowString != data["date"]:
             detailedPost = DetailedPost.objects.create(Post=detailedPost.Post, Mission=detailedPost.Mission, content=detailedPost.content, date=date, validated=detailedPost.validated)
             if detailedPost:
               PorM = detailedPost.Post if detailedPost.Post else detailedPost.Mission
@@ -801,7 +802,6 @@ class DataAccessor():
 
   @classmethod
   def __uploadImageSupervision(cls, data, currentUser):
-    print("uploadImageSupervision", data.keys(), currentUser, data["taskId"], data["missionId"])
     if not data['ext'] in File.authorizedExtention:
       return {"uploadImageSupervision":"Warning", "messages":f"L'extention {data['ext']} n'est pas traitée"}
     fileStr = data["imageBase64"]
@@ -816,7 +816,6 @@ class DataAccessor():
       detailedPost = None
       mission = Mission.objects.get(id=data["missionId"])
       supervisions = Supervision.objects.filter(Mission=mission)
-      print("uploadImageSupervision", supervisions)
       if supervisions:
         supervision = supervisions[len(supervisions) - 1]
       else:
@@ -875,7 +874,6 @@ class DataAccessor():
   @classmethod
   def __setValues(cls, dictValue, user, message, valueModified, objectInstance, flagModified):
     for fieldName, value in dictValue.items():
-      print("setValue", fieldName)
       valueToSave = value
       if fieldName != "id" and fieldName != 'userName':
         fieldObject = None
@@ -892,7 +890,6 @@ class DataAccessor():
           flagModifiedNew = cls.__setValuesLabelJob(fieldName, value, valueModified[fieldName], user)
           flagModified = flagModifiedNew if not flagModified else flagModified
         elif getattr(objectInstance, fieldName, "does not exist") != "does not exist":
-          print("setValue", fieldObject, fieldName, value)
           # valueToSave = value == "true"
           if fieldObject and isinstance(fieldObject, models.DateField):
             valueToSave = value.strftime("%Y-%m-%d") if value else None
@@ -900,8 +897,6 @@ class DataAccessor():
             valueToSave = int(value) if value else None
           elif fieldObject and isinstance(fieldObject, models.FloatField):
             valueToSave = float(value) if value else None
-          elif fieldObject and isinstance(fieldObject, models.BooleanField):
-            print("bool", fieldName, value, objectInstance.getAttr(fieldName))
           if valueToSave != objectInstance.getAttr(fieldName):
             objectInstance.setAttr(fieldName, valueToSave)
             objectInstance.save()
