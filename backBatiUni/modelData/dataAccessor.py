@@ -338,35 +338,27 @@ class DataAccessor():
     print("modifyDetailedPost", data)
     unset = data["unset"] if "unset" in data else False
     data = data["detailedPost"]
+    date = datetime.strptime(data["date"], "%Y-%m-%d") if "date" in data and data["date"] else None
     detailedPost = DetailedPost.objects.filter(id=data["id"])
-    if detailedPost:
+    PorM = detailedPost.Post if detailedPost.Post else detailedPost.Mission
+    if detailedPost and not unset:
       detailedPost = detailedPost[0]
-      if "date" in data and data["date"]:
-        print("unset", unset)
-        if not unset:
-          date = datetime.strptime(data["date"], "%Y-%m-%d")
-          dateNowString = detailedPost.date.strftime("%Y-%m-%d") if detailedPost.date else None
-          print("modify", date, dateNowString)
-          if dateNowString != data["date"]:
-            detailedPost = DetailedPost.objects.create(Post=detailedPost.Post, Mission=detailedPost.Mission, content=detailedPost.content, date=date, validated=detailedPost.validated)
-            if detailedPost:
-              PorM = detailedPost.Post if detailedPost.Post else detailedPost.Mission
-              return {"modifyDetailedPost":"OK", PorM.id:PorM.computeValues(PorM.listFields(), currentUser, True)}
-        else:
-          print("unset")
-          if Supervision.objects.filter(DetailedPost=detailedPost):
-            return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche du {data['date']} est commentée"}
-          detailedPost.date = None
-          detailedPost.save()
-          PorM = detailedPost.Post if detailedPost.Post else detailedPost.Mission
-          return {"modifyDetailedPost":"OK", PorM.id:PorM.computeValues(PorM.listFields(), currentUser, True)}
       for field in ["content", "validated", "refused"]:
         if field in data:
           setattr(detailedPost, field, data[field])
       detailedPost.save()
-      PorM = detailedPost.Post if detailedPost.Post else detailedPost.Mission
-      dumpPorM = PorM.computeValues(PorM.listFields(), currentUser, True)
-      return {"modifyDetailedPost":"OK", PorM.id:dumpPorM}
+      if date:
+        if not unset:
+          dateNowString = detailedPost.date.strftime("%Y-%m-%d") if detailedPost.date else None
+          if dateNowString != data["date"]:
+            detailedPost = DetailedPost.objects.create(Post=detailedPost.Post, Mission=detailedPost.Mission, content=detailedPost.content, date=date, validated=detailedPost.validated)
+        else:
+          if Supervision.objects.filter(DetailedPost=detailedPost):
+            return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche du {data['date']} est commentée"}
+          detailedPost.delete()
+          PorM = detailedPost.Post if detailedPost.Post else detailedPost.Mission
+          return {"modifyDetailedPost":"OK", PorM.id:PorM.computeValues(PorM.listFields(), currentUser, True)}
+      return {"modifyDetailedPost":"OK", PorM.id:PorM.computeValues(PorM.listFields(), currentUser, True)}
     return {"modifyDetailedPost":"Error", "messages":f"No Detailed Post with id {data['id']}"}
 
   @classmethod
