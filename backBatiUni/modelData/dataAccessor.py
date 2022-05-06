@@ -339,7 +339,7 @@ class DataAccessor():
     unset = data["unset"] if "unset" in data else False
     data = data["detailedPost"]
     date = datetime.strptime(data["date"], "%Y-%m-%d") if "date" in data and data["date"] else None
-    detailedPost = DetailedPost.objects.filter(id=data["id"])
+    detailedPost = DetailedPost.objects.get(id=data["id"])
     PorM = detailedPost.Post if detailedPost.Post else detailedPost.Mission
     if detailedPost and not unset:
       detailedPost = detailedPost[0]
