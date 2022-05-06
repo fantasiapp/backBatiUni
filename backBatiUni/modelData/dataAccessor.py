@@ -313,7 +313,7 @@ class DataAccessor():
   @classmethod
   def __createDetailedPost(cls, data, currentUser):
     print("createDetailedPost", data)
-    kwargs, post, mission = {"Post":None, "Mission":None, "content":None, "date":None, "validated":False}, None, None
+    kwargs, post, mission = {"Post":None, "Mission":None, "content":None, "date":None}, None, None
     if "postId" in data:
       post = Post.objects.get(id=data["postId"])
       kwargs["Post"] = post
@@ -324,8 +324,6 @@ class DataAccessor():
       kwargs["content"] = data["content"]
     if "date" in data and isinstance(data["date"], str):
       kwargs["date"] = datetime.strptime(data["date"], "%Y-%m-%d")
-    if "validated" in data:
-      kwargs["validated"] = data["validated"]
     detailedPost = DetailedPost.objects.create(**kwargs)
     if detailedPost:
       """Il faut toujours avoir un modèle sans date pour le front"""
@@ -345,25 +343,22 @@ class DataAccessor():
     data = data["detailedPost"]
     date = datetime.strptime(data["date"], "%Y-%m-%d") if "date" in data and data["date"] else None
     detailedPost = DetailedPost.objects.filter(id=data["id"])
-    print("detailPostId", data["id"])
     if detailedPost:
       detailedPost = detailedPost[0]
       PorM = detailedPost.Post if detailedPost.Post else detailedPost.Mission
-      print("unset", unset)
       if not unset:
         if date:
-          print(date, data["date"])
           dateNowString = detailedPost.date.strftime("%Y-%m-%d") if detailedPost.date else None
           if dateNowString != data["date"]:
             detailedPost = DetailedPost.objects.create(Post=detailedPost.Post, Mission=detailedPost.Mission, content=detailedPost.content, date=date, validated=detailedPost.validated)
         for field in ["content", "validated", "refused"]:
           if field in data:
             setattr(detailedPost, field, data[field])
+        detailedPost.save()
       else:
         if Supervision.objects.filter(DetailedPost=detailedPost):
           return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche du {data['date']} est commentée"}
         detailedPost.delete()
-        details = DetailedPost.objects.filter(Mission=PorM)
       return {"modifyDetailedPost":"OK", PorM.id:PorM.computeValues(PorM.listFields(), currentUser, True)}
     return {"modifyDetailedPost":"Error", "messages":f"No Detailed Post with id {data['id']}"}
 
