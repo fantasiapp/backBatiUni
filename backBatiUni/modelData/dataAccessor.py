@@ -340,7 +340,7 @@ class DataAccessor():
     data = data["detailedPost"]
     date = datetime.strptime(data["date"], "%Y-%m-%d") if "date" in data and data["date"] else None
     detailedPost = DetailedPost.objects.filter(id=data["id"])
-    print("detailPostId", detailedPost.id)
+    print("detailPostId", data["id"])
     if detailedPost:
       detailedPost = detailedPost[0]
       PorM = detailedPost.Post if detailedPost.Post else detailedPost.Mission
