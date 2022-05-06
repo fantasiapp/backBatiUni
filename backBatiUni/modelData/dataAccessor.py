@@ -337,6 +337,7 @@ class DataAccessor():
   def __modifyDetailedPost(cls, data, currentUser):
     print("modifyDetailedPost", data)
     unset = data["unset"] if "unset" in data else False
+    print("unset", unset)
     data = data["detailedPost"]
     date = datetime.strptime(data["date"], "%Y-%m-%d") if "date" in data and data["date"] else None
     detailedPost = DetailedPost.objects.filter(id=data["id"])
@@ -344,6 +345,7 @@ class DataAccessor():
       detailedPost = detailedPost[0]
       PorM = detailedPost.Post if detailedPost.Post else detailedPost.Mission
       if not unset:
+        print("set branch")
         if date:
           dateNowString = detailedPost.date.strftime("%Y-%m-%d") if detailedPost.date else None
           if dateNowString != data["date"]:
@@ -353,6 +355,7 @@ class DataAccessor():
             setattr(detailedPost, field, data[field])
         detailedPost.save()
       else:
+        print("unset branch")
         if Supervision.objects.filter(DetailedPost=detailedPost):
           return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche du {data['date']} est commentée"}
         detailedPost.delete()
