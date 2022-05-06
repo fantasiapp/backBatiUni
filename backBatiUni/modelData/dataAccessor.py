@@ -336,21 +336,24 @@ class DataAccessor():
   @classmethod
   def __modifyDetailedPost(cls, data, currentUser):
     print("modifyDetailedPost", data)
+    unset = data["unset"] if "unset" in data else False
     data = data["detailedPost"]
     detailedPost = DetailedPost.objects.filter(id=data["id"])
     if detailedPost:
       detailedPost = detailedPost[0]
       if "date" in data and data["date"]:
-        if not "unset" in data or not data["unset"]:
+        print("unset", unset)
+        if not unset:
           date = datetime.strptime(data["date"], "%Y-%m-%d")
           dateNowString = detailedPost.date.strftime("%Y-%m-%d") if detailedPost.date else None
-          # print("modify", date, dateNowString)
+          print("modify", date, dateNowString)
           if dateNowString != data["date"]:
             detailedPost = DetailedPost.objects.create(Post=detailedPost.Post, Mission=detailedPost.Mission, content=detailedPost.content, date=date, validated=detailedPost.validated)
             if detailedPost:
               PorM = detailedPost.Post if detailedPost.Post else detailedPost.Mission
               return {"modifyDetailedPost":"OK", PorM.id:PorM.computeValues(PorM.listFields(), currentUser, True)}
         else:
+          print("unset")
           if Supervision.objects.filter(DetailedPost=detailedPost):
             return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche du {data['date']} est commentée"}
           detailedPost.date = None
