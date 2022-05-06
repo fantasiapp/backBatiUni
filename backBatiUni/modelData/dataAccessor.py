@@ -312,6 +312,7 @@ class DataAccessor():
 
   @classmethod
   def __createDetailedPost(cls, data, currentUser):
+    print("createDetailedPost", data)
     kwargs, post, mission = {"Post":None, "Mission":None, "content":None, "date":None, "validated":False}, None, None
     if "postId" in data:
       post = Post.objects.get(id=data["postId"])
@@ -327,6 +328,10 @@ class DataAccessor():
       kwargs["validated"] = data["validated"]
     detailedPost = DetailedPost.objects.create(**kwargs)
     if detailedPost:
+      """Il faut toujours avoir un modèle sans date pour le front"""
+      print("exist", DetailedPost.objects.filter(Mission = mission, date=None, content=detailedPost.content))
+      if not DetailedPost.objects.filter(Mission = mission, date=None, content=detailedPost.content):
+        detailedPost = DetailedPost.objects.create(Mission=detailedPost.Mission, content=detailedPost.content)
       if post:
         return {"createDetailedPost":"OK", post.id:post.computeValues(post.listFields(), currentUser, True)}
       if mission:
@@ -351,10 +356,6 @@ class DataAccessor():
           dateNowString = detailedPost.date.strftime("%Y-%m-%d") if detailedPost.date else None
           if dateNowString != data["date"]:
             detailedPost = DetailedPost.objects.create(Post=detailedPost.Post, Mission=detailedPost.Mission, content=detailedPost.content, date=date, validated=detailedPost.validated)
-            """Il faut toujours avoir un modèle sans date pour le front"""
-            print("exist", DetailedPost.objects.filter(Mission = PorM, date=None, content=detailedPost.content))
-            if not DetailedPost.objects.filter(Mission = PorM, date=None, content=detailedPost.content):
-              detailedPost = DetailedPost.objects.create(Mission=detailedPost.Mission, content=detailedPost.content)
         for field in ["content", "validated", "refused"]:
           if field in data:
             setattr(detailedPost, field, data[field])
