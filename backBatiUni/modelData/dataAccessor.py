@@ -337,7 +337,6 @@ class DataAccessor():
   def __modifyDetailedPost(cls, data, currentUser):
     print("modifyDetailedPost", data)
     unset = data["unset"] if "unset" in data else False
-    print("unset", unset)
     data = data["detailedPost"]
     date = datetime.strptime(data["date"], "%Y-%m-%d") if "date" in data and data["date"] else None
     detailedPost = DetailedPost.objects.filter(id=data["id"])
@@ -345,22 +344,22 @@ class DataAccessor():
       detailedPost = detailedPost[0]
       PorM = detailedPost.Post if detailedPost.Post else detailedPost.Mission
       if not unset:
-        print("set branch")
         if date:
           dateNowString = detailedPost.date.strftime("%Y-%m-%d") if detailedPost.date else None
           if dateNowString != data["date"]:
             detailedPost = DetailedPost.objects.create(Post=detailedPost.Post, Mission=detailedPost.Mission, content=detailedPost.content, date=date, validated=detailedPost.validated)
+            """Il faut toujours avoir un modèle sans date pour le front"""
+            if not DetailedPost.objects.filter(Mission = PorM, date=None, content=detailedPost.content):
+              detailedPost = DetailedPost.objects.create(Mission=detailedPost.Mission, content=detailedPost.content)
         for field in ["content", "validated", "refused"]:
           if field in data:
             setattr(detailedPost, field, data[field])
-        detailedPost.save()
+
       else:
-        print("unset branch")
         if Supervision.objects.filter(DetailedPost=detailedPost):
           return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche du {data['date']} est commentée"}
         detailedPost.delete()
         details = DetailedPost.objects.filter(Mission=PorM)
-        print("number", len(details))
       return {"modifyDetailedPost":"OK", PorM.id:PorM.computeValues(PorM.listFields(), currentUser, True)}
     return {"modifyDetailedPost":"Error", "messages":f"No Detailed Post with id {data['id']}"}
 
