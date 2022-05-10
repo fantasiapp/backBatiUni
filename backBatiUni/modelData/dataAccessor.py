@@ -963,8 +963,12 @@ class DataAccessor():
     return {"forgetPassword":"Warning", "messages":f"L'adressse du couriel {email} n'est pas reconnue"}
 
   @classmethod
-  def inviteFriend(cls, email, currentUser):
+  def inviteFriend(cls, email, register, currentUser):
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
+    if not register:
+      userProfile.tokenFriend = ''
+      userProfile.save()
+      return  {"inviteFriend":"OK"}
     exists = InviteFriend.objects.filter(emailTarget=email)
     if exists:
       return {"inviteFriend":"Warning", "messages":f"Une invitation a déjà été envoyé"}
