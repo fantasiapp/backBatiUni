@@ -247,6 +247,7 @@ class UserProfile(CommonModel):
   email = models.CharField("Email", max_length=128, blank=True, null=True, default="Inconnu")
   password = models.CharField("Mot de passe", max_length=128, blank=True, null=True, default="Inconnu")
   function = models.CharField("Fonction dans l'entreprise", max_length=128, blank=True, null=True, default="")
+  tokenFriend = models.CharField("Token pour invitation d'ami", max_length=128, blank=True, null=True, default="")
   manyToManyObject = ["FavoritePost", "ViewPost"]
 
   class Meta:

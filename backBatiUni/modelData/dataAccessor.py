@@ -972,6 +972,8 @@ class DataAccessor():
     response = SmtpConnector(cls.portSmtp).inviteFriend(email, token, userProfile.firstName, userProfile.lastName, userProfile.Company.name)
     if "status" in response and response["status"]:
       InviteFriend.objects.create(invitationAuthor=userProfile, emailTarget=email, token=token)
+      userProfile.tokenFriend = token
+      userProfile.save()
       return  {"inviteFriend":"OK", "messages": f"Invitation envoyé", "token":token}
     return {"inviteFriend":"Warning", "messages":f"Echec de l'envoi"}
 
