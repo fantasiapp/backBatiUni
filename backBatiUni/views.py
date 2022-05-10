@@ -35,7 +35,7 @@ class Data(DefaultView):
       elif action == "applyPost": return Response(DataAccessor.applyPost(request.GET["Post"], request.GET["amount"] if "amount" in request.GET else 0.0, request.GET["devis"] if "devis" in request.GET else "Prix Total", currentUser))
       elif action == "setFavorite": return Response(DataAccessor.setFavorite(request.GET["Post"], request.GET["value"], currentUser))
       elif action == "isViewed": return Response(DataAccessor.isViewed(request.GET["Post"], currentUser))
-      elif action == "inviteFriend": return Response(DataAccessor.inviteFriend(request.GET["mail"], currentUser))
+      elif action == "inviteFriend": return Response(DataAccessor.inviteFriend(request.GET["mail"], request.GET["register"], currentUser))
       return Response({"data GET":"Error", "messages":{"action":action}})
     return Response({"data GET":"Warning", "messages":"La confirmation par mail n'est pas réalisée."})
 
