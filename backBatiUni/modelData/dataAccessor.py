@@ -232,7 +232,6 @@ class DataAccessor():
         if fieldName in Post.manyToManyObject:
           modelObject = apps.get_model(app_label='backBatiUni', model_name=fieldName)
           for content in value:
-            print("pb", content, fieldName)
             if fieldName == "DatePost":
               cls.__computeStartEndDate(kwargs, content)
               listObject.append(modelObject.objects.create(date=content))
@@ -327,7 +326,6 @@ class DataAccessor():
     detailedPost = DetailedPost.objects.create(**kwargs)
     if detailedPost:
       """Il faut toujours avoir un modèle sans date pour le front"""
-      print("exist", DetailedPost.objects.filter(Mission = mission, date=None, content=detailedPost.content))
       if not DetailedPost.objects.filter(Mission = mission, date=None, content=detailedPost.content):
         detailedPost = DetailedPost.objects.create(Mission=detailedPost.Mission, content=detailedPost.content)
       if post:
@@ -606,7 +604,6 @@ class DataAccessor():
 
   @classmethod
   def __validateMissionDate(cls, data, currentUser):
-    print("validateMissionDate", data)
     mission, answer = cls.__validateMissionTimeTable(data)
     if answer:
       return {"validateMissionDate":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
@@ -859,6 +856,7 @@ class DataAccessor():
     if "UserProfile" in data:
       message, valueModified, userProfile = {}, {"UserProfile":{}}, UserProfile.objects.get(id=data["UserProfile"]["id"])
       flagModified = cls.__setValues(data["UserProfile"], user, message, valueModified["UserProfile"], userProfile, False)
+      print("updateUser", flagModified)
       if not flagModified:
         message["general"] = "Aucun champ n'a été modifié" 
       if message:
@@ -900,6 +898,7 @@ class DataAccessor():
             flagModified = True
         else:
           message[fieldName] = "is not a field"
+    print("flagModified2", flagModified)
     return flagModified
 
   @classmethod
@@ -973,7 +972,7 @@ class DataAccessor():
     response = SmtpConnector(cls.portSmtp).inviteFriend(email, token, userProfile.firstName, userProfile.lastName, userProfile.Company.name)
     if "status" in response and response["status"]:
       InviteFriend.objects.create(invitationAuthor=userProfile, emailTarget=email, token=token)
-      return  {"inviteFriend":"OK", "messages": f"Invitation envoyé"}
+      return  {"inviteFriend":"OK", "messages": f"Invitation envoyé", "token":token}
     return {"inviteFriend":"Warning", "messages":f"Echec de l'envoi"}
 
 

@@ -518,6 +518,7 @@ class DetailedPost(CommonModel):
 
   class Meta:
     verbose_name = "DetailedPost"
+    unique_together = ('Post', 'Mission', 'date')
 
 
   @classmethod
@@ -606,8 +607,11 @@ class File(CommonModel):
 
 
   def encodedStringListForPdf(self):
+    print("self.path", self.path)
     path = self.path.replace(".pdf", "/")
+    print("path", path)
     if not os.path.isdir(path):
+      print("test", path, self.path)
       os.mkdir(path)
       images = convert_from_path(self.path)
       for index in range(len(images)):
