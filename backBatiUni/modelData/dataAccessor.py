@@ -965,7 +965,7 @@ class DataAccessor():
   @classmethod
   def inviteFriend(cls, email, register, currentUser):
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
-    if not register:
+    if register == "false":
       userProfile.tokenFriend = ''
       userProfile.save()
       return  {"inviteFriend":"OK"}
