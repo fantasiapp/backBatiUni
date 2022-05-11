@@ -449,7 +449,7 @@ class DataAccessor():
     if post:
       post = post[0]
       for candidate in Candidate.objects.filter(Post=post):
-        print("deletePost", candidate.id, candidate.lastName)
+        print("deletePost", candidate.id, candidate.Company)
         Notification.objects.create(nature="PME", Company=candidate.Company, Role="ST", content=f"L'annonce sur le chantier du {candidate.Post.address} de la société { post.Company } a été supprimé.", timestamp=datetime.now().timestamp())
       for notification in Notification.objects.filter(Post=post):
         notification.Post = None
