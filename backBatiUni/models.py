@@ -484,7 +484,6 @@ class Notification(CommonModel):
     userProfile = UserProfile.objects.get(userNameInternal=user)
     notifications = list(Notification.objects.filter(Company=userProfile.Company))
     notifications.sort(key=lambda notification: notification.timestamp, reverse=True)
-    print("notifications", [notification.timestamp for notification in notifications])
     return Notification.objects.filter(Company=userProfile.Company)
 
 class Candidate(CommonModel):
@@ -611,11 +610,8 @@ class File(CommonModel):
 
 
   def encodedStringListForPdf(self):
-    print("self.path", self.path)
     path = self.path.replace(".pdf", "/")
-    print("path", path)
     if not os.path.isdir(path):
-      print("test", path, self.path)
       os.mkdir(path)
       images = convert_from_path(self.path)
       for index in range(len(images)):

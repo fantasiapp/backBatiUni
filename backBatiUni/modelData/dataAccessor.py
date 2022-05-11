@@ -113,9 +113,6 @@ class DataAccessor():
 
   @classmethod
   def registerConfirm(cls, token):
-    for user in UserProfile.objects.all():
-      if user.token:
-        print("user pending", user.token)
     userProfile = UserProfile.objects.filter(token=token)
     if userProfile:
       userProfile = userProfile[0]
@@ -450,11 +447,16 @@ class DataAccessor():
   def deletePost(cls, id):
     post = Post.objects.filter(id=id)
     if post:
-      for detail in DetailedPost.objects.filter(Post=post[0]):
-        detail.delete()
-      for file in File.objects.filter(Post=post[0]):
-        file.delete()
-        
+      post = post[0]
+      for candidate in Candidate.objects.filter(Post=post):
+        print("deletePost", candidate.id, candidate.lastName)
+        Notification.objects.create(nature="PME", Company=candidate.Company, Role="ST", content=f"L'annonce sur le chantier du {candidate.Post.address} de la société { post.Company } a été supprimé.", timestamp=datetime.now().timestamp())
+      for notification in Notification.objects.filter(Post=post):
+        notification.Post = None
+        notification.save()
+      for classObject in [DetailedPost, DatePost, DetailedPost, File]:
+        for object in classObject.objects.filter(Post=post):
+          object.delete()
       post.delete()
       return {"deletePost":"OK", "id":id}
     return {"deletePost":"Error", "messages":f"{id} does not exist"}
@@ -858,7 +860,6 @@ class DataAccessor():
     if "UserProfile" in data:
       message, valueModified, userProfile = {}, {"UserProfile":{}}, UserProfile.objects.get(id=data["UserProfile"]["id"])
       flagModified = cls.__setValues(data["UserProfile"], user, message, valueModified["UserProfile"], userProfile, False)
-      print("updateUser", flagModified)
       if not flagModified:
         message["general"] = "Aucun champ n'a été modifié" 
       if message:
@@ -900,7 +901,6 @@ class DataAccessor():
             flagModified = True
         else:
           message[fieldName] = "is not a field"
-    print("flagModified2", flagModified)
     return flagModified
 
   @classmethod
