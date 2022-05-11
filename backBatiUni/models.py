@@ -482,6 +482,9 @@ class Notification(CommonModel):
   @classmethod
   def filter(cls, user):
     userProfile = UserProfile.objects.get(userNameInternal=user)
+    notifications = list(Notification.objects.filter(Company=userProfile.Company))
+    notifications.sort(key=lambda notification: notification.timestamp, reverse=True)
+    print("notifications", [notification.timestamp for notification in notifications])
     return Notification.objects.filter(Company=userProfile.Company)
 
 class Candidate(CommonModel):

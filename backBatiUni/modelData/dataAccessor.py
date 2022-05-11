@@ -243,6 +243,7 @@ class DataAccessor():
 
   @classmethod
   def __computeStartEndDate(cls, limitDate, strDate):
+    print("__computeStartEndDate", strDate)
     date = datetime.strptime(strDate, "%Y-%m-%d")
     if not limitDate["startDate"] or limitDate["startDate"] > date:
       limitDate["startDate"] = date
@@ -295,7 +296,7 @@ class DataAccessor():
     amount = 0.0 if amount == "undefined" else amount
     candidate = Candidate.objects.create(Post=post, Company=subContractor, amount=amount, contact=contact, unitOfTime=unitOfTime)
     Notification.objects.create(Post=post, Company=company, subContractor=subContractor, nature="ST", Role="PME", content=f"Un nouveau sous traitant : {subContractor.name} pour le chantier du {post.address} a postulé.", timestamp=datetime.now().timestamp())
-    return {"applyPost":"OK", candidate.id:candidate.computeValues(candidate.listFields(), currentUser, True)}
+    return {"applyPost":"OK", post.id:post.computeValues(post.listFields(), currentUser, True)}
 
 
   @classmethod
@@ -487,8 +488,9 @@ class DataAccessor():
       cls.__updateDatePost(candidate.Mission)
       candidate.Mission.save()
       Notification.objects.create(Mission=candidate.Mission, nature="PME", Company=candidate.Company, Role="ST", content=f"Votre candidature pour le chantier du {candidate.Mission.address} a été retenue.", timestamp=datetime.now().timestamp())
-      response = mission.computeValues(mission.listFields(), currentUser, dictFormat=True)
-      print("handleCandidateForPost", response[39], len(response))
+      for otherCandidate in Candidate.objects.filter(Mission=mission):
+        if otherCandidate != candidate:
+          Notification.objects.create(Mission=candidate.Mission, nature="PME", Company=candidate.Company, Role="ST", content=f"Une autre candidature que la vôtre a été retenue pour le chantier du {candidate.Mission.address}.", timestamp=datetime.now().timestamp())
       return {"handleCandidateForPost":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
     candidate.save()
     Notification.objects.create(Post=candidate.Post, nature="PME", Company=candidate.Company, Role="ST", content=f"Votre candidature pour le chantier du {candidate.Post.address} n'a pas été retenue.", timestamp=datetime.now().timestamp())
