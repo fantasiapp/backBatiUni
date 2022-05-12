@@ -641,7 +641,6 @@ class DataAccessor():
     if data["field"] == "date":
       date = datetime.strptime(data["date"], "%Y-%m-%d")
       datePost = DatePost.objects.get(Mission=mission, date=date)
-      print("validateDate", data, datePost.deleted)
       stillExist = True
       if data["state"]:
         if datePost.deleted:
@@ -652,14 +651,15 @@ class DataAccessor():
           Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"La journée de travail du {data['date']} pour le chantier du {mission.address} est maintenant validée.", timestamp=datetime.now().timestamp())
       else:
         if datePost.deleted:
-          Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"Le retrait de la journée de travail du {data['date']} pour le chantier du {mission.address} a été refusé.", timestamp=datetime.now().timestamp())
           datePost.deleted = False
+          Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"Le retrait de la journée de travail du {data['date']} pour le chantier du {mission.address} a été refusé.", timestamp=datetime.now().timestamp())
         else:
+          stillExist = False
+          datePost.delete()
           Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"La journée supplémentaire de travail du {data['date']} pour le chantier du {mission.address} a été refusé.", timestamp=datetime.now().timestamp())
       if stillExist:
         datePost.validated = True
         datePost.save()
-      print("validateDate", mission.computeValues(mission.listFields(), currentUser, dictFormat=True))
       return {"validateMissionDate":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
     return {"validateMissionDate":"Error", "messages":f'field {data["field"]} is not recognize'}
 
