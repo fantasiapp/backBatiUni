@@ -644,8 +644,8 @@ class DataAccessor():
       print("validateDate", data, datePost.deleted)
       stillExist = True
       if data["state"]:
-        stillExist = False
         if datePost.deleted:
+          stillExist = False
           datePost.delete()
           Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"La journée de travail du {data['date']} pour le chantier du {mission.address} a été refusée.", timestamp=datetime.now().timestamp())
         else:
