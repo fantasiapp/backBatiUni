@@ -368,6 +368,8 @@ class Post(CommonModel):
   securityComment = models.TextField("Respect de la sécurité et de la propreté du chantier Commentaire", blank=False, null=False, default="")
   organisation = models.IntegerField("Organisation", blank=False, null=False, default=0)
   organisationComment = models.TextField("Organisation Commentaire", blank=False, null=False, default="")
+  isBoosted = models.BooleanField("Détermine si une annonce est boosté", null=False, default=False)
+  boostTimestamp = models.FloatField(verbose_name="Timestamp de mise à jour", null=False, default=datetime.datetime.now().timestamp())
 
   vibeST = models.IntegerField("Ambiance sur le chantier ST", blank=False, null=False, default=0)
   vibeCommentST = models.TextField("Ambiance sur le chantier ST Commentaire", blank=False, null=False, default="")
@@ -405,7 +407,7 @@ class Mission(Post):
   @classmethod
   def listFields(cls):
       superList = [field.name.replace("Internal", "") for field in cls._meta.fields][1:] + cls.manyToManyObject
-      for fieldName in ["Candidate"]: #"Company", 
+      for fieldName in ["Candidate", "isBoosted", "boostTimestamp"]: #"Company", 
         index = superList.index(fieldName)
         del superList[index]
       return superList

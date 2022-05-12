@@ -235,12 +235,12 @@ class DataAccessor():
             else:
               listObject.append(modelObject.objects.create(content=content))
     kwargs["contactName"] = f"{userProfile.firstName} {userProfile.lastName}"
+    print("kwargs", kwargs)
     return kwargs, listObject
 
 
   @classmethod
   def __computeStartEndDate(cls, limitDate, strDate):
-    print("__computeStartEndDate", strDate)
     date = datetime.strptime(strDate, "%Y-%m-%d")
     if not limitDate["startDate"] or limitDate["startDate"] > date:
       limitDate["startDate"] = date
