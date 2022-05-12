@@ -1,5 +1,5 @@
 {
-   "currentUser": 4,
+   "currentUser": 3,
    "UserProfileFields": [
       "userName",
       "Company",
@@ -19,14 +19,14 @@
       10
    ],
    "UserProfileValues": {
-      "4": [
-         "pme",
-         4,
-         "Eric",
-         "Entreprise",
+      "3": [
+         "st",
+         3,
+         "Th\u00e9ophile",
+         "Traitant",
          "",
-         "",
-         "pme",
+         "06 29 35 04 18",
+         "st",
          "",
          "",
          [],
@@ -171,7 +171,15 @@
          [],
          [],
          [],
-         []
+         [
+            6,
+            8,
+            10,
+            11,
+            12,
+            13,
+            14
+         ]
       ],
       "4": [
          "PME",
@@ -219,19 +227,7 @@
             4
          ],
          [],
-         [
-            1,
-            2,
-            3,
-            4,
-            5,
-            9,
-            15,
-            16,
-            17,
-            18,
-            19
-         ]
+         []
       ],
       "5": [
          "both",
@@ -494,6 +490,8 @@
       "unitOfTime",
       "counterOffer",
       "description",
+      "isBoosted",
+      "boostTimestamp",
       "DetailedPost",
       "File",
       "Candidate",
@@ -502,10 +500,10 @@
    "PostIndices": [
       0,
       1,
-      21,
-      22,
       23,
-      24
+      24,
+      25,
+      26
    ],
    "PostValues": {
       "1": [
@@ -530,6 +528,8 @@
          "Prix Journalier",
          false,
          "Deuxi\u00e8me description d'un chantier",
+         false,
+         1652371111.477477,
          [
             20,
             21,
@@ -565,6 +565,8 @@
          "Prix Journalier",
          true,
          "Deuxi\u00e8me description d'un chantier",
+         false,
+         1652371111.477477,
          [
             3,
             4
@@ -605,6 +607,8 @@
          "Prix Journalier",
          false,
          "cinqui\u00e8me description d'un chantier",
+         false,
+         1652371111.477477,
          [
             11,
             12,
@@ -643,6 +647,8 @@
          "Prix Journalier",
          true,
          "Sixi\u00e8me description d'un chantier",
+         false,
+         1652371111.477477,
          [
             15,
             16
@@ -663,7 +669,7 @@
          "",
          "",
          "Eric Entreprise",
-         true,
+         false,
          false,
          "2022-05-24",
          "2022-05-19",
@@ -677,11 +683,13 @@
          "Prix Journalier",
          true,
          "",
+         false,
+         1652371111.477477,
          [],
          [],
          [],
          [
-            29
+            45
          ]
       ],
       "8": [
@@ -692,7 +700,7 @@
          "",
          "",
          "Eric Entreprise",
-         true,
+         false,
          false,
          "2022-05-24",
          "2022-05-19",
@@ -704,13 +712,15 @@
          1.0,
          "\u20ac",
          "Prix Journalier",
-         true,
+         false,
          "",
+         false,
+         1652371111.477477,
          [],
          [],
          [],
          [
-            30
+            44
          ]
       ],
       "9": [
@@ -721,7 +731,7 @@
          "",
          "",
          "Eric Entreprise",
-         true,
+         false,
          false,
          "2022-05-24",
          "2022-05-19",
@@ -733,13 +743,15 @@
          1.0,
          "\u20ac",
          "Prix Journalier",
-         true,
+         false,
          "",
+         false,
+         1652371111.477477,
          [],
          [],
          [],
          [
-            31
+            43
          ]
       ],
       "10": [
@@ -750,7 +762,7 @@
          "",
          "",
          "Eric Entreprise",
-         true,
+         false,
          false,
          "2022-05-24",
          "2022-05-19",
@@ -764,11 +776,13 @@
          "Prix Journalier",
          true,
          "",
+         false,
+         1652371111.477477,
          [],
          [],
          [],
          [
-            33
+            42
          ]
       ]
    },
@@ -1134,22 +1148,22 @@
          false,
          false
       ],
-      "29": [
+      "42": [
          "2022-05-19",
          false,
          true
       ],
-      "30": [
+      "43": [
          "2022-05-19",
          false,
          true
       ],
-      "31": [
+      "44": [
          "2022-05-19",
          false,
          true
       ],
-      "33": [
+      "45": [
          "2022-05-19",
          false,
          true
@@ -1435,115 +1449,75 @@
       2
    ],
    "NotificationValues": {
-      "1": [
-         2,
+      "6": [
          "",
          3,
-         "PME",
-         1652368127.374695,
-         "Un nouveau sous traitant : Sous-traitant pour le chantier du 106 rue du Cherche-Midi 75006 Paris a postul\u00e9.",
-         false,
-         "ST"
-      ],
-      "2": [
          "",
-         3,
-         3,
-         "PME",
-         1652368127.477944,
-         "Un nouveau sous traitant : Sous-traitant pour le chantier du 36 rue Dauphine 75006 Paris a postul\u00e9.",
+         "ST",
+         1652368128.774121,
+         "Votre candidature pour le chantier du 36 rue Dauphine 75006 Paris a \u00e9t\u00e9 retenue.",
          false,
-         "ST"
+         "PME"
       ],
-      "3": [
+      "8": [
          "",
          4,
-         3,
-         "PME",
-         1652368127.547637,
-         "Un nouveau sous traitant : Sous-traitant pour le chantier du 28 rue de Fleurus 75006 Paris a postul\u00e9.",
-         false,
-         "ST"
-      ],
-      "4": [
-         5,
          "",
-         3,
-         "PME",
-         1652368127.617945,
-         "Un nouveau sous traitant : Sous-traitant pour le chantier du 34 rue Guynemer 75006 Paris a postul\u00e9.",
+         "ST",
+         1652368129.156406,
+         "Votre candidature pour le chantier du 28 rue de Fleurus 75006 Paris a \u00e9t\u00e9 retenue.",
          false,
-         "ST"
+         "PME"
       ],
-      "5": [
-         2,
-         "",
-         6,
-         "PME",
-         1652368127.847586,
-         "Un nouveau sous traitant : Sous-traitant 2 pour le chantier du 106 rue du Cherche-Midi 75006 Paris a postul\u00e9.",
-         false,
-         "ST"
-      ],
-      "9": [
+      "10": [
          "",
          4,
-         3,
-         "PME",
-         1652368129.424207,
+         "",
+         "ST",
+         1652368129.616667,
          "Le contrat pour le chantier du 28 rue de Fleurus 75006 Paris  a \u00e9t\u00e9 sign\u00e9.",
          false,
-         "ST"
+         "PME"
       ],
-      "15": [
+      "11": [
          "",
          3,
          "",
-         "PME",
-         1652368131.988814,
-         "Votre horaire de d\u00e9but pour le chantier du 36 rue Dauphine 75006 Paris est maintenant valid\u00e9e et est 07:00.",
+         "ST",
+         1652368131.667624,
+         "Votre horaire de d\u00e9part pour le chantier du 36 rue Dauphine 75006 Paris va chang\u00e9 et pour 07:00, \u00e0 vous de valider la modification.",
          false,
          "alert"
       ],
-      "16": [
+      "12": [
          "",
          3,
          "",
-         "PME",
-         1652368132.076196,
-         "Votre horaire de fin de journ\u00e9e pour le chantier du 36 rue Dauphine 75006 Paris a \u00e9t\u00e9 refus\u00e9e.",
+         "ST",
+         1652368131.671603,
+         "Votre horaire de fin de journ\u00e9e pour le chantier du 36 rue Dauphine 75006 Paris va changer et pour 17:00, \u00e0 vous de valider la modification.",
          false,
          "alert"
       ],
-      "17": [
+      "13": [
          "",
          3,
          "",
-         "PME",
-         1652368132.152088,
-         "Le retrait de la journ\u00e9e de travail du 2022-04-15 pour le chantier du 36 rue Dauphine 75006 Paris a \u00e9t\u00e9 refus\u00e9.",
+         "ST",
+         1652368131.686678,
+         "Votre journ\u00e9e de travail du 2022-04-15 pour le chantier du 36 rue Dauphine 75006 Paris est propos\u00e9e \u00e0 la suppression, \u00e0 vous de valider la modification.",
          false,
          "alert"
       ],
-      "18": [
+      "14": [
          "",
          3,
          "",
-         "PME",
-         1652368132.238098,
-         "La journ\u00e9e de travail du 2022-04-19 pour le chantier du 36 rue Dauphine 75006 Paris est maintenant valid\u00e9e.",
+         "ST",
+         1652368131.696242,
+         "Une journ\u00e9e de travail pour le chantier du 36 rue Dauphine 75006 Paris vous est propos\u00e9e 2022-04-19, \u00e0 vous de valider la proposition.",
          false,
          "alert"
-      ],
-      "19": [
-         "",
-         4,
-         3,
-         "PME",
-         1652368132.772987,
-         "La mission du 28 rue de Fleurus 75006 Paris a \u00e9t\u00e9 not\u00e9e.",
-         false,
-         "ST"
       ]
    }
 }
