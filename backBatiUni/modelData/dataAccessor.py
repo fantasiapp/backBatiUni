@@ -7,7 +7,7 @@ from django.apps import apps
 import sys
 import os
 import shutil
-from datetime import datetime
+from datetime import datetime, timedelta
 import base64
 from django.core.files.base import ContentFile
 from ..smtpConnector import SmtpConnector
@@ -35,6 +35,7 @@ class DataAccessor():
     dictAnswer = {"currentUser":UserProfile.objects.get(userNameInternal=user).id} if profile == "user" else {}
     for table in cls.loadTables[profile]:
       dictAnswer.update(table.dumpStructure(user))
+    dictAnswer["timestamp"] = datetime.now().timestamp()
     with open(f"./backBatiUni/modelData/{profile}Data.json", 'w') as jsonFile:
       json.dump(dictAnswer, jsonFile, indent = 3)
     return dictAnswer
@@ -157,6 +158,7 @@ class DataAccessor():
       elif data["action"] == "closeMission": return cls.__closeMission(data, currentUser)
       elif data["action"] == "closeMissionST": return cls.__closeMissionST(data, currentUser)
       elif data["action"] == "notificationViewed": return cls.__notificationViewed(data, currentUser)
+      elif data["action"] == "boostDuration": return cls.__boostDuration(data, currentUser)
       return {"dataPost":"Error", "messages":f"unknown action in post {data['action']}"}
     return {"dataPost":"Error", "messages":"no action in post"}
 
@@ -955,6 +957,20 @@ class DataAccessor():
       answer["modifyDisponibility"] = "Warning"
       answer["messages"] = messages
     return answer
+
+  @classmethod
+  def __boostDuration(cls, dictValue, user):
+    post = Post.objects.filter(id=dictValue["postId"])
+    if post:
+      post = post[0]
+      date = datetime.now() + timedelta(days=dictValue["duration"], hours=0) if dictValue["duration"] else 0
+      post.boostTimestamp = date.timestamp() if date else -1
+      post.save()
+      print("boostDuration", post.computeValues(post.listFields(), user, True))
+      return {"boostDuration":"OK","UserProfile":{post.id:post.computeValues(post.listFields(), user, True)}}
+    return {"boostDuration":"Error", "messages":f"No post with id {'postId'}"}
+    
+
 
   @classmethod
   def forgetPassword(cls, email):
