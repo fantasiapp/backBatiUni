@@ -243,13 +243,13 @@ def executeQuery():
     print("downloadFile: not checked")
   elif query == "inviteFriend":
     response = requests.get(url, headers=headers, params={"action":"inviteFriend", "mail":"jeanluc.walter@fantasiapp.com"})
-  elif query == "boostDuration":
-      post = {"action":"boostDuration", "postId":2, "duration":0}
+  elif query == "boostPost":
+      post = {"action":"boostPost", "postId":2, "duration":0}
       response = requests.post(url, headers=headers, json=post)
   else:
     print("no answer")
 if query == "all":
-  keys = ["buildDB", "register", "registerConfirm", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "uploadFile", "downloadFile", "applyPost", "switchDraft", "handleCandidateForPost", "signContract", "modifyDetailedPost", "createSupervision", "modifyMissionDate", "validateMissionDate", "closeMission", "closeMissionST", "boostDuration"]
+  keys = ["buildDB", "register", "registerConfirm", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "uploadFile", "downloadFile", "applyPost", "switchDraft", "handleCandidateForPost", "signContract", "modifyDetailedPost", "createSupervision", "modifyMissionDate", "validateMissionDate", "closeMission", "closeMissionST", "boostPost"]
   for key in keys: #, "modifyPost"
     query = key
     executeQuery()

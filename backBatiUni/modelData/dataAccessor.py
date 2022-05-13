@@ -158,7 +158,7 @@ class DataAccessor():
       elif data["action"] == "closeMission": return cls.__closeMission(data, currentUser)
       elif data["action"] == "closeMissionST": return cls.__closeMissionST(data, currentUser)
       elif data["action"] == "notificationViewed": return cls.__notificationViewed(data, currentUser)
-      elif data["action"] == "boostDuration": return cls.__boostDuration(data, currentUser)
+      elif data["action"] == "boostPost": return cls.__boostPost(data, currentUser)
       return {"dataPost":"Error", "messages":f"unknown action in post {data['action']}"}
     return {"dataPost":"Error", "messages":"no action in post"}
 
@@ -959,16 +959,16 @@ class DataAccessor():
     return answer
 
   @classmethod
-  def __boostDuration(cls, dictValue, user):
+  def __boostPost(cls, dictValue, user):
     post = Post.objects.filter(id=dictValue["postId"])
     if post:
       post = post[0]
       date = datetime.now() + timedelta(days=dictValue["duration"], hours=0) if dictValue["duration"] else 0
       post.boostTimestamp = date.timestamp() if date else -1
       post.save()
-      print("boostDuration", post.computeValues(post.listFields(), user, True))
-      return {"boostDuration":"OK","UserProfile":{post.id:post.computeValues(post.listFields(), user, True)}}
-    return {"boostDuration":"Error", "messages":f"No post with id {'postId'}"}
+      print("boostPost", post.computeValues(post.listFields(), user, True))
+      return {"boostPost":"OK","UserProfile":{post.id:post.computeValues(post.listFields(), user, True)}}
+    return {"boostPost":"Error", "messages":f"No post with id {'postId'}"}
     
 
 
