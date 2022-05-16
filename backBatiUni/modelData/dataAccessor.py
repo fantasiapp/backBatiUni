@@ -734,6 +734,7 @@ class DataAccessor():
         exceptionField = ['signedByCompany', 'signedBySubContractor', 'subContractorContact', 'subContractorName', 'quality', 'qualityComment', 'security', 'securityComment', 'organisation', 'organisationComment', 'vibeST',  'vibeCommentST',  'securityST',  'securityCommentST',  'signedByCompany',  'organisationST',  'organisationCommentST',  'isClosed', 'contract']
         kwargs = {field.name:getattr(post, field.name) for field in Post._meta.fields[1:] if not field in exceptionField}
         kwargs["draft"] = True
+        kwargs["boostTimestamp"] = datetime.now().timestamp()
         duplicate = Post.objects.create(**kwargs)
         for detailPost in DetailedPost.objects.filter(Post=post):
           DetailedPost.objects.create(Post=duplicate, content=detailPost.content)
