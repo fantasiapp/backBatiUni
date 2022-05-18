@@ -125,8 +125,8 @@ def executeQuery():
           "longitude":2.237779 + random.random() / 10000 ,
           "latitude":48.848776 + random.random() / 10000,
           "address":f"{math.floor(1 + random.random() * 50)} rue de {street} {city}",
-          # "Job":math.floor(1 + random.random() * 145),
-          "Job": 6,
+          "Job":math.floor(1 + random.random() * 140),
+          # "Job": 6,
           "numberOfPeople":math.floor(1 + random.random() * 10),
           "dueDate":f"2022-06-{str(startDate - 1)}",
           "startDate":f"2022-06-{str(startDate)}",
@@ -140,7 +140,7 @@ def executeQuery():
           "description":"Première description d'un chantier",
           "amount":math.floor(1000 + random.random() * 1000) if counterOffer else 0,
           "DetailedPost":["salle de bain", "douche"],
-          "draft": False
+          "draft": random.random() < 0.2
           }
         requests.post(url, headers=headers, json=post)
 

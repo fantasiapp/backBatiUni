@@ -96,11 +96,14 @@ class CommonModel(models.Model):
         elif field == "FavoritePost":
           listModel = [favorite.postId for favorite in FavoritePost.objects.filter(UserProfile=self)]
         elif field in ["DatePost", "DetailedPost"] and (isinstance(self, Post) or isinstance(self, Mission)) : #, "Candidate"]
-          objects = DatePost.objects.filter(Mission = self) if isinstance(self, Mission) else DatePost.objects.filter(Post = self)
+          objectsClass = {"DatePost":DatePost, "DetailedPost":DetailedPost}
+          objects = objectsClass[field].objects.filter(Mission = self) if isinstance(self, Mission) else  objectsClass[field].objects.filter(Post = self)
           if dictFormat:
             listModel = {objectModel.id:objectModel.computeValues(listFieldsModel, user, dictFormat=True) for objectModel in objects}
           else:
             listModel = [objectModel.id for objectModel in objects]
+            if field == "DetailedPost":
+              print("DetailedPost", listModel)
         elif dictFormat:
           listModel = {objectModel.id:objectModel.computeValues(listFieldsModel, user, dictFormat=True) for objectModel in model.filter(user) if getattr(objectModel, self.__class__.__name__, False) == self}
           listModel = {key:valueList if len(valueList) != 1 else valueList[0] for key, valueList in listModel.items()}
