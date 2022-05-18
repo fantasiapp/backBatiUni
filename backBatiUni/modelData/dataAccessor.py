@@ -13,7 +13,6 @@ from django.core.files.base import ContentFile
 from ..smtpConnector import SmtpConnector
 import json
 import secrets
-from time import time
 
 from dotenv import load_dotenv
 
@@ -22,17 +21,6 @@ if os.getenv('PATH_MIDDLE'):
   sys.path.append(os.getenv('PATH_MIDDLE'))
   from profileScraping import getEnterpriseDataFrom
   from geocoding import getCoordinatesFrom # argument str address
-
-def timer_func(func):
-  # This function shows the execution time of 
-  # the function object passed
-  def wrap_func(*args, **kwargs):
-      t1 = time()
-      result = func(*args, **kwargs)
-      t2 = time()
-      print(f'Function {func.__name__!r} executed in {(t2-t1):.4f}s')
-      return result
-  return wrap_func
 
 
 class DataAccessor():
@@ -51,7 +39,7 @@ class DataAccessor():
       dictAnswer.update(table.dumpStructure(user))
       t2 = time()
       # print(f'Function {table} executed in {(t2-t1):.4f}s')
-    # print(f"total executed in {(t2-t0):.4f}s")
+    print(f"total executed in {(t2-t0):.4f}s")
     dictAnswer["timestamp"] = datetime.now().timestamp()
     with open(f"./backBatiUni/modelData/{profile}Data.json", 'w') as jsonFile:
       json.dump(dictAnswer, jsonFile, indent = 3)

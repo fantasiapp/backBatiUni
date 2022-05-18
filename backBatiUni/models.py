@@ -89,25 +89,18 @@ class CommonModel(models.Model):
       elif isinstance(fieldObject, models.BooleanField):
         values.append(getattr(self, field))
       elif field in self.manyToManyObject:
-        t0 = time()
         model = apps.get_model(app_label='backBatiUni', model_name=field)
         listFieldsModel = model.listFields()
         if field == "ViewPost":
           listModel = [view.id for view in ViewPost.objects.filter(UserProfile=self)]
         elif field == "FavoritePost":
           listModel = [favorite.postId for favorite in FavoritePost.objects.filter(UserProfile=self)]
-        # elif field in ["DatePost", "DetailedPost"] and (isinstance(self, Post) or isinstance(self, Mission)) : #, "Candidate"]
-        #   objects = DatePost.objects.filter(Mission = self) if isinstance(self, Mission) else DatePost.objects.filter(Post = self)
-        #   if dictFormat:
-        #     listModel = {objectModel.id:objectModel.computeValues(listFieldsModel, user, dictFormat=True) for objectModel in objects}
-        #   else:
-        #     if "DatePost":
-        #       listModel = [objectModel.id for objectModel in objects]
-        #       print("new", listModel)
-        #     listModel = [objectModel.id for objectModel in model.filter(user) if getattr(objectModel, self.__class__.__name__, False) == self]
-        #     if "DatePost":
-        #       print("old", listModel, self.__class__.__name__, self.id)
-        #       print()
+        elif field in ["DatePost", "DetailedPost"] and (isinstance(self, Post) or isinstance(self, Mission)) : #, "Candidate"]
+          objects = DatePost.objects.filter(Mission = self) if isinstance(self, Mission) else DatePost.objects.filter(Post = self)
+          if dictFormat:
+            listModel = {objectModel.id:objectModel.computeValues(listFieldsModel, user, dictFormat=True) for objectModel in objects}
+          else:
+            listModel = [objectModel.id for objectModel in objects]
         elif dictFormat:
           listModel = {objectModel.id:objectModel.computeValues(listFieldsModel, user, dictFormat=True) for objectModel in model.filter(user) if getattr(objectModel, self.__class__.__name__, False) == self}
           listModel = {key:valueList if len(valueList) != 1 else valueList[0] for key, valueList in listModel.items()}

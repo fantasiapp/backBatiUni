@@ -115,34 +115,34 @@ def executeQuery():
       for post in [post1, post2, post3, post4, post5, post6]:
         response = requests.post(url, headers=headers, json=post)
 
-      # for i in range(10):
-      #   street = ''.join(random.choice(string.ascii_letters) for x in range(8))
-      #   city = ''.join(random.choice(string.ascii_letters) for x in range(8))
-      #   counterOffer = random.random() > .5
-      #   startDate = math.floor(5 + random.random() * 20)
-      #   post = {
-      #     'action':"uploadPost",
-      #     "longitude":2.237779 + random.random() / 10000 ,
-      #     "latitude":48.848776 + random.random() / 10000,
-      #     "address":f"{math.floor(1 + random.random() * 50)} rue de {street} {city}",
-      #     # "Job":math.floor(1 + random.random() * 145),
-      #     "Job": 6,
-      #     "numberOfPeople":math.floor(1 + random.random() * 10),
-      #     "dueDate":f"2022-06-{str(startDate - 1)}",
-      #     "startDate":f"2022-06-{str(startDate)}",
-      #     "endDate":f"2022-06-{str(startDate + 3)}",
-      #     "DatePost":[f"2022-06-{str(startDate)}", f"2022-06-{str(startDate + 1)}", f"2022-06-{str(startDate + 2)}", f"2022-06-{str(startDate + 3)}"],
-      #     "manPower":random.random() > .5,
-      #     "counterOffer":counterOffer,
-      #     "hourlyStart":"07:30",
-      #     "hourlyEnd":"17:30",
-      #     "currency":"€",
-      #     "description":"Première description d'un chantier",
-      #     "amount":math.floor(1000 + random.random() * 1000) if counterOffer else 0,
-      #     "DetailedPost":["salle de bain", "douche"],
-      #     "draft": False
-      #     }
-      #   requests.post(url, headers=headers, json=post)
+      for i in range(50):
+        street = ''.join(random.choice(string.ascii_letters) for x in range(8))
+        city = ''.join(random.choice(string.ascii_letters) for x in range(8))
+        counterOffer = random.random() > .5
+        startDate = math.floor(5 + random.random() * 20)
+        post = {
+          'action':"uploadPost",
+          "longitude":2.237779 + random.random() / 10000 ,
+          "latitude":48.848776 + random.random() / 10000,
+          "address":f"{math.floor(1 + random.random() * 50)} rue de {street} {city}",
+          # "Job":math.floor(1 + random.random() * 145),
+          "Job": 6,
+          "numberOfPeople":math.floor(1 + random.random() * 10),
+          "dueDate":f"2022-06-{str(startDate - 1)}",
+          "startDate":f"2022-06-{str(startDate)}",
+          "endDate":f"2022-06-{str(startDate + 3)}",
+          "DatePost":[f"2022-06-{str(startDate)}", f"2022-06-{str(startDate + 1)}", f"2022-06-{str(startDate + 2)}", f"2022-06-{str(startDate + 3)}"],
+          "manPower":random.random() > .5,
+          "counterOffer":counterOffer,
+          "hourlyStart":"07:30",
+          "hourlyEnd":"17:30",
+          "currency":"€",
+          "description":"Première description d'un chantier",
+          "amount":math.floor(1000 + random.random() * 1000) if counterOffer else 0,
+          "DetailedPost":["salle de bain", "douche"],
+          "draft": False
+          }
+        requests.post(url, headers=headers, json=post)
 
     elif query == "modifyPost":
       post = {'action':"modifyPost", "id":1, "address":"126 rue de Paris 92100 Boulogne", "Job":5, "numberOfPeople":2, "dueDate":"2022-03-15", "startDate":"2022-03-16", "endDate":"2022-04-28", "manPower":False, "counterOffer":False, "hourlyStart":"07:00", "hourlyEnd":"17:00", "currency":"€", "description":"Deuxième description d'un chantier", "amount":24456.10, "DetailedPost":["salle de bain", "douche", "lavabo"], "DatePost":["2022-03-15", "2022-03-16", "2022-03-17"]}
@@ -285,7 +285,7 @@ def executeQuery():
   else:
     print("no answer")
 if query == "all":
-  keys = ["buildDB", "register", "registerConfirm", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "uploadFile", "downloadFile", "applyPost", "switchDraft", "handleCandidateForPost", "signContract", "modifyDetailedPost", "createSupervision", "modifyMissionDate", "validateMissionDate", "closeMission", "closeMissionST", "boostPost"]
+  keys = ["buildDB", "register", "registerConfirm", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "uploadFile", "downloadFile", "applyPost", "switchDraft", "handleCandidateForPost", "signContract", "modifyDetailedPost", "createSupervision", "modifyMissionDate", "validateMissionDate", "uploadImageSupervision", "closeMission", "closeMissionST", "boostPost"]
   for key in keys: #, "modifyPost"
     query = key
     executeQuery()
