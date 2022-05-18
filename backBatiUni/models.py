@@ -102,8 +102,6 @@ class CommonModel(models.Model):
             listModel = {objectModel.id:objectModel.computeValues(listFieldsModel, user, dictFormat=True) for objectModel in objects}
           else:
             listModel = [objectModel.id for objectModel in objects]
-            if field == "DetailedPost":
-              print("DetailedPost", listModel)
         elif dictFormat:
           listModel = {objectModel.id:objectModel.computeValues(listFieldsModel, user, dictFormat=True) for objectModel in model.filter(user) if getattr(objectModel, self.__class__.__name__, False) == self}
           listModel = {key:valueList if len(valueList) != 1 else valueList[0] for key, valueList in listModel.items()}
