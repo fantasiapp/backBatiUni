@@ -5,6 +5,9 @@ from PIL import Image
 import os
 import base64
 from io import BytesIO
+import random
+import string
+import math
 
 userName, password = "st", "pwd"
 # userName, password = "jlw", "pwd"
@@ -111,6 +114,36 @@ def executeQuery():
       post6 = {'action':"uploadPost", "longitude":2.324877 , "latitude":48.841625, "address":"108 rue du Cherche-Midi 75006 Paris", "Job":5, "numberOfPeople":1, "dueDate":"2022-04-15", "startDate":"2022-04-16", "endDate":"2022-04-28", "DatePost":["2022-04-26", "2022-04-27", "2022-04-28"], "manPower":False, "counterOffer":True, "hourlyStart":"07:00", "hourlyEnd":"17:00", "currency":"€", "description":"Sixième description d'un chantier", "amount":23456.10, "DetailedPost":["radiateur", "Chaudière"]}
       for post in [post1, post2, post3, post4, post5, post6]:
         response = requests.post(url, headers=headers, json=post)
+
+      # for i in range(10):
+      #   street = ''.join(random.choice(string.ascii_letters) for x in range(8))
+      #   city = ''.join(random.choice(string.ascii_letters) for x in range(8))
+      #   counterOffer = random.random() > .5
+      #   startDate = math.floor(5 + random.random() * 20)
+      #   post = {
+      #     'action':"uploadPost",
+      #     "longitude":2.237779 + random.random() / 10000 ,
+      #     "latitude":48.848776 + random.random() / 10000,
+      #     "address":f"{math.floor(1 + random.random() * 50)} rue de {street} {city}",
+      #     # "Job":math.floor(1 + random.random() * 145),
+      #     "Job": 6,
+      #     "numberOfPeople":math.floor(1 + random.random() * 10),
+      #     "dueDate":f"2022-06-{str(startDate - 1)}",
+      #     "startDate":f"2022-06-{str(startDate)}",
+      #     "endDate":f"2022-06-{str(startDate + 3)}",
+      #     "DatePost":[f"2022-06-{str(startDate)}", f"2022-06-{str(startDate + 1)}", f"2022-06-{str(startDate + 2)}", f"2022-06-{str(startDate + 3)}"],
+      #     "manPower":random.random() > .5,
+      #     "counterOffer":counterOffer,
+      #     "hourlyStart":"07:30",
+      #     "hourlyEnd":"17:30",
+      #     "currency":"€",
+      #     "description":"Première description d'un chantier",
+      #     "amount":math.floor(1000 + random.random() * 1000) if counterOffer else 0,
+      #     "DetailedPost":["salle de bain", "douche"],
+      #     "draft": False
+      #     }
+      #   requests.post(url, headers=headers, json=post)
+
     elif query == "modifyPost":
       post = {'action':"modifyPost", "id":1, "address":"126 rue de Paris 92100 Boulogne", "Job":5, "numberOfPeople":2, "dueDate":"2022-03-15", "startDate":"2022-03-16", "endDate":"2022-04-28", "manPower":False, "counterOffer":False, "hourlyStart":"07:00", "hourlyEnd":"17:00", "currency":"€", "description":"Deuxième description d'un chantier", "amount":24456.10, "DetailedPost":["salle de bain", "douche", "lavabo"], "DatePost":["2022-03-15", "2022-03-16", "2022-03-17"]}
       response = requests.post(url, headers=headers, json=post)
@@ -182,6 +215,9 @@ def executeQuery():
       post4 = {'action':"createSupervision", "missionId":3, "date":"2022-04-16", "comment":"Attention au travail de ce jour."}
       for post in [post1, post2, post3, post4]:
         response = requests.post(url, headers=headersPme, json=post)
+    elif query == "uploadImageSupervision":
+      post = {'action':"uploadImageSupervision", "supervisionId":7, "ext":"png", "imageBase64":getDocStr(7)}
+      response = requests.post(url, headers=headers, json=post)
     elif query == "switchDraft":
       requests.get(url, headers=headers, params={"action":"switchDraft", "id":2})
       response = requests.get(url, headers=headers, params={"action":"switchDraft", "id":3})

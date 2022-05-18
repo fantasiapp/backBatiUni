@@ -13,6 +13,7 @@ from django.core.files.base import ContentFile
 from ..smtpConnector import SmtpConnector
 import json
 import secrets
+from time import time
 
 from dotenv import load_dotenv
 
@@ -21,6 +22,17 @@ if os.getenv('PATH_MIDDLE'):
   sys.path.append(os.getenv('PATH_MIDDLE'))
   from profileScraping import getEnterpriseDataFrom
   from geocoding import getCoordinatesFrom # argument str address
+
+def timer_func(func):
+  # This function shows the execution time of 
+  # the function object passed
+  def wrap_func(*args, **kwargs):
+      t1 = time()
+      result = func(*args, **kwargs)
+      t2 = time()
+      print(f'Function {func.__name__!r} executed in {(t2-t1):.4f}s')
+      return result
+  return wrap_func
 
 
 class DataAccessor():
@@ -33,8 +45,13 @@ class DataAccessor():
     if not UserProfile.objects.filter(userNameInternal=user) and profile == "user":
       {"register":"Error", "messages":"currentUser does not exist"} 
     dictAnswer = {"currentUser":UserProfile.objects.get(userNameInternal=user).id} if profile == "user" else {}
+    t0 = time()
     for table in cls.loadTables[profile]:
+      t1 = time()
       dictAnswer.update(table.dumpStructure(user))
+      t2 = time()
+      # print(f'Function {table} executed in {(t2-t1):.4f}s')
+    # print(f"total executed in {(t2-t0):.4f}s")
     dictAnswer["timestamp"] = datetime.now().timestamp()
     with open(f"./backBatiUni/modelData/{profile}Data.json", 'w') as jsonFile:
       json.dump(dictAnswer, jsonFile, indent = 3)
@@ -801,6 +818,7 @@ class DataAccessor():
     except:
       if file: file.delete()
       return {"uploadFile":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
+      
 
   @classmethod
   def __uploadImageSupervision(cls, data, currentUser):
@@ -809,27 +827,14 @@ class DataAccessor():
     fileStr = data["imageBase64"]
     if not fileStr:
       return {"uploadImageSupervision":"Error", "messages":"field fileBase64 is empty"}
-    name = "supervision"
-    if data["taskId"]:
-      detailedPost = DetailedPost.objects.get(id=data["taskId"])
-      supervisions = Supervision.objects.filter(Mission=None, DetailedPost=detailedPost)
-      mission = None
-    else:
-      detailedPost = None
-      mission = Mission.objects.get(id=data["missionId"])
-      supervisions = Supervision.objects.filter(Mission=mission)
-      if supervisions:
-        supervision = supervisions[len(supervisions) - 1]
-      else:
-        return {"uploadImageSupervision":"Error", "messages":f"No supervision associated to mission id {mission.id}"}
-
-    objectFile = File.createFile("supervision", name, data['ext'], currentUser, post=None, mission=mission, detailedPost=detailedPost, supervision=supervision)
+    supervision = Supervision.objects.get(id=data["supervisionId"])
+    objectFile = File.createFile("supervision", "supervision", data['ext'], currentUser, supervision=supervision)
     file = None
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path + data['ext']) if data['ext'] != "txt" else fileStr
       with open(objectFile.path, "wb") as outfile:
           outfile.write(file.file.getbuffer())
-      return {"uploadImageSupervision":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)[:-1]}
+      return {"uploadImageSupervision":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)[:-1], "supervisionId":supervision.id}
     except:
       if file: file.delete()
       return {"uploadImageSupervision":"Warning", "messages":"Le fichier ne peut être sauvegardé"}

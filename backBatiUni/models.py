@@ -1,3 +1,4 @@
+from ast import DictComp
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -11,6 +12,7 @@ import whatimage
 import pyheif
 from PIL import Image
 from cairosvg import svg2png
+from time import time
 
 
 class CommonModel(models.Model):
@@ -87,12 +89,25 @@ class CommonModel(models.Model):
       elif isinstance(fieldObject, models.BooleanField):
         values.append(getattr(self, field))
       elif field in self.manyToManyObject:
+        t0 = time()
         model = apps.get_model(app_label='backBatiUni', model_name=field)
         listFieldsModel = model.listFields()
         if field == "ViewPost":
           listModel = [view.id for view in ViewPost.objects.filter(UserProfile=self)]
         elif field == "FavoritePost":
           listModel = [favorite.postId for favorite in FavoritePost.objects.filter(UserProfile=self)]
+        # elif field in ["DatePost", "DetailedPost"] and (isinstance(self, Post) or isinstance(self, Mission)) : #, "Candidate"]
+        #   objects = DatePost.objects.filter(Mission = self) if isinstance(self, Mission) else DatePost.objects.filter(Post = self)
+        #   if dictFormat:
+        #     listModel = {objectModel.id:objectModel.computeValues(listFieldsModel, user, dictFormat=True) for objectModel in objects}
+        #   else:
+        #     if "DatePost":
+        #       listModel = [objectModel.id for objectModel in objects]
+        #       print("new", listModel)
+        #     listModel = [objectModel.id for objectModel in model.filter(user) if getattr(objectModel, self.__class__.__name__, False) == self]
+        #     if "DatePost":
+        #       print("old", listModel, self.__class__.__name__, self.id)
+        #       print()
         elif dictFormat:
           listModel = {objectModel.id:objectModel.computeValues(listFieldsModel, user, dictFormat=True) for objectModel in model.filter(user) if getattr(objectModel, self.__class__.__name__, False) == self}
           listModel = {key:valueList if len(valueList) != 1 else valueList[0] for key, valueList in listModel.items()}
@@ -153,7 +168,7 @@ class Company(CommonModel):
   address = models.CharField("Adresse de l'entreprise", unique=True, max_length=256, null=True, default=None)
   activity = models.CharField("Activite principale de l'entreprise", unique=False, max_length=256, null=False, default="")
   ntva = models.CharField("Numéro de TVA intra communautaire", unique=True, max_length=32, null=True, default=None)
-  capital = models.IntegerField("Capital de l'entreprise", null=True, default=None)
+  capital = models.FloatField("Capital de l'entreprise", null=True, default=None)
   revenue = models.FloatField("Capital de l'entreprise", null=True, default=None)
   logo = models.CharField("Path du logo de l'entreprise", max_length=256, null=True, default=None)
   webSite = models.CharField("Url du site Web", max_length=256, null=True, default=None)
