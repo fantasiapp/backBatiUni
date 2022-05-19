@@ -56,6 +56,16 @@ def executeQuery():
     post5 = {"firstname":"Tanguy","lastname":"Traitant","email":"st2","password":"pwd","company":{'id': 6, 'name': 'Sous-traitant 2', 'address': '78 rue des Sous-traitants Paris 75008', 'activity': 'Activité inconnue', 'siret': '40422352100048', 'ntva': 'FR49404223553'},"Role":2,"proposer":"","jobs":[1,2,80]}
     for post in [post1, post2, post3, post4, post5]:
       response = requests.post(url, headers=headers, json=post)
+  elif query == "registerMany":
+    company = ''.join(random.choice(string.ascii_letters) for x in range(3))
+    companies = requests.get(f'{address}/initialize/', headers=headers, params={"action":"getEnterpriseDataFrom", "subName":company})
+    data = json.loads(companies.text)
+    establishmentsFields = data["EstablishmentsFields"]
+    establishmentsValues = data["EstablishmentsValues"]
+    for i in range(len(establishmentsValues)):
+      establishmentValue = establishmentsValues[str(i)]
+      print(establishmentValue)
+    print(establishmentsFields, len(establishmentsValues))
   elif query == "registerConfirm":
       print("registerConfirm", url)
       requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
@@ -126,7 +136,6 @@ def executeQuery():
           "latitude":48.848776 + random.random() / 10000,
           "address":f"{math.floor(1 + random.random() * 50)} rue de {street} {city}",
           "Job":math.floor(1 + random.random() * 140),
-          # "Job": 6,
           "numberOfPeople":math.floor(1 + random.random() * 10),
           "dueDate":f"2022-06-{str(startDate - 1)}",
           "startDate":f"2022-06-{str(startDate)}",
@@ -138,7 +147,7 @@ def executeQuery():
           "hourlyEnd":"17:30",
           "currency":"€",
           "description":"Première description d'un chantier",
-          "amount":math.floor(1000 + random.random() * 1000) if counterOffer else 0,
+          "amount":math.floor(1000 + random.random() * 4000),
           "DetailedPost":["salle de bain", "douche"],
           "draft": random.random() < 0.2
           }

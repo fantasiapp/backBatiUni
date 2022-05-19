@@ -52,6 +52,7 @@ class DataAccessor():
       return {"register":"Warning", "messages":message}
     token = SmtpConnector(cls.portSmtp).register(data["firstname"], data["lastname"], data["email"])
     if token != "token not received" or data["email"] == "jeanluc":
+      print("register", data)
       userProfile = cls.__registerAction(data, token)
       cls.__checkIfHaveBeenInvited(userProfile, data['proposer'], data['email'])
       return {"register":"OK"}
@@ -105,7 +106,7 @@ class DataAccessor():
     company.Role = Role.objects.get(id=data['Role'])
     company.save()
     proposer = None
-    if data['proposer'] and User.objects.get(id=data['proposer']):
+    if data['proposer'] and User.objects.get(tokenFriend=data['proposer']):
       proposer = User.objects.get(id=data['proposer'])
     userProfile = UserProfile.objects.create(Company=company, firstName=data['firstname'], lastName=data['lastname'], proposer=proposer, token=token, email=data["email"], password=data["password"])
     if 'jobs' in data:
@@ -739,7 +740,7 @@ class DataAccessor():
         exceptionField = ['signedByCompany', 'signedBySubContractor', 'subContractorContact', 'subContractorName', 'quality', 'qualityComment', 'security', 'securityComment', 'organisation', 'organisationComment', 'vibeST',  'vibeCommentST',  'securityST',  'securityCommentST',  'signedByCompany',  'organisationST',  'organisationCommentST',  'isClosed', 'contract']
         kwargs = {field.name:getattr(post, field.name) for field in Post._meta.fields[1:] if not field in exceptionField}
         kwargs["draft"] = True
-        kwargs["boostTimestamp"] = datetime.now().timestamp()
+        kwargs["boostTimestamp"] = 0
         duplicate = Post.objects.create(**kwargs)
         for detailPost in DetailedPost.objects.filter(Post=post):
           DetailedPost.objects.create(Post=duplicate, content=detailPost.content)
@@ -810,6 +811,7 @@ class DataAccessor():
 
   @classmethod
   def __uploadImageSupervision(cls, data, currentUser):
+    print("data", data)
     if not data['ext'] in File.authorizedExtention:
       return {"uploadImageSupervision":"Warning", "messages":f"L'extention {data['ext']} n'est pas traitée"}
     fileStr = data["imageBase64"]
