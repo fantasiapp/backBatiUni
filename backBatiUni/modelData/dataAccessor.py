@@ -969,7 +969,7 @@ class DataAccessor():
         print("test", post.endDate, type(post.endDate), datetime.now(), "now", type(datetime.now())) #datetime.now()
         strEndDate = post.endDate.strftime("%m/%d/%Y" "%H:%M:%S")
         date = datetime.strptime(strEndDate, "%m/%d/%Y" "%H:%M:%S")
-        post.boostTimestamp = date.timestamp() if date else -1
+      post.boostTimestamp = date.timestamp()
       post.save()
       print("boostPost", post.computeValues(post.listFields(), user, True))
       return {"boostPost":"OK","UserProfile":{post.id:post.computeValues(post.listFields(), user, True)}}
