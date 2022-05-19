@@ -125,7 +125,7 @@ def executeQuery():
       for post in [post1, post2, post3, post4, post5, post6]:
         response = requests.post(url, headers=headers, json=post)
 
-      for i in range(50):
+      for i in range(200):
         street = ''.join(random.choice(string.ascii_letters) for x in range(8))
         city = ''.join(random.choice(string.ascii_letters) for x in range(8))
         counterOffer = random.random() > .5
@@ -284,8 +284,8 @@ def executeQuery():
   if response and query != "downloadFile":
     data = json.loads(response.text)
     print("data", data)
-  elif query == "downloadFile":
-    print("downloadFile: not checked")
+  elif query in ["downloadFile", "uploadSupervision"]:
+    print(f"{query}: not checked")
   elif query == "inviteFriend":
     response = requests.get(url, headers=headers, params={"action":"inviteFriend", "mail":"jeanluc.walter@fantasiapp.com"})
   elif query == "boostPost":

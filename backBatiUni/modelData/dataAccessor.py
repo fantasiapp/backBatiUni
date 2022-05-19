@@ -106,9 +106,9 @@ class DataAccessor():
     company.Role = Role.objects.get(id=data['Role'])
     company.save()
     proposer = None
-    if data['proposer'] and UserProfile.objects.get(tokenFriend=data['proposer']):
-      idProposer = UserProfile.objects.get(tokenFriend=data['proposer'])
-      proposer = UserProfile.objects.get(id=idProposer)
+    # if data['proposer'] and UserProfile.objects.get(tokenFriend=data['proposer']):
+    #   idProposer = UserProfile.objects.get(tokenFriend=data['proposer'])
+    #   proposer = UserProfile.objects.get(id=idProposer)
     userProfile = UserProfile.objects.create(Company=company, firstName=data['firstname'], lastName=data['lastname'], proposer=proposer, token=token, email=data["email"], password=data["password"])
     if 'jobs' in data:
       for idJob in data['jobs']:
@@ -812,7 +812,7 @@ class DataAccessor():
 
   @classmethod
   def __uploadImageSupervision(cls, data, currentUser):
-    print("data", data)
+    print("uploadImageSupervision")
     if not data['ext'] in File.authorizedExtention:
       return {"uploadImageSupervision":"Warning", "messages":f"L'extention {data['ext']} n'est pas traitée"}
     fileStr = data["imageBase64"]
@@ -957,11 +957,19 @@ class DataAccessor():
 
   @classmethod
   def __boostPost(cls, dictValue, user):
+    print("boostPost")
     post = Post.objects.filter(id=dictValue["postId"])
     if post:
       post = post[0]
-      date = datetime.now() + timedelta(days=dictValue["duration"], hours=0) if dictValue["duration"] else 0
-      post.boostTimestamp = date.timestamp() if date else -1
+      if dictValue["duration"]:
+        date = datetime.now() + timedelta(days=dictValue["duration"], hours=0)
+      else:
+        date = None
+        endDate = post.endDate
+        print("test", post.endDate, type(post.endDate), datetime.now(), "now", type(datetime.now())) #datetime.now()
+        strEndDate = post.endDate.strftime("%m/%d/%Y" "%H:%M:%S")
+        date = datetime.strptime(strEndDate, "%m/%d/%Y" "%H:%M:%S")
+        post.boostTimestamp = date.timestamp() if date else -1
       post.save()
       print("boostPost", post.computeValues(post.listFields(), user, True))
       return {"boostPost":"OK","UserProfile":{post.id:post.computeValues(post.listFields(), user, True)}}
