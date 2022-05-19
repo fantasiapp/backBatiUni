@@ -106,8 +106,9 @@ class DataAccessor():
     company.Role = Role.objects.get(id=data['Role'])
     company.save()
     proposer = None
-    if data['proposer'] and User.objects.get(tokenFriend=data['proposer']):
-      proposer = User.objects.get(id=data['proposer'])
+    if data['proposer'] and UserProfile.objects.get(tokenFriend=data['proposer']):
+      idProposer = UserProfile.objects.get(tokenFriend=data['proposer'])
+      proposer = UserProfile.objects.get(id=idProposer)
     userProfile = UserProfile.objects.create(Company=company, firstName=data['firstname'], lastName=data['lastname'], proposer=proposer, token=token, email=data["email"], password=data["password"])
     if 'jobs' in data:
       for idJob in data['jobs']:
