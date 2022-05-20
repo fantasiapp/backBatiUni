@@ -195,11 +195,7 @@ class Company(CommonModel):
     t0 = time()
     for index in range(len(listFields)):
       field = listFields[index]
-      if isinstance(self, Company):
-        t1 = time()
-        print("field", field)
-        print("time", t1 - t0)
-        t0 = t1
+      t1 = time()
       fieldObject = None
       try:
         fieldObject = self._meta.get_field(field)
@@ -221,6 +217,10 @@ class Company(CommonModel):
         elif field in ["LabelForCompany", "File"]:
           objectsClass = {"LabelForCompany":LabelForCompany, "File":File}
           objects = objectsClass[field].objects.filter(Company = self)
+          if isinstance(self, Company):
+            t1 = time()
+            print("field", field, "time", t1 - t0)
+            t0 = t1
           if dictFormat:
             listModel = {objectModel.id:objectModel.computeValues(listFieldsModel, user, dictFormat=True) for objectModel in objects}
           else:
@@ -284,7 +284,11 @@ class LabelForCompany(CommonModel):
     unique_together = ('Label', 'Company')
     verbose_name = "LabelForCompany"
 
-  # def computs
+  def computeValues(self, listFields, user, dictFormat=False):
+    if dictFormat:
+      return {self.id:[self.label.id, self.date.strftime("%Y-%m-%d")]}
+    else:
+      return self.id
 
   @classmethod
   def listFields(cls):
