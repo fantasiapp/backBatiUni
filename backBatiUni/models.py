@@ -72,18 +72,9 @@ class CommonModel(models.Model):
     return dictResult
 
   def computeValues(self, listFields, user, dictFormat=False):
-    # if isinstance(self, Company):
-    #   print("computeValues", self)
-
     values, listIndices = [], self.listIndices()
-    t0 = time()
     for index in range(len(listFields)):
       field = listFields[index]
-      if isinstance(self, Company):
-        t1 = time()
-        # print("field", field)
-        # print("time", t1 - t0)
-        t0 = t1
       fieldObject = None
       try:
         fieldObject = self._meta.get_field(field)
@@ -112,7 +103,6 @@ class CommonModel(models.Model):
           else:
             listModel = [objectModel.id for objectModel in objects]
         elif dictFormat:
-          # print("dictFormat", field)
           listModel = {objectModel.id:objectModel.computeValues(listFieldsModel, user, dictFormat=True) for objectModel in model.filter(user) if getattr(objectModel, self.__class__.__name__, False) == self}
           listModel = {key:valueList if len(valueList) != 1 else valueList[0] for key, valueList in listModel.items()}
         else:
@@ -121,8 +111,6 @@ class CommonModel(models.Model):
       else:
         value = getattr(self, field, "") if getattr(self, field, None) else ""
         values.append(value)
-    # if isinstance(self, Company):
-    #   print("computeValues end", self)
     return values
 
   @classmethod
@@ -232,9 +220,9 @@ class Company(CommonModel):
           listModel = [view.id for view in ViewPost.objects.filter(UserProfile=self)]
         elif field == "FavoritePost":
           listModel = [favorite.postId for favorite in FavoritePost.objects.filter(UserProfile=self)]
-        elif field in ["DatePost", "DetailedPost"] and (isinstance(self, Post) or isinstance(self, Mission)) : #, "Candidate"]
-          objectsClass = {"DatePost":DatePost, "DetailedPost":DetailedPost}
-          objects = objectsClass[field].objects.filter(Mission = self) if isinstance(self, Mission) else  objectsClass[field].objects.filter(Post = self)
+        elif field in ["LabelForCompany", "File"]:
+          objectsClass = {"LabelForCompany":LabelForCompany, "File":File}
+          objects = objectsClass[field].objects.filter(Company = self)
           if dictFormat:
             listModel = {objectModel.id:objectModel.computeValues(listFieldsModel, user, dictFormat=True) for objectModel in objects}
           else:
