@@ -968,6 +968,7 @@ class DataAccessor():
         endDate = post.endDate
         print("test", post.endDate, type(post.endDate), datetime.now(), "now", type(datetime.now())) #datetime.now()
         strEndDate = post.endDate.strftime("%m/%d/%Y" "%H:%M:%S")
+        print("boost", strEndDate)
         date = datetime.strptime(strEndDate, "%m/%d/%Y" "%H:%M:%S")
       post.boostTimestamp = date.timestamp()
       post.save()

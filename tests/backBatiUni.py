@@ -56,16 +56,33 @@ def executeQuery():
     post5 = {"firstname":"Tanguy","lastname":"Traitant","email":"st2","password":"pwd","company":{'id': 6, 'name': 'Sous-traitant 2', 'address': '78 rue des Sous-traitants Paris 75008', 'activity': 'Activité inconnue', 'siret': '40422352100048', 'ntva': 'FR49404223553'},"Role":2,"proposer":"","jobs":[1,2,80]}
     for post in [post1, post2, post3, post4, post5]:
       response = requests.post(url, headers=headers, json=post)
+
   elif query == "registerMany":
-    company = ''.join(random.choice(string.ascii_letters) for x in range(3))
+    company = ''.join(random.choice(string.ascii_letters) for x in range(2))
     companies = requests.get(f'{address}/initialize/', headers=headers, params={"action":"getEnterpriseDataFrom", "subName":company})
     data = json.loads(companies.text)
+    print(data)
+    companyId = 7
     establishmentsFields = data["EstablishmentsFields"]
     establishmentsValues = data["EstablishmentsValues"]
     for i in range(len(establishmentsValues)):
       establishmentValue = establishmentsValues[str(i)]
-      print(establishmentValue)
+      now, data, response, url , headers = "2022/01/12", None, None, f'{address}/initialize/', {"content-type":"Application/Json"}
+      firstName = ''.join(random.choice(string.ascii_letters) for x in range(6))
+      lastName = "Traitant" if random.random() < 0.5 else "Entreprise"
+      mail = ''.join(random.choice(string.ascii_letters) for x in range(2))
+      role = 1 if random.random() < 0.5 else 2
+      jobs = [math.floor(1 + random.random() * 140), math.floor(1 + random.random() * 140), math.floor(1 + random.random() * 140)]
+      company = {"id":companyId, 'name':establishmentValue[0], 'address': establishmentValue[1], 'activity': establishmentValue[2], 'siret': establishmentValue[3], 'ntva': establishmentValue[4]}
+      companyId += 1
+      post = {"firstname":firstName, "lastname":lastName, "email":mail, "password":"pwd", "company":company, "Role":role,"proposer":"","jobs":jobs}
+      print(post)
+      response = requests.post(url, headers=headers, json=post)
+      print(json.loads(response.text))
     print(establishmentsFields, len(establishmentsValues))
+    # for i in range(len(establishmentsValues)):
+    #   requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
+
   elif query == "registerConfirm":
       print("registerConfirm", url)
       requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
@@ -125,7 +142,7 @@ def executeQuery():
       for post in [post1, post2, post3, post4, post5, post6]:
         response = requests.post(url, headers=headers, json=post)
 
-      for i in range(200):
+      for i in range(0):
         street = ''.join(random.choice(string.ascii_letters) for x in range(8))
         city = ''.join(random.choice(string.ascii_letters) for x in range(8))
         counterOffer = random.random() > .5
