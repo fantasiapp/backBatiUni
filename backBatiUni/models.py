@@ -21,7 +21,8 @@ class RamData():
   @classmethod
   def fillUpRamStructure(cls):
     cls.ramStructure = {
-      "LabelForCompany": LabelForCompany.generateRamStructure()
+      "LabelForCompany": LabelForCompany.generateRamStructure(),
+      "JobForCompany": JobForCompany.generateRamStructure()
     }
     print(cls.ramStructure)
 
@@ -225,11 +226,11 @@ class Company(CommonModel):
       elif field in self.manyToManyObject:
         model = apps.get_model(app_label='backBatiUni', model_name=field)
         listFieldsModel = model.listFields()
-        if field in ["LabelForCompany"]:
+        if field in ["LabelForCompany", "JobForCompany"]:
           if dictFormat:
-            listModel = RamData.ramStructure["LabelForCompany"][self.id]
+            listModel = RamData.ramStructure[field][self.id]
           else:
-            listModel = list(RamData.ramStructure["LabelForCompany"][self.id].keys())
+            listModel = list(RamData.ramStructure[field][self.id].keys())
         elif field in ["File"]:
           objectsClass = {"LabelForCompany":LabelForCompany, "File":File}
           objects = objectsClass[field].objects.filter(Company = self)
@@ -243,13 +244,12 @@ class Company(CommonModel):
         else:
           listModel = [objectModel.id for objectModel in model.filter(user) if getattr(objectModel, self.__class__.__name__, False) == self]
         values.append(listModel)
-        t1 = time()
-        print("object", field, listModel)
-        print("field", field, "time", t1 - t0)
-        t0 = t1
       else:
         value = getattr(self, field, "") if getattr(self, field, None) else ""
         values.append(value)
+      t1 = time()
+      print("field", field, "time", t1 - t0)
+      t0 = t1
     return values
 
 class Disponibility(CommonModel):
@@ -270,6 +270,13 @@ class JobForCompany(CommonModel):
   Job = models.ForeignKey(Job, on_delete=models.PROTECT, blank=False, null=False)
   number = models.IntegerField("Nombre de profils ayant ce metier", null=False, default=1)
   Company = models.ForeignKey(Company, on_delete=models.PROTECT, blank=False, null=False)
+
+  @classmethod
+  def generateRamStructure(cls):
+    companies = {company.id:{} for company in Company.objects.all()}
+    for jobForCompany in JobForCompany.objects.all():
+      companies[jobForCompany.Company.id][jobForCompany.id] = [jobForCompany.Job.id, jobForCompany.number]
+    return companies
 
   class Meta:
     unique_together = ('Job', 'Company')
