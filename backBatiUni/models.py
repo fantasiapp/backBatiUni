@@ -72,7 +72,9 @@ class CommonModel(models.Model):
     return dictResult
 
   def computeValues(self, listFields, user, dictFormat=False):
-    print("computeValues", self)
+    if isinstance(self, Company):
+      print("computeValues", self)
+
     values, listIndices = [], self.listIndices()
     t0 = time()
     for index in range(len(listFields)):
@@ -119,7 +121,8 @@ class CommonModel(models.Model):
       else:
         value = getattr(self, field, "") if getattr(self, field, None) else ""
         values.append(value)
-    print("computeValues end", self)
+    if isinstance(self, Company):
+      print("computeValues end", self)
     return values
 
   @classmethod
