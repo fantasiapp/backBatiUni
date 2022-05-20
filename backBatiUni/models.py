@@ -21,9 +21,12 @@ class RamData():
   @classmethod
   def fillUpRamStructure(cls):
     cls.ramStructure = {
-      "LabelForCompany": LabelForCompany.generateRamStructure(),
-      "JobForCompany": JobForCompany.generateRamStructure(),
-      "Disponibility": Disponibility.generateRamStructure()
+      "Company": {
+        "LabelForCompany": LabelForCompany.generateRamStructure(),
+        "JobForCompany": JobForCompany.generateRamStructure(),
+        "Disponibility": Disponibility.generateRamStructure(),
+        "Notification": Notification.generateRamStructure()
+      }
     }
     print(cls.ramStructure)
 
@@ -208,7 +211,8 @@ class Company(CommonModel):
     return [jobForCompany.Job for jobForCompany in JobForCompany.objects.filter(Company=self)]
 
   def computeValues(self, listFields, user, dictFormat=False):
-    # print("computeValues Companies", self)
+    print("computeValues Companies", self)
+    print("")
     values, listIndices = [], self.listIndices()
     for index in range(len(listFields)):
       t0 = time()
@@ -227,11 +231,11 @@ class Company(CommonModel):
       elif field in self.manyToManyObject:
         model = apps.get_model(app_label='backBatiUni', model_name=field)
         listFieldsModel = model.listFields()
-        if field in ["LabelForCompany", "JobForCompany", "Disponibility"]:
+        if field in ["LabelForCompany", "JobForCompany", "Disponibility", "Notification"]:
           if dictFormat:
-            listModel = RamData.ramStructure[field][self.id]
+            listModel = RamData.ramStructure["Company"][field][self.id]
           else:
-            listModel = list(RamData.ramStructure[field][self.id].keys())
+            listModel = list(RamData.ramStructure["Company"][field][self.id].keys())
         elif field in ["File"]:
           objectsClass = {"LabelForCompany":LabelForCompany, "File":File}
           objects = objectsClass[field].objects.filter(Company = self)
@@ -568,6 +572,16 @@ class Notification(CommonModel):
   content = models.CharField("Contenu du Post", max_length=1024, null=False, default="")
   hasBeenViewed = models.BooleanField("A été vu", null=False, default=False)
   nature = models.CharField("Nature de la notification", max_length=64, null=False, default="other")
+
+  @classmethod
+  def generateRamStructure(cls):
+    companies = {company.id:{} for company in Company.objects.all()}
+    for notification in Notification.objects.all():
+      postId = notification.Post.id if notification.Post else ""
+      missionId = notification.Mission.id if notification.Mission else ""
+      subContractorId = notification.subContractor.id if notification.subContractor else ""
+      companies[notification.Company.id][notification.id] = [postId, missionId, subContractorId, notification.Role, notification.timestamp, notification.content, notification.content, notification.hasBeenViewed, notification.nature]
+    return companies
 
   class Meta:
     verbose_name = "Notification"
