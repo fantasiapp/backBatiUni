@@ -231,8 +231,7 @@ class Company(CommonModel):
           listModel = {key:valueList if len(valueList) != 1 else valueList[0] for key, valueList in listModel.items()}
         else:
           listModel = [objectModel.id for objectModel in model.filter(user) if getattr(objectModel, self.__class__.__name__, False) == self]
-        if field == "LabelForCompanies":
-          print("object", field, listModel)
+        print("object", field, listModel)
         values.append(listModel)
       else:
         value = getattr(self, field, "") if getattr(self, field, None) else ""
