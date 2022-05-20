@@ -213,17 +213,10 @@ class Company(CommonModel):
     return [jobForCompany.Job for jobForCompany in JobForCompany.objects.filter(Company=self)]
 
   def computeValues(self, listFields, user, dictFormat=False):
-    print()
-    print()
     values = [] 
     for index in range(len(listFields)):
-      t0 = time()
       field = listFields[index]
-      fieldObject = None
-      try:
-        fieldObject = self._meta.get_field(field)
-      except:
-        pass
+      
       if field == "Role": values.append(self.Role.id if self.Role else "")
       elif field == "name": values.append(self.name if self.name else "")
       elif field == "siret": values.append(self.siret if self.siret else "")
@@ -254,12 +247,8 @@ class Company(CommonModel):
           listModel = RamData.ramStructure["Company"][field][self.id]
         values.append(listModel)
       else:
-        print("other", field)
         value = getattr(self, field, "") if getattr(self, field, None) else ""
         values.append(value)
-      t1 = time()
-      print("field", field, "time", t1 - t0)
-      t0 = t1
     return values
 
 class Disponibility(CommonModel):
