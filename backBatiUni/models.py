@@ -74,10 +74,14 @@ class CommonModel(models.Model):
   def computeValues(self, listFields, user, dictFormat=False):
     print("computeValues", self)
     values, listIndices = [], self.listIndices()
+    t0 = time()
     for index in range(len(listFields)):
       field = listFields[index]
       if isinstance(self, Company):
+        t1 = time()
         print("field", field)
+        print("time", t1 - t0)
+        t0 = t1
       fieldObject = None
       try:
         fieldObject = self._meta.get_field(field)
