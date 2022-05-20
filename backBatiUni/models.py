@@ -7,13 +7,24 @@ import base64
 import datetime
 from django.apps import apps
 from pdf2image import convert_from_path
-from modelData.dataAccessor import DataAccessor
 
 import whatimage
 import pyheif
 from PIL import Image
 from cairosvg import svg2png
 from time import time
+
+
+class RamData():
+  ramStructure = {}
+
+  @classmethod
+  def fillUpRamStructure(cls):
+    cls.ramStructure = {
+      "LabelForCompany": LabelForCompany.generateRamStructure()
+    }
+    print(cls.ramStructure)
+
 
 
 class CommonModel(models.Model):
@@ -215,10 +226,11 @@ class Company(CommonModel):
         listFieldsModel = model.listFields()
         if field in ["LabelForCompany"]:
           if dictFormat:
-            listModel = DataAccessor.ramStructure[self.id]
+            listModel = RamData.ramStructure[self.id]
           else:
-            listModel = list(DataAccessor.ramStructure[self.id].keys)
+            listModel = list(RamData.ramStructure[self.id].keys)
           print("object", field, listModel)
+          print("field", field, "time", t1 - t0)
         elif field in ["File"]:
           objectsClass = {"LabelForCompany":LabelForCompany, "File":File}
           objects = objectsClass[field].objects.filter(Company = self)
