@@ -209,6 +209,7 @@ class Company(CommonModel):
     # print("computeValues Companies", self)
     values, listIndices = [], self.listIndices()
     for index in range(len(listFields)):
+      t0 = time()
       field = listFields[index]
       fieldObject = None
       try:
@@ -226,18 +227,17 @@ class Company(CommonModel):
         listFieldsModel = model.listFields()
         if field in ["LabelForCompany"]:
           if dictFormat:
-            listModel = RamData.ramStructure[self.id]
+            listModel = RamData.ramStructure["LabelForCompany"][self.id]
           else:
-            listModel = list(RamData.ramStructure[self.id].keys)
+            listModel = list(RamData.ramStructure["LabelForCompany"][self.id].keys())
+
+          t1 = time()
           print("object", field, listModel)
           print("field", field, "time", t1 - t0)
+          t0 = t1
         elif field in ["File"]:
           objectsClass = {"LabelForCompany":LabelForCompany, "File":File}
           objects = objectsClass[field].objects.filter(Company = self)
-          if isinstance(self, Company):
-            t1 = time()
-            # print("field", field, "time", t1 - t0)
-            t0 = t1
           if dictFormat:
             listModel = {objectModel.id:objectModel.computeValues(listFieldsModel, user, dictFormat=True) for objectModel in objects}
           else:
