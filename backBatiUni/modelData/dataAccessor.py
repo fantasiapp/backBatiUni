@@ -29,7 +29,7 @@ class DataAccessor():
   portSmtp = os.getenv('PORT_SMTP')
 
   @classmethod
-  def getData(cls, profile, view:str, user):
+  def getData(cls, profile, user):
     if not UserProfile.objects.filter(userNameInternal=user) and profile == "user":
       {"register":"Error", "messages":"currentUser does not exist"} 
     dictAnswer = {"currentUser":UserProfile.objects.get(userNameInternal=user).id} if profile == "user" else {}
