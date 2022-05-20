@@ -25,10 +25,12 @@ class RamData():
         "LabelForCompany": LabelForCompany.generateRamStructure(),
         "JobForCompany": JobForCompany.generateRamStructure(),
         "Disponibility": Disponibility.generateRamStructure(),
-        "Notification": Notification.generateRamStructure()
+        "Notification": Notification.generateRamStructure(),
+        "File": File.generateRamStructure(),
+        "Post": Post.generateRamStructure(),
+        "Mission": Mission.generateRamStructure()
       }
     }
-    print(cls.ramStructure)
 
 
 
@@ -211,9 +213,9 @@ class Company(CommonModel):
     return [jobForCompany.Job for jobForCompany in JobForCompany.objects.filter(Company=self)]
 
   def computeValues(self, listFields, user, dictFormat=False):
-    print("computeValues Companies", self)
-    print("")
-    values, listIndices = [], self.listIndices()
+    print()
+    print()
+    values = [] 
     for index in range(len(listFields)):
       t0 = time()
       field = listFields[index]
@@ -222,34 +224,37 @@ class Company(CommonModel):
         fieldObject = self._meta.get_field(field)
       except:
         pass
-      if index in listIndices and isinstance(fieldObject, models.ForeignKey):
-        values.append(getattr(self, field).id if getattr(self, field, None) else "")
-      elif isinstance(fieldObject, models.DateField):
-        values.append(getattr(self, field).strftime("%Y-%m-%d") if getattr(self, field) else "")
-      elif isinstance(fieldObject, models.BooleanField):
-        values.append(getattr(self, field))
+      if field == "Role": values.append(self.Role.id if self.Role else "")
+      elif field == "name": values.append(self.name if self.name else "")
+      elif field == "siret": values.append(self.siret if self.siret else "")
+      elif field == "address": values.append(self.address if self.address else "")
+      elif field == "ntva": values.append(self.ntva if self.ntva else "")
+      elif field == "activity": values.append(self.activity if self.activity else "")
+      elif field == "capital": values.append(self.capital if self.capital else "")
+      elif field == "revenue": values.append(self.revenue if self.revenue else "")
+      elif field == "logo": values.append(self.logo if self.logo else "")
+      elif field == "webSite": values.append(self.webSite if self.webSite else "")
+      elif field == "starsST": values.append(self.starsST if self.starsST else "")
+      elif field == "starsPME": values.append(self.starsPME if self.starsPME else "")
+      elif field == "companyPhone": values.append(self.companyPhone if self.companyPhone else "")
+      elif field == "amount": values.append(self.amount if self.amount else "")
+      elif field == "unity": values.append(self.unity if self.unity else "")
+      elif field == "latitude": values.append(self.latitude if self.latitude else "")
+      elif field == "longitude": values.append(self.longitude if self.longitude else "")
+      elif field == "saturdayDisponibility": values.append(self.saturdayDisponibility if self.saturdayDisponibility else "")
+      elif field == "allQualifications": values.append(self.allQualifications if self.allQualifications else "")
+  
       elif field in self.manyToManyObject:
-        model = apps.get_model(app_label='backBatiUni', model_name=field)
-        listFieldsModel = model.listFields()
-        if field in ["LabelForCompany", "JobForCompany", "Disponibility", "Notification"]:
+        if field in ["LabelForCompany", "JobForCompany", "Disponibility", "Notification", "File"]:
           if dictFormat:
             listModel = RamData.ramStructure["Company"][field][self.id]
           else:
             listModel = list(RamData.ramStructure["Company"][field][self.id].keys())
-        elif field in ["File"]:
-          objectsClass = {"LabelForCompany":LabelForCompany, "File":File}
-          objects = objectsClass[field].objects.filter(Company = self)
-          if dictFormat:
-            listModel = {objectModel.id:objectModel.computeValues(listFieldsModel, user, dictFormat=True) for objectModel in objects}
-          else:
-            listModel = [objectModel.id for objectModel in objects]
-        elif dictFormat:
-          listModel = {objectModel.id:objectModel.computeValues(listFieldsModel, user, dictFormat=True) for objectModel in model.filter(user) if getattr(objectModel, self.__class__.__name__, False) == self}
-          listModel = {key:valueList if len(valueList) != 1 else valueList[0] for key, valueList in listModel.items()}
         else:
-          listModel = [objectModel.id for objectModel in model.filter(user) if getattr(objectModel, self.__class__.__name__, False) == self]
+          listModel = RamData.ramStructure["Company"][field][self.id]
         values.append(listModel)
       else:
+        print("other", field)
         value = getattr(self, field, "") if getattr(self, field, None) else ""
         values.append(value)
       t1 = time()
@@ -498,6 +503,13 @@ class Post(CommonModel):
       return superList
 
   @classmethod
+  def generateRamStructure(cls):
+    companies = {company.id:[] for company in Company.objects.all()}
+    for post in Post.objects.all():
+      companies[post.Company.id].append(post.id)
+    return companies
+
+  @classmethod
   def filter(cls, user):
     listMission = {candidate.Mission.id for candidate in Candidate.objects.all() if candidate.Mission != None}
     return [post for post in Post.objects.all() if not post.id in listMission]
@@ -506,6 +518,13 @@ class Mission(Post):
   class Meta:
     proxy = True
     verbose_name = "Mission"
+
+  @classmethod
+  def generateRamStructure(cls):
+    companies = {company.id:[] for company in Company.objects.all()}
+    for mission in Mission.objects.all():
+      companies[mission.Company.id].append(mission.id)
+    return companies
 
   @classmethod
   def listFields(cls):
@@ -697,6 +716,15 @@ class File(CommonModel):
   class Meta:
     unique_together = ('nature', 'name', 'Company', "Post", "Mission", "Supervision")
     verbose_name = "File"
+
+  @classmethod
+  def generateRamStructure(cls):
+    companies = {company.id:{} for company in Company.objects.all()}
+    for file in File.objects.all():
+      expirationDate = file.expirationDate.strftime("%Y-%m-%d") if file.expirationDate else ""
+      if file.Company:
+        companies[file.Company.id][file.id] = [file.nature, file.name, file.ext, expirationDate, file.timestamp]
+    return companies
 
   @classmethod
   def listFields(cls):
