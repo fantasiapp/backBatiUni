@@ -16,7 +16,7 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 50
+numberCompanies = 200
 emailList, emailListPME, emailListST = [], [], []
 
 arguments = sys.argv
@@ -74,18 +74,18 @@ def executeQuery():
       lastName = "Traitant" if random.random() < 0.5 else "Entreprise"
       mail = firstName[:2]
       role = 1 if random.random() < 0.2 else 2
-      if role == 1:
-        emailListPME.append(i)
-      else:
-        emailListST.append(i)
       jobs = [math.floor(1 + random.random() * 40), math.floor(41 + random.random() * 40), math.floor(81 + random.random() * 60)]
       company = {"id":companyId, 'name':establishmentValue[0], 'address': establishmentValue[1], 'activity': establishmentValue[2], 'siret': establishmentValue[3], 'ntva': establishmentValue[4]}
-      companyId += 1
       post = {"firstname":firstName, "lastname":lastName, "email":mail, "password":"pwd", "company":company, "Role":role,"proposer":"","jobs":jobs}
       userProfile = requests.post(url, headers=headers, json=post)
       success = json.loads(userProfile.text)
       if success['register'] == "OK":
         emailList.append(mail)
+        if role == 1:
+          emailListPME.append(companyId)
+        else:
+          emailListST.append(companyId)
+      companyId += 1
 
     for i in range(len(emailList)):
       requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
