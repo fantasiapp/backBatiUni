@@ -207,8 +207,6 @@ class Company(CommonModel):
         pass
       if index in listIndices and isinstance(fieldObject, models.ForeignKey):
         values.append(getattr(self, field).id if getattr(self, field, None) else "")
-      # elif index in listIndices and isinstance(fieldObject, models.ManyToManyField):
-      #   values.append([element.id for element in getattr(self, field).all()])
       elif isinstance(fieldObject, models.DateField):
         values.append(getattr(self, field).strftime("%Y-%m-%d") if getattr(self, field) else "")
       elif isinstance(fieldObject, models.BooleanField):
@@ -233,6 +231,8 @@ class Company(CommonModel):
           listModel = {key:valueList if len(valueList) != 1 else valueList[0] for key, valueList in listModel.items()}
         else:
           listModel = [objectModel.id for objectModel in model.filter(user) if getattr(objectModel, self.__class__.__name__, False) == self]
+        if field == "LabelForCompanies":
+          print("object", field, listModel)
         values.append(listModel)
       else:
         value = getattr(self, field, "") if getattr(self, field, None) else ""
@@ -284,6 +284,8 @@ class LabelForCompany(CommonModel):
   class Meta:
     unique_together = ('Label', 'Company')
     verbose_name = "LabelForCompany"
+
+  # def computs
 
   @classmethod
   def listFields(cls):
