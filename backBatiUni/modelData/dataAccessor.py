@@ -34,7 +34,8 @@ class DataAccessor():
       {"register":"Error", "messages":"currentUser does not exist"} 
     dictAnswer = {"currentUser":UserProfile.objects.get(userNameInternal=user).id} if profile == "user" else {}
     t0 = time()
-    RamData.fillUpRamStructure()
+    if profile == "user":
+      RamData.fillUpRamStructure()
     CommonModel.fillupRamObjects(dictAnswer["currentUser"])
     for table in cls.loadTables[profile]:
       t1 = time()
