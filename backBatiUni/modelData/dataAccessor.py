@@ -29,7 +29,7 @@ class DataAccessor():
   portSmtp = os.getenv('PORT_SMTP')
 
   @classmethod
-  def getData(cls, profile, user):
+  def getData(cls, profile, view:str, user):
     if not UserProfile.objects.filter(userNameInternal=user) and profile == "user":
       {"register":"Error", "messages":"currentUser does not exist"} 
     dictAnswer = {"currentUser":UserProfile.objects.get(userNameInternal=user).id} if profile == "user" else {}
@@ -944,7 +944,7 @@ class DataAccessor():
       return {"modifyDisponibility":"Error", "messages":f"User company is not sub contractor {company.name}"}
     Disponibility.objects.filter(Company=company).delete()
     for date, nature in listValue:
-      if not nature in ["Disponible", "Disponible Sous Conditions", "Non Disponible"]:
+      if not nature in ["Disponible", "Disponible Sous Conditions"]:
         messages[date] = f"nature incorrect: {nature} replaced by Disponible"
         nature = "Disponible"
       Disponibility.objects.create(Company=company, date=datetime.strptime(date, "%Y-%m-%d"), nature=nature)

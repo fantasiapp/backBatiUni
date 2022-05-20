@@ -1,3 +1,4 @@
+from email.policy import EmailPolicy
 import requests
 import json
 import sys
@@ -8,12 +9,15 @@ from io import BytesIO
 import random
 import string
 import math
+from datetime import datetime, timedelta
 
 userName, password = "st", "pwd"
 # userName, password = "jlw", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
+numberCompanies = 50
+emailList, emailListPME, emailListST = [], [], []
 
 arguments = sys.argv
 if len(arguments) > 1:
@@ -46,7 +50,7 @@ def getDocStr(index = 0):
 def executeQuery():
   print()
   print("query", query)
-  now, data, response, url , headers = "2022/01/12", None, None, f'{address}/initialize/', {"content-type":"Application/Json"}
+  now, data, response, url , headers = datetime.now().strftime("%Y-%m-%d"), None, None, f'{address}/initialize/', {"content-type":"Application/Json"}
   if query == "register":
     headers = {}
     post1 = {"firstname":"Augustin","lastname":"Alleaume","email":"aa","password":"pwd","company":{'id': 2, 'name': 'BATIUNI', 'address': '9 rue Vintimille Paris 75009', 'activity': 'Activité inconnue', 'siret': '40422352100018', 'ntva': 'FR49404223521'},"Role":3,"proposer":"","jobs":[1,2,80]}
@@ -57,31 +61,58 @@ def executeQuery():
     for post in [post1, post2, post3, post4, post5]:
       response = requests.post(url, headers=headers, json=post)
 
+
   elif query == "registerMany":
-    company = ''.join(random.choice(string.ascii_letters) for x in range(2))
-    companies = requests.get(f'{address}/initialize/', headers=headers, params={"action":"getEnterpriseDataFrom", "subName":company})
-    data = json.loads(companies.text)
-    print(data)
-    companyId = 7
-    establishmentsFields = data["EstablishmentsFields"]
-    establishmentsValues = data["EstablishmentsValues"]
-    for i in range(len(establishmentsValues)):
-      establishmentValue = establishmentsValues[str(i)]
-      now, data, response, url , headers = "2022/01/12", None, None, f'{address}/initialize/', {"content-type":"Application/Json"}
+    dateForLabel = (datetime.now() + timedelta(days=100, hours=0)).strftime("%Y-%m-%d")
+    companyId, response, url , headers = 7, None, f'{address}/initialize/', {"content-type":"Application/Json"}
+    for i in range(numberCompanies):
+      company = ''.join(random.choice(string.ascii_letters) for x in range(2))
+      companies = requests.get(f'{address}/initialize/', headers=headers, params={"action":"getEnterpriseDataFrom", "subName":company})
+      data = json.loads(companies.text)
+      establishmentValue = data["EstablishmentsValues"]['0']
       firstName = ''.join(random.choice(string.ascii_letters) for x in range(6))
       lastName = "Traitant" if random.random() < 0.5 else "Entreprise"
-      mail = ''.join(random.choice(string.ascii_letters) for x in range(2))
-      role = 1 if random.random() < 0.5 else 2
+      mail = firstName[:2]
+      role = 1 if random.random() < 0.2 else 2
+      if role == 1:
+        emailListPME.append(i)
+      else:
+        emailListST.append(i)
       jobs = [math.floor(1 + random.random() * 140), math.floor(1 + random.random() * 140), math.floor(1 + random.random() * 140)]
       company = {"id":companyId, 'name':establishmentValue[0], 'address': establishmentValue[1], 'activity': establishmentValue[2], 'siret': establishmentValue[3], 'ntva': establishmentValue[4]}
       companyId += 1
       post = {"firstname":firstName, "lastname":lastName, "email":mail, "password":"pwd", "company":company, "Role":role,"proposer":"","jobs":jobs}
-      print(post)
-      response = requests.post(url, headers=headers, json=post)
-      print(json.loads(response.text))
-    print(establishmentsFields, len(establishmentsValues))
-    # for i in range(len(establishmentsValues)):
-    #   requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
+      userProfile = requests.post(url, headers=headers, json=post)
+      success = json.loads(userProfile.text)
+      if success['register'] == "OK":
+        emailList.append(mail)
+
+    for i in range(len(emailList)):
+      requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
+    companyId = 7
+
+    for i in range(len(emailList)):
+      token = queryForToken(emailList[i], "pwd")
+      headers = {'Authorization': f'Token {token}'}
+      capital = str(math.floor(10000 + random.random() * 100000))
+      revenue = str(math.floor(100000 + random.random() * 1000000))
+      amount = math.floor(8 + random.random() * 70)
+      webSite = "https://monWebSite"
+      JobForCompany = [[math.floor(1 + random.random() * 140), math.floor(1 + random.random() * 4)], [math.floor(1 + random.random() * 140), math.floor(1 + random.random() * 4)], [math.floor(1 + random.random() * 140), math.floor(1 + random.random() * 4)]]
+      post = {'action': 'modifyUser', 'UserProfile': {'id': companyId, 'cellPhone': '06 29 35 04 18', 'Company': {'capital': capital, 'revenue': revenue, "webSite": webSite, "amount":amount, 'companyPhone': '08 92 97 64 15', "allQualifications":True, 'JobForCompany':JobForCompany, 'LabelForCompany':[[1,dateForLabel], [2,dateForLabel]]}}}
+      companyId += 1
+      requests.post(f'{address}/data/', headers=headers, json=post)
+    companyId = 7
+
+    for i in range(len(emailList)):
+      if i in emailListST:
+        token = queryForToken(emailList[i], "pwd")
+        headers = {'Authorization': f'Token {token}'}
+        disponibilities = [now, (datetime.now() + timedelta(days=1, hours=0)).strftime("%Y-%m-%d"), (datetime.now() + timedelta(days=2, hours=0)).strftime("%Y-%m-%d"), (datetime.now() + timedelta(days=3, hours=0)).strftime("%Y-%m-%d")]
+        dispoNature = [(dispo, "Disponible" if random.random() > 0.6 else "Disponible Sous Conditions") for dispo in disponibilities]
+        post = {"action":"modifyDisponibility", "disponibility":dispoNature}
+        response = requests.post(f'{address}/data/', headers=headers, json=post)
+      companyId += 1
 
   elif query == "registerConfirm":
       print("registerConfirm", url)
@@ -103,8 +134,6 @@ def executeQuery():
       token = queryForToken("pme", "pwd")
     else:
       token = queryForToken("st", "pwd")
-    if query == "token":
-      print("token", token)
     url = f'{address}/data/'
     headers = {'Authorization': f'Token {token}'}
     if query == "getUserData":
@@ -141,8 +170,12 @@ def executeQuery():
       post6 = {'action':"uploadPost", "longitude":2.324877 , "latitude":48.841625, "address":"108 rue du Cherche-Midi 75006 Paris", "Job":5, "numberOfPeople":1, "dueDate":"2022-04-15", "startDate":"2022-04-16", "endDate":"2022-04-28", "DatePost":["2022-04-26", "2022-04-27", "2022-04-28"], "manPower":False, "counterOffer":True, "hourlyStart":"07:00", "hourlyEnd":"17:00", "currency":"€", "description":"Sixième description d'un chantier", "amount":23456.10, "DetailedPost":["radiateur", "Chaudière"]}
       for post in [post1, post2, post3, post4, post5, post6]:
         response = requests.post(url, headers=headers, json=post)
-
-      for i in range(0):
+      
+      for i in range(len(emailList)):
+        token = queryForToken("pme", "pwd")
+        if random.random() > 0.7 and emailListPME:
+          token = queryForToken(emailList[i], "pwd")
+        headers = {'Authorization': f'Token {token}'}
         street = ''.join(random.choice(string.ascii_letters) for x in range(8))
         city = ''.join(random.choice(string.ascii_letters) for x in range(8))
         counterOffer = random.random() > .5
@@ -201,7 +234,6 @@ def executeQuery():
       for file in [file1, file2, file4, file5]:
         response = requests.post(url, headers=headers, json=file)
         data = json.loads(response.text)
-        print("uploadFile", data.keys())
     elif query == "downloadFile":
       requests.get(url, headers=headers, params={"action":"downloadFile", "id":1})
       response = None
@@ -311,7 +343,7 @@ def executeQuery():
   else:
     print("no answer")
 if query == "all":
-  keys = ["buildDB", "register", "registerConfirm", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "uploadFile", "downloadFile", "applyPost", "switchDraft", "handleCandidateForPost", "signContract", "modifyDetailedPost", "createSupervision", "modifyMissionDate", "validateMissionDate", "uploadImageSupervision", "closeMission", "closeMissionST", "boostPost"]
+  keys = ["buildDB", "register", "registerConfirm", "registerMany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "uploadFile", "downloadFile", "applyPost", "switchDraft", "handleCandidateForPost", "signContract", "modifyDetailedPost", "createSupervision", "modifyMissionDate", "validateMissionDate", "uploadImageSupervision", "closeMission", "closeMissionST", "boostPost"]
   for key in keys: #, "modifyPost"
     query = key
     executeQuery()
