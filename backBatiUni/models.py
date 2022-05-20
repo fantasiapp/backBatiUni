@@ -76,6 +76,8 @@ class CommonModel(models.Model):
     values, listIndices = [], self.listIndices()
     for index in range(len(listFields)):
       field = listFields[index]
+      if isinstance(self, Company):
+        print("field", field)
       fieldObject = None
       try:
         fieldObject = self._meta.get_field(field)
