@@ -160,7 +160,7 @@ class Company(CommonModel):
   name = models.CharField('Nom de la société', unique=True, max_length=128, null=False, blank=False)
   Role = models.ForeignKey(Role, on_delete=models.PROTECT, blank=False, null=False, default=3)
   siret = models.CharField('Numéro de Siret', unique=True, max_length=32, null=True, default=None)
-  address = models.CharField("Adresse de l'entreprise", unique=True, max_length=256, null=True, default=None)
+  address = models.CharField("Adresse de l'entreprise", unique=False, max_length=256, null=True, default=None)
   activity = models.CharField("Activite principale de l'entreprise", unique=False, max_length=256, null=False, default="")
   ntva = models.CharField("Numéro de TVA intra communautaire", unique=True, max_length=32, null=True, default=None)
   capital = models.FloatField("Capital de l'entreprise", null=True, default=None)
