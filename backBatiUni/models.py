@@ -22,7 +22,8 @@ class RamData():
   def fillUpRamStructure(cls):
     cls.ramStructure = {
       "LabelForCompany": LabelForCompany.generateRamStructure(),
-      "JobForCompany": JobForCompany.generateRamStructure()
+      "JobForCompany": JobForCompany.generateRamStructure(),
+      "Disponibility": Disponibility.generateRamStructure()
     }
     print(cls.ramStructure)
 
@@ -226,7 +227,7 @@ class Company(CommonModel):
       elif field in self.manyToManyObject:
         model = apps.get_model(app_label='backBatiUni', model_name=field)
         listFieldsModel = model.listFields()
-        if field in ["LabelForCompany", "JobForCompany"]:
+        if field in ["LabelForCompany", "JobForCompany", "Disponibility"]:
           if dictFormat:
             listModel = RamData.ramStructure[field][self.id]
           else:
@@ -259,6 +260,13 @@ class Disponibility(CommonModel):
 
   class Meta:
     verbose_name = "Disponibility"
+
+  @classmethod
+  def generateRamStructure(cls):
+    companies = {company.id:{} for company in Company.objects.all()}
+    for disponibility in Disponibility.objects.all():
+      companies[disponibility.Company.id][disponibility.id] = [disponibility.date.strftime("%Y-%m-%d"), disponibility.nature]
+    return companies
 
   @classmethod
   def listFields(cls):
