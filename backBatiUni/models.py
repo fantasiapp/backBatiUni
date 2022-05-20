@@ -238,7 +238,7 @@ class Company(CommonModel):
         value = getattr(self, field, "") if getattr(self, field, None) else ""
         values.append(value)
     if isinstance(self, Company):
-      print("computeValues end", self)
+      print("computeValues companies end", self)
     return values
 
 class Disponibility(CommonModel):

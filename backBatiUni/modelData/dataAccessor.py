@@ -669,7 +669,9 @@ class DataAccessor():
       if stillExist:
         datePost.validated = True
         datePost.save()
-      return {"validateMissionDate":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
+      if not datePost.deleted:
+        return {"validateMissionDate":"OK", "mission":{mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}, "datePost":{datePost.id:datePost.computeValues(datePost.listFields(), currentUser, dictFormat=True)}}
+      return {"validateMissionDate":"OK", "mission":{mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}, "datePost":{}}
     return {"validateMissionDate":"Error", "messages":f'field {data["field"]} is not recognize'}
 
 
