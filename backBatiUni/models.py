@@ -22,6 +22,10 @@ class CommonModel(models.Model):
     abstract = True
 
   @classmethod
+  def fillupRamObjects(cls, user):
+    pass
+
+  @classmethod
   def dumpStructure(cls, user):
     dictAnswer = {}
     tableName = cls._meta.verbose_name
@@ -190,12 +194,10 @@ class Company(CommonModel):
     return [jobForCompany.Job for jobForCompany in JobForCompany.objects.filter(Company=self)]
 
   def computeValues(self, listFields, user, dictFormat=False):
-    print("computeValues Companies", self)
+    # print("computeValues Companies", self)
     values, listIndices = [], self.listIndices()
-    t0 = time()
     for index in range(len(listFields)):
       field = listFields[index]
-      t1 = time()
       fieldObject = None
       try:
         fieldObject = self._meta.get_field(field)
@@ -210,34 +212,29 @@ class Company(CommonModel):
       elif field in self.manyToManyObject:
         model = apps.get_model(app_label='backBatiUni', model_name=field)
         listFieldsModel = model.listFields()
-        if field == "ViewPost":
-          listModel = [view.id for view in ViewPost.objects.filter(UserProfile=self)]
-        elif field == "FavoritePost":
-          listModel = [favorite.postId for favorite in FavoritePost.objects.filter(UserProfile=self)]
-        elif field in ["LabelForCompany", "File"]:
+        if field in ["LabelForCompany", "File"]:
           objectsClass = {"LabelForCompany":LabelForCompany, "File":File}
           objects = objectsClass[field].objects.filter(Company = self)
           if isinstance(self, Company):
             t1 = time()
-            print("field", field, "time", t1 - t0)
+            # print("field", field, "time", t1 - t0)
             t0 = t1
           if dictFormat:
             listModel = {objectModel.id:objectModel.computeValues(listFieldsModel, user, dictFormat=True) for objectModel in objects}
           else:
             listModel = [objectModel.id for objectModel in objects]
         elif dictFormat:
-          print("dictFormat", field)
+          # print("dictFormat", field)
           listModel = {objectModel.id:objectModel.computeValues(listFieldsModel, user, dictFormat=True) for objectModel in model.filter(user) if getattr(objectModel, self.__class__.__name__, False) == self}
           listModel = {key:valueList if len(valueList) != 1 else valueList[0] for key, valueList in listModel.items()}
         else:
           listModel = [objectModel.id for objectModel in model.filter(user) if getattr(objectModel, self.__class__.__name__, False) == self]
-        print("object", field, listModel)
+        # print("object", field, listModel)
         values.append(listModel)
       else:
         value = getattr(self, field, "") if getattr(self, field, None) else ""
         values.append(value)
-    if isinstance(self, Company):
-      print("computeValues companies end", self)
+    # print("computeValues companies end", self)
     return values
 
 class Disponibility(CommonModel):
@@ -289,6 +286,13 @@ class LabelForCompany(CommonModel):
       return {self.id:[self.label.id, self.date.strftime("%Y-%m-%d")]}
     else:
       return self.id
+
+  @classmethod
+  def generateRamStructure(cls):
+    companies = {company.id:{} for company in Company.objects.all()}
+    for labelForCompany in LabelForCompany.object.all():
+      companies[labelForCompany.Company.id][labelForCompany.id] = [labelForCompany.Label.id, labelForCompany.date.strftime("%Y-%m-%d")]
+    return companies
 
   @classmethod
   def listFields(cls):

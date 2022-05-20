@@ -27,6 +27,7 @@ class DataAccessor():
   loadTables = {"user":[UserProfile, Company, JobForCompany, LabelForCompany, File, Post, Candidate, DetailedPost, DatePost, Mission, Disponibility, Supervision, Notification], "general":[Job, Role, Label]}
   dictTable = {}
   portSmtp = os.getenv('PORT_SMTP')
+  ramStructure = {}
 
   @classmethod
   def getData(cls, profile, user):
@@ -34,6 +35,8 @@ class DataAccessor():
       {"register":"Error", "messages":"currentUser does not exist"} 
     dictAnswer = {"currentUser":UserProfile.objects.get(userNameInternal=user).id} if profile == "user" else {}
     t0 = time()
+    cls.fillUpRamStructure()
+    CommonModel.fillupRamObjects(dictAnswer["UserProfile"])
     for table in cls.loadTables[profile]:
       t1 = time()
       dictAnswer.update(table.dumpStructure(user))
@@ -44,6 +47,13 @@ class DataAccessor():
     with open(f"./backBatiUni/modelData/{profile}Data.json", 'w') as jsonFile:
       json.dump(dictAnswer, jsonFile, indent = 3)
     return dictAnswer
+
+  @classmethod
+  def fillUpRamStructure(cls):
+    cls.ramStructre = {
+      "LabelForCompany": LabelForCompany.generateRamStructure()
+    }
+    print(cls.ramStructure)
 
   @classmethod
   def register(cls, data):
