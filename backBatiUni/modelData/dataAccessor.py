@@ -50,7 +50,7 @@ class DataAccessor():
 
   @classmethod
   def fillUpRamStructure(cls):
-    cls.ramStructre = {
+    cls.ramStructure = {
       "LabelForCompany": LabelForCompany.generateRamStructure()
     }
     print(cls.ramStructure)
