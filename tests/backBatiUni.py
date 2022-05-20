@@ -87,11 +87,12 @@ def executeQuery():
           emailListST.append(companyId)
       companyId += 1
 
-
     for i in emailListPME + emailListST:
       requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
     companyId = 7
 
+    print("emailListPME", emailListPME)
+    print("emailListST", emailListST)
     for i in emailListPME + emailListST:
       token = queryForToken(emailList[i], "pwd")
       headers = {'Authorization': f'Token {token}'}
