@@ -7,6 +7,7 @@ import base64
 import datetime
 from django.apps import apps
 from pdf2image import convert_from_path
+from modelData.dataAccessor import DataAccessor
 
 import whatimage
 import pyheif
@@ -212,7 +213,13 @@ class Company(CommonModel):
       elif field in self.manyToManyObject:
         model = apps.get_model(app_label='backBatiUni', model_name=field)
         listFieldsModel = model.listFields()
-        if field in ["LabelForCompany", "File"]:
+        if field in ["LabelForCompany"]:
+          if dictFormat:
+            listModel = DataAccessor.ramStructure[self.id]
+          else:
+            listModel = list(DataAccessor.ramStructure[self.id].keys)
+          print("object", field, listModel)
+        elif field in ["File"]:
           objectsClass = {"LabelForCompany":LabelForCompany, "File":File}
           objects = objectsClass[field].objects.filter(Company = self)
           if isinstance(self, Company):
@@ -224,12 +231,10 @@ class Company(CommonModel):
           else:
             listModel = [objectModel.id for objectModel in objects]
         elif dictFormat:
-          # print("dictFormat", field)
           listModel = {objectModel.id:objectModel.computeValues(listFieldsModel, user, dictFormat=True) for objectModel in model.filter(user) if getattr(objectModel, self.__class__.__name__, False) == self}
           listModel = {key:valueList if len(valueList) != 1 else valueList[0] for key, valueList in listModel.items()}
         else:
           listModel = [objectModel.id for objectModel in model.filter(user) if getattr(objectModel, self.__class__.__name__, False) == self]
-        # print("object", field, listModel)
         values.append(listModel)
       else:
         value = getattr(self, field, "") if getattr(self, field, None) else ""
