@@ -64,6 +64,7 @@ def executeQuery():
   elif query == "registerMany":
     dateForLabel = (datetime.now() + timedelta(days=100, hours=0)).strftime("%Y-%m-%d")
     companyId, response, url , headers = 7, None, f'{address}/initialize/', {"content-type":"Application/Json"}
+
     for i in range(numberCompanies):
       company = ''.join(random.choice(string.ascii_letters) for x in range(2))
       companies = requests.get(f'{address}/initialize/', headers=headers, params={"action":"getEnterpriseDataFrom", "subName":company})
@@ -78,7 +79,6 @@ def executeQuery():
       else:
         emailListST.append(i)
       jobs = [math.floor(1 + random.random() * 40), math.floor(41 + random.random() * 40), math.floor(81 + random.random() * 60)]
-      print("jobs", i, jobs)
       company = {"id":companyId, 'name':establishmentValue[0], 'address': establishmentValue[1], 'activity': establishmentValue[2], 'siret': establishmentValue[3], 'ntva': establishmentValue[4]}
       companyId += 1
       post = {"firstname":firstName, "lastname":lastName, "email":mail, "password":"pwd", "company":company, "Role":role,"proposer":"","jobs":jobs}
@@ -145,8 +145,8 @@ def executeQuery():
       response = requests.post(url, headers=headers, json=post)
     elif query == "modifyUser":
       now = "2022-01-12"
-      post1 = {'action': 'modifyUser', 'UserProfile': {'id': 3, 'cellPhone': '06 29 35 04 18', 'Company': {'capital': '307130', 'companyPhone': '08 92 97 64 15', "allQualifications":True, 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]]}}}
-      post2 = {'action': 'modifyUser', 'UserProfile': {'id': 6, 'cellPhone': '06 28 34 03 17', 'Company': {'capital': '207130', 'companyPhone': '08 91 96 63 14', "allQualifications":True, 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]]}}}
+      post1 = {'action': 'modifyUser', 'UserProfile': {'id': 3, 'cellPhone': '06 29 35 04 18', 'Company': {'capital': '307130', 'companyPhone': '08 92 97 64 15', "amount":'28', "allQualifications":True, 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]]}}}
+      post2 = {'action': 'modifyUser', 'UserProfile': {'id': 6, 'cellPhone': '06 28 34 03 17', 'Company': {'capital': '207130', 'companyPhone': '08 91 96 63 14', "amount":'52', "allQualifications":True, 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]]}}}
       requests.post(url, headers=headers, json=post1)
       response = requests.post(url, headers=headers, json=post2)
     elif query == "changeUserImage":

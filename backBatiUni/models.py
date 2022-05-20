@@ -230,11 +230,6 @@ class Company(CommonModel):
             listModel = RamData.ramStructure["LabelForCompany"][self.id]
           else:
             listModel = list(RamData.ramStructure["LabelForCompany"][self.id].keys())
-
-          t1 = time()
-          print("object", field, listModel)
-          print("field", field, "time", t1 - t0)
-          t0 = t1
         elif field in ["File"]:
           objectsClass = {"LabelForCompany":LabelForCompany, "File":File}
           objects = objectsClass[field].objects.filter(Company = self)
@@ -248,10 +243,13 @@ class Company(CommonModel):
         else:
           listModel = [objectModel.id for objectModel in model.filter(user) if getattr(objectModel, self.__class__.__name__, False) == self]
         values.append(listModel)
+        t1 = time()
+        print("object", field, listModel)
+        print("field", field, "time", t1 - t0)
+        t0 = t1
       else:
         value = getattr(self, field, "") if getattr(self, field, None) else ""
         values.append(value)
-    # print("computeValues companies end", self)
     return values
 
 class Disponibility(CommonModel):
