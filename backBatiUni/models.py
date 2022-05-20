@@ -72,6 +72,7 @@ class CommonModel(models.Model):
     return dictResult
 
   def computeValues(self, listFields, user, dictFormat=False):
+    print("computeValues", self)
     values, listIndices = [], self.listIndices()
     for index in range(len(listFields)):
       field = listFields[index]
@@ -112,6 +113,7 @@ class CommonModel(models.Model):
       else:
         value = getattr(self, field, "") if getattr(self, field, None) else ""
         values.append(value)
+    print("computeValues end", self)
     return values
 
   @classmethod

@@ -77,7 +77,8 @@ def executeQuery():
         emailListPME.append(i)
       else:
         emailListST.append(i)
-      jobs = [math.floor(1 + random.random() * 140), math.floor(1 + random.random() * 140), math.floor(1 + random.random() * 140)]
+      jobs = [math.floor(1 + random.random() * 40), math.floor(41 + random.random() * 40), math.floor(81 + random.random() * 60)]
+      print("jobs", i, jobs)
       company = {"id":companyId, 'name':establishmentValue[0], 'address': establishmentValue[1], 'activity': establishmentValue[2], 'siret': establishmentValue[3], 'ntva': establishmentValue[4]}
       companyId += 1
       post = {"firstname":firstName, "lastname":lastName, "email":mail, "password":"pwd", "company":company, "Role":role,"proposer":"","jobs":jobs}
