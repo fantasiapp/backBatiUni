@@ -87,11 +87,12 @@ def executeQuery():
           emailListST.append(companyId)
       companyId += 1
 
-    for i in range(len(emailList)):
+
+    for i in emailListPME + emailListST:
       requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
     companyId = 7
 
-    for i in range(len(emailList)):
+    for i in emailListPME + emailListST:
       token = queryForToken(emailList[i], "pwd")
       headers = {'Authorization': f'Token {token}'}
       capital = str(math.floor(10000 + random.random() * 100000))
@@ -100,19 +101,15 @@ def executeQuery():
       webSite = "https://monWebSite"
       JobForCompany = [[math.floor(1 + random.random() * 140), math.floor(1 + random.random() * 4)], [math.floor(1 + random.random() * 140), math.floor(1 + random.random() * 4)], [math.floor(1 + random.random() * 140), math.floor(1 + random.random() * 4)]]
       post = {'action': 'modifyUser', 'UserProfile': {'id': companyId, 'cellPhone': '06 29 35 04 18', 'Company': {'capital': capital, 'revenue': revenue, "webSite": webSite, "amount":amount, 'companyPhone': '08 92 97 64 15', "allQualifications":True, 'JobForCompany':JobForCompany, 'LabelForCompany':[[1,dateForLabel], [2,dateForLabel]]}}}
-      companyId += 1
       requests.post(f'{address}/data/', headers=headers, json=post)
-    companyId = 7
 
-    for i in range(len(emailList)):
-      if i in emailListST:
-        token = queryForToken(emailList[i], "pwd")
-        headers = {'Authorization': f'Token {token}'}
-        disponibilities = [now, (datetime.now() + timedelta(days=1, hours=0)).strftime("%Y-%m-%d"), (datetime.now() + timedelta(days=2, hours=0)).strftime("%Y-%m-%d"), (datetime.now() + timedelta(days=3, hours=0)).strftime("%Y-%m-%d")]
-        dispoNature = [(dispo, "Disponible" if random.random() > 0.6 else "Disponible Sous Conditions") for dispo in disponibilities]
-        post = {"action":"modifyDisponibility", "disponibility":dispoNature}
-        response = requests.post(f'{address}/data/', headers=headers, json=post)
-      companyId += 1
+    for i in emailListST:
+      token = queryForToken(emailList[i], "pwd")
+      headers = {'Authorization': f'Token {token}'}
+      disponibilities = [now, (datetime.now() + timedelta(days=1, hours=0)).strftime("%Y-%m-%d"), (datetime.now() + timedelta(days=2, hours=0)).strftime("%Y-%m-%d"), (datetime.now() + timedelta(days=3, hours=0)).strftime("%Y-%m-%d")]
+      dispoNature = [(dispo, "Disponible" if random.random() > 0.6 else "Disponible Sous Conditions") for dispo in disponibilities]
+      post = {"action":"modifyDisponibility", "disponibility":dispoNature}
+      response = requests.post(f'{address}/data/', headers=headers, json=post)
 
   elif query == "registerConfirm":
     requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
@@ -172,7 +169,7 @@ def executeQuery():
       
       for i in range(len(emailList)):
         token = queryForToken("pme", "pwd")
-        if random.random() > 0.7 and emailListPME:
+        if random.random() > 0.7:
           token = queryForToken(emailList[i], "pwd")
         headers = {'Authorization': f'Token {token}'}
         street = ''.join(random.choice(string.ascii_letters) for x in range(8))
