@@ -290,7 +290,7 @@ class LabelForCompany(CommonModel):
   @classmethod
   def generateRamStructure(cls):
     companies = {company.id:{} for company in Company.objects.all()}
-    for labelForCompany in LabelForCompany.object.all():
+    for labelForCompany in LabelForCompany.objects.all():
       companies[labelForCompany.Company.id][labelForCompany.id] = [labelForCompany.Label.id, labelForCompany.date.strftime("%Y-%m-%d")]
     return companies
 
