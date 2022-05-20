@@ -863,7 +863,6 @@ class DataAccessor():
   def __updateUserInfo(cls, data, user):
     print("__updateUserInfo", data)
     if "UserProfile" in data:
-      print("__updateUserInfo", data["UserProfile"])
       message, valueModified, userProfile = {}, {"UserProfile":{}}, UserProfile.objects.get(id=data["UserProfile"]["id"])
       flagModified = cls.__setValues(data["UserProfile"], user, message, valueModified["UserProfile"], userProfile, False)
       if not flagModified:
@@ -871,6 +870,7 @@ class DataAccessor():
       if message:
         return {"modifyUser":"Warning", "messages":message, "valueModified": valueModified}
       company = userProfile.Company
+      print("__updateUserInfo", userProfile.Company.id)
       return {"modifyUser":"OK","UserProfile":{userProfile.id:userProfile.computeValues(userProfile.listFields(), user, True)}, "Company":{company.id:company.computeValues(company.listFields(), user, True)}}
     return {"modifyUser":"Warning", "messages":"Pas de valeur à mettre à jour"}
     
