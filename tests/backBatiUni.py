@@ -32,13 +32,12 @@ if len(arguments) > 2:
   query = arguments[2]
 
 def queryForToken(userName, password):
-  print("queryForToken", userName, password)
+  # print("queryForToken", userName, password)
   tokenUrl = f'{address}/api-token-auth/'
   headers = {'Content-Type': 'application/json'}
   data = json.dumps({"username": userName, "password": password})
   response = requests.post(tokenUrl, headers=headers, data=data)
   dictResponse = json.loads(response.text)
-  print(dictResponse)
   return dictResponse['token']
 
 def getDocStr(index = 0):
@@ -115,16 +114,15 @@ def executeQuery():
       companyId += 1
 
   elif query == "registerConfirm":
-      print("registerConfirm", url)
-      requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
-      requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
-      requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
-      requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
-      response = requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
+    requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
+    requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
+    requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
+    requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
+    response = requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
   elif query == "getGeneralData":
     response = requests.get(url, headers=headers, params={"action":"getGeneralData"})
   elif query == "forgetPassword":
-      response = requests.get(url, headers=headers, params={"action":"forgetPassword", "email":"walter.jeanluc@gmail.com"})
+    response = requests.get(url, headers=headers, params={"action":"forgetPassword", "email":"walter.jeanluc@gmail.com"})
   else:
     if query in ["emptyDB", "buildDB"]:
       token = queryForToken("jlw", "pwd")
@@ -213,7 +211,6 @@ def executeQuery():
       response = requests.get(url, headers=headers, params={'action':"removeFavorite", "value":"false", "Post":3})
     elif query == "isViewed":
       response = requests.get(url, headers=headers, params={'action':"isViewed", "Post":1})
-      print("response", response)
     # elif query == "deletePost":
     #   print("deletePost")
     #   post = {'action':"uploadPost", "address":"129 rue de Paris 92100 Boulogne", "Job":9, "numberOfPeople":3, "dueDate":"2022-02-15", "startDate":"2022-02-16", "endDate":"2022-02-28", "manPower":True, "counterOffer":True, "hourlyStart":"7:30", "hourlyEnd":"17:30", "currency":"€", "description":"Première description d'un chantier", "amount":65243.10, "DetailedPost":["lavabo", "baignoire"]}
@@ -253,7 +250,6 @@ def executeQuery():
       response = requests.get(url, headers=headers, params={'action':"handleCandidateForPost", "Candidate":3, "response":"true"})
     elif query == "signContract":
       requests.get(url, headers=headers, params={"action":"signContract", "missionId":4, "view":"ST"})
-      print("user pme")
       tokenPme = queryForToken("pme", "pwd")
       headersPme = {'Authorization': f'Token {tokenPme}'}
       response = requests.get(url, headers=headersPme, params={"action":"signContract", "missionId":4, "view":"PME"})
