@@ -201,11 +201,6 @@ class Company(CommonModel):
   class Meta:
     verbose_name = "Company"
 
-  # @classmethod
-  # def filter(cls, user):
-  #   userProfile = UserProfile.objects.get(userNameInternal=user)
-  #   return [userProfile.Company]
-
   @property
   def jobs(self):
     return [jobForCompany.Job for jobForCompany in JobForCompany.objects.filter(Company=self)]
@@ -240,8 +235,6 @@ class Company(CommonModel):
       elif field in self.manyToManyObject:
         if field in manyToMany:
           if dictFormat:
-            print("test", manyToMany[field], field)
-            print("test", manyToMany[field].objects.filter(Company=self))
             listModel = {objectModel.id:objectModel.dump() for objectModel in manyToMany[field].objects.filter(Company=self)}
           else:
             listModel = RamData.ramStructure["Company"][field][self.id]

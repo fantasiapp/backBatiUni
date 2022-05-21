@@ -101,7 +101,7 @@ def executeQuery():
       revenue = str(math.floor(100000 + random.random() * 1000000))
       amount = math.floor(8 + random.random() * 70)
       webSite = "https://monWebSite.fr"
-      JobForCompany = [[math.floor(1 + random.random() * 140), math.floor(1 + random.random() * 4)], [math.floor(1 + random.random() * 140), math.floor(1 + random.random() * 4)], [math.floor(1 + random.random() * 140), math.floor(1 + random.random() * 4)]]
+      JobForCompany = [[math.floor(1 + random.random() * 40), math.floor(1 + random.random() * 4)], [math.floor(41 + random.random() * 80), math.floor(1 + random.random() * 4)], [math.floor(81 + random.random() * 140), math.floor(1 + random.random() * 4)]]
       post = {'action': 'modifyUser', 'UserProfile': {'id': companyId, 'cellPhone': '06 29 35 04 18', 'Company': {'capital': capital, 'revenue': revenue, "webSite": webSite, "amount":amount, 'companyPhone': '08 92 97 64 15', "allQualifications":True, 'JobForCompany':JobForCompany, 'LabelForCompany':[[1,dateForLabel], [2,dateForLabel]]}}}
       requests.post(f'{address}/data/', headers=headers, json=post)
 
