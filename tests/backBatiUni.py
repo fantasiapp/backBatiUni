@@ -63,10 +63,10 @@ def executeQuery():
 
   elif query == "registerMany":
     dateForLabel = (datetime.now() + timedelta(days=100, hours=0)).strftime("%Y-%m-%d")
-    companyId, response, url , headers = 7, None, f'{address}/initialize/', {"content-type":"Application/Json"}
+    companyId, response, url , headers = 0, None, f'{address}/initialize/', {"content-type":"Application/Json"}
 
-    for i in range(numberCompanies):
-      company = ''.join(random.choice(string.ascii_letters) for x in range(2))
+    while companyId <= numberCompanies:
+      company = ''.join(random.choice(string.ascii_letters) for x in range(5))
       companies = requests.get(f'{address}/initialize/', headers=headers, params={"action":"getEnterpriseDataFrom", "subName":company})
       data = json.loads(companies.text)
       establishmentValue = data["EstablishmentsValues"]['0']
@@ -85,15 +85,16 @@ def executeQuery():
           emailListPME.append(companyId)
         else:
           emailListST.append(companyId)
-      companyId += 1
+        companyId += 1
 
     for i in emailListPME + emailListST:
       requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
 
     print("emailListPME", emailListPME)
     print("emailListST", emailListST)
+    print("emailList", emailList, len(emailList))
     for i in emailListPME + emailListST:
-      print(emailList, i, len(emailList))
+      # print("emailList", i)
       token = queryForToken(emailList[i], "pwd")
       headers = {'Authorization': f'Token {token}'}
       capital = str(math.floor(10000 + random.random() * 100000))

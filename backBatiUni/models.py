@@ -242,7 +242,7 @@ class Company(CommonModel):
           if dictFormat:
             print("test", manyToMany[field], field)
             print("test", manyToMany[field].objects.filter(Company=self))
-            listModel = {objectModel.id:objectModel.objectModel.dump() for objectModel in manyToMany[field].objects.filter(Company=self)}
+            listModel = {objectModel.id:objectModel.dump() for objectModel in manyToMany[field].objects.filter(Company=self)}
           else:
             listModel = RamData.ramStructure["Company"][field][self.id]
         else:
