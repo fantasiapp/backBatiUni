@@ -240,6 +240,7 @@ class Company(CommonModel):
       elif field in self.manyToManyObject:
         if field in manyToMany:
           if dictFormat:
+            print("test", manyToMany[field], field)
             listModel = {objectModel.id:self.objectModel.dump() for objectModel in manyToMany[field].objects.filter(Company=self)}
           else:
             listModel = RamData.ramStructure["Company"][field][self.id]
