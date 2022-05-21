@@ -32,8 +32,6 @@ class RamData():
       }
     }
 
-
-
 class CommonModel(models.Model):
   manyToManyObject = []
 
@@ -213,7 +211,9 @@ class Company(CommonModel):
     return [jobForCompany.Job for jobForCompany in JobForCompany.objects.filter(Company=self)]
 
   def computeValues(self, listFields, user, dictFormat=False):
-    values = [] 
+    values = []
+    manyToMany = {"LabelForCompany":LabelForCompany, "JobForCompany":JobForCompany, "Disponibility":Disponibility, "Notification":Notification, "File":File}
+    postMission = {"Post":Post, "Mission":Mission}
     for index in range(len(listFields)):
       field = listFields[index]
       
@@ -238,13 +238,16 @@ class Company(CommonModel):
       elif field == "allQualifications": values.append(self.allQualifications if self.allQualifications else "")
   
       elif field in self.manyToManyObject:
-        if field in ["LabelForCompany", "JobForCompany", "Disponibility", "Notification", "File"]:
+        if field in manyToMany:
           if dictFormat:
-            listModel = RamData.ramStructure["Company"][field][self.id]
+            listModel = {objectModel.id:self.objectModel.dump() for objectModel in manyToMany[field].objects.filter(Company=self)}
           else:
-            listModel = list(RamData.ramStructure["Company"][field][self.id].keys())
+            listModel = RamData.ramStructure["Company"][field][self.id]
         else:
-          listModel = RamData.ramStructure["Company"][field][self.id]
+          if dictFormat:
+            listModel = [post.id for post in postMission[field].objects.filter(Company=self)]
+          else:
+            listModel = RamData.ramStructure["Company"][field][self.id]
         values.append(listModel)
       else:
         value = getattr(self, field, "") if getattr(self, field, None) else ""
@@ -261,9 +264,9 @@ class Disponibility(CommonModel):
 
   @classmethod
   def generateRamStructure(cls):
-    companies = {company.id:{} for company in Company.objects.all()}
+    companies = {company.id:[] for company in Company.objects.all()}
     for disponibility in Disponibility.objects.all():
-      companies[disponibility.Company.id][disponibility.id] = [disponibility.date.strftime("%Y-%m-%d"), disponibility.nature]
+      companies[disponibility.Company.id].append(disponibility.id)
     return companies
 
   @classmethod
@@ -272,6 +275,8 @@ class Disponibility(CommonModel):
     superList.remove("Company")
     return superList
 
+  def dump(self): return [self.date.strftime("%Y-%m-%d"), self.nature]
+
 class JobForCompany(CommonModel):
   Job = models.ForeignKey(Job, on_delete=models.PROTECT, blank=False, null=False)
   number = models.IntegerField("Nombre de profils ayant ce metier", null=False, default=1)
@@ -279,9 +284,9 @@ class JobForCompany(CommonModel):
 
   @classmethod
   def generateRamStructure(cls):
-    companies = {company.id:{} for company in Company.objects.all()}
+    companies = {company.id:[] for company in Company.objects.all()}
     for jobForCompany in JobForCompany.objects.all():
-      companies[jobForCompany.Company.id][jobForCompany.id] = [jobForCompany.Job.id, jobForCompany.number]
+      companies[jobForCompany.Company.id].append(jobForCompany.id)
     return companies
 
   class Meta:
@@ -293,6 +298,9 @@ class JobForCompany(CommonModel):
     superList = super().listFields()
     superList.remove("Company")
     return superList
+
+  def dump(self):
+    return [self.Job.id, self.number]
 
   # @classmethod
   # def filter(cls, user):
@@ -317,10 +325,13 @@ class LabelForCompany(CommonModel):
 
   @classmethod
   def generateRamStructure(cls):
-    companies = {company.id:{} for company in Company.objects.all()}
+    companies = {company.id:[] for company in Company.objects.all()}
     for labelForCompany in LabelForCompany.objects.all():
-      companies[labelForCompany.Company.id][labelForCompany.id] = [labelForCompany.Label.id, labelForCompany.date.strftime("%Y-%m-%d")]
+      companies[labelForCompany.Company.id].append(labelForCompany.id)
     return companies
+
+  def dump(self):
+    return [self.Label.id, self.date.strftime("%Y-%m-%d")]
 
   @classmethod
   def listFields(cls):
@@ -583,12 +594,9 @@ class Notification(CommonModel):
 
   @classmethod
   def generateRamStructure(cls):
-    companies = {company.id:{} for company in Company.objects.all()}
+    companies = {company.id:[] for company in Company.objects.all()}
     for notification in Notification.objects.all():
-      postId = notification.Post.id if notification.Post else ""
-      missionId = notification.Mission.id if notification.Mission else ""
-      subContractorId = notification.subContractor.id if notification.subContractor else ""
-      companies[notification.Company.id][notification.id] = [postId, missionId, subContractorId, notification.Role, notification.timestamp, notification.content, notification.content, notification.hasBeenViewed, notification.nature]
+      companies[notification.Company.id].append(notification.id)
     return companies
 
   class Meta:
@@ -608,6 +616,13 @@ class Notification(CommonModel):
     notifications = list(Notification.objects.filter(Company=userProfile.Company))
     notifications.sort(key=lambda notification: notification.timestamp, reverse=True)
     return Notification.objects.filter(Company=userProfile.Company)
+
+  def dump(self):
+    postId = self.Post.id if self.Post else ""
+    missionId = self.Mission.id if self.Mission else ""
+    subContractorId = self.subContractor.id if self.subContractor else ""
+    return [postId, missionId, subContractorId, self.Role, self.timestamp, self.content, self.content, self.hasBeenViewed, self.nature]
+
 
 class Candidate(CommonModel):
   Post = models.ForeignKey(Post, verbose_name='Annonce associée', on_delete=models.CASCADE, null=True, default=None)
@@ -708,11 +723,10 @@ class File(CommonModel):
 
   @classmethod
   def generateRamStructure(cls):
-    companies = {company.id:{} for company in Company.objects.all()}
+    companies = {company.id:[] for company in Company.objects.all()}
     for file in File.objects.all():
-      expirationDate = file.expirationDate.strftime("%Y-%m-%d") if file.expirationDate else ""
       if file.Company:
-        companies[file.Company.id][file.id] = [file.nature, file.name, file.ext, expirationDate, file.timestamp]
+        companies[file.Company.id].append(file.id)
     return companies
 
   @classmethod
@@ -723,6 +737,10 @@ class File(CommonModel):
       del superList[index]
     superList.append("content")
     return superList
+
+  def dump(self):
+    expirationDate = self.expirationDate.strftime("%Y-%m-%d") if self.expirationDate else ""
+    return [self.nature, self.name, self.ext, expirationDate, self.timestamp]
 
   def getAttr(self, fieldName, answer=False):
     if fieldName == "file":
