@@ -16,7 +16,7 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 200
+numberCompanies = 20
 emailList, emailListPME, emailListST = [], [], []
 
 arguments = sys.argv
@@ -89,11 +89,11 @@ def executeQuery():
 
     for i in emailListPME + emailListST:
       requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
-    companyId = 7
 
     print("emailListPME", emailListPME)
     print("emailListST", emailListST)
     for i in emailListPME + emailListST:
+      print(emailList, i, len(emailList))
       token = queryForToken(emailList[i], "pwd")
       headers = {'Authorization': f'Token {token}'}
       capital = str(math.floor(10000 + random.random() * 100000))
