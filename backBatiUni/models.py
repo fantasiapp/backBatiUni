@@ -835,13 +835,13 @@ class Supervision(CommonModel):
 
   @classmethod
   def generateRamStructure(cls):
-    RamData.ramStructure["DetailedPost"] = {detailed.id:[] for detailed in DetailedPost.objects.all()}
-    RamData.ramStructure["Mission"] = {detailed.id:[] for detailed in Mission.objects.all()}
+    RamData.ramStructure["DetailedPost"]["Supervision"] = {detailed.id:[] for detailed in DetailedPost.objects.all()}
+    RamData.ramStructure["Mission"]["Supervision"] = {detailed.id:[] for detailed in Mission.objects.all()}
     for supervision in Supervision.objects.all():
       if supervision.Mission:
-          RamData.ramStructure["Mission"][supervision.Mission.id].append(supervision.id)
+          RamData.ramStructure["Mission"]["Supervision"][supervision.Mission.id].append(supervision.id)
       elif supervision.DetailedPost:
-          RamData.ramStructure["DetailedPost"][supervision.DetailedPost.id].append(supervision.id)
+          RamData.ramStructure["DetailedPost"]["Supervision"][supervision.DetailedPost.id].append(supervision.id)
 
   def dump(self):
     files = [file.id for file in File.objects.filter(Supervision = self)]
