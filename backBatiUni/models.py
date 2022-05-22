@@ -809,6 +809,10 @@ class DetailedPost(CommonModel):
     print("detailedPost", values)
     return values
 
+  def dump(self):
+    return self.computeValue(self.listFields(), None, dictFormat=False)
+
+
 class Supervision(CommonModel):
   Mission = models.ForeignKey(Mission, verbose_name='Mission associée', on_delete=models.PROTECT, null=True, default=None)
   DetailedPost = models.ForeignKey(DetailedPost, verbose_name='Tâche associée', on_delete=models.PROTECT, null=True, default=None)
