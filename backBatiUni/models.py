@@ -29,6 +29,9 @@ class RamData():
         "File": File.generateRamStructure(),
         "Post": Post.generateRamStructure(),
         "Mission": Mission.generateRamStructure()
+      },
+      "Supervision": {
+        "DetailedPost": DetailedPost.generateRamStructure()
       }
     }
 
@@ -664,16 +667,39 @@ class DetailedPost(CommonModel):
         index = superList.index(fieldName)
         del superList[index]
       return superList
+      
+  @classmethod
+  def fillUpRamStructure(cls):
+    detailedPost = {detailedPost.id:[] for detailedPost in DetailedPost.objects.all()}
+    for supervision in Supervision.objects.all():
+      if supervision.DetailedPost:
+        detailedPost[supervision.DetailPost.id].append(supervision.id)
+    return detailedPost
+
+  def computeValues(self, listFields, user, dictFormat=False):
+    values = []
+    for index in range(len(listFields)):
+      field = listFields[index]
+
+      if field == "content": values.append(self.content if self.content else "")
+      elif field == "date": values.append(self.date.strftime("%Y-%m-%d") if self.date else "")
+      elif field == "validated": values.append(self.validated)
+      elif field == "refused": values.append(self.refused)
+
+      else:
+        if dictFormat:
+          values.append({objectModel.id:objectModel.dump() for objectModel in Supervision.objects.filter(DetailedPost=self)})
+        else:
+          values.append(RamData.ramStructure["DetailedPost"][field][self.id])
 
 class Supervision(CommonModel):
   Mission = models.ForeignKey(Mission, verbose_name='Mission associée', on_delete=models.PROTECT, null=True, default=None)
   DetailedPost = models.ForeignKey(DetailedPost, verbose_name='Tâche associée', on_delete=models.PROTECT, null=True, default=None)
-  SupervisionAssociated = models.ForeignKey('self', verbose_name='Supervision associée', related_name='associatedSupervision', on_delete=models.PROTECT, null=True, default=None)
   author = models.CharField("Nom de l'auteur du message", max_length=256, null=True, default=None)
   companyId = models.IntegerField("Id de la companie emettrice", blank=True, null=False, default=None)
   date = models.DateField(verbose_name="Date du suivi", null=False, default=timezone.now)
   comment = models.CharField("Commentaire sur le suivi", max_length=4906, null=True, default=None)
-  manyToManyObject = ["File", "Supervision"]
+  manyToManyObject = ["File"]
 
   class Meta:
     verbose_name = "Supervision"
@@ -685,6 +711,11 @@ class Supervision(CommonModel):
         index = superList.index(fieldName)
         del superList[index]
       return superList
+
+  def dump(self):
+    files = [file.id for file in File.objects.filter(Supervision = self)]
+    return [self.author, self.companyId, self.date.strftime("%Y-%m-%d") if self.date else "", files]
+
 
 class InviteFriend(CommonModel):
   invitationAuthor = models.ForeignKey(UserProfile, related_name='Author', on_delete=models.PROTECT, null=True, default=None)

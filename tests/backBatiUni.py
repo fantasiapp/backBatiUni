@@ -16,7 +16,7 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 50
+numberCompanies = 200
 emailList, emailListPME, emailListST = [], [], []
 
 arguments = sys.argv
@@ -32,12 +32,12 @@ if len(arguments) > 2:
   query = arguments[2]
 
 def queryForToken(userName, password):
-  # print("queryForToken", userName, password)
   tokenUrl = f'{address}/api-token-auth/'
   headers = {'Content-Type': 'application/json'}
   data = json.dumps({"username": userName, "password": password})
   response = requests.post(tokenUrl, headers=headers, data=data)
   dictResponse = json.loads(response.text)
+  # print("queryForToken", userName, password, dictresponse)
   return dictResponse['token']
 
 def getDocStr(index = 0):
@@ -69,23 +69,24 @@ def executeQuery():
       company = ''.join(random.choice(string.ascii_letters) for x in range(5))
       companies = requests.get(f'{address}/initialize/', headers=headers, params={"action":"getEnterpriseDataFrom", "subName":company})
       data = json.loads(companies.text)
-      establishmentValue = data["EstablishmentsValues"]['0']
-      firstName = ''.join(random.choice(string.ascii_letters) for x in range(6))
-      lastName = "Traitant" if random.random() < 0.5 else "Entreprise"
-      mail = firstName[:2]
-      role = 1 if random.random() < 0.2 else 2
-      jobs = [math.floor(1 + random.random() * 40), math.floor(41 + random.random() * 40), math.floor(81 + random.random() * 60)]
-      company = {"id":companyId, 'name':establishmentValue[0], 'address': establishmentValue[1], 'activity': establishmentValue[2], 'siret': establishmentValue[3], 'ntva': establishmentValue[4]}
-      post = {"firstname":firstName, "lastname":lastName, "email":mail, "password":"pwd", "company":company, "Role":role,"proposer":"","jobs":jobs}
-      userProfile = requests.post(url, headers=headers, json=post)
-      success = json.loads(userProfile.text)
-      if success['register'] == "OK":
-        emailList.append(mail)
-        if role == 1:
-          emailListPME.append(companyId)
-        else:
-          emailListST.append(companyId)
-        companyId += 1
+      if "EstablishmentsValues" in data and data["EstablishmentsValues"]:
+        establishmentValue = data["EstablishmentsValues"]['0']
+        firstName = ''.join(random.choice(string.ascii_letters) for x in range(6))
+        lastName = "Traitant" if random.random() < 0.5 else "Entreprise"
+        mail = firstName[:2]
+        role = 1 if random.random() < 0.2 else 2
+        jobs = [math.floor(1 + random.random() * 40), math.floor(41 + random.random() * 40), math.floor(81 + random.random() * 60)]
+        company = {"id":companyId, 'name':establishmentValue[0], 'address': establishmentValue[1], 'activity': establishmentValue[2], 'siret': establishmentValue[3], 'ntva': establishmentValue[4]}
+        post = {"firstname":firstName, "lastname":lastName, "email":mail, "password":"pwd", "company":company, "Role":role,"proposer":"","jobs":jobs}
+        userProfile = requests.post(url, headers=headers, json=post)
+        success = json.loads(userProfile.text)
+        if success['register'] == "OK":
+          emailList.append(mail)
+          if role == 1:
+            emailListPME.append(companyId)
+          else:
+            emailListST.append(companyId)
+          companyId += 1
 
     for i in emailListPME + emailListST:
       requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
@@ -101,7 +102,7 @@ def executeQuery():
       revenue = str(math.floor(100000 + random.random() * 1000000))
       amount = math.floor(8 + random.random() * 70)
       webSite = "https://monWebSite.fr"
-      JobForCompany = [[math.floor(1 + random.random() * 40), math.floor(1 + random.random() * 4)], [math.floor(41 + random.random() * 80), math.floor(1 + random.random() * 4)], [math.floor(81 + random.random() * 140), math.floor(1 + random.random() * 4)]]
+      JobForCompany = [[math.floor(1 + random.random() * 40), math.floor(1 + random.random() * 4)], [math.floor(41 + random.random() * 40), math.floor(1 + random.random() * 4)], [math.floor(81 + random.random() * 40), math.floor(1 + random.random() * 4)]]
       post = {'action': 'modifyUser', 'UserProfile': {'id': companyId, 'cellPhone': '06 29 35 04 18', 'Company': {'capital': capital, 'revenue': revenue, "webSite": webSite, "amount":amount, 'companyPhone': '08 92 97 64 15', "allQualifications":True, 'JobForCompany':JobForCompany, 'LabelForCompany':[[1,dateForLabel], [2,dateForLabel]]}}}
       requests.post(f'{address}/data/', headers=headers, json=post)
 
@@ -194,7 +195,7 @@ def executeQuery():
           "hourlyStart":"07:30",
           "hourlyEnd":"17:30",
           "currency":"€",
-          "description":"Première description d'un chantier",
+          "description":"Première description d'un chantier" + str(i),
           "amount":math.floor(1000 + random.random() * 4000),
           "DetailedPost":["salle de bain", "douche"],
           "draft": random.random() < 0.2
