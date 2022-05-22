@@ -12,7 +12,7 @@ import whatimage
 import pyheif
 from PIL import Image
 from cairosvg import svg2png
-from time import time
+from time import sleep, time
 
 
 class RamData():
@@ -20,6 +20,9 @@ class RamData():
 
   @classmethod
   def fillUpRamStructure(cls):
+    Supervision.generateRamStructure()
+    print("fillUpRamStructure", cls.ramStructure)
+    sleep(5)
     cls.ramStructure = {
       "Company": {
         "LabelForCompany": LabelForCompany.generateRamStructure(),
@@ -37,7 +40,7 @@ class RamData():
         "DatePost": DatePost.generateRamStructure("Post"),
       }
     }
-    Supervision.generateRamStructure()
+    
 
 class CommonModel(models.Model):
   manyToManyObject = []
