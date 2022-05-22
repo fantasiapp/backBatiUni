@@ -843,9 +843,12 @@ class Supervision(CommonModel):
       return missions
     if nature == "DetailedPost":
       detailedList = {detailed.id:[] for detailed in DetailedPost.objects.all()}
+      print("start", detailedList)
       for supervision in Supervision.objects.all():
         if supervision.DetailedPost:
           detailedList[supervision.DetailedPost.id].append(supervision.id)
+          print("add", detailedList)
+      print("end", detailedList)
       return detailedList
 
   def dump(self):
