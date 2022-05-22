@@ -522,7 +522,6 @@ class Post(CommonModel):
   def computeValues(self, listFields, user, dictFormat=False):
     values = []
     manyToMany = {"DetailedPost":DetailedPost, "File":File, "Candidate":Candidate, "DatePost":DatePost}
-    postMission = {"Post":Post, "Mission":Mission}
     for index in range(len(listFields)):
       field = listFields[index]
       
@@ -805,12 +804,11 @@ class DetailedPost(CommonModel):
         if dictFormat:
           values.append({objectModel.id:objectModel.dump() for objectModel in Supervision.objects.filter(DetailedPost=self)})
         else:
-          print("detailedPost", RamData.ramStructure["DetailedPost"], field, self.id)
           values.append(RamData.ramStructure["DetailedPost"][field][self.id])
     return values
 
   def dump(self):
-    return self.computeValues(self.listFields(), None, dictFormat=False)
+    return self.computeValues(self.listFields(), None, dictFormat=True)
 
 
 class Supervision(CommonModel):
