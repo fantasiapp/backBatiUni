@@ -30,17 +30,14 @@ class RamData():
         "Post": Post.generateRamStructure(),
         "Mission": Mission.generateRamStructure()
       },
-      "DetailedPost": {
-        "Supervision": Supervision.generateRamStructure("DetailedPost")
-      },
       "Post": {
-        "Supervision": Supervision.generateRamStructure("Post"),
         "DetailedPost": DetailedPost.generateRamStructure("Post"),
         "File": File.generateRamStructure("Post"),
         "Candidate": File.generateRamStructure("Post"),
         "DatePost": DatePost.generateRamStructure("Post"),
       }
     }
+    Supervision.generateRamStructure()
 
 class CommonModel(models.Model):
   manyToManyObject = []
@@ -834,24 +831,14 @@ class Supervision(CommonModel):
       return superList
 
   @classmethod
-  def generateRamStructure(cls, nature):
-    if nature == "Mission":
-      missions = {mission.id:[] for mission in Mission.objects.all()}
-      for supervision in Supervision.objects.all():
-        if supervision.Mission:
-          missions[supervision.Mission.id].append(supervision.id)
-      return missions
-    if nature == "DetailedPost":
-      detailedList = {detailed.id:[] for detailed in DetailedPost.objects.all()}
-      print("start", detailedList)
-      for supervision in Supervision.objects.all():
-        if supervision.DetailedPost:
-          detailedList[supervision.DetailedPost.id].append(supervision.id)
-          print("add", detailedList)
-      print("end", detailedList)
-      foo = []
-      foo[12] = 2
-      return detailedList
+  def generateRamStructure(cls):
+    RamData.ramStructure["DetailedPost"] = {detailed.id:[] for detailed in DetailedPost.objects.all()}
+    RamData.ramStructure["Mission"] = {detailed.id:[] for detailed in Mission.objects.all()}
+    for supervision in Supervision.objects.all():
+      if supervision.Mission:
+          RamData.ramStructure["Mission"][supervision.Mission.id].append(supervision.id)
+      elif supervision.DetailedPost:
+          RamData.ramStructure["DetailedPost"][supervision.DetailedPost.id].append(supervision.id)
 
   def dump(self):
     files = [file.id for file in File.objects.filter(Supervision = self)]
