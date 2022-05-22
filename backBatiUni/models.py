@@ -20,9 +20,6 @@ class RamData():
 
   @classmethod
   def fillUpRamStructure(cls):
-    Supervision.generateRamStructure()
-    print("fillUpRamStructure", cls.ramStructure)
-    sleep(5)
     cls.ramStructure = {
       "Company": {
         "LabelForCompany": LabelForCompany.generateRamStructure(),
@@ -40,6 +37,9 @@ class RamData():
         "DatePost": DatePost.generateRamStructure("Post"),
       }
     }
+    Supervision.generateRamStructure()
+    print("fillUpRamStructure", cls.ramStructure)
+    sleep(5)
     
 
 class CommonModel(models.Model):
