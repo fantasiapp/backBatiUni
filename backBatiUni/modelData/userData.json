@@ -751,185 +751,30 @@
       4
    ],
    "DetailedPostValues": {
-      "3": [
-         "radiateur",
-         "",
-         false,
-         false,
-         []
-      ],
-      "4": [
-         "Chaudi\u00e8re",
-         "",
-         false,
-         false,
-         []
-      ],
-      "5": [
-         "doublage",
-         "",
-         false,
-         false,
-         []
-      ],
-      "6": [
-         "cloison",
-         "",
-         false,
-         false,
-         []
-      ],
-      "7": [
-         "doublage",
-         "",
-         false,
-         false,
-         [
-            1,
-            5
-         ]
-      ],
-      "8": [
-         "cloison",
-         "",
-         false,
-         false,
-         [
-            2,
-            6
-         ]
-      ],
-      "9": [
-         "pose",
-         "",
-         false,
-         false,
-         [
-            4
-         ]
-      ],
-      "10": [
-         "mesure",
-         "",
-         false,
-         false,
-         [
-            3,
-            7
-         ]
-      ],
-      "11": [
-         "cuisine",
-         "",
-         false,
-         false,
-         []
-      ],
-      "12": [
-         "salle de bain",
-         "",
-         false,
-         false,
-         []
-      ],
-      "13": [
-         "salon",
-         "",
-         false,
-         false,
-         []
-      ],
-      "14": [
-         "Chambre",
-         "",
-         false,
-         false,
-         []
-      ],
-      "15": [
-         "radiateur",
-         "",
-         false,
-         false,
-         []
-      ],
-      "16": [
-         "Chaudi\u00e8re",
-         "",
-         false,
-         false,
-         []
-      ],
-      "20": [
-         "salle de bain",
-         "",
-         false,
-         false,
-         []
-      ],
-      "21": [
-         "douche",
-         "",
-         false,
-         false,
-         []
-      ],
-      "22": [
-         "lavabo",
-         "",
-         false,
-         false,
-         []
-      ],
-      "23": [
-         "mesure",
-         "2022-03-16",
-         true,
-         false,
-         []
-      ],
-      "24": [
-         "doublage",
-         "2022-03-17",
-         true,
-         false,
-         []
-      ],
-      "25": [
-         "cloison",
-         "2022-03-17",
-         true,
-         false,
-         []
-      ],
-      "26": [
-         "Nettoyer le chantier",
-         "2022-03-18",
-         true,
-         false,
-         []
-      ],
-      "27": [
-         "doublage",
-         "2022-04-16",
-         false,
-         false,
-         []
-      ],
-      "28": [
-         "cloison",
-         "2022-04-17",
-         false,
-         false,
-         []
-      ],
-      "29": [
-         "doublage",
-         "2022-03-17",
-         true,
-         false,
-         []
-      ]
+      "3": null,
+      "4": null,
+      "5": null,
+      "6": null,
+      "7": null,
+      "8": null,
+      "9": null,
+      "10": null,
+      "11": null,
+      "12": null,
+      "13": null,
+      "14": null,
+      "15": null,
+      "16": null,
+      "20": null,
+      "21": null,
+      "22": null,
+      "23": null,
+      "24": null,
+      "25": null,
+      "26": null,
+      "27": null,
+      "28": null,
+      "29": null
    },
    "DatePostFields": [
       "date",
@@ -1229,12 +1074,10 @@
       "companyId",
       "date",
       "comment",
-      "File",
-      "Supervision"
+      "File"
    ],
    "SupervisionIndices": [
-      4,
-      5
+      4
    ],
    "SupervisionValues": {
       "1": [
@@ -1242,7 +1085,6 @@
          3,
          "2022-05-20",
          "J'ai fini.",
-         [],
          []
       ],
       "2": [
@@ -1250,7 +1092,6 @@
          3,
          "2022-05-20",
          "OK pour les t\u00e2ches du jour.",
-         [],
          []
       ],
       "3": [
@@ -1258,7 +1099,6 @@
          3,
          "2022-05-20",
          "Pas de souci aujourd'hui.",
-         [],
          []
       ],
       "4": [
@@ -1266,7 +1106,6 @@
          3,
          "2022-05-20",
          "Le chantier est termin\u00e9.",
-         [],
          []
       ],
       "5": [
@@ -1274,7 +1113,6 @@
          4,
          "2022-05-20",
          "Les t\u00e2ches du jour sont bien faites.",
-         [],
          []
       ],
       "6": [
@@ -1282,7 +1120,6 @@
          4,
          "2022-05-20",
          "Tout est parfait, merci.",
-         [],
          []
       ],
       "7": [
@@ -1292,15 +1129,13 @@
          "Attention aux finitions.",
          [
             10
-         ],
-         []
+         ]
       ],
       "8": [
          "Eric Entreprise",
          4,
          "2022-04-16",
          "Attention au travail de ce jour.",
-         [],
          []
       ]
    },
@@ -1431,5 +1266,5 @@
          "ST"
       ]
    },
-   "timestamp": 1653073053.034126
+   "timestamp": 1653225074.764371
 }

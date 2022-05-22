@@ -30,8 +30,8 @@ class RamData():
         "Post": Post.generateRamStructure(),
         "Mission": Mission.generateRamStructure()
       },
-      "Supervision": {
-        "DetailedPost": DetailedPost.generateRamStructure()
+      "DetailedPost": {
+        "Supervision": DetailedPost.generateRamStructure()
       }
     }
 
@@ -667,13 +667,13 @@ class DetailedPost(CommonModel):
         index = superList.index(fieldName)
         del superList[index]
       return superList
-      
+
   @classmethod
-  def fillUpRamStructure(cls):
+  def generateRamStructure(cls):
     detailedPost = {detailedPost.id:[] for detailedPost in DetailedPost.objects.all()}
     for supervision in Supervision.objects.all():
       if supervision.DetailedPost:
-        detailedPost[supervision.DetailPost.id].append(supervision.id)
+        detailedPost[supervision.DetailedPost.id].append(supervision.id)
     return detailedPost
 
   def computeValues(self, listFields, user, dictFormat=False):
@@ -690,6 +690,7 @@ class DetailedPost(CommonModel):
         if dictFormat:
           values.append({objectModel.id:objectModel.dump() for objectModel in Supervision.objects.filter(DetailedPost=self)})
         else:
+          print("computeValues, DetailedPost", RamData.ramStructure["DetailedPost"], field)
           values.append(RamData.ramStructure["DetailedPost"][field][self.id])
 
 class Supervision(CommonModel):
@@ -707,7 +708,7 @@ class Supervision(CommonModel):
   @classmethod
   def listFields(cls):
       superList = super().listFields()
-      for fieldName in ["Mission", "DetailedPost", "SupervisionAssociated"]:
+      for fieldName in ["Mission", "DetailedPost"]:
         index = superList.index(fieldName)
         del superList[index]
       return superList
