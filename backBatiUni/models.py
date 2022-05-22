@@ -36,8 +36,14 @@ class RamData():
         "Candidate": File.generateRamStructure("Post"),
         "DatePost": DatePost.generateRamStructure("Post"),
       },
+      "Mission": {
+        "DetailedPost": DetailedPost.generateRamStructure("Mission"),
+        "File": File.generateRamStructure("Mission"),
+        "Candidate": File.generateRamStructure("Mission"),
+        "DatePost": DatePost.generateRamStructure("Mission"),
+      },
       "DetailedPost": {"Supervision":None},
-      "Mission": {"Supervision":None},
+      # "Mission": {"Supervision":None},
     }
     Supervision.generateRamStructure()
     
@@ -573,10 +579,16 @@ class Post(CommonModel):
   
       elif field in self.manyToManyObject:
         if dictFormat:
-          listModel = {objectModel.id:objectModel.dump() for objectModel in manyToMany[field].objects.filter(Post=self)}
+          if isinstance(self, Mission):
+            listModel = {objectModel.id:objectModel.dump() for objectModel in manyToMany[field].objects.filter(Mission=self)}
+          else:
+            listModel = {objectModel.id:objectModel.dump() for objectModel in manyToMany[field].objects.filter(Post=self)}
         else:
-          if field == "DetailedPost": print(RamData.ramStructure["Post"][field], self.id)
-          listModel = RamData.ramStructure["Post"][field][self.id]
+          if isinstance(self, Mission):
+            print(field)
+            listModel = RamData.ramStructure["Mission"][field][self.id]
+          else:
+            listModel = RamData.ramStructure["Post"][field][self.id]
         values.append(listModel)
       else:
         value = getattr(self, field, "") if getattr(self, field, None) else ""
@@ -890,6 +902,12 @@ class File(CommonModel):
         if file.Post:
           posts[file.Post.id].append(file.id)
       return posts
+    if nature == "Mission":
+      missions = {mission.id:[] for mission in Mission.objects.all()}
+      for file in File.objects.all():
+        if file.Mission:
+          missions[file.Mission.id].append(file.id)
+      return missions
 
   @classmethod
   def listFields(cls):
