@@ -690,7 +690,6 @@ class DetailedPost(CommonModel):
         if dictFormat:
           values.append({objectModel.id:objectModel.dump() for objectModel in Supervision.objects.filter(DetailedPost=self)})
         else:
-          print("computeValues, DetailedPost", RamData.ramStructure["DetailedPost"], field)
           values.append(RamData.ramStructure["DetailedPost"][field][self.id])
 
 class Supervision(CommonModel):
