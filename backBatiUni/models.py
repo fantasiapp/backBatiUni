@@ -26,12 +26,19 @@ class RamData():
         "JobForCompany": JobForCompany.generateRamStructure(),
         "Disponibility": Disponibility.generateRamStructure(),
         "Notification": Notification.generateRamStructure(),
-        "File": File.generateRamStructure(),
+        "File": File.generateRamStructure("Company"),
         "Post": Post.generateRamStructure(),
         "Mission": Mission.generateRamStructure()
       },
       "DetailedPost": {
-        "Supervision": DetailedPost.generateRamStructure()
+        "Supervision": Supervision.generateRamStructure("DetailedPost")
+      },
+      "Post": {
+        "Supervision": Supervision.generateRamStructure("Post"),
+        "DetailedPost": DetailedPost.generateRamStructure("Post"),
+        "File": File.generateRamStructure("Post"),
+        "Candidate": File.generateRamStructure("Post"),
+        "DatePost": DatePost.generateRamStructure("Post"),
       }
     }
 
@@ -487,7 +494,7 @@ class Post(CommonModel):
   isClosed = models.BooleanField("Fin de la mission", null=False, default=False)
 
   contract = models.IntegerField("Image du contrat", blank=False, null=True, default=None)
-  manyToManyObject = ["DetailedPost", "File", "Candidate", "DatePost", "Supervision"]
+  manyToManyObject = ["DetailedPost", "File", "Candidate", "DatePost"]
 
   class Meta:
     verbose_name = "Post"
@@ -495,7 +502,7 @@ class Post(CommonModel):
   @classmethod
   def listFields(cls):
       superList = super().listFields()
-      for fieldName in ["signedByCompany", "signedBySubContractor", "contract", "Supervision", "subContractorContact", "subContractorName", "quality", "qualityComment", "security", "securityComment", "organisation", "organisationComment", "vibeST", "vibeCommentST", "securityST", "securityCommentST", "organisationST", "organisationCommentST", "isClosed"]:
+      for fieldName in ["signedByCompany", "signedBySubContractor", "contract", "subContractorContact", "subContractorName", "quality", "qualityComment", "security", "securityComment", "organisation", "organisationComment", "vibeST", "vibeCommentST", "securityST", "securityCommentST", "organisationST", "organisationCommentST", "isClosed"]:
         index = superList.index(fieldName)
         del superList[index]
       return superList
@@ -511,6 +518,71 @@ class Post(CommonModel):
   def filter(cls, user):
     listMission = {candidate.Mission.id for candidate in Candidate.objects.all() if candidate.Mission != None}
     return [post for post in Post.objects.all() if not post.id in listMission]
+
+  def computeValues(self, listFields, user, dictFormat=False):
+    values = []
+    manyToMany = {"DetailedPost":DetailedPost, "File":File, "Candidate":Candidate, "DatePost":DatePost}
+    postMission = {"Post":Post, "Mission":Mission}
+    for index in range(len(listFields)):
+      field = listFields[index]
+      
+      if field == "Company": values.append(self.Company.id if self.Company else "")
+      elif field == "Job": values.append(self.Job.id if self.Job else "")
+
+      elif field == "numberOfPeople": values.append(self.numberOfPeople)
+      elif field == "draft": values.append(self.draft)
+      elif field == "manPower": values.append(self.manPower)
+      elif field == "amount": values.append(self.amount)
+      elif field == "currency": values.append(self.currency)
+      elif field == "unitOfTime": values.append(self.unitOfTime)
+      elif field == "counterOffer": values.append(self.counterOffer)
+      elif field == "signedByCompany": values.append(self.signedByCompany)
+      elif field == "signedBySubContractor": values.append(self.signedBySubContractor)
+      elif field == "quality": values.append(self.quality)
+      elif field == "qualityComment": values.append(self.qualityComment)
+      elif field == "security": values.append(self.security)
+      elif field == "securityComment": values.append(self.securityComment)
+      elif field == "organisation": values.append(self.organisation)
+      elif field == "organisationComment": values.append(self.organisationComment)
+      elif field == "boostTimestamp": values.append(self.boostTimestamp)
+      elif field == "vibeST": values.append(self.vibeST)
+      elif field == "vibeCommentST": values.append(self.vibeCommentST)
+      elif field == "securityST": values.append(self.securityST)
+      elif field == "securityCommentST": values.append(self.securityCommentST)
+      elif field == "organisationST": values.append(self.organisationST)
+      elif field == "organisationCommentST": values.append(self.organisationCommentST)
+      elif field == "isClosed": values.append(self.isClosed)
+
+      elif field == "address": values.append(self.address if self.address else "")
+      elif field == "latitude": values.append(self.latitude if self.latitude else "")
+      elif field == "longitude": values.append(self.longitude if self.longitude else "")
+      elif field == "contactName": values.append(self.contactName if self.contactName else "")
+      elif field == "hourlyStart": values.append(self.hourlyStart if self.hourlyStart else "")
+      elif field == "hourlyEnd": values.append(self.hourlyEnd if self.hourlyEnd else "")
+      elif field == "starsST": values.append(self.starsST if self.starsST else "")
+      elif field == "starsPME": values.append(self.starsPME if self.starsPME else "")
+      elif field == "hourlyStartChange": values.append(self.hourlyStartChange if self.hourlyStartChange else "")
+      elif field == "hourlyEndChange": values.append(self.hourlyEndChange if self.hourlyEndChange else "")
+      elif field == "description": values.append(self.description if self.description else "")
+      elif field == "subContractorContact": values.append(self.subContractorContact if self.subContractorContact else "")
+      elif field == "subContractorName": values.append(self.subContractorName if self.subContractorName else "")
+      elif field == "contract": values.append(self.contract if self.contract else "")
+      
+      elif field == "dueDate": values.append(self.dueDate.strftime("%Y-%m-%d") if self.dueDate else "")
+      elif field == "startDate": values.append(self.startDate.strftime("%Y-%m-%d") if self.startDate else "")
+      elif field == "endDate": values.append(self.endDate.strftime("%Y-%m-%d") if self.endDate else "")
+  
+      elif field in self.manyToManyObject:
+        if dictFormat:
+          listModel = {objectModel.id:objectModel.dump() for objectModel in manyToMany[field].objects.filter(Post=self)}
+        else:
+          if field == "DetailedPost": print(RamData.ramStructure["Post"][field])
+          listModel = RamData.ramStructure["Post"][field][self.id]
+        values.append(listModel)
+      else:
+        value = getattr(self, field, "") if getattr(self, field, None) else ""
+        values.append(value)
+    return values
 
 class Mission(Post):
   class Meta:
@@ -578,6 +650,25 @@ class DatePost(CommonModel):
         index = superList.index(fieldName)
         del superList[index]
     return superList
+  
+  @classmethod
+  def generateRamStructure(cls, nature):
+    if nature == "Post":
+      posts = {post.id:[] for post in Post.objects.all()}
+      for datePost in DatePost.objects.all():
+        if datePost.Post:
+          posts[datePost.Post.id].append(datePost.id)
+      return posts
+    if nature == "Mission":
+      missions = {mission.id:[] for mission in Mission.objects.all()}
+      for datePost in DatePost.objects.all():
+        if datePost.Mission:
+          missions[datePost.Mission.id].append(datePost.id)
+      return missions
+
+  def dump(self):
+    date = self.date.strftime("%Y-%m-%d") if self.date else ""
+    return [date, self.deleted, self.validated]
 
 class Notification(CommonModel):
   Post = models.ForeignKey(Post, verbose_name='Annonce associée', related_name='PostNotification', on_delete=models.PROTECT, null=True, default=None)
@@ -639,12 +730,29 @@ class Candidate(CommonModel):
     verbose_name = "Candidate"
 
   @classmethod
+  def generateRamStructure(cls, nature):
+    if nature == "Post":
+      posts = {post.id:[] for post in Post.objects.all()}
+      for notification in Notification.objects.all():
+        posts[notification.Post.id].append(notification.id)
+      return posts
+    if nature == "Mission":
+      missions = {mission.id:[] for mission in Mission.objects.all()}
+      for notification in Notification.objects.all():
+        missions[notification.Mission.id].append(notification.id)
+      return missions
+
+  @classmethod
   def listFields(cls):
       superList = super().listFields()
       for fieldName in ["Post", "Mission"]:
         index = superList.index(fieldName)
         del superList[index]
       return superList
+
+  def dump(self):
+    date = self.date.strftime("%Y-%m-%d") if self.date else ""
+    return [self.Company.id, self.contact, self.isChoosen, self.isRefused, self.isViewed, date, self.amount, self.unitOfTime]
 
 class DetailedPost(CommonModel):
   Post = models.ForeignKey(Post, related_name='Post', verbose_name='Annonce associée', on_delete=models.PROTECT, null=True, default=None)
@@ -669,12 +777,19 @@ class DetailedPost(CommonModel):
       return superList
 
   @classmethod
-  def generateRamStructure(cls):
-    detailedPost = {detailedPost.id:[] for detailedPost in DetailedPost.objects.all()}
-    for supervision in Supervision.objects.all():
-      if supervision.DetailedPost:
-        detailedPost[supervision.DetailedPost.id].append(supervision.id)
-    return detailedPost
+  def generateRamStructure(cls, nature):
+    if nature == "Post":
+      posts = {post.id:[] for post in Post.objects.all()}
+      for detailed in DetailedPost.objects.all():
+        if detailed.Post:
+          posts[detailed.Post.id].append(detailed.id)
+      return posts
+    if nature == "Mission":
+      missions = {mission.id:[] for mission in Mission.objects.all()}
+      for detailed in DetailedPost.objects.all():
+        if detailed.Mission:
+          missions[detailed.Mission.id].append(detailed.id)
+      return missions
 
   def computeValues(self, listFields, user, dictFormat=False):
     values = []
@@ -691,6 +806,8 @@ class DetailedPost(CommonModel):
           values.append({objectModel.id:objectModel.dump() for objectModel in Supervision.objects.filter(DetailedPost=self)})
         else:
           values.append(RamData.ramStructure["DetailedPost"][field][self.id])
+    print("detailedPost", values)
+    return values
 
 class Supervision(CommonModel):
   Mission = models.ForeignKey(Mission, verbose_name='Mission associée', on_delete=models.PROTECT, null=True, default=None)
@@ -711,6 +828,21 @@ class Supervision(CommonModel):
         index = superList.index(fieldName)
         del superList[index]
       return superList
+
+  @classmethod
+  def generateRamStructure(cls, nature):
+    if nature == "Mission":
+      missions = {mission.id:[] for mission in Mission.objects.all()}
+      for supervision in Supervision.objects.all():
+        if supervision.Mission:
+          missions[supervision.Mission.id].append(supervision.id)
+      return missions
+    if nature == "DetailedPost":
+      detailedList = {detailed.id:[] for detailed in DetailedPost.objects.all()}
+      for supervision in Supervision.objects.all():
+        if supervision.DetailedPost:
+          detailedList[supervision.DetailedPost.id].append(supervision.id)
+      return detailedList
 
   def dump(self):
     files = [file.id for file in File.objects.filter(Supervision = self)]
@@ -748,12 +880,19 @@ class File(CommonModel):
     verbose_name = "File"
 
   @classmethod
-  def generateRamStructure(cls):
-    companies = {company.id:[] for company in Company.objects.all()}
-    for file in File.objects.all():
-      if file.Company:
-        companies[file.Company.id].append(file.id)
-    return companies
+  def generateRamStructure(cls, nature):
+    if nature == "Company":
+      companies = {company.id:[] for company in Company.objects.all()}
+      for file in File.objects.all():
+        if file.Company:
+          companies[file.Company.id].append(file.id)
+      return companies
+    if nature == "Post":
+      posts = {post.id:[] for post in Post.objects.all()}
+      for file in File.objects.all():
+        if file.Post:
+          posts[file.Post.id].append(file.id)
+      return posts
 
   @classmethod
   def listFields(cls):
