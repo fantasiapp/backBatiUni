@@ -924,7 +924,6 @@ class DataAccessor():
       jobForCompany.delete()
     for listValue in dictValue:
       if listValue[1]:
-        print("idJob", listValue[0])
         job = Job.objects.get(id=listValue[0])
         jobForCompany = JobForCompany.objects.create(Job=job, number=listValue[1], Company=company)
         if jobForCompany.number != 0:

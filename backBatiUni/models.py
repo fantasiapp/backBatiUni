@@ -810,7 +810,7 @@ class DetailedPost(CommonModel):
     return values
 
   def dump(self):
-    return self.computeValue(self.listFields(), None, dictFormat=False)
+    return self.computeValues(self.listFields(), None, dictFormat=False)
 
 
 class Supervision(CommonModel):
