@@ -35,11 +35,11 @@ class RamData():
         "File": File.generateRamStructure("Post"),
         "Candidate": File.generateRamStructure("Post"),
         "DatePost": DatePost.generateRamStructure("Post"),
-      }
+      },
+      "DetailedPost": {"Supervision":None},
+      "Mission": {"Supervision":None},
     }
     Supervision.generateRamStructure()
-    print("fillUpRamStructure", cls.ramStructure)
-    sleep(5)
     
 
 class CommonModel(models.Model):
@@ -575,7 +575,7 @@ class Post(CommonModel):
         if dictFormat:
           listModel = {objectModel.id:objectModel.dump() for objectModel in manyToMany[field].objects.filter(Post=self)}
         else:
-          if field == "DetailedPost": print(RamData.ramStructure["Post"][field])
+          if field == "DetailedPost": print(RamData.ramStructure["Post"][field], self.id)
           listModel = RamData.ramStructure["Post"][field][self.id]
         values.append(listModel)
       else:
