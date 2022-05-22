@@ -805,8 +805,8 @@ class DetailedPost(CommonModel):
         if dictFormat:
           values.append({objectModel.id:objectModel.dump() for objectModel in Supervision.objects.filter(DetailedPost=self)})
         else:
+          print("detailedPost", RamData.ramStructure["DetailedPost"], field, self.id)
           values.append(RamData.ramStructure["DetailedPost"][field][self.id])
-    print("detailedPost", values)
     return values
 
   def dump(self):

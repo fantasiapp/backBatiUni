@@ -16,7 +16,7 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 20
+numberCompanies = 10
 emailList, emailListPME, emailListST = [], [], []
 
 arguments = sys.argv
