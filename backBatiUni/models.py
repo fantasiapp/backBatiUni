@@ -849,6 +849,8 @@ class Supervision(CommonModel):
           detailedList[supervision.DetailedPost.id].append(supervision.id)
           print("add", detailedList)
       print("end", detailedList)
+      foo = []
+      foo[12] = 2
       return detailedList
 
   def dump(self):
