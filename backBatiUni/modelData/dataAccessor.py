@@ -602,7 +602,7 @@ class DataAccessor():
       datePost = DatePost.objects.create(Mission=mission, date=date, validated=False)
       datePostList[datePost.id] = datePost
       Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role="ST", content=f"Une journée de travail pour le chantier du {mission.address} vous est proposée {strDate}, à vous de valider la proposition.", timestamp=datetime.now().timestamp())
-    return {"modifyMissionDate":"OK", "mission":{mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)} , "datePost":{datePost.id:datePost.computeValues(datePost.listFields(), currentUser, dictFormat=True) for datePost in datePostList}}
+    return {"modifyMissionDate":"OK", "mission":{mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)} , "datePost":{id:datePost.computeValues(datePost.listFields(), currentUser, dictFormat=True) for id, datePost in datePostList.items()}}
 
   @classmethod
   def __modifyMissionTimeTable(cls, data):
