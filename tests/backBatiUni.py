@@ -16,7 +16,7 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 10
+numberCompanies = -1
 emailList, emailListPME, emailListST = [], [], []
 
 arguments = sys.argv
@@ -91,9 +91,6 @@ def executeQuery():
     for i in emailListPME + emailListST:
       requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
 
-    print("emailListPME", emailListPME)
-    print("emailListST", emailListST)
-    print("emailList", emailList, len(emailList))
     for i in emailListPME + emailListST:
       # print("emailList", i)
       token = queryForToken(emailList[i], "pwd")
@@ -128,7 +125,7 @@ def executeQuery():
     if query in ["emptyDB", "buildDB"]:
       token = queryForToken("jlw", "pwd")
       print("user jlw")
-    elif query in ["uploadPost" , "modifyPost", "getPost", "switchDraft", "handleCandidateForPost", "modifyMissionDate", "getUserData", "closeMission", "notificationViewed", "boostDuration"]:
+    elif query in ["uploadPost" , "modifyPost", "getPost", "switchDraft", "handleCandidateForPost", "modifyMissionDate", "getUserData", "closeMission", "notificationViewed", "boostDuration", "isViewed"]:
       print("user pme")
       token = queryForToken("pme", "pwd")
     else:
@@ -211,7 +208,7 @@ def executeQuery():
     elif query == "removeFavorite":
       response = requests.get(url, headers=headers, params={'action':"removeFavorite", "value":"false", "Post":3})
     elif query == "isViewed":
-      response = requests.get(url, headers=headers, params={'action':"isViewed", "Post":1})
+      response = requests.get(url, headers=headers, params={'action':"isViewed", "Post":4})
     # elif query == "deletePost":
     #   print("deletePost")
     #   post = {'action':"uploadPost", "address":"129 rue de Paris 92100 Boulogne", "Job":9, "numberOfPeople":3, "dueDate":"2022-02-15", "startDate":"2022-02-16", "endDate":"2022-02-28", "manPower":True, "counterOffer":True, "hourlyStart":"7:30", "hourlyEnd":"17:30", "currency":"€", "description":"Première description d'un chantier", "amount":65243.10, "DetailedPost":["lavabo", "baignoire"]}
@@ -340,7 +337,7 @@ def executeQuery():
   else:
     print("no answer")
 if query == "all":
-  keys = ["buildDB", "register", "registerConfirm", "registerMany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "uploadFile", "downloadFile", "applyPost", "switchDraft", "handleCandidateForPost", "signContract", "modifyDetailedPost", "createSupervision", "modifyMissionDate", "validateMissionDate", "uploadImageSupervision", "closeMission", "closeMissionST", "boostPost"]
+  keys = ["buildDB", "register", "registerConfirm", "registerMany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "uploadFile", "downloadFile", "applyPost", "switchDraft", "handleCandidateForPost", "signContract", "modifyDetailedPost", "createSupervision", "modifyMissionDate", "validateMissionDate", "uploadImageSupervision", "isViewed", "closeMission", "closeMissionST", "boostPost"]
   for key in keys: #, "modifyPost"
     query = key
     executeQuery()

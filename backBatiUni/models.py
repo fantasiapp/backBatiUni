@@ -1,4 +1,5 @@
 from ast import DictComp
+from fileinput import isstdin
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -33,13 +34,12 @@ class RamData():
       "Post": {
         "DetailedPost": DetailedPost.generateRamStructure("Post"),
         "File": File.generateRamStructure("Post"),
-        "Candidate": File.generateRamStructure("Post"),
+        "Candidate": Candidate.generateRamStructure(),
         "DatePost": DatePost.generateRamStructure("Post"),
       },
       "Mission": {
         "DetailedPost": DetailedPost.generateRamStructure("Mission"),
         "File": File.generateRamStructure("Mission"),
-        "Candidate": File.generateRamStructure("Mission"),
         "DatePost": DatePost.generateRamStructure("Mission"),
       },
       "DetailedPost": {"Supervision":None},
@@ -129,6 +129,7 @@ class CommonModel(models.Model):
         model = apps.get_model(app_label='backBatiUni', model_name=field)
         listFieldsModel = model.listFields()
         if field == "ViewPost":
+          print("ViewPost",  ViewPost.objects.filter(UserProfile=self))
           listModel = [view.id for view in ViewPost.objects.filter(UserProfile=self)]
         elif field == "FavoritePost":
           listModel = [favorite.postId for favorite in FavoritePost.objects.filter(UserProfile=self)]
@@ -500,7 +501,7 @@ class Post(CommonModel):
   isClosed = models.BooleanField("Fin de la mission", null=False, default=False)
 
   contract = models.IntegerField("Image du contrat", blank=False, null=True, default=None)
-  manyToManyObject = ["DetailedPost", "File", "Candidate", "DatePost"]
+  manyToManyObject = ["DetailedPost", "File", "Candidate", "DatePost", "Supervision"]
 
   class Meta:
     verbose_name = "Post"
@@ -508,7 +509,7 @@ class Post(CommonModel):
   @classmethod
   def listFields(cls):
       superList = super().listFields()
-      for fieldName in ["signedByCompany", "signedBySubContractor", "contract", "subContractorContact", "subContractorName", "quality", "qualityComment", "security", "securityComment", "organisation", "organisationComment", "vibeST", "vibeCommentST", "securityST", "securityCommentST", "organisationST", "organisationCommentST", "isClosed"]:
+      for fieldName in ["signedByCompany", "signedBySubContractor", "contract", "subContractorContact", "subContractorName", "quality", "qualityComment", "security", "securityComment", "organisation", "organisationComment", "vibeST", "vibeCommentST", "securityST", "securityCommentST", "organisationST", "organisationCommentST", "isClosed", "Supervision"]:
         index = superList.index(fieldName)
         del superList[index]
       return superList
@@ -517,7 +518,8 @@ class Post(CommonModel):
   def generateRamStructure(cls):
     companies = {company.id:[] for company in Company.objects.all()}
     for post in Post.objects.all():
-      companies[post.Company.id].append(post.id)
+      if not post.subContractorName:
+        companies[post.Company.id].append(post.id)
     return companies
 
   @classmethod
@@ -579,16 +581,16 @@ class Post(CommonModel):
   
       elif field in self.manyToManyObject:
         if dictFormat:
-          if isinstance(self, Mission):
+          if self.subContractorName:
             listModel = {objectModel.id:objectModel.dump() for objectModel in manyToMany[field].objects.filter(Mission=self)}
           else:
             listModel = {objectModel.id:objectModel.dump() for objectModel in manyToMany[field].objects.filter(Post=self)}
         else:
-          if isinstance(self, Mission):
-            print(field)
+          if self.subContractorName:
             listModel = RamData.ramStructure["Mission"][field][self.id]
           else:
             listModel = RamData.ramStructure["Post"][field][self.id]
+            if field == "Candidate": print("Candidate", listModel)
         values.append(listModel)
       else:
         value = getattr(self, field, "") if getattr(self, field, None) else ""
@@ -604,7 +606,8 @@ class Mission(Post):
   def generateRamStructure(cls):
     companies = {company.id:[] for company in Company.objects.all()}
     for mission in Mission.objects.all():
-      companies[mission.Company.id].append(mission.id)
+      if mission.subContractorName:
+        companies[mission.Company.id].append(mission.id)
     return companies
 
   @classmethod
@@ -741,17 +744,12 @@ class Candidate(CommonModel):
     verbose_name = "Candidate"
 
   @classmethod
-  def generateRamStructure(cls, nature):
-    if nature == "Post":
-      posts = {post.id:[] for post in Post.objects.all()}
-      for notification in Notification.objects.all():
-        posts[notification.Post.id].append(notification.id)
-      return posts
-    if nature == "Mission":
-      missions = {mission.id:[] for mission in Mission.objects.all()}
-      for notification in Notification.objects.all():
-        missions[notification.Mission.id].append(notification.id)
-      return missions
+  def generateRamStructure(cls):
+    posts = {post.id:[] for post in Post.objects.all()}
+    for candidate in Candidate.objects.all():
+      if candidate.Post:
+        posts[candidate.Post.id].append(candidate.id)
+    return posts
 
   @classmethod
   def listFields(cls):
