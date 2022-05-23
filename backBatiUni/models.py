@@ -583,7 +583,6 @@ class Post(CommonModel):
           if self.subContractorName:
             listModel = {objectModel.id:objectModel.dump() for objectModel in manyToMany[field].objects.filter(Mission=self)}
           else:
-            print(field, )
             listModel = {objectModel.id:objectModel.dump() for objectModel in manyToMany[field].objects.filter(Post=self)}
         else:
           if self.subContractorName:

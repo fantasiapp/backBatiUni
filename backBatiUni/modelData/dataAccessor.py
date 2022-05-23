@@ -711,7 +711,6 @@ class DataAccessor():
 
   @classmethod
   def __notificationViewed(cls, data, currentUser):
-    print("__notificationViewed", data)
     company = Company.objects.get(id=data["companyId"])
     notifications = Notification.objects.filter(Company=company, Role=data["role"])
     for notification in notifications:

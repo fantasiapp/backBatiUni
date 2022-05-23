@@ -16,7 +16,7 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 10
+numberCompanies = 20
 emailList, emailListPME, emailListST = {}, [], []
 
 arguments = sys.argv
@@ -75,7 +75,7 @@ def executeQuery():
         firstName = ''.join(random.choice(string.ascii_letters) for x in range(6))
         lastName = "Traitant" if random.random() < 0.5 else "Entreprise"
         mail = firstName[:2]
-        role = 1 if random.random() < 0.2 else 2
+        role = 1 if random.random() < 0.3 else 2
         jobs = [math.floor(1 + random.random() * 40), math.floor(41 + random.random() * 40), math.floor(81 + random.random() * 60)]
         company = {"id":companyId, 'name':establishmentValue[0], 'address': establishmentValue[1], 'activity': establishmentValue[2], 'siret': establishmentValue[3], 'ntva': establishmentValue[4]}
         post = {"firstname":firstName, "lastname":lastName, "email":mail, "password":"pwd", "company":company, "Role":role,"proposer":"","jobs":jobs}
@@ -170,7 +170,7 @@ def executeQuery():
       
       for id, mail in emailList.items():
         token = queryForToken("pme", "pwd")
-        if random.random() > 0.9 and id in emailListPME:
+        if id in emailListPME:
           token = queryForToken(mail, "pwd")
         headers = {'Authorization': f'Token {token}'}
         street = ''.join(random.choice(string.ascii_letters) for x in range(8))
@@ -342,6 +342,9 @@ if query == "all":
   for key in keys: #, "modifyPost"
     query = key
     executeQuery()
+    print("PME", emailListPME)
+    print("ST", emailListST)
+    print("email", emailList)
 else:
   executeQuery()
 
