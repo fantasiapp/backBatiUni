@@ -14,7 +14,7 @@ import pyheif
 from PIL import Image
 from cairosvg import svg2png
 from time import sleep, time
-from copy import copy
+from copy import deepcopy
 
 
 class RamData():
@@ -28,19 +28,7 @@ class RamData():
     cls.allPost = {int(post.id):[] for post in Post.objects.all() if post.subContractorName == None}
     cls.allMission = {mission.id:[] for mission in Mission.objects.all() if mission.subContractorName}
     cls.allCompany = {company.id:[] for company in Company.objects.all()}
-    cls.ramStructure = {
-      "Company": {},
-      "Post": {
-        # "Candidate": Casndidate.generateRamStructure(),
-        "DatePost": None,
-      },
-      "Mission": {
-        "DatePost": {}, 
-        "Supervision":{},
-        "DetailedPost":{},
-      },
-      "DetailedPost": {"Supervision":{}},
-    }
+    cls.ramStructure = {"Company":{}, "Post":{}, "Mission":{}, "DetailedPost":{}}
     for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
       classObject.generateRamStructure()
 
@@ -273,7 +261,7 @@ class Disponibility(CommonModel):
 
   @classmethod
   def generateRamStructure(cls):
-    RamData.ramStructure["Company"]["Disponibility"] = copy(RamData.allCompany)
+    RamData.ramStructure["Company"]["Disponibility"] = deepcopy(RamData.allCompany)
     for disponibility in Disponibility.objects.all():
       RamData.ramStructure["Company"]["Disponibility"][disponibility.Company.id].append(disponibility.id)
 
@@ -292,7 +280,7 @@ class JobForCompany(CommonModel):
 
   @classmethod
   def generateRamStructure(cls):
-    RamData.ramStructure["Company"]["JobForCompany"] = copy(RamData.allCompany)
+    RamData.ramStructure["Company"]["JobForCompany"] = deepcopy(RamData.allCompany)
     for jobForCompany in JobForCompany.objects.all():
       RamData.ramStructure["Company"]["JobForCompany"][jobForCompany.Company.id].append(jobForCompany.id)
 
@@ -332,7 +320,7 @@ class LabelForCompany(CommonModel):
 
   @classmethod
   def generateRamStructure(cls):
-    RamData.ramStructure["Company"]["LabelForCompany"] = copy(RamData.allCompany)
+    RamData.ramStructure["Company"]["LabelForCompany"] = deepcopy(RamData.allCompany)
     for labelForCompany in LabelForCompany.objects.all():
       RamData.ramStructure["Company"]["LabelForCompany"][labelForCompany.Company.id].append(labelForCompany.id)
 
@@ -510,10 +498,12 @@ class Post(CommonModel):
 
   @classmethod
   def generateRamStructure(cls):
-    RamData.ramStructure["Company"]["Post"] = copy(RamData.allCompany)
+    RamData.ramStructure["Company"]["Post"] = deepcopy(RamData.allCompany)
     for post in Post.objects.all():
       if not post.subContractorName:
-        RamData.ramStructure["Company"]["Post"][post.Company.id] = post.id
+        RamData.ramStructure["Company"]["Post"][post.Company.id].append(post.id)
+    print("RamData Post", RamData.allPost)
+
 
   @classmethod
   def filter(cls, user):
@@ -596,10 +586,11 @@ class Mission(Post):
 
   @classmethod
   def generateRamStructure(cls):
-    RamData.ramStructure["Company"]["Mission"] = copy(RamData.allCompany)
+    RamData.ramStructure["Company"]["Mission"] = deepcopy(RamData.allCompany)
     for mission in Mission.objects.all():
       if mission.subContractorName:
-        RamData.ramStructure["Company"]["Mission"][mission.Company.id] = mission.id
+        RamData.ramStructure["Company"]["Mission"][mission.Company.id].append(mission.id)
+    print("RamData Mission", RamData.allPost)
 
   @classmethod
   def listFields(cls):
@@ -658,13 +649,14 @@ class DatePost(CommonModel):
   
   @classmethod
   def generateRamStructure(cls):
-    RamData.ramStructure["Post"]["DatePost"] = copy(RamData.allPost)
-    RamData.ramStructure["Mission"]["DatePost"] = copy(RamData.allMission)
+    RamData.ramStructure["Post"]["DatePost"] = deepcopy(RamData.allPost)
+    RamData.ramStructure["Mission"]["DatePost"] = deepcopy(RamData.allMission)
     for datePost in DatePost.objects.all():
       if datePost.Post:
-        RamData.ramStructure["Post"]["DatePost"][datePost.Post.id] = datePost.id
+        RamData.ramStructure["Post"]["DatePost"][datePost.Post.id].append(datePost.id)
       elif datePost.Mission:
-        RamData.ramStructure["Mission"]["DatePost"][datePost.Mission.id] = datePost.id
+        RamData.ramStructure["Mission"]["DatePost"][datePost.Mission.id].append(datePost.id)
+    print("RamData DatePost", RamData.allPost)
 
   def dump(self):
     date = self.date.strftime("%Y-%m-%d") if self.date else ""
@@ -683,9 +675,10 @@ class Notification(CommonModel):
 
   @classmethod
   def generateRamStructure(cls):
-    RamData.ramStructure["Company"]["Notification"] = copy(RamData.allCompany)
+    RamData.ramStructure["Company"]["Notification"] = deepcopy(RamData.allCompany)
     for notification in Notification.objects.all():
-      RamData.ramStructure["Company"]["Notification"][notification.Company.id] = notification.id
+      RamData.ramStructure["Company"]["Notification"][notification.Company.id].append(notification.id)
+    print("RamData Notification", RamData.allPost)
 
   class Meta:
     verbose_name = "Notification"
@@ -730,10 +723,14 @@ class Candidate(CommonModel):
 
   @classmethod
   def generateRamStructure(cls):
-    RamData.ramStructure["Post"]["Candidate"] = copy(RamData.allPost)
+    RamData.ramStructure["Post"]["Candidate"] = deepcopy(RamData.allPost)
+    print("start", RamData.ramStructure["Post"]["Candidate"])
+    print("id Candidate", [candidate.id for candidate in Candidate.objects.all()])
     for candidate in Candidate.objects.all():
       if candidate.Post:
+        print("id", candidate.id, candidate.Post.id)
         RamData.ramStructure["Post"]["Candidate"][candidate.Post.id].append(candidate.id)
+    print("RamData Candidate", RamData.allPost)
 
   @classmethod
   def listFields(cls):
@@ -771,13 +768,13 @@ class DetailedPost(CommonModel):
 
   @classmethod
   def generateRamStructure(cls):
-    RamData.ramStructure["Post"]["DetailedPost"] = copy(RamData.allPost)
-    RamData.ramStructure["Mission"]["DetailedPost"] = copy(RamData.allMission)
+    RamData.ramStructure["Post"]["DetailedPost"] = deepcopy(RamData.allPost)
+    RamData.ramStructure["Mission"]["DetailedPost"] = deepcopy(RamData.allMission)
     for detailed in DetailedPost.objects.all():
       if detailed.Post:
-        RamData.ramStructure["Post"]["DetailedPost"][detailed.Post.id] = detailed.id
+        RamData.ramStructure["Post"]["DetailedPost"][detailed.Post.id].append(detailed.id)
       if detailed.Mission:
-        RamData.ramStructure["Mission"]["DetailedPost"][detailed.Mission.id] = detailed.id
+        RamData.ramStructure["Mission"]["DetailedPost"][detailed.Mission.id].append(detailed.id)
     
   def computeValues(self, listFields, user, dictFormat=False):
     values = []
@@ -823,12 +820,12 @@ class Supervision(CommonModel):
   @classmethod
   def generateRamStructure(cls):
     RamData.ramStructure["DetailedPost"]["Supervision"] = {detailed.id:[] for detailed in DetailedPost.objects.all()}
-    RamData.ramStructure["Mission"]["Supervision"] = copy(RamData.allMission)
+    RamData.ramStructure["Mission"]["Supervision"] = deepcopy(RamData.allMission)
     for supervision in Supervision.objects.all():
       if supervision.Mission:
-          RamData.ramStructure["Mission"]["Supervision"][supervision.Mission.id] = supervision.id
+          RamData.ramStructure["Mission"]["Supervision"][supervision.Mission.id].append(supervision.id)
       elif supervision.DetailedPost:
-          RamData.ramStructure["DetailedPost"]["Supervision"][supervision.DetailedPost.id] = supervision.id
+          RamData.ramStructure["DetailedPost"]["Supervision"][supervision.DetailedPost.id].append(supervision.id)
 
   def dump(self):
     files = [file.id for file in File.objects.filter(Supervision = self)]
@@ -867,9 +864,9 @@ class File(CommonModel):
 
   @classmethod
   def generateRamStructure(cls):
-    RamData.ramStructure["Post"]["File"] = copy(RamData.allPost)
-    RamData.ramStructure["Mission"]["File"] = copy(RamData.allMission)
-    RamData.ramStructure["Company"]["File"] = copy(RamData.allCompany)
+    RamData.ramStructure["Post"]["File"] = deepcopy(RamData.allPost)
+    RamData.ramStructure["Mission"]["File"] = deepcopy(RamData.allMission)
+    RamData.ramStructure["Company"]["File"] = deepcopy(RamData.allCompany)
     for file in File.objects.all():
       if file.Company:
         RamData.ramStructure["Company"]["File"][file.Company.id].append(file.id)

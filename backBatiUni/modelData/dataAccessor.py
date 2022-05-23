@@ -36,7 +36,6 @@ class DataAccessor():
     t0 = time()
     if profile == "user":
       RamData.fillUpRamStructure()
-      print("ramData", RamData.ramStructure)
     for table in cls.loadTables[profile]:
       t1 = time()
       dictAnswer.update(table.dumpStructure(user))
@@ -55,7 +54,6 @@ class DataAccessor():
       return {"register":"Warning", "messages":message}
     token = SmtpConnector(cls.portSmtp).register(data["firstname"], data["lastname"], data["email"])
     if token != "token not received" or data["email"] == "jeanluc":
-      print("register", data)
       userProfile = cls.__registerAction(data, token)
       cls.__checkIfHaveBeenInvited(userProfile, data['proposer'], data['email'])
       return {"register":"OK"}
@@ -601,7 +599,7 @@ class DataAccessor():
       date = datetime.strptime(strDate, "%Y-%m-%d")
       DatePost.objects.create(Mission=mission, date=date, validated=False)
       Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role="ST", content=f"Une journée de travail pour le chantier du {mission.address} vous est proposée {strDate}, à vous de valider la proposition.", timestamp=datetime.now().timestamp())
-    return {"modifyMissionDate":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
+    return {"modifyMissionDate":"OK", "mission":{mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)} , "datePost":{datePost.id:datePost.computeValues(datePost.listFields(), currentUser, dictFormat=True)}}
 
   @classmethod
   def __modifyMissionTimeTable(cls, data):
