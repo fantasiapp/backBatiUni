@@ -129,7 +129,6 @@ class CommonModel(models.Model):
         model = apps.get_model(app_label='backBatiUni', model_name=field)
         listFieldsModel = model.listFields()
         if field == "ViewPost":
-          print("ViewPost",  ViewPost.objects.filter(UserProfile=self))
           listModel = [view.id for view in ViewPost.objects.filter(UserProfile=self)]
         elif field == "FavoritePost":
           listModel = [favorite.postId for favorite in FavoritePost.objects.filter(UserProfile=self)]
@@ -529,7 +528,7 @@ class Post(CommonModel):
 
   def computeValues(self, listFields, user, dictFormat=False):
     values = []
-    manyToMany = {"DetailedPost":DetailedPost, "File":File, "Candidate":Candidate, "DatePost":DatePost}
+    manyToMany = {"DetailedPost":DetailedPost, "File":File, "Candidate":Candidate, "DatePost":DatePost, "Supervision":Supervision}
     for index in range(len(listFields)):
       field = listFields[index]
       
@@ -584,13 +583,13 @@ class Post(CommonModel):
           if self.subContractorName:
             listModel = {objectModel.id:objectModel.dump() for objectModel in manyToMany[field].objects.filter(Mission=self)}
           else:
+            print(field, )
             listModel = {objectModel.id:objectModel.dump() for objectModel in manyToMany[field].objects.filter(Post=self)}
         else:
           if self.subContractorName:
             listModel = RamData.ramStructure["Mission"][field][self.id]
           else:
             listModel = RamData.ramStructure["Post"][field][self.id]
-            if field == "Candidate": print("Candidate", listModel)
         values.append(listModel)
       else:
         value = getattr(self, field, "") if getattr(self, field, None) else ""

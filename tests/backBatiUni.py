@@ -16,8 +16,8 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = -1
-emailList, emailListPME, emailListST = [], [], []
+numberCompanies = 10
+emailList, emailListPME, emailListST = {}, [], []
 
 arguments = sys.argv
 if len(arguments) > 1:
@@ -63,9 +63,10 @@ def executeQuery():
 
   elif query == "registerMany":
     dateForLabel = (datetime.now() + timedelta(days=100, hours=0)).strftime("%Y-%m-%d")
-    companyId, response, url , headers = 0, None, f'{address}/initialize/', {"content-type":"Application/Json"}
+    id, response, url , headers = 0, None, f'{address}/initialize/', {"content-type":"Application/Json"}
 
-    while companyId <= numberCompanies:
+    while id <= numberCompanies:
+      companyId = id + 7
       company = ''.join(random.choice(string.ascii_letters) for x in range(5))
       companies = requests.get(f'{address}/initialize/', headers=headers, params={"action":"getEnterpriseDataFrom", "subName":company})
       data = json.loads(companies.text)
@@ -81,19 +82,19 @@ def executeQuery():
         userProfile = requests.post(url, headers=headers, json=post)
         success = json.loads(userProfile.text)
         if success['register'] == "OK":
-          emailList.append(mail)
+          emailList[companyId] = mail
           if role == 1:
             emailListPME.append(companyId)
           else:
             emailListST.append(companyId)
-          companyId += 1
+          id += 1
 
     for i in emailListPME + emailListST:
       requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
 
-    for i in emailListPME + emailListST:
+    for companyId, mail in emailList.items():
       # print("emailList", i)
-      token = queryForToken(emailList[i], "pwd")
+      token = queryForToken(mail, "pwd")
       headers = {'Authorization': f'Token {token}'}
       capital = str(math.floor(10000 + random.random() * 100000))
       revenue = str(math.floor(100000 + random.random() * 1000000))
@@ -167,10 +168,10 @@ def executeQuery():
       for post in [post1, post2, post3, post4, post5, post6]:
         response = requests.post(url, headers=headers, json=post)
       
-      for i in range(len(emailList)):
+      for id, mail in emailList.items():
         token = queryForToken("pme", "pwd")
-        if random.random() > 0.7:
-          token = queryForToken(emailList[i], "pwd")
+        if random.random() > 0.9 and id in emailListPME:
+          token = queryForToken(mail, "pwd")
         headers = {'Authorization': f'Token {token}'}
         street = ''.join(random.choice(string.ascii_letters) for x in range(8))
         city = ''.join(random.choice(string.ascii_letters) for x in range(8))
@@ -192,7 +193,7 @@ def executeQuery():
           "hourlyStart":"07:30",
           "hourlyEnd":"17:30",
           "currency":"€",
-          "description":"Première description d'un chantier" + str(i),
+          "description":"Première description d'un chantier " + str(id),
           "amount":math.floor(1000 + random.random() * 4000),
           "DetailedPost":["salle de bain", "douche"],
           "draft": random.random() < 0.2
