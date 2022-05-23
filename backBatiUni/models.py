@@ -32,8 +32,6 @@ class RamData():
     for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
       classObject.generateRamStructure()
 
-    
-
 class CommonModel(models.Model):
   manyToManyObject = []
 
