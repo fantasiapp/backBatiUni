@@ -29,8 +29,12 @@ class RamData():
     cls.allMission = {mission.id:[] for mission in Mission.objects.all() if mission.subContractorName}
     cls.allCompany = {company.id:[] for company in Company.objects.all()}
     cls.ramStructure = {"Company":{}, "Post":{}, "Mission":{}, "DetailedPost":{}}
+    t0 = time()
     for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
       classObject.generateRamStructure()
+      t1 = time()
+      print("query for ClassObject", t1 - t0)
+      t0 = t1
 
 class CommonModel(models.Model):
   manyToManyObject = []
