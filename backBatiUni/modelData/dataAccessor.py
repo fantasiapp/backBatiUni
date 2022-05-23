@@ -977,7 +977,6 @@ class DataAccessor():
         date = datetime.strptime(strEndDate, "%m/%d/%Y" "%H:%M:%S")
       post.boostTimestamp = date.timestamp()
       post.save()
-      print("boostPost", post.computeValues(post.listFields(), user, True))
       return {"boostPost":"OK","UserProfile":{post.id:post.computeValues(post.listFields(), user, True)}}
     return {"boostPost":"Error", "messages":f"No post with id {'postId'}"}
     

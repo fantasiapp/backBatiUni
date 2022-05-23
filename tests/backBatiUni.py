@@ -342,9 +342,9 @@ if query == "all":
   for key in keys: #, "modifyPost"
     query = key
     executeQuery()
-    print("PME", emailListPME)
-    print("ST", emailListST)
-    print("email", emailList)
+  print("PME", emailListPME)
+  print("ST", emailListST)
+  print("email", emailList)
 else:
   executeQuery()
 
