@@ -16,7 +16,7 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 20
+numberCompanies = 50
 emailList, emailListPME, emailListST = {}, [], []
 
 arguments = sys.argv
@@ -73,9 +73,9 @@ def executeQuery():
       if "EstablishmentsValues" in data and data["EstablishmentsValues"]:
         establishmentValue = data["EstablishmentsValues"]['0']
         firstName = ''.join(random.choice(string.ascii_letters) for x in range(6))
-        lastName = "Traitant" if random.random() < 0.5 else "Entreprise"
         mail = firstName[:2]
         role = 1 if random.random() < 0.3 else 2
+        lastName = "Traitant" if role == 2 else "Entreprise"
         jobs = [math.floor(1 + random.random() * 40), math.floor(41 + random.random() * 40), math.floor(81 + random.random() * 60)]
         company = {"id":companyId, 'name':establishmentValue[0], 'address': establishmentValue[1], 'activity': establishmentValue[2], 'siret': establishmentValue[3], 'ntva': establishmentValue[4]}
         post = {"firstname":firstName, "lastname":lastName, "email":mail, "password":"pwd", "company":company, "Role":role,"proposer":"","jobs":jobs}
@@ -339,12 +339,9 @@ def executeQuery():
     print("no answer")
 if query == "all":
   keys = ["buildDB", "register", "registerConfirm", "registerMany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "uploadFile", "downloadFile", "applyPost", "switchDraft", "handleCandidateForPost", "signContract", "modifyDetailedPost", "createSupervision", "modifyMissionDate", "validateMissionDate", "uploadImageSupervision", "isViewed", "closeMission", "closeMissionST", "boostPost"]
-  for key in keys: #, "modifyPost"
+  for key in keys:
     query = key
     executeQuery()
-  print("PME", emailListPME)
-  print("ST", emailListST)
-  print("email", emailList)
 else:
   executeQuery()
 

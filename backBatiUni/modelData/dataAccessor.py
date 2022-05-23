@@ -36,6 +36,7 @@ class DataAccessor():
     t0 = time()
     if profile == "user":
       RamData.fillUpRamStructure()
+      print("ramData", RamData.ramStructure)
     for table in cls.loadTables[profile]:
       t1 = time()
       dictAnswer.update(table.dumpStructure(user))

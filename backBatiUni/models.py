@@ -14,38 +14,36 @@ import pyheif
 from PIL import Image
 from cairosvg import svg2png
 from time import sleep, time
+from copy import copy
 
 
 class RamData():
   ramStructure = {}
+  allPost = {}
+  allMission = {}
+  allCompany = {}
 
   @classmethod
   def fillUpRamStructure(cls):
+    cls.allPost = {int(post.id):[] for post in Post.objects.all() if post.subContractorName == None}
+    cls.allMission = {mission.id:[] for mission in Mission.objects.all() if mission.subContractorName}
+    cls.allCompany = {company.id:[] for company in Company.objects.all()}
     cls.ramStructure = {
-      "Company": {
-        "LabelForCompany": LabelForCompany.generateRamStructure(),
-        "JobForCompany": JobForCompany.generateRamStructure(),
-        "Disponibility": Disponibility.generateRamStructure(),
-        "Notification": Notification.generateRamStructure(),
-        "File": File.generateRamStructure("Company"),
-        "Post": Post.generateRamStructure(),
-        "Mission": Mission.generateRamStructure()
-      },
+      "Company": {},
       "Post": {
-        "DetailedPost": DetailedPost.generateRamStructure("Post"),
-        "File": File.generateRamStructure("Post"),
-        "Candidate": Candidate.generateRamStructure(),
-        "DatePost": DatePost.generateRamStructure("Post"),
+        # "Candidate": Casndidate.generateRamStructure(),
+        "DatePost": None,
       },
       "Mission": {
-        "DetailedPost": DetailedPost.generateRamStructure("Mission"),
-        "File": File.generateRamStructure("Mission"),
-        "DatePost": DatePost.generateRamStructure("Mission"),
+        "DatePost": {}, 
+        "Supervision":{},
+        "DetailedPost":{},
       },
-      "DetailedPost": {"Supervision":None},
-      # "Mission": {"Supervision":None},
+      "DetailedPost": {"Supervision":{}},
     }
-    Supervision.generateRamStructure()
+    for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
+      classObject.generateRamStructure()
+
     
 
 class CommonModel(models.Model):
@@ -275,10 +273,9 @@ class Disponibility(CommonModel):
 
   @classmethod
   def generateRamStructure(cls):
-    companies = {company.id:[] for company in Company.objects.all()}
+    RamData.ramStructure["Company"]["Disponibility"] = copy(RamData.allCompany)
     for disponibility in Disponibility.objects.all():
-      companies[disponibility.Company.id].append(disponibility.id)
-    return companies
+      RamData.ramStructure["Company"]["Disponibility"][disponibility.Company.id].append(disponibility.id)
 
   @classmethod
   def listFields(cls):
@@ -295,10 +292,9 @@ class JobForCompany(CommonModel):
 
   @classmethod
   def generateRamStructure(cls):
-    companies = {company.id:[] for company in Company.objects.all()}
+    RamData.ramStructure["Company"]["JobForCompany"] = copy(RamData.allCompany)
     for jobForCompany in JobForCompany.objects.all():
-      companies[jobForCompany.Company.id].append(jobForCompany.id)
-    return companies
+      RamData.ramStructure["Company"]["JobForCompany"][jobForCompany.Company.id].append(jobForCompany.id)
 
   class Meta:
     unique_together = ('Job', 'Company')
@@ -336,10 +332,9 @@ class LabelForCompany(CommonModel):
 
   @classmethod
   def generateRamStructure(cls):
-    companies = {company.id:[] for company in Company.objects.all()}
+    RamData.ramStructure["Company"]["LabelForCompany"] = copy(RamData.allCompany)
     for labelForCompany in LabelForCompany.objects.all():
-      companies[labelForCompany.Company.id].append(labelForCompany.id)
-    return companies
+      RamData.ramStructure["Company"]["LabelForCompany"][labelForCompany.Company.id].append(labelForCompany.id)
 
   def dump(self):
     return [self.Label.id, self.date.strftime("%Y-%m-%d")]
@@ -515,11 +510,10 @@ class Post(CommonModel):
 
   @classmethod
   def generateRamStructure(cls):
-    companies = {company.id:[] for company in Company.objects.all()}
+    RamData.ramStructure["Company"]["Post"] = copy(RamData.allCompany)
     for post in Post.objects.all():
       if not post.subContractorName:
-        companies[post.Company.id].append(post.id)
-    return companies
+        RamData.ramStructure["Company"]["Post"][post.Company.id] = post.id
 
   @classmethod
   def filter(cls, user):
@@ -602,11 +596,10 @@ class Mission(Post):
 
   @classmethod
   def generateRamStructure(cls):
-    companies = {company.id:[] for company in Company.objects.all()}
+    RamData.ramStructure["Company"]["Mission"] = copy(RamData.allCompany)
     for mission in Mission.objects.all():
       if mission.subContractorName:
-        companies[mission.Company.id].append(mission.id)
-    return companies
+        RamData.ramStructure["Company"]["Mission"][mission.Company.id] = mission.id
 
   @classmethod
   def listFields(cls):
@@ -664,19 +657,14 @@ class DatePost(CommonModel):
     return superList
   
   @classmethod
-  def generateRamStructure(cls, nature):
-    if nature == "Post":
-      posts = {post.id:[] for post in Post.objects.all()}
-      for datePost in DatePost.objects.all():
-        if datePost.Post:
-          posts[datePost.Post.id].append(datePost.id)
-      return posts
-    if nature == "Mission":
-      missions = {mission.id:[] for mission in Mission.objects.all()}
-      for datePost in DatePost.objects.all():
-        if datePost.Mission:
-          missions[datePost.Mission.id].append(datePost.id)
-      return missions
+  def generateRamStructure(cls):
+    RamData.ramStructure["Post"]["DatePost"] = copy(RamData.allPost)
+    RamData.ramStructure["Mission"]["DatePost"] = copy(RamData.allMission)
+    for datePost in DatePost.objects.all():
+      if datePost.Post:
+        RamData.ramStructure["Post"]["DatePost"][datePost.Post.id] = datePost.id
+      elif datePost.Mission:
+        RamData.ramStructure["Mission"]["DatePost"][datePost.Mission.id] = datePost.id
 
   def dump(self):
     date = self.date.strftime("%Y-%m-%d") if self.date else ""
@@ -695,10 +683,9 @@ class Notification(CommonModel):
 
   @classmethod
   def generateRamStructure(cls):
-    companies = {company.id:[] for company in Company.objects.all()}
+    RamData.ramStructure["Company"]["Notification"] = copy(RamData.allCompany)
     for notification in Notification.objects.all():
-      companies[notification.Company.id].append(notification.id)
-    return companies
+      RamData.ramStructure["Company"]["Notification"][notification.Company.id] = notification.id
 
   class Meta:
     verbose_name = "Notification"
@@ -743,11 +730,10 @@ class Candidate(CommonModel):
 
   @classmethod
   def generateRamStructure(cls):
-    posts = {post.id:[] for post in Post.objects.all()}
+    RamData.ramStructure["Post"]["Candidate"] = copy(RamData.allPost)
     for candidate in Candidate.objects.all():
       if candidate.Post:
-        posts[candidate.Post.id].append(candidate.id)
-    return posts
+        RamData.ramStructure["Post"]["Candidate"][candidate.Post.id].append(candidate.id)
 
   @classmethod
   def listFields(cls):
@@ -784,20 +770,15 @@ class DetailedPost(CommonModel):
       return superList
 
   @classmethod
-  def generateRamStructure(cls, nature):
-    if nature == "Post":
-      posts = {post.id:[] for post in Post.objects.all()}
-      for detailed in DetailedPost.objects.all():
-        if detailed.Post:
-          posts[detailed.Post.id].append(detailed.id)
-      return posts
-    if nature == "Mission":
-      missions = {mission.id:[] for mission in Mission.objects.all()}
-      for detailed in DetailedPost.objects.all():
-        if detailed.Mission:
-          missions[detailed.Mission.id].append(detailed.id)
-      return missions
-
+  def generateRamStructure(cls):
+    RamData.ramStructure["Post"]["DetailedPost"] = copy(RamData.allPost)
+    RamData.ramStructure["Mission"]["DetailedPost"] = copy(RamData.allMission)
+    for detailed in DetailedPost.objects.all():
+      if detailed.Post:
+        RamData.ramStructure["Post"]["DetailedPost"][detailed.Post.id] = detailed.id
+      if detailed.Mission:
+        RamData.ramStructure["Mission"]["DetailedPost"][detailed.Mission.id] = detailed.id
+    
   def computeValues(self, listFields, user, dictFormat=False):
     values = []
     for index in range(len(listFields)):
@@ -842,12 +823,12 @@ class Supervision(CommonModel):
   @classmethod
   def generateRamStructure(cls):
     RamData.ramStructure["DetailedPost"]["Supervision"] = {detailed.id:[] for detailed in DetailedPost.objects.all()}
-    RamData.ramStructure["Mission"]["Supervision"] = {detailed.id:[] for detailed in Mission.objects.all()}
+    RamData.ramStructure["Mission"]["Supervision"] = copy(RamData.allMission)
     for supervision in Supervision.objects.all():
       if supervision.Mission:
-          RamData.ramStructure["Mission"]["Supervision"][supervision.Mission.id].append(supervision.id)
+          RamData.ramStructure["Mission"]["Supervision"][supervision.Mission.id] = supervision.id
       elif supervision.DetailedPost:
-          RamData.ramStructure["DetailedPost"]["Supervision"][supervision.DetailedPost.id].append(supervision.id)
+          RamData.ramStructure["DetailedPost"]["Supervision"][supervision.DetailedPost.id] = supervision.id
 
   def dump(self):
     files = [file.id for file in File.objects.filter(Supervision = self)]
@@ -885,25 +866,18 @@ class File(CommonModel):
     verbose_name = "File"
 
   @classmethod
-  def generateRamStructure(cls, nature):
-    if nature == "Company":
-      companies = {company.id:[] for company in Company.objects.all()}
-      for file in File.objects.all():
-        if file.Company:
-          companies[file.Company.id].append(file.id)
-      return companies
-    if nature == "Post":
-      posts = {post.id:[] for post in Post.objects.all()}
-      for file in File.objects.all():
-        if file.Post:
-          posts[file.Post.id].append(file.id)
-      return posts
-    if nature == "Mission":
-      missions = {mission.id:[] for mission in Mission.objects.all()}
-      for file in File.objects.all():
-        if file.Mission:
-          missions[file.Mission.id].append(file.id)
-      return missions
+  def generateRamStructure(cls):
+    RamData.ramStructure["Post"]["File"] = copy(RamData.allPost)
+    RamData.ramStructure["Mission"]["File"] = copy(RamData.allMission)
+    RamData.ramStructure["Company"]["File"] = copy(RamData.allCompany)
+    for file in File.objects.all():
+      if file.Company:
+        RamData.ramStructure["Company"]["File"][file.Company.id].append(file.id)
+      if file.Post:
+        RamData.ramStructure["Post"]["File"][file.Post.id].append(file.id)
+      if file.Mission:
+        RamData.ramStructure["Mission"]["File"][file.Mission.id].append(file.id)
+
 
   @classmethod
   def listFields(cls):
