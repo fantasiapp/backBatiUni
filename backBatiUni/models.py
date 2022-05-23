@@ -33,7 +33,7 @@ class RamData():
     for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
       classObject.generateRamStructure()
       t1 = time()
-      print("query for ClassObject", t1 - t0)
+      print("query for ClassObject", classObject, t1 - t0)
       t0 = t1
 
 class CommonModel(models.Model):
