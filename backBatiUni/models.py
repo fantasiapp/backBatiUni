@@ -306,7 +306,7 @@ class LabelForCompany(CommonModel):
     unique_together = ('Label', 'Company')
     verbose_name = "LabelForCompany"
 
-  def computeValues(self, listFields, user, dictFormat=False): return [self.Label.name, self.date.strftime("%Y-%m-%d")]
+  def computeValues(self, listFields, user, dictFormat=False): return [self.Label.id, self.date.strftime("%Y-%m-%d")]
 
   @classmethod
   def generateRamStructure(cls):
