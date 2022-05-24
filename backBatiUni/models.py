@@ -856,7 +856,7 @@ class File(CommonModel):
 
   def dump(self):
     expirationDate = self.expirationDate.strftime("%Y-%m-%d") if self.expirationDate else ""
-    return [self.nature, self.name, self.ext, expirationDate, self.timestamp]
+    return [self.nature, self.name, self.ext, expirationDate, self.timestamp, ""]
 
   def getAttr(self, fieldName, answer=False):
     if fieldName == "file":
