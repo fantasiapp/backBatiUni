@@ -790,7 +790,7 @@ class DataAccessor():
   @classmethod
   def __uploadFile(cls, data, currentUser):
     print("data", data.keys(), data["ext"], data["name"], data["nature"], data["expirationDate"])
-    if not "ext" in data:
+    if not "ext" in data or not data["ext"]:
       return {"uploadFile":"Warning", "messages":f"Aucune image n'est associé à la demande"}
     if not data['ext'] in File.authorizedExtention:
       return {"uploadFile":"Warning", "messages":f"L'extention {data['ext']} n'est pas traitée"}
