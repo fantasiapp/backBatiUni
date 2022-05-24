@@ -34,7 +34,7 @@ class CreateNewDataBase:
     "Quali’ENR":["", "", True],		
     "QualiGaz":["", "", True],
   }
-  listJobs = {"TCE (Tout Corps d'Etat)",
+  listJobs = {
     "Autre: .....",
     "Acousticien	Acousticienne",
     "Agenceur de cuisines et de salles de bains",

@@ -89,11 +89,9 @@ class CommonModel(models.Model):
   @classmethod
   def dictValues(cls, user):
     listFields, dictResult = cls.listFields(), {}
+    print("dictValue", cls, listFields)
     for instance in cls.filter(user):
-      if len(listFields) > 1:
-        dictResult[instance.id] = instance.computeValues(listFields, user)
-      else:
-        dictResult[instance.id] = getattr(instance, listFields[0]) if listFields[0] != "date" else getattr(instance, "date").strftime("%Y-%m-%d")
+      dictResult[instance.id] = instance.computeValues(listFields, user)
     return dictResult
 
   def computeValues(self, listFields, user, dictFormat=False):
@@ -238,6 +236,7 @@ class Company(CommonModel):
   
       elif field in self.manyToManyObject:
         if field in manyToMany:
+          print("Company compute", field, dictFormat)
           if dictFormat:
             listModel = {objectModel.id:objectModel.dump() for objectModel in manyToMany[field].objects.filter(Company=self)}
           else:
@@ -286,6 +285,8 @@ class JobForCompany(CommonModel):
     for jobForCompany in JobForCompany.objects.all():
       RamData.ramStructure["Company"]["JobForCompany"][jobForCompany.Company.id].append(jobForCompany.id)
 
+  def computeValues(self, listFields, user, dictFormat=False): return [self.Job.name, self.number]
+
   class Meta:
     unique_together = ('Job', 'Company')
     verbose_name = "JobForCompany"
@@ -314,17 +315,14 @@ class LabelForCompany(CommonModel):
     unique_together = ('Label', 'Company')
     verbose_name = "LabelForCompany"
 
-  def computeValues(self, listFields, user, dictFormat=False):
-    if dictFormat:
-      return {self.id:[self.label.id, self.date.strftime("%Y-%m-%d")]}
-    else:
-      return self.id
+  def computeValues(self, listFields, user, dictFormat=False): return [self.Label.name, self.date.strftime("%Y-%m-%d")]
 
   @classmethod
   def generateRamStructure(cls):
     RamData.ramStructure["Company"]["LabelForCompany"] = deepcopy(RamData.allCompany)
     for labelForCompany in LabelForCompany.objects.all():
       RamData.ramStructure["Company"]["LabelForCompany"][labelForCompany.Company.id].append(labelForCompany.id)
+    print("Ram Labels for companies", RamData.ramStructure["Company"]["LabelForCompany"])
 
   def dump(self):
     return [self.Label.id, self.date.strftime("%Y-%m-%d")]
@@ -381,17 +379,7 @@ class UserProfile(CommonModel):
       user.username = value
       user.save()
     else:
-      super().setAttr(fieldName, value)
-
-  # @classmethod
-  # def dictValues (cls, user):
-  #   dictVal = super().dictValues(user)
-  #   for key, newKey in {"FavoritePost":"favoritePosts", "ViewPost":"viewedPosts"}.items():
-  #     if key in dictVal:
-  #       dictVal[newKey] = dictVal[key]
-  #       del dictVal[key]
-  #     print("dictValues, userProfile", type(dictVal), dictVal)
-  #   return dictVal 
+      super().setAttr(fieldName, value) 
   
   @classmethod
   def filter(cls, user):
@@ -504,7 +492,6 @@ class Post(CommonModel):
     for post in Post.objects.all():
       if not post.subContractorName:
         RamData.ramStructure["Company"]["Post"][post.Company.id].append(post.id)
-    print("RamData Post", RamData.allPost)
 
 
   @classmethod
@@ -592,7 +579,6 @@ class Mission(Post):
     for mission in Mission.objects.all():
       if mission.subContractorName:
         RamData.ramStructure["Company"]["Mission"][mission.Company.id].append(mission.id)
-    print("RamData Mission", RamData.allPost)
 
   @classmethod
   def listFields(cls):
@@ -658,7 +644,6 @@ class DatePost(CommonModel):
         RamData.ramStructure["Post"]["DatePost"][datePost.Post.id].append(datePost.id)
       elif datePost.Mission:
         RamData.ramStructure["Mission"]["DatePost"][datePost.Mission.id].append(datePost.id)
-    print("RamData DatePost", RamData.allPost)
 
   def dump(self):
     date = self.date.strftime("%Y-%m-%d") if self.date else ""
@@ -680,7 +665,6 @@ class Notification(CommonModel):
     RamData.ramStructure["Company"]["Notification"] = deepcopy(RamData.allCompany)
     for notification in Notification.objects.all():
       RamData.ramStructure["Company"]["Notification"][notification.Company.id].append(notification.id)
-    print("RamData Notification", RamData.allPost)
 
   class Meta:
     verbose_name = "Notification"
@@ -726,13 +710,9 @@ class Candidate(CommonModel):
   @classmethod
   def generateRamStructure(cls):
     RamData.ramStructure["Post"]["Candidate"] = deepcopy(RamData.allPost)
-    print("start", RamData.ramStructure["Post"]["Candidate"])
-    print("id Candidate", [candidate.id for candidate in Candidate.objects.all()])
     for candidate in Candidate.objects.all():
       if candidate.Post:
-        print("id", candidate.id, candidate.Post.id)
         RamData.ramStructure["Post"]["Candidate"][candidate.Post.id].append(candidate.id)
-    print("RamData Candidate", RamData.allPost)
 
   @classmethod
   def listFields(cls):
