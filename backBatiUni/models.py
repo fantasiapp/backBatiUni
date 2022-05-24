@@ -268,7 +268,7 @@ class Disponibility(CommonModel):
     superList.remove("Company")
     return superList
 
-  def dump(self): return [self.date.strftime("%Y-%m-%d"), self.nature]
+  def dump(self): return [self.date.strftime("%Y-%m-%d") if self.date else "", self.nature]
 
 class JobForCompany(CommonModel):
   Job = models.ForeignKey(Job, on_delete=models.PROTECT, blank=False, null=False)
@@ -314,7 +314,7 @@ class LabelForCompany(CommonModel):
       RamData.ramStructure["Company"]["LabelForCompany"][labelForCompany.Company.id].append(labelForCompany.id)
 
   def dump(self):
-    return [self.Label.name, self.date.strftime("%Y-%m-%d")]
+    return [self.Label.name, self.date.strftime("%Y-%m-%d") if self.date else ""]
 
   @classmethod
   def listFields(cls):
