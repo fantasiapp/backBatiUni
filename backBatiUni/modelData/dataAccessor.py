@@ -407,6 +407,7 @@ class DataAccessor():
     print('createSupervision kwargs', kwargs)
     supervision = Supervision.objects.create(**kwargs)
     if supervision:
+      print("send", mission.computeValues(mission.listFields(), currentUser, True))
       return {"createSupervision":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, True)}
     return {"createSupervision":"Warning", "messages":"La supervision n'a pas été créée"}
 

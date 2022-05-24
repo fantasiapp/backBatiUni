@@ -280,7 +280,6 @@ class JobForCompany(CommonModel):
     RamData.ramStructure["Company"]["JobForCompany"] = deepcopy(RamData.allCompany)
     for jobForCompany in JobForCompany.objects.all():
       RamData.ramStructure["Company"]["JobForCompany"][jobForCompany.Company.id].append(jobForCompany.id)
-      # RamData.ramStructure["Company"]["JobForCompany"][jobForCompany.Company.id].append([jobForCompany.Job.name, jobForCompany.number])
 
   def computeValues(self, listFields, user, dictFormat=False): return [self.Job.id, self.number]
 
@@ -313,7 +312,6 @@ class LabelForCompany(CommonModel):
     RamData.ramStructure["Company"]["LabelForCompany"] = deepcopy(RamData.allCompany)
     for labelForCompany in LabelForCompany.objects.all():
       RamData.ramStructure["Company"]["LabelForCompany"][labelForCompany.Company.id].append(labelForCompany.id)
-      # RamData.ramStructure["Company"]["LabelForCompany"][labelForCompany.Company.id].append([labelForCompany.Label.name, labelForCompany.date.strftime("%Y-%m-%d")])
 
   def dump(self):
     return [self.Label.name, self.date.strftime("%Y-%m-%d")]
@@ -493,9 +491,7 @@ class Post(CommonModel):
   def computeValues(self, listFields, user, dictFormat=False):
     values = []
     manyToMany = {"DetailedPost":DetailedPost, "File":File, "Candidate":Candidate, "DatePost":DatePost, "Supervision":Supervision}
-    for index in range(len(listFields)):
-      field = listFields[index]
-      
+    for field in listFields:
       if field == "Company": values.append(self.Company.id if self.Company else "")
       elif field == "Job": values.append(self.Job.id if self.Job else "")
 
@@ -541,7 +537,7 @@ class Post(CommonModel):
       elif field == "dueDate": values.append(self.dueDate.strftime("%Y-%m-%d") if self.dueDate else "")
       elif field == "startDate": values.append(self.startDate.strftime("%Y-%m-%d") if self.startDate else "")
       elif field == "endDate": values.append(self.endDate.strftime("%Y-%m-%d") if self.endDate else "")
-  
+
       elif field in self.manyToManyObject:
         if dictFormat:
           if self.subContractorName:
@@ -574,6 +570,7 @@ class Mission(Post):
   @classmethod
   def listFields(cls):
       superList = [field.name.replace("Internal", "") for field in cls._meta.fields][1:] + cls.manyToManyObject
+      print("listFields", superList)
       for fieldName in ["Candidate", "boostTimestamp"]: #"Company", 
         index = superList.index(fieldName)
         del superList[index]
@@ -802,7 +799,7 @@ class Supervision(CommonModel):
 
   def dump(self):
     files = [file.id for file in File.objects.filter(Supervision = self)]
-    return [self.author, self.companyId, self.date.strftime("%Y-%m-%d") if self.date else "", files]
+    return [self.author, self.companyId, self.date.strftime("%Y-%m-%d") if self.date else "", self.comment, files]
 
 
 class InviteFriend(CommonModel):
