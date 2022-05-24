@@ -310,10 +310,11 @@ class LabelForCompany(CommonModel):
   def generateRamStructure(cls):
     RamData.ramStructure["Company"]["LabelForCompany"] = deepcopy(RamData.allCompany)
     for labelForCompany in LabelForCompany.objects.all():
-      RamData.ramStructure["Company"]["LabelForCompany"][labelForCompany.Company.id].append(labelForCompany.id)
+      # RamData.ramStructure["Company"]["LabelForCompany"][labelForCompany.Company.id].append(labelForCompany.id)
+      RamData.ramStructure["Company"]["LabelForCompany"][labelForCompany.Company.id].append([labelForCompany.Label.name, labelForCompany.date.strftime("%Y-%m-%d")])
 
   def dump(self):
-    return [self.Label.id, self.date.strftime("%Y-%m-%d")]
+    return [self.Label.name, self.date.strftime("%Y-%m-%d")]
 
   @classmethod
   def listFields(cls):
