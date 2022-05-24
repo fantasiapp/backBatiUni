@@ -282,7 +282,7 @@ class JobForCompany(CommonModel):
       RamData.ramStructure["Company"]["JobForCompany"][jobForCompany.Company.id].append(jobForCompany.id)
       # RamData.ramStructure["Company"]["JobForCompany"][jobForCompany.Company.id].append([jobForCompany.Job.name, jobForCompany.number])
 
-  def computeValues(self, listFields, user, dictFormat=False): return [self.Job.name, self.number]
+  def computeValues(self, listFields, user, dictFormat=False): return [self.Job.id, self.number]
 
   class Meta:
     unique_together = ('Job', 'Company')
