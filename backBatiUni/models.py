@@ -279,8 +279,8 @@ class JobForCompany(CommonModel):
   def generateRamStructure(cls):
     RamData.ramStructure["Company"]["JobForCompany"] = deepcopy(RamData.allCompany)
     for jobForCompany in JobForCompany.objects.all():
-      # RamData.ramStructure["Company"]["JobForCompany"][jobForCompany.Company.id].append(jobForCompany.id)
-      RamData.ramStructure["Company"]["JobForCompany"][jobForCompany.Company.id].append([jobForCompany.Job.name, jobForCompany.number])
+      RamData.ramStructure["Company"]["JobForCompany"][jobForCompany.Company.id].append(jobForCompany.id)
+      # RamData.ramStructure["Company"]["JobForCompany"][jobForCompany.Company.id].append([jobForCompany.Job.name, jobForCompany.number])
 
   def computeValues(self, listFields, user, dictFormat=False): return [self.Job.name, self.number]
 
@@ -312,8 +312,8 @@ class LabelForCompany(CommonModel):
   def generateRamStructure(cls):
     RamData.ramStructure["Company"]["LabelForCompany"] = deepcopy(RamData.allCompany)
     for labelForCompany in LabelForCompany.objects.all():
-      # RamData.ramStructure["Company"]["LabelForCompany"][labelForCompany.Company.id].append(labelForCompany.id)
-      RamData.ramStructure["Company"]["LabelForCompany"][labelForCompany.Company.id].append([labelForCompany.Label.name, labelForCompany.date.strftime("%Y-%m-%d")])
+      RamData.ramStructure["Company"]["LabelForCompany"][labelForCompany.Company.id].append(labelForCompany.id)
+      # RamData.ramStructure["Company"]["LabelForCompany"][labelForCompany.Company.id].append([labelForCompany.Label.name, labelForCompany.date.strftime("%Y-%m-%d")])
 
   def dump(self):
     return [self.Label.name, self.date.strftime("%Y-%m-%d")]
