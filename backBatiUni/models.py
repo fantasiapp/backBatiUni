@@ -314,7 +314,7 @@ class LabelForCompany(CommonModel):
       RamData.ramStructure["Company"]["LabelForCompany"][labelForCompany.Company.id].append(labelForCompany.id)
 
   def dump(self):
-    return [self.Label.name, self.date.strftime("%Y-%m-%d") if self.date else ""]
+    return [self.Label.id, self.date.strftime("%Y-%m-%d") if self.date else ""]
 
   @classmethod
   def listFields(cls):
