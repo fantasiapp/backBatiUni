@@ -29,12 +29,8 @@ class RamData():
     cls.allMission = {mission.id:[] for mission in Mission.objects.all() if mission.subContractorName}
     cls.allCompany = {company.id:[] for company in Company.objects.all()}
     cls.ramStructure = {"Company":{}, "Post":{}, "Mission":{}, "DetailedPost":{}}
-    t0 = time()
     for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
       classObject.generateRamStructure()
-      t1 = time()
-      print("query for ClassObject", classObject, t1 - t0)
-      t0 = t1
 
 class CommonModel(models.Model):
   manyToManyObject = []
@@ -89,7 +85,6 @@ class CommonModel(models.Model):
   @classmethod
   def dictValues(cls, user):
     listFields, dictResult = cls.listFields(), {}
-    print("dictValue", cls, listFields)
     for instance in cls.filter(user):
       dictResult[instance.id] = instance.computeValues(listFields, user)
     return dictResult
@@ -236,7 +231,6 @@ class Company(CommonModel):
   
       elif field in self.manyToManyObject:
         if field in manyToMany:
-          print("Company compute", field, dictFormat)
           if dictFormat:
             listModel = {objectModel.id:objectModel.dump() for objectModel in manyToMany[field].objects.filter(Company=self)}
           else:
@@ -283,7 +277,8 @@ class JobForCompany(CommonModel):
   def generateRamStructure(cls):
     RamData.ramStructure["Company"]["JobForCompany"] = deepcopy(RamData.allCompany)
     for jobForCompany in JobForCompany.objects.all():
-      RamData.ramStructure["Company"]["JobForCompany"][jobForCompany.Company.id].append(jobForCompany.id)
+      # RamData.ramStructure["Company"]["JobForCompany"][jobForCompany.Company.id].append(jobForCompany.id)
+      RamData.ramStructure["Company"]["JobForCompany"][jobForCompany.Company.id].append([jobForCompany.Job.name, jobForCompany.number])
 
   def computeValues(self, listFields, user, dictFormat=False): return [self.Job.name, self.number]
 
@@ -299,12 +294,6 @@ class JobForCompany(CommonModel):
 
   def dump(self):
     return [self.Job.id, self.number]
-
-  # @classmethod
-  # def filter(cls, user):
-  #   userProfile = UserProfile.objects.get(userNameInternal=user)
-  #   Company = userProfile.Company
-  #   return cls.objects.filter(Company=Company)
 
 class LabelForCompany(CommonModel):
   Label = models.ForeignKey(Label, on_delete=models.PROTECT, blank=False, null=False)
@@ -322,7 +311,6 @@ class LabelForCompany(CommonModel):
     RamData.ramStructure["Company"]["LabelForCompany"] = deepcopy(RamData.allCompany)
     for labelForCompany in LabelForCompany.objects.all():
       RamData.ramStructure["Company"]["LabelForCompany"][labelForCompany.Company.id].append(labelForCompany.id)
-    print("Ram Labels for companies", RamData.ramStructure["Company"]["LabelForCompany"])
 
   def dump(self):
     return [self.Label.id, self.date.strftime("%Y-%m-%d")]
