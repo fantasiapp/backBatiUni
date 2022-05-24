@@ -570,7 +570,6 @@ class Mission(Post):
   @classmethod
   def listFields(cls):
       superList = [field.name.replace("Internal", "") for field in cls._meta.fields][1:] + cls.manyToManyObject
-      print("listFields", superList)
       for fieldName in ["Candidate", "boostTimestamp"]: #"Company", 
         index = superList.index(fieldName)
         del superList[index]
