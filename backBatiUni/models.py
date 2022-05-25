@@ -798,9 +798,10 @@ class Supervision(CommonModel):
     RamData.ramStructure["DatePost"]["Supervision"] = deepcopy(RamData.allDatePost)
     for supervision in Supervision.objects.all():
       if supervision.DetailedPost:
-          RamData.ramStructure["DetailedPost"]["Supervision"][supervision.DetailedPost.id].append(supervision.id)
+        RamData.ramStructure["DetailedPost"]["Supervision"][supervision.DetailedPost.id].append(supervision.id)
       elif supervision.DatePost:
-          RamData.ramStructure["DatePost"]["Supervision"][supervision.DetailedPost.id].append(supervision.id)
+        print(RamData.ramStructure["DatePost"]["Supervision"])
+        RamData.ramStructure["DatePost"]["Supervision"][supervision.DatePost.id].append(supervision.id)
 
   def dump(self):
     files = [file.id for file in File.objects.filter(Supervision = self)]
