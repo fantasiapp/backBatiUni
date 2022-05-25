@@ -403,7 +403,7 @@ class DataAccessor():
     if "datePostId" in data and data["datePostId"]:
       dateSupervision = DatePost.objects.get(id=data["datePostId"]) 
       mission = dateSupervision.Mission
-      kwargs["datePostId"] = dateSupervision
+      kwargs["DatePost"] = dateSupervision
     if "comment" in data:
       kwargs["comment"] = data["comment"]
     # if "date" in data and data["date"]:
