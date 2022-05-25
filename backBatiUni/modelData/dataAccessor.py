@@ -404,7 +404,7 @@ class DataAccessor():
     kwargs["Mission"] = mission
     supervision = Supervision.objects.create(**kwargs)
     if supervision:
-      response = {"createSupervision":"OK", "mission":{mission.id:mission.computeValues(mission.listFields(), currentUser, True)}}
+      response = {"createSupervision":"OK", "supervision":{supervision.id:supervision.computeValues(supervision.listFields(), currentUser, True)}}
       if dateSupervision:
         response["datePostId"] = dateSupervision.id
       else:
