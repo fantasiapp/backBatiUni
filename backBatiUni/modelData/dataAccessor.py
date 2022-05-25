@@ -389,31 +389,27 @@ class DataAccessor():
     print("createSupervision", data, currentUser.id)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     author = f'{userProfile.firstName} {userProfile.lastName}'
+    dateSupervision, detailedPost = None, None
     kwargs, mission = {"DetailedPost":None, "author":author, "companyId":userProfile.Company.id,"comment":""}, None
-    # if "missionId" in data and data["missionId"]:
-    #   mission = Mission.objects.get(id=data["missionId"])
-    #   kwargs["Mission"] = mission
     if "detailedPostId" in data and data["detailedPostId"]:
       detailedPost = DetailedPost.objects.get(id=data["detailedPostId"])
       mission = detailedPost.Mission
       kwargs["DetailedPost"] = detailedPost
-    # if "parentId" in data and data["parentId"]:
-    #   parentSupervision = Supervision.objects.get(id=data["parentId"]) 
-    #   kwargs["parentId"] = parentSupervision
     if "datePostId" in data and data["datePostId"]:
       dateSupervision = DatePost.objects.get(id=data["datePostId"]) 
       mission = dateSupervision.Mission
       kwargs["DatePost"] = dateSupervision
     if "comment" in data:
       kwargs["comment"] = data["comment"]
-    # if "date" in data and data["date"]:
-    #   kwargs["date"] = datetime.strptime(data["date"], "%Y-%m-%d")
-    print('createSupervision kwargs', kwargs)
     kwargs["Mission"] = mission
     supervision = Supervision.objects.create(**kwargs)
     if supervision:
-      print("send", mission.computeValues(mission.listFields(), currentUser, True))
-      return {"createSupervision":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, True)}
+      response = {"createSupervision":"OK", "mission":{mission.id:mission.computeValues(mission.listFields(), currentUser, True)}}
+      if dateSupervision:
+        response["datePostId"] = dateSupervision.id
+      else:
+        response["detailedPostId"] = detailedPost.id
+      return response
     return {"createSupervision":"Warning", "messages":"La supervision n'a pas été créée"}
 
   @classmethod

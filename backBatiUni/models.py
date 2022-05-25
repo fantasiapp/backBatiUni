@@ -638,7 +638,8 @@ class DatePost(CommonModel):
 
   def dump(self):
     date = self.date.strftime("%Y-%m-%d") if self.date else ""
-    return [date, self.deleted, self.validated]
+    supervisions = [supervision.id for supervision in Supervision.objects.filter(DatePost=self)]
+    return [date, self.deleted, self.validated, supervisions]
 
 class Notification(CommonModel):
   Post = models.ForeignKey(Post, verbose_name='Annonce associée', related_name='PostNotification', on_delete=models.PROTECT, null=True, default=None)
@@ -803,9 +804,13 @@ class Supervision(CommonModel):
       elif supervision.DatePost:
         RamData.ramStructure["DatePost"]["Supervision"][supervision.DatePost.id].append(supervision.id)
 
+  def computeValues(self, listFields, user, dictFormat=False):
+    return self.dump()
+
   def dump(self):
     files = [file.id for file in File.objects.filter(Supervision = self)]
-    return [self.author, self.companyId, self.date.strftime("%Y-%m-%d") if self.date else "", self.comment, files]
+    datePost = self.DatePost.id if self.DatePost else ""
+    return [datePost, self.author, self.companyId, self.date.strftime("%Y-%m-%d") if self.date else "", self.comment, files]
 
 
 class InviteFriend(CommonModel):
