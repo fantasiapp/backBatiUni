@@ -28,7 +28,8 @@ class RamData():
     cls.allPost = {int(post.id):[] for post in Post.objects.all() if post.subContractorName == None}
     cls.allMission = {mission.id:[] for mission in Mission.objects.all() if mission.subContractorName}
     cls.allCompany = {company.id:[] for company in Company.objects.all()}
-    cls.ramStructure = {"Company":{}, "Post":{}, "Mission":{}, "DetailedPost":{}}
+    cls.allDatePost = {datePost.id:[] for datePost in DatePost.objects.all()}
+    cls.ramStructure = {"Company":{}, "Post":{}, "Mission":{}, "DetailedPost":{}, "DatePost":{}}
     for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
       classObject.generateRamStructure()
 
@@ -611,6 +612,7 @@ class DatePost(CommonModel):
   date = models.DateField(verbose_name="Date du chantier", null=False, default=timezone.now)
   deleted = models.BooleanField("A été effacé", null=False, default=False)
   validated = models.BooleanField("A été effacé", null=False, default=True)
+  manyToManyObject = ["Supervision"]
 
   class Meta:
     unique_together = ('Post', 'Mission', 'date')
@@ -770,8 +772,9 @@ class DetailedPost(CommonModel):
 
 
 class Supervision(CommonModel):
-  Mission = models.ForeignKey(Mission, verbose_name='Mission associée', on_delete=models.PROTECT, null=True, default=None)
+  # Mission = models.ForeignKey(Mission, verbose_name='Mission associée', on_delete=models.PROTECT, null=True, default=None)
   DetailedPost = models.ForeignKey(DetailedPost, verbose_name='Tâche associée', on_delete=models.PROTECT, null=True, default=None)
+  DatePost = models.ForeignKey(DatePost, verbose_name='Tâche associée', on_delete=models.PROTECT, null=True, default=None)
   author = models.CharField("Nom de l'auteur du message", max_length=256, null=True, default=None)
   companyId = models.IntegerField("Id de la companie emettrice", blank=True, null=False, default=None)
   date = models.DateField(verbose_name="Date du suivi", null=False, default=timezone.now)
@@ -793,11 +796,14 @@ class Supervision(CommonModel):
   def generateRamStructure(cls):
     RamData.ramStructure["DetailedPost"]["Supervision"] = {detailed.id:[] for detailed in DetailedPost.objects.all()}
     RamData.ramStructure["Mission"]["Supervision"] = deepcopy(RamData.allMission)
+    RamData.ramStructure["DatePost"]["Supervision"] = deepcopy(RamData.allDatePost)
     for supervision in Supervision.objects.all():
       if supervision.Mission:
           RamData.ramStructure["Mission"]["Supervision"][supervision.Mission.id].append(supervision.id)
       elif supervision.DetailedPost:
           RamData.ramStructure["DetailedPost"]["Supervision"][supervision.DetailedPost.id].append(supervision.id)
+      elif supervision.DatePost:
+          RamData.ramStructure["DatePost"]["Supervision"][supervision.DetailedPost.id].append(supervision.id)
 
   def dump(self):
     files = [file.id for file in File.objects.filter(Supervision = self)]
@@ -862,6 +868,9 @@ class File(CommonModel):
     return [self.nature, self.name, self.ext, expirationDate, self.timestamp, ""]
 
   def getAttr(self, fieldName, answer=False):
+    if fieldName == "ext":
+      if self.ext == "pdf":
+        return "jpg"
     if fieldName == "file":
       if self.ext == "pdf":
         return self.encodedStringListForPdf()
@@ -903,9 +912,6 @@ class File(CommonModel):
           picture = Image.frombytes(mode=image.mode, size=image.size, data=image.data)
           picture.save(equivJpg, format="jpeg")
     return self.readFile(equivJpg)
-
-  def decodePdf(self):
-    pass
 
   def decodeSvg(self):
     equivJpg = self.path.replace(f"{self.ext}", "png")

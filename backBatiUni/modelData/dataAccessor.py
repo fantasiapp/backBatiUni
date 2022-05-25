@@ -390,20 +390,24 @@ class DataAccessor():
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     author = f'{userProfile.firstName} {userProfile.lastName}'
     kwargs, mission = {"DetailedPost":None, "author":author, "companyId":userProfile.Company.id,"comment":""}, None
-    if "missionId" in data and data["missionId"]:
-      mission = Mission.objects.get(id=data["missionId"])
-      kwargs["Mission"] = mission
+    # if "missionId" in data and data["missionId"]:
+    #   mission = Mission.objects.get(id=data["missionId"])
+    #   kwargs["Mission"] = mission
     if "detailedPostId" in data and data["detailedPostId"]:
       detailedPost = DetailedPost.objects.get(id=data["detailedPostId"])
       mission = detailedPost.Mission
       kwargs["DetailedPost"] = detailedPost
-    if "parentId" in data and data["parentId"]:
-      parentSupervision = Supervision.objects.get(id=data["parentId"]) 
-      kwargs["parentId"] = parentSupervision
+    # if "parentId" in data and data["parentId"]:
+    #   parentSupervision = Supervision.objects.get(id=data["parentId"]) 
+    #   kwargs["parentId"] = parentSupervision
+    if "datePostId" in data and data["datePostId"]:
+      dateSupervision = DatePost.objects.get(id=data["datePostId"]) 
+      mission = dateSupervision.Mission
+      kwargs["datePostId"] = dateSupervision
     if "comment" in data:
       kwargs["comment"] = data["comment"]
-    if "date" in data and data["date"]:
-      kwargs["date"] = datetime.strptime(data["date"], "%Y-%m-%d")
+    # if "date" in data and data["date"]:
+    #   kwargs["date"] = datetime.strptime(data["date"], "%Y-%m-%d")
     print('createSupervision kwargs', kwargs)
     supervision = Supervision.objects.create(**kwargs)
     if supervision:
@@ -979,9 +983,7 @@ class DataAccessor():
       else:
         date = None
         endDate = post.endDate
-        print("test", post.endDate, type(post.endDate), datetime.now(), "now", type(datetime.now())) #datetime.now()
         strEndDate = post.endDate.strftime("%m/%d/%Y" "%H:%M:%S")
-        print("boost", strEndDate)
         date = datetime.strptime(strEndDate, "%m/%d/%Y" "%H:%M:%S")
       post.boostTimestamp = date.timestamp()
       post.save()
