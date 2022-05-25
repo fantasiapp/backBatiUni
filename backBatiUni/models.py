@@ -464,7 +464,7 @@ class Post(CommonModel):
   isClosed = models.BooleanField("Fin de la mission", null=False, default=False)
 
   contract = models.IntegerField("Image du contrat", blank=False, null=True, default=None)
-  manyToManyObject = ["DetailedPost", "File", "Candidate", "DatePost"]
+  manyToManyObject = ["DetailedPost", "File", "Candidate", "DatePost", "Supervision"]
 
   class Meta:
     verbose_name = "Post"
@@ -472,7 +472,7 @@ class Post(CommonModel):
   @classmethod
   def listFields(cls):
       superList = super().listFields()
-      for fieldName in ["signedByCompany", "signedBySubContractor", "contract", "subContractorContact", "subContractorName", "quality", "qualityComment", "security", "securityComment", "organisation", "organisationComment", "vibeST", "vibeCommentST", "securityST", "securityCommentST", "organisationST", "organisationCommentST", "isClosed"]:
+      for fieldName in ["signedByCompany", "signedBySubContractor", "contract", "subContractorContact", "subContractorName", "quality", "qualityComment", "security", "securityComment", "organisation", "organisationComment", "vibeST", "vibeCommentST", "securityST", "securityCommentST", "organisationST", "organisationCommentST", "isClosed", "Supervision"]:
         index = superList.index(fieldName)
         del superList[index]
       return superList
@@ -703,7 +703,6 @@ class Candidate(CommonModel):
     RamData.ramStructure["Post"]["Candidate"] = deepcopy(RamData.allPost)
     for candidate in Candidate.objects.all():
       if candidate.Post:
-        print("Ram", RamData.ramStructure["Post"]["Candidate"], candidate.Post, candidate.id)
         RamData.ramStructure["Post"]["Candidate"][candidate.Post.id].append(candidate.id)
 
   @classmethod
@@ -772,7 +771,7 @@ class DetailedPost(CommonModel):
 
 
 class Supervision(CommonModel):
-  # Mission = models.ForeignKey(Mission, verbose_name='Mission associée', on_delete=models.PROTECT, null=True, default=None)
+  Mission = models.ForeignKey(Mission, verbose_name='Mission associée', on_delete=models.PROTECT, null=True, default=None)
   DetailedPost = models.ForeignKey(DetailedPost, verbose_name='Tâche associée', on_delete=models.PROTECT, null=True, default=None)
   DatePost = models.ForeignKey(DatePost, verbose_name='Tâche associée', on_delete=models.PROTECT, null=True, default=None)
   author = models.CharField("Nom de l'auteur du message", max_length=256, null=True, default=None)
@@ -796,11 +795,12 @@ class Supervision(CommonModel):
   def generateRamStructure(cls):
     RamData.ramStructure["DetailedPost"]["Supervision"] = {detailed.id:[] for detailed in DetailedPost.objects.all()}
     RamData.ramStructure["DatePost"]["Supervision"] = deepcopy(RamData.allDatePost)
+    RamData.ramStructure["Mission"]["Supervision"] = deepcopy(RamData.allMission)
     for supervision in Supervision.objects.all():
+      RamData.ramStructure["Mission"]["Supervision"][supervision.Mission.id].append(supervision.id)
       if supervision.DetailedPost:
         RamData.ramStructure["DetailedPost"]["Supervision"][supervision.DetailedPost.id].append(supervision.id)
       elif supervision.DatePost:
-        print(RamData.ramStructure["DatePost"]["Supervision"])
         RamData.ramStructure["DatePost"]["Supervision"][supervision.DatePost.id].append(supervision.id)
 
   def dump(self):

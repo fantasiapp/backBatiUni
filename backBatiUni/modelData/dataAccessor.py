@@ -409,6 +409,7 @@ class DataAccessor():
     # if "date" in data and data["date"]:
     #   kwargs["date"] = datetime.strptime(data["date"], "%Y-%m-%d")
     print('createSupervision kwargs', kwargs)
+    kwargs["Mission"] = mission
     supervision = Supervision.objects.create(**kwargs)
     if supervision:
       print("send", mission.computeValues(mission.listFields(), currentUser, True))
