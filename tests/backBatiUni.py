@@ -16,7 +16,7 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = -1
+numberCompanies = 50
 emailList, emailListPME, emailListST = {}, [], []
 
 arguments = sys.argv
@@ -61,7 +61,7 @@ def executeQuery():
       response = requests.post(url, headers=headers, json=post)
 
 
-  elif query == "registerMany":
+  elif query == "registerMany" and numberCompanies:
     dateForLabel = (datetime.now() + timedelta(days=100, hours=0)).strftime("%Y-%m-%d")
     id, response, url , headers = 0, None, f'{address}/initialize/', {"content-type":"Application/Json"}
 
@@ -73,7 +73,7 @@ def executeQuery():
       if "EstablishmentsValues" in data and data["EstablishmentsValues"]:
         establishmentValue = data["EstablishmentsValues"]['0']
         firstName = ''.join(random.choice(string.ascii_letters) for x in range(6))
-        mail = firstName[:2]
+        mail = establishmentValue[0][:3]
         role = 1 if random.random() < 0.3 else 2
         lastName = "Traitant" if role == 2 else "Entreprise"
         jobs = [math.floor(1 + random.random() * 40), math.floor(41 + random.random() * 40), math.floor(81 + random.random() * 60)]
@@ -101,7 +101,7 @@ def executeQuery():
       amount = math.floor(8 + random.random() * 70)
       webSite = "https://monWebSite.fr"
       JobForCompany = [[math.floor(1 + random.random() * 40), math.floor(1 + random.random() * 4)], [math.floor(41 + random.random() * 40), math.floor(1 + random.random() * 4)], [math.floor(81 + random.random() * 40), math.floor(1 + random.random() * 4)]]
-      post = {'action': 'modifyUser', 'UserProfile': {'id': companyId, 'cellPhone': '06 29 35 04 18', 'Company': {'capital': capital, 'revenue': revenue, "webSite": webSite, "amount":amount, 'companyPhone': '08 92 97 64 15', "allQualifications":True, 'JobForCompany':JobForCompany, 'LabelForCompany':[[1,dateForLabel], [2,dateForLabel]]}}}
+      post = {'action': 'modifyUser', 'UserProfile': {'id': companyId, 'cellPhone': '0629350418', 'Company': {'capital': capital, 'revenue': revenue, "webSite": webSite, "amount":amount, 'companyPhone': '0892976415', "allQualifications":True, 'JobForCompany':JobForCompany, 'LabelForCompany':[[1,dateForLabel], [2,dateForLabel]]}}}
       requests.post(f'{address}/data/', headers=headers, json=post)
 
     for i in emailListST:
@@ -143,8 +143,8 @@ def executeQuery():
       response = requests.post(url, headers=headers, json=post)
     elif query == "modifyUser":
       now = "2022-01-12"
-      post1 = {'action': 'modifyUser', 'UserProfile': {'id': 3, 'cellPhone': '06 29 35 04 18', 'Company': {'capital': '307130', 'companyPhone': '08 92 97 64 15', "amount":'28', "allQualifications":True, 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]]}}}
-      post2 = {'action': 'modifyUser', 'UserProfile': {'id': 6, 'cellPhone': '06 28 34 03 17', 'Company': {'capital': '207130', 'companyPhone': '08 91 96 63 14', "amount":'52', "allQualifications":True, 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]]}}}
+      post1 = {'action': 'modifyUser', 'UserProfile': {'id': 3, 'cellPhone': '0629350418', 'Company': {'capital': '307130', 'companyPhone': '0892976415', "amount":'28', "allQualifications":True, 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]]}}}
+      post2 = {'action': 'modifyUser', 'UserProfile': {'id': 6, 'cellPhone': '0628340317', 'Company': {'capital': '207130', 'companyPhone': '0891966314', "amount":'52', "allQualifications":True, 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]]}}}
       requests.post(url, headers=headers, json=post1)
       response = requests.post(url, headers=headers, json=post2)
     elif query == "changeUserImage":
@@ -167,38 +167,38 @@ def executeQuery():
       post6 = {'action':"uploadPost", "longitude":2.324877 , "latitude":48.841625, "address":"108 rue du Cherche-Midi 75006 Paris", "Job":5, "numberOfPeople":1, "dueDate":"2022-04-15", "startDate":"2022-04-16", "endDate":"2022-04-28", "DatePost":["2022-04-26", "2022-04-27", "2022-04-28"], "manPower":False, "counterOffer":True, "hourlyStart":"07:00", "hourlyEnd":"17:00", "currency":"€", "description":"Sixième description d'un chantier", "amount":23456.10, "DetailedPost":["radiateur", "Chaudière"]}
       for post in [post1, post2, post3, post4, post5, post6]:
         response = requests.post(url, headers=headers, json=post)
-      
-      for id, mail in emailList.items():
-        token = queryForToken("pme", "pwd")
-        if id in emailListPME:
-          token = queryForToken(mail, "pwd")
-        headers = {'Authorization': f'Token {token}'}
-        street = ''.join(random.choice(string.ascii_letters) for x in range(8))
-        city = ''.join(random.choice(string.ascii_letters) for x in range(8))
-        counterOffer = random.random() > .5
-        startDate = math.floor(5 + random.random() * 20)
-        post = {
-          'action':"uploadPost",
-          "longitude":2.237779 + random.random() / 10000 ,
-          "latitude":48.848776 + random.random() / 10000,
-          "address":f"{math.floor(1 + random.random() * 50)} rue de {street} {city}",
-          "Job":math.floor(1 + random.random() * 140),
-          "numberOfPeople":math.floor(1 + random.random() * 10),
-          "dueDate":f"2022-06-{str(startDate - 1)}",
-          "startDate":f"2022-06-{str(startDate)}",
-          "endDate":f"2022-06-{str(startDate + 3)}",
-          "DatePost":[f"2022-06-{str(startDate)}", f"2022-06-{str(startDate + 1)}", f"2022-06-{str(startDate + 2)}", f"2022-06-{str(startDate + 3)}"],
-          "manPower":random.random() > .5,
-          "counterOffer":counterOffer,
-          "hourlyStart":"07:30",
-          "hourlyEnd":"17:30",
-          "currency":"€",
-          "description":"Première description d'un chantier " + str(id),
-          "amount":math.floor(1000 + random.random() * 4000),
-          "DetailedPost":["salle de bain", "douche"],
-          "draft": random.random() < 0.2
-          }
-        requests.post(url, headers=headers, json=post)
+      if numberCompanies:
+        for id, mail in emailList.items():
+          token = queryForToken("pme", "pwd")
+          if id in emailListPME:
+            token = queryForToken(mail, "pwd")
+          headersNew = {'Authorization': f'Token {token}'}
+          street = ''.join(random.choice(string.ascii_letters) for x in range(8))
+          city = ''.join(random.choice(string.ascii_letters) for x in range(8))
+          counterOffer = random.random() > .5
+          startDate = math.floor(5 + random.random() * 20)
+          post = {
+            'action':"uploadPost",
+            "longitude":2.237779 + random.random() / 10000 ,
+            "latitude":48.848776 + random.random() / 10000,
+            "address":f"{math.floor(1 + random.random() * 50)} rue de {street} {city}",
+            "Job":math.floor(1 + random.random() * 140),
+            "numberOfPeople":math.floor(1 + random.random() * 10),
+            "dueDate":f"2022-06-{str(startDate - 1)}",
+            "startDate":f"2022-06-{str(startDate)}",
+            "endDate":f"2022-06-{str(startDate + 3)}",
+            "DatePost":[f"2022-06-{str(startDate)}", f"2022-06-{str(startDate + 1)}", f"2022-06-{str(startDate + 2)}", f"2022-06-{str(startDate + 3)}"],
+            "manPower":random.random() > .5,
+            "counterOffer":counterOffer,
+            "hourlyStart":"07:30",
+            "hourlyEnd":"17:30",
+            "currency":"€",
+            "description":"Première description d'un chantier " + str(id),
+            "amount":math.floor(1000 + random.random() * 4000),
+            "DetailedPost":["salle de bain", "douche"],
+            "draft": random.random() < 0.2
+            }
+          requests.post(url, headers=headersNew, json=post)
 
     elif query == "modifyPost":
       post = {'action':"modifyPost", "id":1, "address":"126 rue de Paris 92100 Boulogne", "Job":5, "numberOfPeople":2, "dueDate":"2022-03-15", "startDate":"2022-03-16", "endDate":"2022-04-28", "manPower":False, "counterOffer":False, "hourlyStart":"07:00", "hourlyEnd":"17:00", "currency":"€", "description":"Deuxième description d'un chantier", "amount":24456.10, "DetailedPost":["salle de bain", "douche", "lavabo"], "DatePost":["2022-03-15", "2022-03-16", "2022-03-17"]}
@@ -206,6 +206,14 @@ def executeQuery():
     elif query == "setFavorite":
       requests.get(url, headers=headers, params={'action':"setFavorite", "value":"true", "Post":2})
       response = requests.get(url, headers=headers, params={'action':"setFavorite", "value":"true", "Post":3})
+      if numberCompanies:
+        for id, mail in emailList.items():
+          if id in emailListST:
+            token = queryForToken(mail, "pwd")
+            headersNew = {'Authorization': f'Token {token}'}
+            if random.random() > .3:
+              requests.get(url, headers=headers, params={'action':"setFavorite", "value":"true", "Post":id})
+              requests.get(url, headers=headersNew, params={'action':"setFavorite", "value":"true", "Post":id})
     elif query == "removeFavorite":
       response = requests.get(url, headers=headers, params={'action':"removeFavorite", "value":"false", "Post":3})
     elif query == "isViewed":
@@ -338,7 +346,7 @@ def executeQuery():
   else:
     print("no answer")
 if query == "all":
-  keys = ["buildDB", "register", "registerConfirm", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "uploadFile", "downloadFile", "applyPost", "switchDraft", "handleCandidateForPost", "signContract", "modifyDetailedPost", "createSupervision", "modifyMissionDate", "validateMissionDate", "uploadImageSupervision", "isViewed", "closeMission", "closeMissionST", "boostPost"]  #"registerMany", 
+  keys = ["buildDB", "register", "registerConfirm", "registerMany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "setFavorite", "uploadFile", "downloadFile", "applyPost", "switchDraft", "handleCandidateForPost", "signContract", "modifyDetailedPost", "createSupervision", "modifyMissionDate", "validateMissionDate", "uploadImageSupervision", "isViewed", "closeMission", "closeMissionST", "boostPost"]  #
   for key in keys:
     query = key
     executeQuery()

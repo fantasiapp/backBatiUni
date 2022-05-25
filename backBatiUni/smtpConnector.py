@@ -14,6 +14,7 @@ class SmtpConnector:
     SmtpConnector.url = f'http://127.0.0.1:{port}{SmtpConnector.dir}'
 
   def register(self, firstName, lastName, email):
+    print("register smtp", firstName, lastName, email)
     if (firstName == "Augustin" and lastName == "Alleaume") or (firstName == "a" and lastName == "a") or (lastName == "Traitant") or (lastName == "Entreprise"):
       # hack pour passer la sécurité
       return "A secret code to check 9243672519"

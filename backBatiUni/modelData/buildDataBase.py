@@ -34,7 +34,7 @@ class CreateNewDataBase:
     "Quali’ENR":["", "", True],		
     "QualiGaz":["", "", True],
   }
-  listJobs = {
+  listJobs = [
     "Autre: .....",
     "Acousticien	Acousticienne",
     "Agenceur de cuisines et de salles de bains",
@@ -171,7 +171,6 @@ class CreateNewDataBase:
     "Tableau Électrique Chantier ( M?)",
     "Tailleur de pierre	Tailleuse de pierre",
     "Tapissier d'ameublement	Tapissière d'ameublement",
-    "Tout corps d'état"
     "Technicien automobile	Technicienne automobile",
     "Technicien de la construction	Technicienne de la construction",
     "Technicien électrotechnicien	Technicienne électrotechnicienne",
@@ -182,7 +181,7 @@ class CreateNewDataBase:
     "Verrier au chalumeau	Verrière au chalumeau",
     "Vitrailliste",
     "Vitrier	Vitrière",
-  }	
+  ]	
 
   def __init__(self):
     load_dotenv()
