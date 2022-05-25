@@ -464,7 +464,7 @@ class Post(CommonModel):
   isClosed = models.BooleanField("Fin de la mission", null=False, default=False)
 
   contract = models.IntegerField("Image du contrat", blank=False, null=True, default=None)
-  manyToManyObject = ["DetailedPost", "File", "Candidate", "DatePost", "Supervision"]
+  manyToManyObject = ["DetailedPost", "File", "Candidate", "DatePost"]
 
   class Meta:
     verbose_name = "Post"
@@ -472,7 +472,7 @@ class Post(CommonModel):
   @classmethod
   def listFields(cls):
       superList = super().listFields()
-      for fieldName in ["signedByCompany", "signedBySubContractor", "contract", "subContractorContact", "subContractorName", "quality", "qualityComment", "security", "securityComment", "organisation", "organisationComment", "vibeST", "vibeCommentST", "securityST", "securityCommentST", "organisationST", "organisationCommentST", "isClosed", "Supervision"]:
+      for fieldName in ["signedByCompany", "signedBySubContractor", "contract", "subContractorContact", "subContractorName", "quality", "qualityComment", "security", "securityComment", "organisation", "organisationComment", "vibeST", "vibeCommentST", "securityST", "securityCommentST", "organisationST", "organisationCommentST", "isClosed"]:
         index = superList.index(fieldName)
         del superList[index]
       return superList
@@ -787,7 +787,7 @@ class Supervision(CommonModel):
   @classmethod
   def listFields(cls):
       superList = super().listFields()
-      for fieldName in ["Mission", "DetailedPost"]:
+      for fieldName in ["DatePost", "DetailedPost"]:
         index = superList.index(fieldName)
         del superList[index]
       return superList
@@ -795,12 +795,9 @@ class Supervision(CommonModel):
   @classmethod
   def generateRamStructure(cls):
     RamData.ramStructure["DetailedPost"]["Supervision"] = {detailed.id:[] for detailed in DetailedPost.objects.all()}
-    RamData.ramStructure["Mission"]["Supervision"] = deepcopy(RamData.allMission)
     RamData.ramStructure["DatePost"]["Supervision"] = deepcopy(RamData.allDatePost)
     for supervision in Supervision.objects.all():
-      if supervision.Mission:
-          RamData.ramStructure["Mission"]["Supervision"][supervision.Mission.id].append(supervision.id)
-      elif supervision.DetailedPost:
+      if supervision.DetailedPost:
           RamData.ramStructure["DetailedPost"]["Supervision"][supervision.DetailedPost.id].append(supervision.id)
       elif supervision.DatePost:
           RamData.ramStructure["DatePost"]["Supervision"][supervision.DetailedPost.id].append(supervision.id)
