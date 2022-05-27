@@ -704,6 +704,7 @@ class Candidate(CommonModel):
     RamData.ramStructure["Post"]["Candidate"] = deepcopy(RamData.allPost)
     for candidate in Candidate.objects.all():
       if candidate.Post:
+        print("generateRamStructure", candidate.Post, candidate.id)
         RamData.ramStructure["Post"]["Candidate"][candidate.Post.id].append(candidate.id)
 
   @classmethod
