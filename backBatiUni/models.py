@@ -703,7 +703,7 @@ class Candidate(CommonModel):
   def generateRamStructure(cls):
     RamData.ramStructure["Post"]["Candidate"] = deepcopy(RamData.allPost)
     for candidate in Candidate.objects.all():
-      if candidate.Post and not isinstance(candidate.Post, Mission):
+      if candidate.Post and candidate.Post.id in RamData.ramStructure["Post"]["Candidate"]:
         print("generateRamStructure", candidate.Post, candidate.id)
         RamData.ramStructure["Post"]["Candidate"][candidate.Post.id].append(candidate.id)
 
