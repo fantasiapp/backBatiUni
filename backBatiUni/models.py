@@ -549,6 +549,7 @@ class Post(CommonModel):
             listModel = {objectModel.id:objectModel.dump() for objectModel in manyToMany[field].objects.filter(Post=self)}
         else:
           if self.subContractorName:
+            print("compute values Mission", field, RamData.ramStructure["Mission"][field], self.id)
             listModel = RamData.ramStructure["Mission"][field][self.id]
           else:
             listModel = RamData.ramStructure["Post"][field][self.id]
