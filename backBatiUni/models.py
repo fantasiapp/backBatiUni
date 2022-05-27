@@ -550,10 +550,8 @@ class Post(CommonModel):
         else:
           if self.subContractorName:
             if field != "Candidate":
-              print("compute values Mission", field, RamData.ramStructure["Mission"][field], self.id)
               listModel = RamData.ramStructure["Mission"][field][self.id]
           else:
-            print("compute values Mission", field, RamData.ramStructure["Mission"], self.id)
             listModel = RamData.ramStructure["Post"][field][self.id]
         values.append(listModel)
       else:
