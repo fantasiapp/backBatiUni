@@ -322,7 +322,7 @@ class DataAccessor():
   @classmethod
   def __createDetailedPost(cls, data, currentUser):
     print("createDetailedPost", data)
-    kwargs, post, mission = {"Post":None, "Mission":None, "content":None, "date":None}, None, None
+    kwargs, post, mission = {"Post":None, "Mission":None, "content":None}, None, None
     if "postId" in data:
       post = Post.objects.get(id=data["postId"])
       kwargs["Post"] = post
@@ -331,17 +331,15 @@ class DataAccessor():
       kwargs["Mission"] = mission
     if "content" in data:
       kwargs["content"] = data["content"]
-    if "date" in data and isinstance(data["date"], str):
-      kwargs["date"] = datetime.strptime(data["date"], "%Y-%m-%d")
+    if "dateId" in data:
+      kwargs["DatePost"] = DatePost.objects.get(id=data["dateId"])
+    print(kwargs)
     detailedPost = DetailedPost.objects.create(**kwargs)
     if detailedPost:
       """Il faut toujours avoir un modèle sans date pour le front"""
-      if not DetailedPost.objects.filter(Mission = mission, date=None, content=detailedPost.content):
+      if not DetailedPost.objects.filter(Mission = mission, content=detailedPost.content):
         detailedPost = DetailedPost.objects.create(Mission=detailedPost.Mission, content=detailedPost.content)
-      if post:
-        return {"createDetailedPost":"OK", post.id:post.computeValues(post.listFields(), currentUser, True)}
-      if mission:
-        return {"createDetailedPost":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, True)}
+      return cls.__detailedPostComputeAnswer(detailedPost, currentUser)
     return {"createDetailedPost":"Warning", "messages":"La tâche n'a pas été créée"}
 
   @classmethod
@@ -349,26 +347,54 @@ class DataAccessor():
     print("modifyDetailedPost", data)
     unset = data["unset"] if "unset" in data else False
     data = data["detailedPost"]
-    date = datetime.strptime(data["date"], "%Y-%m-%d") if "date" in data and data["date"] else None
-    detailedPost = DetailedPost.objects.filter(id=data["id"])
-    if detailedPost:
-      detailedPost = detailedPost[0]
+    datePost = DatePost.objects.get(id=data["dateId"]) if "dateId" in data and data["dateId"] else None
+    detailedPost = DetailedPost.objects.get(id=data["id"])
+    if not unset:
+      if datePost:
+        if datePost != DetailedPost.DatePost:
+          detailedPost = DetailedPost.objects.create(
+            content=detailedPost.content,
+            DatePost=datePost,
+            validated=detailedPost.validated,
+            refused=detailedPost.refused
+            )
+      """Double passe au cas ou les attributs sont absents"""
+      for field in ["content", "validated", "refused"]:
+        if field in data:
+          setattr(detailedPost, field, data[field])
+      detailedPost.save()
+      return cls.__detailedPostComputeAnswer(detailedPost, currentUser)
+    else:
+      if Supervision.objects.filter(DetailedPost=detailedPost):
+        return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche du {data['date']} est commentée"}
+      detailedPost.delete()
       PorM = detailedPost.Post if detailedPost.Post else detailedPost.Mission
-      if not unset:
-        if date:
-          dateNowString = detailedPost.date.strftime("%Y-%m-%d") if detailedPost.date else None
-          if dateNowString != data["date"]:
-            detailedPost = DetailedPost.objects.create(Post=detailedPost.Post, Mission=detailedPost.Mission, content=detailedPost.content, date=date, validated=detailedPost.validated)
-        for field in ["content", "validated", "refused"]:
-          if field in data:
-            setattr(detailedPost, field, data[field])
-        detailedPost.save()
-      else:
-        if Supervision.objects.filter(DetailedPost=detailedPost):
-          return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche du {data['date']} est commentée"}
-        detailedPost.delete()
-      return {"modifyDetailedPost":"OK", PorM.id:PorM.computeValues(PorM.listFields(), currentUser, True)}
-    return {"modifyDetailedPost":"Error", "messages":f"No Detailed Post with id {data['id']}"}
+      return {
+        "modifyDetailedPost":"OK",
+        "deteled":"yes",
+        "type":"Post" if detailedPost.Post else "Mission",
+        "Object":{PorM.id:PorM.computeValues(PorM.listFields(), currentUser, True)}
+        }
+
+  @classmethod
+  def __detailedPostComputeAnswer(cls, detailedPost, currentUser):
+    typeDetailedPost = "Post" if detailedPost.Post else "Mission"
+    if detailedPost.DatePost:
+      typeDetailedPost = "DatePost"
+    if typeDetailedPost == "Post": fatherId = detailedPost.Post.id
+    elif typeDetailedPost == "Mission": fatherId = detailedPost.Mission.id
+    else: fatherId = detailedPost.DatePost.id
+    answer = {
+      "modifyDetailedPost":"OK",
+      "type":typeDetailedPost,
+      "fatherId":fatherId,
+      "detailedPost":{detailedPost.id:detailedPost.computeValues(detailedPost.listFields(), currentUser, True)}
+    }
+    if detailedPost.DatePost:
+        answer["DatePostId"] = detailedPost.DatePost.id
+    return answer
+
+
 
   @classmethod
   def __deleteDetailedPost(cls, data, currentUser):
@@ -389,30 +415,33 @@ class DataAccessor():
     print("createSupervision", data, currentUser.id)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     author = f'{userProfile.firstName} {userProfile.lastName}'
-    dateSupervision, detailedPost = None, None
-    kwargs, mission = {"DetailedPost":None, "author":author, "companyId":userProfile.Company.id,"comment":""}, None
+    datePost, detailedPost = None, None
+    kwargs = {"DetailedPost":None, "author":author, "companyId":userProfile.Company.id,"comment":""}
     if "detailedPostId" in data and data["detailedPostId"]:
       detailedPost = DetailedPost.objects.get(id=data["detailedPostId"])
-      mission = detailedPost.Mission
       kwargs["DetailedPost"] = detailedPost
-    if "datePostId" in data and data["datePostId"]:
-      dateSupervision = DatePost.objects.get(id=data["datePostId"]) 
-      mission = dateSupervision.Mission
-      kwargs["DatePost"] = dateSupervision
+    if "dateId" in data and data["dateId"]:
+      datePost = DatePost.objects.get(id=data["dateId"]) 
+      kwargs["DatePost"] = datePost
     if "comment" in data:
       kwargs["comment"] = data["comment"]
-    kwargs["Mission"] = mission
+    if "date" in data and data["date"]:
+      kwargs["date"] = datetime.strptime(data["date"], "%Y-%m-%d")
+    print("kwargs", kwargs)
     supervision = Supervision.objects.create(**kwargs)
     if supervision:
-      response = {"createSupervision":"OK", "supervision":{supervision.id:supervision.computeValues(supervision.listFields(), currentUser, True)}}
-      if dateSupervision:
-        response["datePostId"] = dateSupervision.id
-      else:
-        response["detailedPostId"] = detailedPost.id
-      return response
+      return  cls.__supervisionAnswer(supervision, currentUser)
     return {"createSupervision":"Warning", "messages":"La supervision n'a pas été créée"}
 
   @classmethod
+  def __supervisionAnswer(cls, supervision, currentUser):
+    answer = {
+      "createSupervision":"OK",
+      "type":"DetailedPost" if supervision.DetailedPost else "DatePost",
+      "fatherId":supervision.DetailedPost.id if supervision.DetailedPost else supervision.DatePost.id,
+      "supervision":{supervision.id:supervision.computeValues(supervision.listFields(), currentUser, True)}}
+    return answer
+
 
   @classmethod
   def __modifySupervision(cls, data, currentUser):
@@ -421,6 +450,7 @@ class DataAccessor():
 
   @classmethod
   def __deleteSupervision(cls, data, currentUser):
+    """A mettre à jour si nécessaire"""
     print("deleteSupervision", data, currentUser.id)
     supervision = Supervision.objects.get(id=data["supervisionId"])
     if supervision.SupervisionAssociated:

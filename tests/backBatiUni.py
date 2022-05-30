@@ -16,7 +16,7 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 50
+numberCompanies = 0
 emailList, missionList, emailListPME, emailListST = {}, {}, [], []
 
 arguments = sys.argv
@@ -299,8 +299,7 @@ def executeQuery():
       post2 = {'action':"createSupervision", "detailedPostId":8, "comment":"Tout est parfait, merci."}
       post3 = {'action':"createSupervision", "detailedPostId":10, "comment":"Attention aux finitions."}
       post4 = {'action':"createSupervision", "detailedPostId":9, "comment":"Le travail est fini, Youpi."}
-      # post4 = {'action':"createSupervision", "missionId":3, "date":"2022-04-16", "comment":"Attention au travail de ce jour."}
-      post5 = {'action':"createSupervision", "datePostId":8, "comment":"Attention au travail de ce jour."}
+      post5 = {'action':"createSupervision", "dateId":8, "comment":"Attention au travail de ce jour."}
       for post in [post1, post2, post3, post4, post5]:
         response = requests.post(url, headers=headersPme, json=post)
     elif query == "uploadImageSupervision":
@@ -323,17 +322,17 @@ def executeQuery():
       url = f'{address}/createBase/'
       response = requests.get(url, headers=headers, params={"action":"emptyDB"})
     elif query == "createDetailedPost":
-      post = {"action":"createDetailedPost", "missionId":1, "content":"Réparer le lavabo une nouvelle fois", "date":"2022-03-17"}
+      post = {"action":"createDetailedPost", "postId":1, "content":"Réparer le lavabo une nouvelle fois", "dateId":21}
       response = requests.post(url, headers=headers, json=post)
     elif query == "modifyDetailedPost":
-      post1 = {"action":"modifyDetailedPost", "detailedPost":{"id":9, "date":"2022-03-18", "content":"Nettoyer le chantier", "validated":True, "unset":False}}
-      post2 = {"action":"modifyDetailedPost", "detailedPost":{"id":7, "date":"2022-03-17", "validated":True, "unset":False}}
-      post3 = {"action":"modifyDetailedPost", "detailedPost":{"id":8, "date":"2022-03-17", "validated":True, "unset":False}}
-      post4 = {"action":"modifyDetailedPost", "detailedPost":{"id":10, "date":"2022-03-16", "validated":True, "unset":False}}
-      post5 = {"action":"modifyDetailedPost", "detailedPost":{"id":5, "date":"2022-04-16", "validated":False, "unset":False}}
-      post6 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "date":"2022-04-16", "validated":False, "unset":False}}
-      post6 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "date":"2022-04-16", "validated":False, "unset":True}}
-      post6 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "date":"2022-04-17", "validated":False, "unset":False}}
+      post1 = {"action":"modifyDetailedPost", "detailedPost":{"id":9, "dateId":9, "content":"Nettoyer le chantier", "validated":True, "unset":False}}
+      post2 = {"action":"modifyDetailedPost", "detailedPost":{"id":7, "dateId":7, "validated":True}, "unset":False}
+      post3 = {"action":"modifyDetailedPost", "detailedPost":{"id":8, "dateId":8, "validated":True}, "unset":False}
+      post4 = {"action":"modifyDetailedPost", "detailedPost":{"id":10, "dateId":10, "validated":True}, "unset":False}
+      post5 = {"action":"modifyDetailedPost", "detailedPost":{"id":5, "dateId":5, "validated":False}, "unset":False}
+      post6 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "dateId":6, "validated":False}, "unset":False}
+      post6 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "dateId":6, "validated":False}, "unset":True}
+      post6 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "dateId":6, "validated":False}, "unset":False}
       for post in [post4, post2, post3, post1, post5, post6]:
         response = requests.post(url, headers=headers, json=post)
       data = json.loads(response.text)

@@ -464,7 +464,7 @@ class Post(CommonModel):
   isClosed = models.BooleanField("Fin de la mission", null=False, default=False)
 
   contract = models.IntegerField("Image du contrat", blank=False, null=True, default=None)
-  manyToManyObject = ["DetailedPost", "File", "Candidate", "DatePost", "Supervision"]
+  manyToManyObject = ["DetailedPost", "File", "Candidate", "DatePost"]
 
   class Meta:
     verbose_name = "Post"
@@ -472,7 +472,7 @@ class Post(CommonModel):
   @classmethod
   def listFields(cls):
       superList = super().listFields()
-      for fieldName in ["signedByCompany", "signedBySubContractor", "contract", "subContractorContact", "subContractorName", "quality", "qualityComment", "security", "securityComment", "organisation", "organisationComment", "vibeST", "vibeCommentST", "securityST", "securityCommentST", "organisationST", "organisationCommentST", "isClosed", "Supervision"]:
+      for fieldName in ["signedByCompany", "signedBySubContractor", "contract", "subContractorContact", "subContractorName", "quality", "qualityComment", "security", "securityComment", "organisation", "organisationComment", "vibeST", "vibeCommentST", "securityST", "securityCommentST", "organisationST", "organisationCommentST", "isClosed"]:
         index = superList.index(fieldName)
         del superList[index]
       return superList
@@ -492,7 +492,7 @@ class Post(CommonModel):
 
   def computeValues(self, listFields, user, dictFormat=False):
     values = []
-    manyToMany = {"DetailedPost":DetailedPost, "File":File, "Candidate":Candidate, "DatePost":DatePost, "Supervision":Supervision}
+    manyToMany = {"DetailedPost":DetailedPost, "File":File, "Candidate":Candidate, "DatePost":DatePost}
     for field in listFields:
       if field == "Company": values.append(self.Company.id if self.Company else "")
       elif field == "Job": values.append(self.Job.id if self.Job else "")
@@ -554,9 +554,6 @@ class Post(CommonModel):
           else:
             listModel = RamData.ramStructure["Post"][field][self.id]
         values.append(listModel)
-      else:
-        value = getattr(self, field, "") if getattr(self, field, None) else ""
-        values.append(value)
     return values
 
 class Mission(Post):
@@ -613,7 +610,7 @@ class DatePost(CommonModel):
   date = models.DateField(verbose_name="Date du chantier", null=False, default=timezone.now)
   deleted = models.BooleanField("A été effacé", null=False, default=False)
   validated = models.BooleanField("A été effacé", null=False, default=True)
-  manyToManyObject = ["Supervision"]
+  manyToManyObject = ["Supervision", "DetailedPost"]
 
   class Meta:
     unique_together = ('Post', 'Mission', 'date')
@@ -705,7 +702,6 @@ class Candidate(CommonModel):
     RamData.ramStructure["Post"]["Candidate"] = deepcopy(RamData.allPost)
     for candidate in Candidate.objects.all():
       if candidate.Post and candidate.Post.id in RamData.ramStructure["Post"]["Candidate"]:
-        print("generateRamStructure", candidate.Post, candidate.id)
         RamData.ramStructure["Post"]["Candidate"][candidate.Post.id].append(candidate.id)
 
   @classmethod
@@ -724,20 +720,20 @@ class DetailedPost(CommonModel):
   Post = models.ForeignKey(Post, related_name='Post', verbose_name='Annonce associée', on_delete=models.PROTECT, null=True, default=None)
   Mission = models.ForeignKey(Mission, related_name='Mission', verbose_name='Mission associée', on_delete=models.PROTECT, null=True, default=None)
   content = models.CharField("Détail de la prescription", max_length=256, null=True, default=None)
-  date = models.DateField(verbose_name="Date de la tâche", null=True, default=None)
+  DatePost = models.ForeignKey(DatePost, related_name='DateOfDetail', verbose_name='Date associée', on_delete=models.PROTECT, null=True, default=None)
   validated = models.BooleanField("Validation de la tache", null=False, default=False)
   refused = models.BooleanField("Refus de validation de la tache", null=False, default=False)
   manyToManyObject = ["Supervision"]
 
   class Meta:
     verbose_name = "DetailedPost"
-    unique_together = ('Post', 'Mission', 'date')
+    unique_together = ('Post', 'Mission', 'DatePost')
 
 
   @classmethod
   def listFields(cls):
       superList = super().listFields()
-      for fieldName in ["Post", "Mission"]:
+      for fieldName in ["Post", "Mission", 'DatePost']:
         index = superList.index(fieldName)
         del superList[index]
       return superList
@@ -774,7 +770,6 @@ class DetailedPost(CommonModel):
 
 
 class Supervision(CommonModel):
-  Mission = models.ForeignKey(Mission, verbose_name='Mission associée', on_delete=models.PROTECT, null=True, default=None)
   DetailedPost = models.ForeignKey(DetailedPost, verbose_name='Tâche associée', on_delete=models.PROTECT, null=True, default=None)
   DatePost = models.ForeignKey(DatePost, verbose_name='Tâche associée', on_delete=models.PROTECT, null=True, default=None)
   author = models.CharField("Nom de l'auteur du message", max_length=256, null=True, default=None)
@@ -798,9 +793,7 @@ class Supervision(CommonModel):
   def generateRamStructure(cls):
     RamData.ramStructure["DetailedPost"]["Supervision"] = {detailed.id:[] for detailed in DetailedPost.objects.all()}
     RamData.ramStructure["DatePost"]["Supervision"] = deepcopy(RamData.allDatePost)
-    RamData.ramStructure["Mission"]["Supervision"] = deepcopy(RamData.allMission)
     for supervision in Supervision.objects.all():
-      RamData.ramStructure["Mission"]["Supervision"][supervision.Mission.id].append(supervision.id)
       if supervision.DetailedPost:
         RamData.ramStructure["DetailedPost"]["Supervision"][supervision.DetailedPost.id].append(supervision.id)
       elif supervision.DatePost:
@@ -811,8 +804,7 @@ class Supervision(CommonModel):
 
   def dump(self):
     files = [file.id for file in File.objects.filter(Supervision = self)]
-    datePost = self.DatePost.id if self.DatePost else ""
-    return [datePost, self.author, self.companyId, self.date.strftime("%Y-%m-%d") if self.date else "", self.comment, files]
+    return [self.author, self.companyId, self.date.strftime("%Y-%m-%d") if self.date else "", self.comment, files]
 
 
 class InviteFriend(CommonModel):
