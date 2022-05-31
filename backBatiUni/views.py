@@ -28,6 +28,7 @@ class Data(DefaultView):
       elif action == "deleteFile": return Response(DataAccessor.deleteFile(request.GET["id"]))
       elif action == "getPost": return Response(DataAccessor.getPost(currentUser))
       elif action == "handleCandidateForPost": return Response(DataAccessor.handleCandidateForPost(request.GET["Candidate"], request.GET["response"], currentUser))
+      elif action == "blockCompany": return Response(DataAccessor.blockCompany(request.GET["candidateId"], request.GET["status"], currentUser))
       elif action == "signContract": return Response(DataAccessor.signContract(request.GET["missionId"], request.GET["view"], currentUser))
       elif action == "switchDraft": return Response(DataAccessor.switchDraft(request.GET["id"], currentUser))
       elif action == "duplicatePost": return Response(DataAccessor.duplicatePost(request.GET["id"], currentUser))

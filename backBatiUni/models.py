@@ -719,8 +719,8 @@ class Candidate(CommonModel):
 class DetailedPost(CommonModel):
   Post = models.ForeignKey(Post, related_name='Post', verbose_name='Annonce associée', on_delete=models.PROTECT, null=True, default=None)
   Mission = models.ForeignKey(Mission, related_name='Mission', verbose_name='Mission associée', on_delete=models.PROTECT, null=True, default=None)
-  content = models.CharField("Détail de la prescription", max_length=256, null=True, default=None)
   DatePost = models.ForeignKey(DatePost, related_name='DateOfDetail', verbose_name='Date associée', on_delete=models.PROTECT, null=True, default=None)
+  content = models.CharField("Détail de la prescription", max_length=256, null=True, default=None)
   validated = models.BooleanField("Validation de la tache", null=False, default=False)
   refused = models.BooleanField("Refus de validation de la tache", null=False, default=False)
   manyToManyObject = ["Supervision"]
@@ -817,7 +817,6 @@ class InviteFriend(CommonModel):
 
   class Meta:
     verbose_name = "InviteFriend"
-
 
 class File(CommonModel):
   nature = models.CharField('nature du fichier', max_length=128, null=False, default=False, blank=False)
@@ -965,18 +964,15 @@ class File(CommonModel):
       objectFile = cls.objects.create(nature=nature, name=name, path=path, ext=ext, Company=company, expirationDate=expirationDate, Post=post, Mission=mission, Supervision=supervision)
     return objectFile
 
-# class FilesPost(CommonModel):
-#   Post = models.ForeignKey(Post, verbose_name="Annonce associée", on_delete=models.PROTECT, blank=False, default=None)
+class BlockedCandidate(CommonModel):
+  blocker = models.ForeignKey(Company, verbose_name='Company who is blocking', related_name='blocking', on_delete=models.PROTECT, null=True, default=None)
+  blocked = models.ForeignKey(Company, verbose_name='Company who is blocked', related_name='blocked', on_delete=models.PROTECT, null=True, default=None)
+  status= models.BooleanField("Status du bloqué", null=False, default=False)
+  date = models.DateField(verbose_name="Date de l'inscription", null=True, default=None)
 
-# @classmethod
-#   def listFields(cls):
-#     superList = super().listFields()
-#     for fieldName in ["Post"]:
-#       index = superList.index(fieldName)
-#       del superList[index]
-#     superList.append("content")
-#     return superList
-  
+  class Meta:
+    verbose_name = "BlockedCandidate"
+    unique_together = ('blocker', 'blocked')
 
     
 

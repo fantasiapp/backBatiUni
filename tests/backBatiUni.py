@@ -126,7 +126,7 @@ def executeQuery():
     if query in ["emptyDB", "buildDB"]:
       token = queryForToken("jlw", "pwd")
       print("user jlw")
-    elif query in ["uploadPost" , "modifyPost", "getPost", "switchDraft", "handleCandidateForPost", "modifyMissionDate", "getUserData", "closeMission", "notificationViewed", "boostDuration", "isViewed"]:
+    elif query in ["uploadPost" , "modifyPost", "getPost", "switchDraft", "handleCandidateForPost", "modifyMissionDate", "getUserData", "closeMission", "notificationViewed", "boostDuration", "isViewed", "blockCompany"]:
       print("user pme")
       token = queryForToken("pme", "pwd")
     else:
@@ -368,10 +368,12 @@ def executeQuery():
   elif query == "boostPost":
       post = {"action":"boostPost", "postId":2, "duration":0}
       response = requests.post(url, headers=headers, json=post)
+  elif query == "blockCompany":
+      response = requests.get(url, headers=headers, params={"action":"blockCompany", "candidateId":1, "status":"true"})
   else:
     print("no answer")
 if query == "all":
-  keys = ["buildDB", "register", "registerConfirm", "registerMany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "setFavorite", "uploadFile", "downloadFile", "applyPost", "switchDraft", "handleCandidateForPost", "signContract", "modifyDetailedPost", "createSupervision", "modifyMissionDate", "validateMissionDate", "uploadImageSupervision", "isViewed", "closeMission", "closeMissionST", "boostPost"]  #
+  keys = ["buildDB", "register", "registerConfirm", "registerMany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "setFavorite", "uploadFile", "downloadFile", "applyPost", "switchDraft", "handleCandidateForPost", "signContract", "modifyDetailedPost", "createSupervision", "modifyMissionDate", "validateMissionDate", "uploadImageSupervision", "isViewed", "closeMission", "closeMissionST", "boostPost", "blockCompany"]
   for key in keys:
     query = key
     executeQuery()

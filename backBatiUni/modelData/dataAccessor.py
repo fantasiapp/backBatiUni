@@ -24,7 +24,7 @@ if os.getenv('PATH_MIDDLE'):
 
 
 class DataAccessor():
-  loadTables = {"user":[UserProfile, Company, JobForCompany, LabelForCompany, File, Post, Candidate, DetailedPost, DatePost, Mission, Disponibility, Supervision, Notification], "general":[Job, Role, Label]}
+  loadTables = {"user":[UserProfile, Company, JobForCompany, LabelForCompany, File, Post, Candidate, DetailedPost, DatePost, Mission, Disponibility, Supervision, Notification, BlockedCandidate], "general":[Job, Role, Label]}
   dictTable = {}
   portSmtp = os.getenv('PORT_SMTP')
 
@@ -315,7 +315,11 @@ class DataAccessor():
     candidate.isViewed = True
     candidate.save()
     post = candidate.Post
-    return {"candidateViewed":"OK", post.id:post.computeValues(post.listFields(), currentUser, True)}
+    print("candidateViewed", candidateId, post)
+    if post:
+      return {"candidateViewed":"OK", post.id:post.computeValues(post.listFields(), currentUser, True)}
+    else:
+      return {"candidateViewed":"Error", "messages":f"Candidate of id {candidate.id} has no post."}
 
 
 
@@ -542,6 +546,22 @@ class DataAccessor():
     Notification.objects.create(Post=candidate.Post, nature="PME", Company=candidate.Company, Role="ST", content=f"Votre candidature pour le chantier du {candidate.Post.address} n'a pas été retenue.", timestamp=datetime.now().timestamp())
     post = candidate.Post
     return {"handleCandidateForPost":"OK", post.id:post.computeValues(post.listFields(), currentUser, dictFormat=True)}
+
+
+  @classmethod
+  def blockCompany(cls, candidateId, status, currentUser):
+    userProfile = UserProfile.objects.get(userNameInternal=currentUser)
+    candidate = Candidate.objects.get(id=candidateId)
+    blockedCompany = candidate.Company
+    blockingCompany = userProfile.Company
+    blockData = BlockedCandidate.objects.filter(blocker=blockingCompany, blocked=blockedCompany)
+    status = True if status == "true" else False
+    if blockData:
+      blockData[0].status = status
+      blockData[0].save()
+    else:
+      BlockedCandidate.objects.create(blocker=blockingCompany, blocked=blockedCompany, status=status, date=timezone.now())
+    return {"blockCompany":"OK", "messages":f"{blockedCompany.name} est maintenant bloquée"}
 
 
   @classmethod
