@@ -287,20 +287,21 @@ def executeQuery():
           if "mission" in values:
             requests.get(url, headers=headers, params={"action":"signContract", "missionId":id, "view":"PME"})
     elif query == "createSupervision":
-      post1 = {'action':"createSupervision", "detailedPostId":7, "comment":"J'ai fini."}
-      post2 = {'action':"createSupervision", "detailedPostId":8, "comment":"OK pour les tâches du jour."}
-      post3 = {'action':"createSupervision", "detailedPostId":10, "comment":"Pas de souci aujourd'hui."}
-      post4 = {'action':"createSupervision", "detailedPostId":9, "comment":"Le chantier est terminé."}
-      for post in [post1, post2, post3, post4]:
+      post1 = {'action':"createSupervision", "detailedPostId":24, "comment":"J'ai fini."}
+      post2 = {'action':"createSupervision", "detailedPostId":29, "comment":"OK pour les tâches du jour."}
+      # post3 = {'action':"createSupervision", "detailedPostId":10, "comment":"Pas de souci aujourd'hui."}
+      # post4 = {'action':"createSupervision", "detailedPostId":9, "comment":"Le chantier est terminé."}
+      post5 = {'action':"createSupervision", "datePostId":7, "comment":"Voila une tâche difficile."}
+      for post in [post1, post2, post5]:
         response = requests.post(url, headers=headers, json=post)
       tokenPme = queryForToken("pme", "pwd")
       headersPme = {'Authorization': f'Token {tokenPme}'}
-      post1 = {'action':"createSupervision", "detailedPostId":7, "comment":"Les tâches du jour sont bien faites."}
-      post2 = {'action':"createSupervision", "detailedPostId":8, "comment":"Tout est parfait, merci."}
-      post3 = {'action':"createSupervision", "detailedPostId":10, "comment":"Attention aux finitions."}
-      post4 = {'action':"createSupervision", "detailedPostId":9, "comment":"Le travail est fini, Youpi."}
-      post5 = {'action':"createSupervision", "dateId":8, "comment":"Attention au travail de ce jour."}
-      for post in [post1, post2, post3, post4, post5]:
+      post1 = {'action':"createSupervision", "detailedPostId":24, "comment":"Les tâches du jour sont bien faites."}
+      post2 = {'action':"createSupervision", "detailedPostId":29, "comment":"Tout est parfait, merci."}
+      # post3 = {'action':"createSupervision", "detailedPostId":10, "comment":"Attention aux finitions."}
+      # post4 = {'action':"createSupervision", "detailedPostId":9, "comment":"Le travail est fini, Youpi."}
+      post5 = {'action':"createSupervision", "datePostId":7, "comment":"Attention au travail de ce jour."}
+      for post in [post1, post2, post5]:
         response = requests.post(url, headers=headersPme, json=post)
     elif query == "uploadImageSupervision":
       post = {'action':"uploadImageSupervision", "supervisionId":7, "ext":"png", "imageBase64":getDocStr(7)}
@@ -326,17 +327,15 @@ def executeQuery():
       response = requests.post(url, headers=headers, json=post)
     elif query == "modifyDetailedPost":
       post1 = {"action":"modifyDetailedPost", "detailedPost":{"id":9, "dateId":9, "content":"Nettoyer le chantier", "validated":True, "unset":False}}
-      post2 = {"action":"modifyDetailedPost", "detailedPost":{"id":7, "dateId":7, "validated":True}, "unset":False}
-      post3 = {"action":"modifyDetailedPost", "detailedPost":{"id":8, "dateId":8, "validated":True}, "unset":False}
-      post4 = {"action":"modifyDetailedPost", "detailedPost":{"id":10, "dateId":10, "validated":True}, "unset":False}
-      post5 = {"action":"modifyDetailedPost", "detailedPost":{"id":5, "dateId":5, "validated":False}, "unset":False}
-      post6 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "dateId":6, "validated":False}, "unset":False}
-      post6 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "dateId":6, "validated":False}, "unset":True}
-      post6 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "dateId":6, "validated":False}, "unset":False}
-      for post in [post4, post2, post3, post1, post5, post6]:
+      post2 = {"action":"modifyDetailedPost", "detailedPost":{"id":5, "dateId":7, "refused":True}, "unset":False}
+      post3 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "dateId":7, "refused":True}, "unset":False}
+      # post4 = {"action":"modifyDetailedPost", "detailedPost":{"id":10, "dateId":10, "validated":True}, "unset":False}
+      # post5 = {"action":"modifyDetailedPost", "detailedPost":{"id":5, "dateId":5, "validated":False}, "unset":False}
+      # post6 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "dateId":6, "validated":False}, "unset":False}
+      # post6 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "dateId":6, "validated":False}, "unset":True}
+      # post6 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "dateId":6, "validated":False}, "unset":False}
+      for post in [post1, post2, post3]: #[post4, post5, post6]:
         response = requests.post(url, headers=headers, json=post)
-      data = json.loads(response.text)
-      response = requests.post(url, headers=headers, json=post2)
     elif query == "deleteDetailedPost":
       post = {"action":"deleteDetailedPost", "detailedPostId":9}
       response = requests.post(url, headers=headers, json=post)
