@@ -361,8 +361,8 @@ class DataAccessor():
           detailedPost = DetailedPost.objects.create(
             content=detailedPost.content,
             DatePost=datePost,
-            validated=detailedPost.validated,
-            refused=detailedPost.refused
+            validated=False,
+            refused=False
             )
       """Double passe au cas ou les attributs sont absents"""
       for field in ["content", "validated", "refused"]:
@@ -379,7 +379,7 @@ class DataAccessor():
       PorM = detailedPost.Post if detailedPost.Post else detailedPost.Mission
       return {
         "modifyDetailedPost":"OK",
-        "deteled":"yes",
+        "deleted":"yes",
         "type":"Post" if detailedPost.Post else "Mission",
         "Object":{PorM.id:PorM.computeValues(PorM.listFields(), currentUser, True)}
         }
