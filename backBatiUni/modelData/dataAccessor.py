@@ -390,8 +390,8 @@ class DataAccessor():
     else: fatherId = detailedPost.DatePost.id
     answer = {
       "modifyDetailedPost":"OK",
-      "type":typeDetailedPost,
-      "fatherId":fatherId,
+      "type":"DatePost",
+      "fatherId":detailedPost.DatePost.id,
       "detailedPost":{detailedPost.id:detailedPost.computeValues(detailedPost.listFields(), currentUser, True)}
     }
     if detailedPost.DatePost:
