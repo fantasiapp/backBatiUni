@@ -349,10 +349,12 @@ class DataAccessor():
   @classmethod
   def __modifyDetailedPost(cls, data, currentUser):
     print("modifyDetailedPost", data)
+    datePostId = data["datePostId"] if "datePostId" in data and data["datePostId"] else None
     unset = data["unset"] if "unset" in data else False
     data = data["detailedPost"]
-    datePost = DatePost.objects.get(id=data["dateId"]) if "dateId" in data and data["dateId"] else None
+    datePost = DatePost.objects.get(id=datePostId) if datePostId else None
     detailedPost = DetailedPost.objects.get(id=data["id"])
+    print("unset", unset)
     if not unset:
       if datePost:
         if datePost != DetailedPost.DatePost:
@@ -367,8 +369,10 @@ class DataAccessor():
         if field in data:
           setattr(detailedPost, field, data[field])
       detailedPost.save()
+      print("creation", detailedPost.id, detailedPost.DatePost)
       return cls.__detailedPostComputeAnswer(detailedPost, currentUser)
     else:
+      print("unset delete", unset)
       if Supervision.objects.filter(DetailedPost=detailedPost):
         return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche du {data['date']} est commentée"}
       detailedPost.delete()
@@ -390,12 +394,13 @@ class DataAccessor():
     else: fatherId = detailedPost.DatePost.id
     answer = {
       "modifyDetailedPost":"OK",
-      "type":"DatePost",
-      "fatherId":detailedPost.DatePost.id,
+      "type":typeDetailedPost,
+      "fatherId":fatherId,
       "detailedPost":{detailedPost.id:detailedPost.computeValues(detailedPost.listFields(), currentUser, True)}
     }
     if detailedPost.DatePost:
-        answer["DatePostId"] = detailedPost.DatePost.id
+        answer["Type"] = "DatePost"
+        answer["fatherId"] = detailedPost.DatePost.id
     return answer
 
 
