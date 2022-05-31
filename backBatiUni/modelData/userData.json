@@ -30,9 +30,7 @@
          "",
          "",
          [],
-         [
-            1
-         ]
+         []
       ]
    },
    "CompanyFields": [
@@ -147,7 +145,7 @@
          "",
          "",
          "",
-         4,
+         "",
          "",
          "0892976415",
          28.0,
@@ -166,22 +164,12 @@
             4
          ],
          [
-            3,
-            4,
-            5
+            3
          ],
          [],
          [],
          [],
-         [
-            6,
-            8,
-            10,
-            11,
-            12,
-            13,
-            14
-         ]
+         []
       ],
       "4": [
          "PME",
@@ -195,7 +183,7 @@
          "",
          "",
          "",
-         2,
+         "",
          "",
          "",
          "",
@@ -210,34 +198,12 @@
          ],
          [],
          [
-            1,
-            8,
-            9
-         ],
-         [
-            1,
-            2,
-            5,
-            6
-         ],
-         [
-            3,
-            4
+            1
          ],
          [],
-         [
-            1,
-            2,
-            3,
-            4,
-            5,
-            9,
-            15,
-            16,
-            17,
-            18,
-            19
-         ]
+         [],
+         [],
+         []
       ],
       "5": [
          "both",
@@ -303,9 +269,7 @@
          [],
          [],
          [],
-         [
-            7
-         ]
+         []
       ]
    },
    "JobForCompanyFields": [
@@ -412,7 +376,7 @@
          "BatiUni_1",
          "png",
          "",
-         1653928101.342539,
+         1653981447.531813,
          ""
       ],
       "2": [
@@ -420,7 +384,7 @@
          "SousTtraitant2_1",
          "png",
          "",
-         1653928101.342539,
+         1653981447.531813,
          ""
       ],
       "3": [
@@ -428,55 +392,7 @@
          "Fantasiapp_1",
          "png",
          "",
-         1653928101.342539,
-         ""
-      ],
-      "4": [
-         "labels",
-         "Qualibat",
-         "png",
-         "2022-02-12",
-         1653928101.342539,
-         ""
-      ],
-      "5": [
-         "admin",
-         "Kbis",
-         "png",
-         "2022-02-12",
-         1653928101.342539,
-         ""
-      ],
-      "6": [
-         "post",
-         "Document technique",
-         "svg",
-         "",
-         1653928101.342539,
-         ""
-      ],
-      "7": [
-         "post",
-         "Plan",
-         "jpg",
-         "",
-         1653928101.342539,
-         ""
-      ],
-      "8": [
-         "contract",
-         "contract",
-         "png",
-         "",
-         1653928101.342539,
-         ""
-      ],
-      "9": [
-         "contract",
-         "contract",
-         "png",
-         "",
-         1653934398.207401,
+         1653981447.531813,
          ""
       ]
    },
@@ -517,163 +433,7 @@
       25,
       26
    ],
-   "PostValues": {
-      "1": [
-         4,
-         5,
-         2,
-         "126 rue de Paris 92100 Boulogne",
-         "",
-         "",
-         "Eric Entreprise",
-         true,
-         false,
-         "2022-03-15",
-         "2022-03-15",
-         "2022-03-15",
-         "2022-04-28",
-         "07:00",
-         "17:00",
-         "",
-         "",
-         24456.1,
-         "\u20ac",
-         "Prix Journalier",
-         false,
-         "Deuxi\u00e8me description d'un chantier",
-         1653928101.338733,
-         [
-            20,
-            21,
-            22
-         ],
-         [],
-         [],
-         [
-            20,
-            21,
-            22
-         ]
-      ],
-      "2": [
-         4,
-         5,
-         1,
-         "106 rue du Cherche-Midi 75006 Paris",
-         48.841625,
-         2.324877,
-         "Eric Entreprise",
-         false,
-         false,
-         "2022-04-15",
-         "2022-04-15",
-         "2022-03-16",
-         "2022-05-18",
-         "07:00",
-         "17:00",
-         "",
-         "",
-         23456.1,
-         "\u20ac",
-         "Prix Journalier",
-         true,
-         "Deuxi\u00e8me description d'un chantier",
-         1652824800.0,
-         [
-            3,
-            4
-         ],
-         [
-            6,
-            7
-         ],
-         [
-            1,
-            5
-         ],
-         [
-            4,
-            5,
-            6
-         ]
-      ],
-      "5": [
-         4,
-         10,
-         1,
-         "34 rue Guynemer 75006 Paris",
-         48.841628,
-         2.325885,
-         "Eric Entreprise",
-         false,
-         true,
-         "2022-04-21",
-         "2022-04-21",
-         "2022-04-16",
-         "2022-04-28",
-         "08:00",
-         "17:00",
-         "",
-         "",
-         1300.1,
-         "\u20ac",
-         "Prix Journalier",
-         false,
-         "cinqui\u00e8me description d'un chantier",
-         1653928101.338733,
-         [
-            11,
-            12,
-            13,
-            14
-         ],
-         [],
-         [
-            4
-         ],
-         [
-            14,
-            15,
-            16
-         ]
-      ],
-      "6": [
-         4,
-         5,
-         1,
-         "108 rue du Cherche-Midi 75006 Paris",
-         48.841625,
-         2.324877,
-         "Eric Entreprise",
-         false,
-         false,
-         "2022-04-15",
-         "2022-04-15",
-         "2022-04-16",
-         "2022-04-28",
-         "07:00",
-         "17:00",
-         "",
-         "",
-         23456.1,
-         "\u20ac",
-         "Prix Journalier",
-         true,
-         "Sixi\u00e8me description d'un chantier",
-         1653928101.338733,
-         [
-            15,
-            16
-         ],
-         [],
-         [],
-         [
-            17,
-            18,
-            19
-         ]
-      ]
-   },
+   "PostValues": {},
    "CandidateFields": [
       "Company",
       "contact",
@@ -687,58 +447,7 @@
    "CandidateIndices": [
       0
    ],
-   "CandidateValues": {
-      "1": [
-         3,
-         "Th\u00e9ophile Traitant",
-         false,
-         false,
-         false,
-         "2022-05-30",
-         800.0,
-         "Par Jour"
-      ],
-      "2": [
-         3,
-         "Th\u00e9ophile Traitant",
-         true,
-         false,
-         false,
-         "2022-05-30",
-         1000.0,
-         "Par Jour"
-      ],
-      "3": [
-         3,
-         "Th\u00e9ophile Traitant",
-         true,
-         false,
-         false,
-         "2022-05-30",
-         1200.0,
-         "Par Jour"
-      ],
-      "4": [
-         3,
-         "Th\u00e9ophile Traitant",
-         false,
-         false,
-         false,
-         "2022-05-30",
-         "",
-         "Prix Total"
-      ],
-      "5": [
-         6,
-         "Tanguy Traitant",
-         false,
-         true,
-         false,
-         "2022-05-30",
-         1500.0,
-         "Par Jour"
-      ]
-   },
+   "CandidateValues": {},
    "DetailedPostFields": [
       "content",
       "validated",
@@ -748,131 +457,7 @@
    "DetailedPostIndices": [
       3
    ],
-   "DetailedPostValues": {
-      "3": [
-         "radiateur",
-         false,
-         false,
-         []
-      ],
-      "4": [
-         "Chaudi\u00e8re",
-         false,
-         false,
-         []
-      ],
-      "5": [
-         "doublage",
-         false,
-         false,
-         []
-      ],
-      "6": [
-         "cloison",
-         false,
-         false,
-         []
-      ],
-      "7": [
-         "doublage",
-         false,
-         false,
-         []
-      ],
-      "8": [
-         "cloison",
-         false,
-         false,
-         []
-      ],
-      "9": [
-         "pose",
-         false,
-         false,
-         []
-      ],
-      "10": [
-         "mesure",
-         false,
-         false,
-         []
-      ],
-      "11": [
-         "cuisine",
-         false,
-         false,
-         []
-      ],
-      "12": [
-         "salle de bain",
-         false,
-         false,
-         []
-      ],
-      "13": [
-         "salon",
-         false,
-         false,
-         []
-      ],
-      "14": [
-         "Chambre",
-         false,
-         false,
-         []
-      ],
-      "15": [
-         "radiateur",
-         false,
-         false,
-         []
-      ],
-      "16": [
-         "Chaudi\u00e8re",
-         false,
-         false,
-         []
-      ],
-      "20": [
-         "salle de bain",
-         false,
-         false,
-         []
-      ],
-      "21": [
-         "douche",
-         false,
-         false,
-         []
-      ],
-      "22": [
-         "lavabo",
-         false,
-         false,
-         []
-      ],
-      "23": [
-         "Nettoyer le chantier",
-         true,
-         false,
-         []
-      ],
-      "24": [
-         "doublage",
-         false,
-         true,
-         [
-            1,
-            3
-         ]
-      ],
-      "25": [
-         "cloison",
-         false,
-         true,
-         []
-      ]
-   },
+   "DetailedPostValues": {},
    "DatePostFields": [
       "date",
       "deleted",
@@ -884,166 +469,7 @@
       3,
       4
    ],
-   "DatePostValues": {
-      "4": [
-         "2022-05-16",
-         false,
-         true,
-         [],
-         []
-      ],
-      "5": [
-         "2022-05-17",
-         false,
-         true,
-         [],
-         []
-      ],
-      "6": [
-         "2022-05-18",
-         false,
-         true,
-         [],
-         []
-      ],
-      "7": [
-         "2022-04-15",
-         false,
-         true,
-         [
-            2,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14
-         ],
-         [
-            24,
-            25
-         ]
-      ],
-      "8": [
-         "2022-04-16",
-         false,
-         true,
-         [],
-         []
-      ],
-      "9": [
-         "2022-04-17",
-         false,
-         true,
-         [],
-         [
-            23
-         ]
-      ],
-      "10": [
-         "2022-04-18",
-         false,
-         true,
-         [],
-         []
-      ],
-      "11": [
-         "2022-04-21",
-         false,
-         true,
-         [],
-         []
-      ],
-      "12": [
-         "2022-04-22",
-         false,
-         true,
-         [],
-         []
-      ],
-      "13": [
-         "2022-04-23",
-         false,
-         true,
-         [],
-         []
-      ],
-      "14": [
-         "2022-04-16",
-         false,
-         true,
-         [],
-         []
-      ],
-      "15": [
-         "2022-04-17",
-         false,
-         true,
-         [],
-         []
-      ],
-      "16": [
-         "2022-04-18",
-         false,
-         true,
-         [],
-         []
-      ],
-      "17": [
-         "2022-04-26",
-         false,
-         true,
-         [],
-         []
-      ],
-      "18": [
-         "2022-04-27",
-         false,
-         true,
-         [],
-         []
-      ],
-      "19": [
-         "2022-04-28",
-         false,
-         true,
-         [],
-         []
-      ],
-      "20": [
-         "2022-03-15",
-         false,
-         true,
-         [],
-         []
-      ],
-      "21": [
-         "2022-03-16",
-         false,
-         true,
-         [],
-         []
-      ],
-      "22": [
-         "2022-03-17",
-         false,
-         true,
-         [],
-         []
-      ],
-      "23": [
-         "2022-04-19",
-         false,
-         true,
-         [],
-         []
-      ]
-   },
+   "DatePostValues": {},
    "MissionFields": [
       "Company",
       "Job",
@@ -1099,122 +525,7 @@
       42,
       43
    ],
-   "MissionValues": {
-      "3": [
-         4,
-         10,
-         1,
-         "36 rue Dauphine 75006 Paris",
-         48.841626,
-         2.326881,
-         "Eric Entreprise",
-         false,
-         true,
-         "2022-04-15",
-         "2022-04-15",
-         "2022-03-16",
-         "2022-04-28",
-         "06:02",
-         "17:00",
-         "",
-         "",
-         1000.0,
-         "\u20ac",
-         "Prix Journalier",
-         true,
-         "troisi\u00e8me description d'un chantier",
-         false,
-         false,
-         "Th\u00e9ophile Traitant",
-         "Sous-traitant",
-         0,
-         "",
-         0,
-         "",
-         0,
-         "",
-         0,
-         "",
-         0,
-         "",
-         0,
-         "",
-         false,
-         8,
-         [
-            5,
-            6
-         ],
-         [
-            8
-         ],
-         [
-            7,
-            8,
-            9,
-            10,
-            23
-         ],
-         3
-      ],
-      "4": [
-         4,
-         10,
-         2,
-         "28 rue de Fleurus 75006 Paris",
-         48.841627,
-         2.325883,
-         "Eric Entreprise",
-         false,
-         true,
-         "2022-04-18",
-         "2022-04-18",
-         "2022-03-16",
-         "2022-04-28",
-         "07:00",
-         "17:00",
-         "",
-         "",
-         1300.1,
-         "\u20ac",
-         "Prix Journalier",
-         false,
-         "quatri\u00e8me description d'un chantier",
-         true,
-         true,
-         "Th\u00e9ophile Traitant",
-         "Sous-traitant",
-         4,
-         "tr\u00e8s bon travail",
-         4,
-         "Un vrai sous-traitant qualibat",
-         5,
-         "Une organisation parfaite",
-         2,
-         "Ambiance moyenne",
-         2,
-         "une s\u00e9curit\u00e9 faible",
-         2,
-         "Une organisation inexistante",
-         true,
-         9,
-         [
-            7,
-            8,
-            9,
-            10
-         ],
-         [
-            9
-         ],
-         [
-            11,
-            12,
-            13
-         ],
-         3
-      ]
-   },
+   "MissionValues": {},
    "DisponibilityFields": [
       "date",
       "nature"
@@ -1230,106 +541,7 @@
    "SupervisionIndices": [
       4
    ],
-   "SupervisionValues": {
-      "1": [
-         "Th\u00e9ophile Traitant",
-         3,
-         "2022-05-30",
-         "J'ai fini.",
-         []
-      ],
-      "2": [
-         "Th\u00e9ophile Traitant",
-         3,
-         "2022-05-30",
-         "Voila une t\u00e2che difficile.",
-         []
-      ],
-      "3": [
-         "Eric Entreprise",
-         4,
-         "2022-05-30",
-         "Les t\u00e2ches du jour sont bien faites.",
-         []
-      ],
-      "4": [
-         "Eric Entreprise",
-         4,
-         "2022-05-30",
-         "Attention au travail de ce jour.",
-         []
-      ],
-      "5": [
-         "Eric Entreprise",
-         4,
-         "2022-05-30",
-         "foo",
-         []
-      ],
-      "6": [
-         "Eric Entreprise",
-         4,
-         "2022-05-30",
-         "bar",
-         []
-      ],
-      "7": [
-         "Eric Entreprise",
-         4,
-         "2022-05-30",
-         "test1",
-         []
-      ],
-      "8": [
-         "Eric Entreprise",
-         4,
-         "2022-05-30",
-         "test2",
-         []
-      ],
-      "9": [
-         "Eric Entreprise",
-         4,
-         "2022-05-30",
-         "test3",
-         []
-      ],
-      "10": [
-         "Eric Entreprise",
-         4,
-         "2022-05-30",
-         "test4",
-         []
-      ],
-      "11": [
-         "Eric Entreprise",
-         4,
-         "2022-05-30",
-         "test5",
-         []
-      ],
-      "12": [
-         "Eric Entreprise",
-         4,
-         "2022-05-30",
-         "test6",
-         []
-      ],
-      "13": [
-         "Eric Entreprise",
-         4,
-         "2022-05-30",
-         "test7",
-         []
-      ],
-      "14": [
-         "Eric Entreprise",
-         4,
-         "2022-05-30",
-         "test8",
-         []
-      ]
-   },
+   "SupervisionValues": {},
    "NotificationFields": [
       "Post",
       "Mission",
@@ -1345,117 +557,6 @@
       1,
       2
    ],
-   "NotificationValues": {
-      "1": [
-         2,
-         "",
-         3,
-         "PME",
-         1653934397.105294,
-         "Un nouveau sous traitant : Sous-traitant pour le chantier du 106 rue du Cherche-Midi 75006 Paris a postul\u00e9.",
-         false,
-         "ST"
-      ],
-      "2": [
-         "",
-         3,
-         3,
-         "PME",
-         1653934397.12481,
-         "Un nouveau sous traitant : Sous-traitant pour le chantier du 36 rue Dauphine 75006 Paris a postul\u00e9.",
-         false,
-         "ST"
-      ],
-      "3": [
-         "",
-         4,
-         3,
-         "PME",
-         1653934397.144685,
-         "Un nouveau sous traitant : Sous-traitant pour le chantier du 28 rue de Fleurus 75006 Paris a postul\u00e9.",
-         false,
-         "ST"
-      ],
-      "4": [
-         5,
-         "",
-         3,
-         "PME",
-         1653934397.16714,
-         "Un nouveau sous traitant : Sous-traitant pour le chantier du 34 rue Guynemer 75006 Paris a postul\u00e9.",
-         false,
-         "ST"
-      ],
-      "5": [
-         2,
-         "",
-         6,
-         "PME",
-         1653934397.338274,
-         "Un nouveau sous traitant : Sous-traitant 2 pour le chantier du 106 rue du Cherche-Midi 75006 Paris a postul\u00e9.",
-         false,
-         "ST"
-      ],
-      "9": [
-         "",
-         4,
-         3,
-         "PME",
-         1653934398.045552,
-         "Le contrat pour le chantier du 28 rue de Fleurus 75006 Paris  a \u00e9t\u00e9 sign\u00e9.",
-         false,
-         "ST"
-      ],
-      "15": [
-         "",
-         3,
-         "",
-         "PME",
-         1653934399.141173,
-         "Votre horaire de d\u00e9but pour le chantier du 36 rue Dauphine 75006 Paris est maintenant valid\u00e9e et est 07:00.",
-         false,
-         "alert"
-      ],
-      "16": [
-         "",
-         3,
-         "",
-         "PME",
-         1653934399.160594,
-         "Votre horaire de fin de journ\u00e9e pour le chantier du 36 rue Dauphine 75006 Paris a \u00e9t\u00e9 refus\u00e9e.",
-         false,
-         "alert"
-      ],
-      "17": [
-         "",
-         3,
-         "",
-         "PME",
-         1653934399.180943,
-         "Le retrait de la journ\u00e9e de travail du 2022-04-15 pour le chantier du 36 rue Dauphine 75006 Paris a \u00e9t\u00e9 refus\u00e9.",
-         false,
-         "alert"
-      ],
-      "18": [
-         "",
-         3,
-         "",
-         "PME",
-         1653934399.208863,
-         "La journ\u00e9e de travail du 2022-04-19 pour le chantier du 36 rue Dauphine 75006 Paris est maintenant valid\u00e9e.",
-         false,
-         "alert"
-      ],
-      "19": [
-         "",
-         4,
-         3,
-         "PME",
-         1653934399.988513,
-         "La mission du 28 rue de Fleurus 75006 Paris a \u00e9t\u00e9 not\u00e9e.",
-         false,
-         "ST"
-      ]
-   },
-   "timestamp": 1653936905.339417
+   "NotificationValues": {},
+   "timestamp": 1653983855.482211
 }
