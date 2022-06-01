@@ -335,8 +335,6 @@ class DataAccessor():
       kwargs["Mission"] = mission
     if "content" in data:
       kwargs["content"] = data["content"]
-    if "dateId" in data:
-      kwargs["DatePost"] = DatePost.objects.get(id=data["dateId"])
     print(kwargs)
     detailedPost = DetailedPost.objects.create(**kwargs)
     if "dateId" in data:
