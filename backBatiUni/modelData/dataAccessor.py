@@ -820,7 +820,6 @@ class DataAccessor():
   def downloadFile(cls, id, currentUser):
     file = File.objects.get(id=id)
     content = file.getAttr("file")
-    print("content", type(content))
     listFields = file.listFields()
     fileList = file.computeValues(listFields, currentUser)
     indexContent = listFields.index("content")

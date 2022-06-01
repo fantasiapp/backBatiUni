@@ -207,7 +207,7 @@ class Company(CommonModel):
 
   def computeValues(self, listFields, user, dictFormat=False):
     values = []
-    manyToMany = {"LabelForCompany":LabelForCompany, "JobForCompany":JobForCompany, "Disponibility":Disponibility, "Notification":Notification, "File":File}
+    manyToMany = {"LabelForCompany":LabelForCompany, "JobForCompany":JobForCompany, "Disponibility":Disponibility, "File":File, "Notification":Notification}
     postMission = {"Post":Post, "Mission":Mission}
     for index in range(len(listFields)):
       field = listFields[index]
@@ -234,7 +234,9 @@ class Company(CommonModel):
   
       elif field in self.manyToManyObject:
         if field in manyToMany:
-          if dictFormat:
+          if field == "Notification":
+            listModel = RamData.ramStructure["Company"]["Notification"][self.id]
+          elif dictFormat:
             listModel = {objectModel.id:objectModel.dump() for objectModel in manyToMany[field].objects.filter(Company=self)}
           else:
             listModel = RamData.ramStructure["Company"][field][self.id]
@@ -656,6 +658,11 @@ class Notification(CommonModel):
     for notification in Notification.objects.all():
       RamData.ramStructure["Company"]["Notification"][notification.Company.id].append(notification.id)
 
+  # def computeValues(self, listFields, user, dictFormat=False):
+  #   print("computeValue, notifications", [notification.id for notification in self.filter(user)])
+  #   return [notification.id for notification in self.filter(user)]
+
+
   class Meta:
     verbose_name = "Notification"
   
@@ -868,11 +875,7 @@ class File(CommonModel):
       if self.ext == "pdf":
         return "jpg"
     if fieldName == "file":
-      print("getAttr file", self.ext)
-      print("path", self.path)
       if self.ext == "pdf":
-        test = self.encodedStringListForPdf()
-        print("getAttr file", test)
         return self.encodedStringListForPdf()
       if self.ext.lower() == "heic":
         return [self.decodeHeic()]
@@ -890,19 +893,14 @@ class File(CommonModel):
   def encodedStringListForPdf(self):
     path = self.path.replace(".pdf", "/")
     split = self.path.split("/")
-    print("split", split)
     nameFile = split[-1]
     localPath = f"./{split[1]}/{split[2]}/"
-    print("split", split, nameFile, localPath)
-    print("path", path, os.path.isdir(path))
     if not os.path.isdir(path):
       os.mkdir(path)
       os.chdir(localPath)
       images = convert_from_path(f"{nameFile}")
       os.chdir('../../.')
-      print("pdf", images)
       for index in range(len(images)):
-        print(f'{path}page_{str(index)}.jpg')
         images[index].save(f'{path}page_{str(index)}.jpg', 'JPEG')
     listFiles, listEncode  = [os.path.join(path, file) for file in os.listdir(path)], []
     for file in listFiles:
