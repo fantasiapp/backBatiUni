@@ -326,7 +326,7 @@ def executeQuery():
       post = {"action":"createDetailedPost", "postId":1, "content":"Réparer le lavabo une nouvelle fois", "dateId":21}
       response = requests.post(url, headers=headers, json=post)
     elif query == "modifyDetailedPost":
-      post1 = {"action":"modifyDetailedPost", "detailedPost":{"id":9, "dateId":9, "content":"Nettoyer le chantier", "validated":True, "unset":False}}
+      post1 = {"action":"modifyDetailedPost", "detailedPost":{"id":9, "dateId":11, "content":"Nettoyer le chantier", "validated":True, "unset":False}}
       post2 = {"action":"modifyDetailedPost", "detailedPost":{"id":5, "dateId":7, "refused":True}, "unset":False}
       post3 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "dateId":7, "refused":True}, "unset":False}
       # post4 = {"action":"modifyDetailedPost", "detailedPost":{"id":10, "dateId":10, "validated":True}, "unset":False}

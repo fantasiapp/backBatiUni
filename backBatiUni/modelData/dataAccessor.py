@@ -358,12 +358,12 @@ class DataAccessor():
     if not unset:
       print("check what is wrong", detailedPost.DatePost, datePost, not detailedPost.DatePost)
       if not detailedPost.DatePost or datePost.id != detailedPost.DatePost.id:
-        print("__modifyDetailedPost creation")
+        print("__modifyDetailedPost creation", datePost)
         detailedPost = DetailedPost.objects.create(
           content=detailedPost.content,
           DatePost=datePost,
         )
-      """Une fois que le datePost existe, on peut mettre à jour"""
+      """Une fois que le datePost existe surement, on peut mettre à jour"""
       for field in ["content", "validated", "refused"]:
         if field in data:
           setattr(detailedPost, field, data[field])
@@ -371,6 +371,7 @@ class DataAccessor():
       print("new Value", detailedPost.id, detailedPost.DatePost)
       return cls.__detailedPostComputeAnswer(detailedPost, currentUser)
     else:
+      """retrait d'une detailed post"""
       print("unset delete", unset)
       if Supervision.objects.filter(DetailedPost=detailedPost):
         return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche du {data['date']} est commentée"}
