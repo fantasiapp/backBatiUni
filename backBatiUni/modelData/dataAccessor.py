@@ -406,7 +406,7 @@ class DataAccessor():
       "detailedPost":{detailedPost.id:detailedPost.computeValues(detailedPost.listFields(), currentUser, True)}
     }
     if mission:
-      answer["mission"] = {mission.id:mission.computeValues(detailedPost.listFields(), currentUser, True)}
+      answer["mission"] = {mission.id:mission.computeValues(mission.listFields(), currentUser, True)}
     if detailedPost.DatePost:
         answer["Type"] = "DatePost"
         answer["fatherId"] = detailedPost.DatePost.id
