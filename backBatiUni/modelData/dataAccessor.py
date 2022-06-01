@@ -371,7 +371,7 @@ class DataAccessor():
           setattr(detailedPost, field, data[field])
       detailedPost.save()
       print("new Value", detailedPost.id, detailedPost.DatePost)
-      return cls.__detailedPostComputeAnswer(detailedPost, currentUser, "modifyDetailedPost")
+      return cls.__detailedPostComputeAnswer(detailedPost, currentUser)
     else:
       """retrait d'une detailed post"""
       print("unset delete", unset)
