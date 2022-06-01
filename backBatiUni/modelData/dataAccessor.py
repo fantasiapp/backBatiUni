@@ -351,11 +351,8 @@ class DataAccessor():
     data = data["detailedPost"]
     datePost = DatePost.objects.get(id=datePostId) if datePostId else None
     detailedPost = DetailedPost.objects.get(id=data["id"])
-    print("unset", unset)
     if not unset:
-      print("check what is wrong", detailedPost.DatePost, datePost, not detailedPost.DatePost)
       if not detailedPost.DatePost or datePost.id != detailedPost.DatePost.id:
-        print("__modifyDetailedPost creation", datePost)
         detailedPost = DetailedPost.objects.create(
           content=detailedPost.content,
           DatePost=datePost,
@@ -365,26 +362,18 @@ class DataAccessor():
         if field in data:
           setattr(detailedPost, field, data[field])
       detailedPost.save()
-      print("new Value", detailedPost.id, detailedPost.DatePost)
       return cls.__detailedPostComputeAnswer(detailedPost, currentUser)
     else:
       """retrait d'une detailed post"""
-      print("unset delete", unset)
-      if detailedPost.Mission and not unset:
+      if detailedPost.Mission:
         return {"modifyDetailedPost":"Warning", "messages":f"Not yet implemented"}
       if Supervision.objects.filter(DetailedPost=detailedPost):
-        return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche du {data['date']} est commentée"}
-      print("validated", detailedPost.validated, detailedPost.refused)
+        return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche est commentée"}
       if detailedPost.validated or detailedPost.refused :
         return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche est évaluée"}
+      detailPostId = detailedPost.id
       detailedPost.delete()
-      PorM = detailedPost.Post if detailedPost.Post else detailedPost.Mission
-      return {
-        "modifyDetailedPost":"OK",
-        "deleted":"yes",
-        "type":"Post" if detailedPost.Post else "Mission",
-        "Object":{PorM.id:PorM.computeValues(PorM.listFields(), currentUser, True)}
-        }
+      return {"modifyDetailedPost":"OK", "deleted":"yes", "detailedPostId":detailPostId,}
 
   @classmethod
   def __detailedPostComputeAnswer(cls, detailedPost, currentUser, functionName="modifyDetailedPost", detailedPost2=None):
