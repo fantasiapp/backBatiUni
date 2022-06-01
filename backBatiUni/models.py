@@ -869,6 +869,7 @@ class File(CommonModel):
         return "jpg"
     if fieldName == "file":
       print("getAttr file", self.ext)
+      print("path", self.path)
       if self.ext == "pdf":
         test = self.encodedStringListForPdf()
         print("getAttr file", test)
@@ -888,11 +889,20 @@ class File(CommonModel):
 
   def encodedStringListForPdf(self):
     path = self.path.replace(".pdf", "/")
+    split = self.path.split("/")
+    print("split", split)
+    nameFile = split[-1]
+    localPath = f"./{split[1]}/{split[2]}/"
+    print("split", split, nameFile, localPath)
+    print("path", path, os.path.isdir(path))
     if not os.path.isdir(path):
       os.mkdir(path)
-      images = convert_from_path(self.path)
+      os.chdir(localPath)
+      images = convert_from_path(f"{nameFile}")
+      os.chdir('../../.')
+      print("pdf", images)
       for index in range(len(images)):
-        # Save pages as images in the pdf
+        print(f'{path}page_{str(index)}.jpg')
         images[index].save(f'{path}page_{str(index)}.jpg', 'JPEG')
     listFiles, listEncode  = [os.path.join(path, file) for file in os.listdir(path)], []
     for file in listFiles:
