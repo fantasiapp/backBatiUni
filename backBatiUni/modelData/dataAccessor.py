@@ -373,6 +373,8 @@ class DataAccessor():
     else:
       """retrait d'une detailed post"""
       print("unset delete", unset)
+      if detailedPost.Mission:
+        return {"modifyDetailedPost":"Warning", "messages":f"Not yet implemented"}
       if Supervision.objects.filter(DetailedPost=detailedPost):
         return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche du {data['date']} est commentée"}
       print("validated", detailedPost.validated, detailedPost.refused)

@@ -287,7 +287,7 @@ def executeQuery():
           if "mission" in values:
             requests.get(url, headers=headers, params={"action":"signContract", "missionId":id, "view":"PME"})
     elif query == "createSupervision":
-      post1 = {'action':"createSupervision", "detailedPostId":24, "comment":"J'ai fini."}
+      post1 = {'action':"createSupervision", "detailedPostId":31, "comment":"J'ai fini."}
       post2 = {'action':"createSupervision", "detailedPostId":29, "comment":"OK pour les tâches du jour."}
       # post3 = {'action':"createSupervision", "detailedPostId":10, "comment":"Pas de souci aujourd'hui."}
       # post4 = {'action':"createSupervision", "detailedPostId":9, "comment":"Le chantier est terminé."}
@@ -296,7 +296,7 @@ def executeQuery():
         response = requests.post(url, headers=headers, json=post)
       tokenPme = queryForToken("pme", "pwd")
       headersPme = {'Authorization': f'Token {tokenPme}'}
-      post1 = {'action':"createSupervision", "detailedPostId":24, "comment":"Les tâches du jour sont bien faites."}
+      post1 = {'action':"createSupervision", "detailedPostId":31, "comment":"Les tâches du jour sont bien faites."}
       post2 = {'action':"createSupervision", "detailedPostId":29, "comment":"Tout est parfait, merci."}
       # post3 = {'action':"createSupervision", "detailedPostId":10, "comment":"Attention aux finitions."}
       # post4 = {'action':"createSupervision", "detailedPostId":9, "comment":"Le travail est fini, Youpi."}
@@ -326,9 +326,9 @@ def executeQuery():
       post = {"action":"createDetailedPost", "postId":1, "content":"Réparer le lavabo une nouvelle fois", "dateId":21}
       response = requests.post(url, headers=headers, json=post)
     elif query == "modifyDetailedPost":
-      post1 = {"action":"modifyDetailedPost", "detailedPost":{"id":9, "dateId":11, "content":"Nettoyer le chantier", "validated":True, "unset":False}}
-      post2 = {"action":"modifyDetailedPost", "detailedPost":{"id":5, "dateId":7, "refused":True}, "unset":False}
-      post3 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "dateId":7, "refused":True}, "unset":False}
+      post1 = {"action":"modifyDetailedPost", "detailedPost":{"id":9, "content":"Nettoyer le chantier", "validated":True}, "unset":False, "datePostId":11}
+      post2 = {"action":"modifyDetailedPost", "detailedPost":{"id":5, "refused":True}, "unset":False, "datePostId":7}
+      post3 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "refused":True}, "unset":False, "datePostId":7}
       # post4 = {"action":"modifyDetailedPost", "detailedPost":{"id":10, "dateId":10, "validated":True}, "unset":False}
       # post5 = {"action":"modifyDetailedPost", "detailedPost":{"id":5, "dateId":5, "validated":False}, "unset":False}
       # post6 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "dateId":6, "validated":False}, "unset":False}
