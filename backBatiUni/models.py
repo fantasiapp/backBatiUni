@@ -871,10 +871,10 @@ class File(CommonModel):
       if self.ext == "pdf":
         return self.encodedStringListForPdf()
       if self.ext.lower() == "heic":
-        return self.decodeHeic()
+        return [self.decodeHeic()]
       if self.ext.lower() == "svg":
-        return self.decodeSvg()
-      return self.readFile(self.path)
+        return [self.decodeSvg()]
+      return [self.readFile(self.path)]
     return getattr(self, fieldName, answer)
 
   def readFile(self, path):
