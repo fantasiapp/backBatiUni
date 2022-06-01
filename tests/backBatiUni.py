@@ -16,7 +16,7 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 0
+numberCompanies = 100
 emailList, missionList, emailListPME, emailListST = {}, {}, [], []
 
 arguments = sys.argv
@@ -369,7 +369,7 @@ def executeQuery():
       post = {"action":"boostPost", "postId":2, "duration":0}
       response = requests.post(url, headers=headers, json=post)
   elif query == "blockCompany":
-      response = requests.get(url, headers=headers, params={"action":"blockCompany", "candidateId":1, "status":"true"})
+      response = requests.get(url, headers=headers, params={"action":"blockCompany", "companyId":1, "status":"true"})
   else:
     print("no answer")
 if query == "all":
