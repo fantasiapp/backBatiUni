@@ -372,8 +372,10 @@ class DataAccessor():
       if detailedPost.validated or detailedPost.refused :
         return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche est évaluée"}
       detailPostId = detailedPost.id
+      mission = detailedPost.DatePost.Mission
+      missionDump = {mission.id:mission.computeValues(mission.listFields(), currentUser, True)}
       detailedPost.delete()
-      return {"modifyDetailedPost":"OK", "deleted":"yes", "detailedPostId":detailPostId,}
+      return {"modifyDetailedPost":"OK", "deleted":"yes", "detailedPostId":detailPostId, "mission":missionDump}
 
   @classmethod
   def __detailedPostComputeAnswer(cls, detailedPost, currentUser, functionName="modifyDetailedPost", detailedPost2=None):

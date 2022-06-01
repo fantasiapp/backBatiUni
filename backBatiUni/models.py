@@ -868,7 +868,10 @@ class File(CommonModel):
       if self.ext == "pdf":
         return "jpg"
     if fieldName == "file":
+      print("getAttr file", self.ext)
       if self.ext == "pdf":
+        test = self.encodedStringListForPdf()
+        print("getAttr file", test)
         return self.encodedStringListForPdf()
       if self.ext.lower() == "heic":
         return [self.decodeHeic()]

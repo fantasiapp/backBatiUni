@@ -150,13 +150,13 @@ def executeQuery():
     elif query == "changeUserImage":
       tokenPme = queryForToken("pme", "pwd")
       headersPme = {'Authorization': f'Token {tokenPme}'}
-      post = {'action':"changeUserImage", "ext":"png", "name":"BatiUni_1", "imageBase64":getDocStr(5)}
+      post = {'action':"changeUserImage", "ext":"png", "name":"image", "imageBase64":getDocStr(5)}
       requests.post(url, headers=headersPme, json=post)
       tokenPme = queryForToken("st2", "pwd")
       headersSt2 = {'Authorization': f'Token {tokenPme}'}
-      post = {'action':"changeUserImage", "ext":"png", "name":"SousTtraitant2_1", "imageBase64":getDocStr(7)}
+      post = {'action':"changeUserImage", "ext":"png", "name":"image", "imageBase64":getDocStr(7)}
       response = requests.post(url, headers=headersSt2, json=post)
-      post = {'action':"changeUserImage", "ext":"png", "name":"Fantasiapp_1", "imageBase64":getDocStr(6)}
+      post = {'action':"changeUserImage", "ext":"png", "name":"image", "imageBase64":getDocStr(6)}
       requests.post(url, headers=headers, json=post)
     elif query == "uploadPost":
       post1 = {'action':"uploadPost", "longitude":2.237779 , "latitude":48.848776, "address":"128 rue de Paris 92100 Boulogne", "Job":6, "numberOfPeople":3, "dueDate":"2022-04-15", "startDate":"2022-02-16", "endDate":"2022-02-28", "DatePost":["2022-04-26", "2022-04-27", "2022-04-28"], "manPower":True, "counterOffer":True, "hourlyStart":"07:30", "hourlyEnd":"17:30", "currency":"€", "description":"Première description d'un chantier", "amount":65243.10, "DetailedPost":["lavabo", "baignoire"]}
