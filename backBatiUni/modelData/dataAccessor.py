@@ -326,7 +326,7 @@ class DataAccessor():
   @classmethod
   def __createDetailedPost(cls, data, currentUser):
     print("createDetailedPost", data)
-    kwargs, post, mission = {"PostId":None, "Mission":None, "content":None}, None, None
+    kwargs, post, mission = {"Post":None, "Mission":None, "content":None}, None, None
     if "postId" in data:
       post = Post.objects.get(id=data["postId"])
       kwargs["Post"] = post
