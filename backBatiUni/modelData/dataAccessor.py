@@ -356,25 +356,27 @@ class DataAccessor():
     detailedPost = DetailedPost.objects.get(id=data["id"])
     print("unset", unset)
     if not unset:
-      if datePost:
-        if datePost != DetailedPost.DatePost:
-          detailedPost = DetailedPost.objects.create(
-            content=detailedPost.content,
-            DatePost=datePost,
-            validated=False,
-            refused=False
-            )
-      """Double passe au cas ou les attributs sont absents"""
+      print("check what is wrong", detailedPost.DatePost, datePost, not detailedPost.DatePost)
+      if not detailedPost.DatePost or datePost.id != detailedPost.DatePost.id:
+        print("__modifyDetailedPost creation")
+        detailedPost = DetailedPost.objects.create(
+          content=detailedPost.content,
+          DatePost=datePost,
+        )
+      """Une fois que le datePost existe, on peut mettre à jour"""
       for field in ["content", "validated", "refused"]:
         if field in data:
           setattr(detailedPost, field, data[field])
       detailedPost.save()
-      print("creation", detailedPost.id, detailedPost.DatePost)
+      print("new Value", detailedPost.id, detailedPost.DatePost)
       return cls.__detailedPostComputeAnswer(detailedPost, currentUser)
     else:
       print("unset delete", unset)
       if Supervision.objects.filter(DetailedPost=detailedPost):
         return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche du {data['date']} est commentée"}
+      print("validated", detailedPost.validated, detailedPost.refused)
+      if detailedPost.validated or detailedPost.refused :
+        return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche est évaluée"}
       detailedPost.delete()
       PorM = detailedPost.Post if detailedPost.Post else detailedPost.Mission
       return {

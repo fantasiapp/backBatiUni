@@ -412,7 +412,7 @@
          "BatiUni_1",
          "png",
          "",
-         1654018422.212925,
+         1654025617.297392,
          ""
       ],
       "2": [
@@ -420,7 +420,7 @@
          "SousTtraitant2_1",
          "png",
          "",
-         1654018422.212925,
+         1654025617.297392,
          ""
       ],
       "3": [
@@ -428,7 +428,7 @@
          "Fantasiapp_1",
          "png",
          "",
-         1654018422.212925,
+         1654025617.297392,
          ""
       ],
       "4": [
@@ -436,7 +436,7 @@
          "Qualibat",
          "png",
          "2022-02-12",
-         1654018422.212925,
+         1654025617.297392,
          ""
       ],
       "5": [
@@ -444,7 +444,7 @@
          "Kbis",
          "png",
          "2022-02-12",
-         1654018422.212925,
+         1654025617.297392,
          ""
       ],
       "6": [
@@ -452,7 +452,7 @@
          "Document technique",
          "svg",
          "",
-         1654018422.212925,
+         1654025617.297392,
          ""
       ],
       "7": [
@@ -460,7 +460,7 @@
          "Plan",
          "jpg",
          "",
-         1654018422.212925,
+         1654025617.297392,
          ""
       ],
       "8": [
@@ -468,7 +468,7 @@
          "contract",
          "png",
          "",
-         1654018422.212925,
+         1654025617.297392,
          ""
       ],
       "9": [
@@ -476,7 +476,7 @@
          "contract",
          "png",
          "",
-         1654018623.484503,
+         1654025627.81672,
          ""
       ]
    },
@@ -541,7 +541,7 @@
          "Prix Journalier",
          false,
          "Deuxi\u00e8me description d'un chantier",
-         1654018422.209187,
+         1654025617.293851,
          [
             20,
             21,
@@ -620,7 +620,7 @@
          "Prix Journalier",
          false,
          "cinqui\u00e8me description d'un chantier",
-         1654018422.209187,
+         1654025617.293851,
          [
             11,
             12,
@@ -660,7 +660,7 @@
          "Prix Journalier",
          true,
          "Sixi\u00e8me description d'un chantier",
-         1654018422.209187,
+         1654025617.293851,
          [
             15,
             16
@@ -761,16 +761,10 @@
          false,
          []
       ],
-      "5": [
-         "doublage",
-         false,
-         true,
-         []
-      ],
       "6": [
          "cloison",
          false,
-         true,
+         false,
          []
       ],
       "7": [
@@ -786,8 +780,8 @@
          []
       ],
       "9": [
-         "Nettoyer le chantier",
-         true,
+         "pose",
+         false,
          false,
          []
       ],
@@ -852,21 +846,36 @@
          []
       ],
       "23": [
-         "doublage",
-         false,
+         "Nettoyer le chantier",
          true,
+         false,
          []
       ],
       "24": [
+         "doublage",
+         false,
+         true,
+         [
+            1,
+            3
+         ]
+      ],
+      "25": [
          "cloison",
          false,
          true,
          []
       ],
-      "25": [
+      "26": [
          "doublage",
          false,
          true,
+         []
+      ],
+      "27": [
+         "cloison",
+         false,
+         false,
          []
       ]
    },
@@ -908,12 +917,12 @@
          false,
          true,
          [
-            1,
-            2
+            2,
+            4
          ],
          [
-            23,
-            24
+            26,
+            27
          ]
       ],
       "8": [
@@ -921,9 +930,7 @@
          false,
          true,
          [],
-         [
-            25
-         ]
+         []
       ],
       "9": [
          "2022-04-17",
@@ -1129,7 +1136,6 @@
          false,
          8,
          [
-            5,
             6
          ],
          [
@@ -1222,10 +1228,24 @@
          "Th\u00e9ophile Traitant",
          3,
          "2022-05-31",
-         "Voila une t\u00e2che difficile.",
+         "J'ai fini.",
          []
       ],
       "2": [
+         "Th\u00e9ophile Traitant",
+         3,
+         "2022-05-31",
+         "Voila une t\u00e2che difficile.",
+         []
+      ],
+      "3": [
+         "Eric Entreprise",
+         4,
+         "2022-05-31",
+         "Les t\u00e2ches du jour sont bien faites.",
+         []
+      ],
+      "4": [
          "Eric Entreprise",
          4,
          "2022-05-31",
@@ -1254,7 +1274,7 @@
          "",
          3,
          "PME",
-         1654018622.368445,
+         1654025626.722601,
          "Un nouveau sous traitant : Sous-traitant pour le chantier du 106 rue du Cherche-Midi 75006 Paris a postul\u00e9.",
          false,
          "ST"
@@ -1264,7 +1284,7 @@
          3,
          3,
          "PME",
-         1654018622.387653,
+         1654025626.741738,
          "Un nouveau sous traitant : Sous-traitant pour le chantier du 36 rue Dauphine 75006 Paris a postul\u00e9.",
          false,
          "ST"
@@ -1274,7 +1294,7 @@
          4,
          3,
          "PME",
-         1654018622.408416,
+         1654025626.761075,
          "Un nouveau sous traitant : Sous-traitant pour le chantier du 28 rue de Fleurus 75006 Paris a postul\u00e9.",
          false,
          "ST"
@@ -1284,7 +1304,7 @@
          "",
          3,
          "PME",
-         1654018622.429006,
+         1654025626.780713,
          "Un nouveau sous traitant : Sous-traitant pour le chantier du 34 rue Guynemer 75006 Paris a postul\u00e9.",
          false,
          "ST"
@@ -1294,7 +1314,7 @@
          "",
          6,
          "PME",
-         1654018622.609231,
+         1654025626.945443,
          "Un nouveau sous traitant : Sous-traitant 2 pour le chantier du 106 rue du Cherche-Midi 75006 Paris a postul\u00e9.",
          false,
          "ST"
@@ -1304,7 +1324,7 @@
          4,
          3,
          "PME",
-         1654018623.320493,
+         1654025627.654058,
          "Le contrat pour le chantier du 28 rue de Fleurus 75006 Paris  a \u00e9t\u00e9 sign\u00e9.",
          false,
          "ST"
@@ -1314,7 +1334,7 @@
          3,
          "",
          "PME",
-         1654018624.484008,
+         1654025628.831693,
          "Votre horaire de d\u00e9but pour le chantier du 36 rue Dauphine 75006 Paris est maintenant valid\u00e9e et est 07:00.",
          false,
          "alert"
@@ -1324,7 +1344,7 @@
          3,
          "",
          "PME",
-         1654018624.50208,
+         1654025628.849608,
          "Votre horaire de fin de journ\u00e9e pour le chantier du 36 rue Dauphine 75006 Paris a \u00e9t\u00e9 refus\u00e9e.",
          false,
          "alert"
@@ -1334,7 +1354,7 @@
          3,
          "",
          "PME",
-         1654018624.525285,
+         1654025628.868288,
          "Le retrait de la journ\u00e9e de travail du 2022-04-15 pour le chantier du 36 rue Dauphine 75006 Paris a \u00e9t\u00e9 refus\u00e9.",
          false,
          "alert"
@@ -1344,7 +1364,7 @@
          3,
          "",
          "PME",
-         1654018624.554276,
+         1654025628.890233,
          "La journ\u00e9e de travail du 2022-04-19 pour le chantier du 36 rue Dauphine 75006 Paris est maintenant valid\u00e9e.",
          false,
          "alert"
@@ -1354,7 +1374,7 @@
          4,
          3,
          "PME",
-         1654018625.343,
+         1654025629.673607,
          "La mission du 28 rue de Fleurus 75006 Paris a \u00e9t\u00e9 not\u00e9e.",
          false,
          "ST"
@@ -1378,5 +1398,5 @@
          "2022-05-31"
       ]
    },
-   "timestamp": 1654018920.231271
+   "timestamp": 1654064725.253505
 }
