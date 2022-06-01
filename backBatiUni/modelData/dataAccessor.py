@@ -372,10 +372,10 @@ class DataAccessor():
       if detailedPost.validated or detailedPost.refused :
         return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche est évaluée"}
       detailPostId = detailedPost.id
-      mission = detailedPost.DatePost.Mission
-      missionDump = {mission.id:mission.computeValues(mission.listFields(), currentUser, True)}
+      datePost = detailedPost.DatePost
+      datePostDump = {datePost.id:datePost.computeValues(datePost.listFields(), currentUser, True)}
       detailedPost.delete()
-      return {"modifyDetailedPost":"OK", "deleted":"yes", "detailedPostId":detailPostId, "mission":missionDump}
+      return {"modifyDetailedPost":"OK", "deleted":"yes", "detailedPostId":detailPostId, "datePost":datePostDump}
 
   @classmethod
   def __detailedPostComputeAnswer(cls, detailedPost, currentUser, functionName="modifyDetailedPost", detailedPost2=None):
@@ -818,6 +818,7 @@ class DataAccessor():
   def downloadFile(cls, id, currentUser):
     file = File.objects.get(id=id)
     content = file.getAttr("file")
+
     listFields = file.listFields()
     fileList = file.computeValues(listFields, currentUser)
     indexContent = listFields.index("content")
