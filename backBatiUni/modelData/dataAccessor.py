@@ -345,7 +345,7 @@ class DataAccessor():
       """Il faut toujours avoir un modèle sans date pour le front"""
       if not DetailedPost.objects.filter(Mission = mission, content=detailedPost.content):
         detailedPost = DetailedPost.objects.create(Mission=detailedPost.Mission, content=detailedPost.content)
-      return cls.__detailedPostComputeAnswer(detailedPost, currentUser, mission)
+      return cls.__detailedPostComputeAnswer(detailedPost, currentUser, mission, "createDetailedPost")
     return {"createDetailedPost":"Warning", "messages":"La tâche n'a pas été créée"}
 
   @classmethod
@@ -371,11 +371,11 @@ class DataAccessor():
           setattr(detailedPost, field, data[field])
       detailedPost.save()
       print("new Value", detailedPost.id, detailedPost.DatePost)
-      return cls.__detailedPostComputeAnswer(detailedPost, currentUser)
+      return cls.__detailedPostComputeAnswer(detailedPost, currentUser, "modifyDetailedPost")
     else:
       """retrait d'une detailed post"""
       print("unset delete", unset)
-      if detailedPost.Mission:
+      if detailedPost.Mission and not unset:
         return {"modifyDetailedPost":"Warning", "messages":f"Not yet implemented"}
       if Supervision.objects.filter(DetailedPost=detailedPost):
         return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche du {data['date']} est commentée"}
@@ -392,7 +392,7 @@ class DataAccessor():
         }
 
   @classmethod
-  def __detailedPostComputeAnswer(cls, detailedPost, currentUser, mission=None):
+  def __detailedPostComputeAnswer(cls, detailedPost, currentUser, mission=None, functionName="modifyDetailedPost"):
     typeDetailedPost = "Post" if detailedPost.Post else "Mission"
     if detailedPost.DatePost:
       typeDetailedPost = "DatePost"
@@ -400,7 +400,7 @@ class DataAccessor():
     elif typeDetailedPost == "Mission": fatherId = detailedPost.Mission.id
     else: fatherId = detailedPost.DatePost.id
     answer = {
-      "modifyDetailedPost":"OK",
+      functionName:"OK",
       "type":typeDetailedPost,
       "fatherId":fatherId,
       "detailedPost":{detailedPost.id:detailedPost.computeValues(detailedPost.listFields(), currentUser, True)}
