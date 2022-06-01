@@ -565,7 +565,7 @@ class DataAccessor():
   @classmethod
   def blockCompany(cls, companyId, status, currentUser):
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
-    blockedCompany = Candidate.objects.get(id=companyId)
+    blockedCompany = Company.objects.get(id=companyId)
     blockingCompany = userProfile.Company
     blockData = BlockedCandidate.objects.filter(blocker=blockingCompany, blocked=blockedCompany)
     status = True if status == "true" else False
