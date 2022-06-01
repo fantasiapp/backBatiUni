@@ -326,7 +326,7 @@ class DataAccessor():
   @classmethod
   def __createDetailedPost(cls, data, currentUser):
     print("createDetailedPost", data)
-    kwargs, post, mission = {"Post":None, "Mission":None, "content":None}, None, None
+    kwargs, post, mission, detailedPost2 = {"Post":None, "Mission":None, "content":None}, None, None, None
     if "postId" in data:
       post = Post.objects.get(id=data["postId"])
       kwargs["Post"] = post
@@ -335,18 +335,13 @@ class DataAccessor():
       kwargs["Mission"] = mission
     if "content" in data:
       kwargs["content"] = data["content"]
-    print(kwargs)
+    print("kwargs", kwargs)
+    detailedPost2 = DetailedPost.objects.create(**kwargs)
+    kwargs["DatePost"] = DatePost.objects.get(id=data["dateId"])
+    del kwargs["Mission"]
     detailedPost = DetailedPost.objects.create(**kwargs)
-    if "dateId" in data:
-      kwargs["DatePost"] = DatePost.objects.get(id=data["dateId"])
-      del kwargs["Mission"]
-      detailedPost = DetailedPost.objects.create(**kwargs)
-    if detailedPost:
-      """Il faut toujours avoir un modèle sans date pour le front"""
-      if not DetailedPost.objects.filter(Mission = mission, content=detailedPost.content):
-        detailedPost = DetailedPost.objects.create(Mission=detailedPost.Mission, content=detailedPost.content)
-      return cls.__detailedPostComputeAnswer(detailedPost, currentUser, mission, "createDetailedPost")
-    return {"createDetailedPost":"Warning", "messages":"La tâche n'a pas été créée"}
+    return cls.__detailedPostComputeAnswer(detailedPost, currentUser, "createDetailedPost", detailedPost2)
+    # return {"createDetailedPost":"Warning", "messages":"La tâche n'a pas été créée"}
 
   @classmethod
   def __modifyDetailedPost(cls, data, currentUser):
@@ -392,24 +387,22 @@ class DataAccessor():
         }
 
   @classmethod
-  def __detailedPostComputeAnswer(cls, detailedPost, currentUser, mission=None, functionName="modifyDetailedPost"):
+  def __detailedPostComputeAnswer(cls, detailedPost, currentUser, functionName="modifyDetailedPost", detailedPost2=None):
     typeDetailedPost = "Post" if detailedPost.Post else "Mission"
     if detailedPost.DatePost:
+      fatherId = detailedPost.DatePost.id
       typeDetailedPost = "DatePost"
-    if typeDetailedPost == "Post": fatherId = detailedPost.Post.id
+    elif typeDetailedPost == "Post": fatherId = detailedPost.Post.id
     elif typeDetailedPost == "Mission": fatherId = detailedPost.Mission.id
-    else: fatherId = detailedPost.DatePost.id
     answer = {
       functionName:"OK",
       "type":typeDetailedPost,
       "fatherId":fatherId,
       "detailedPost":{detailedPost.id:detailedPost.computeValues(detailedPost.listFields(), currentUser, True)}
     }
-    if mission:
-      answer["mission"] = {mission.id:mission.computeValues(mission.listFields(), currentUser, True)}
-    if detailedPost.DatePost:
-        answer["Type"] = "DatePost"
-        answer["fatherId"] = detailedPost.DatePost.id
+    if detailedPost2:
+      answer["detailedPost2"] = {detailedPost2.id:detailedPost2.computeValues(detailedPost2.listFields(), currentUser, True)}
+      answer["missionId"] = detailedPost2.Mission.id
     return answer
 
 
