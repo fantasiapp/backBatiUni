@@ -1,3 +1,4 @@
+from email.headerregistry import ContentTransferEncodingHeader
 from lib2to3.pgen2 import token
 from django.forms import EmailInput
 from ..models import *
@@ -372,9 +373,10 @@ class DataAccessor():
       if detailedPost.validated or detailedPost.refused :
         return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche est évaluée"}
       detailPostId = detailedPost.id
-      datePost = detailedPost.DatePost
-      datePostDump = {datePost.id:datePost.computeValues(datePost.listFields(), currentUser, True)}
+      datePostId = detailedPost.DatePost.id
       detailedPost.delete()
+      datePost = DatePost.objects.get(id=datePostId)
+      datePostDump = {datePost.id:datePost.computeValues(datePost.listFields(), currentUser, True)}
       return {"modifyDetailedPost":"OK", "deleted":"yes", "detailedPostId":detailPostId, "datePost":datePostDump}
 
   @classmethod
@@ -818,7 +820,7 @@ class DataAccessor():
   def downloadFile(cls, id, currentUser):
     file = File.objects.get(id=id)
     content = file.getAttr("file")
-
+    print("content", type(content))
     listFields = file.listFields()
     fileList = file.computeValues(listFields, currentUser)
     indexContent = listFields.index("content")
