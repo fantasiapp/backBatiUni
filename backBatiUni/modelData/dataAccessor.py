@@ -674,6 +674,7 @@ class DataAccessor():
 
   @classmethod
   def __validateMissionDate(cls, data, currentUser):
+    print("validateMissionDate", data)
     mission, answer = cls.__validateMissionTimeTable(data)
     if answer:
       return {"validateMissionDate":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
@@ -728,11 +729,8 @@ class DataAccessor():
         datePost.validated = True
         datePost.save()
       if not datePost.deleted:
-        response = {"validateMissionDate":"OK", "type":"Mission", "fatherId":mission.id, "datePost":{datePost.id:datePost.computeValues(datePost.listFields(), currentUser, dictFormat=True)}}
-      else:
-        response = {"validateMissionDate":"OK", "fatherId":datePostId, "deleted":"yes","mission":{mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}}
-      print("respone validateMissionDate", response)
-      return response
+        return {"validateMissionDate":"OK", "type":"Mission", "fatherId":mission.id, "datePost":{datePost.id:datePost.computeValues(datePost.listFields(), currentUser, dictFormat=True)}}
+      return {"validateMissionDate":"OK", "fatherId":datePostId, "deleted":"yes","mission":{mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}}
     return {"validateMissionDate":"Error", "messages":f'field {data["field"]} is not recognize'}
 
 
