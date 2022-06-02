@@ -286,26 +286,26 @@ def executeQuery():
         for id, values in missionList.items():
           if "mission" in values:
             requests.get(url, headers=headers, params={"action":"signContract", "missionId":id, "view":"PME"})
-    elif query == "createSupervision":
-      post1 = {'action':"createSupervision", "detailedPostId":31, "comment":"J'ai fini."}
-      post2 = {'action':"createSupervision", "detailedPostId":29, "comment":"OK pour les tâches du jour."}
+    # elif query == "createSupervision":
+      # post1 = {'action':"createSupervision", "detailedPostId":31, "comment":"J'ai fini."}
+      # post2 = {'action':"createSupervision", "detailedPostId":29, "comment":"OK pour les tâches du jour."}
       # post3 = {'action':"createSupervision", "detailedPostId":10, "comment":"Pas de souci aujourd'hui."}
       # post4 = {'action':"createSupervision", "detailedPostId":9, "comment":"Le chantier est terminé."}
-      post5 = {'action':"createSupervision", "datePostId":7, "comment":"Voila une tâche difficile."}
-      for post in [post1, post2, post5]:
-        response = requests.post(url, headers=headers, json=post)
-      tokenPme = queryForToken("pme", "pwd")
-      headersPme = {'Authorization': f'Token {tokenPme}'}
-      post1 = {'action':"createSupervision", "detailedPostId":31, "comment":"Les tâches du jour sont bien faites."}
-      post2 = {'action':"createSupervision", "detailedPostId":29, "comment":"Tout est parfait, merci."}
+      # post5 = {'action':"createSupervision", "datePostId":7, "comment":"Voila une tâche difficile."}
+      # for post in [post1, post2, post5]:
+      #   response = requests.post(url, headers=headers, json=post)
+      # tokenPme = queryForToken("pme", "pwd")
+      # headersPme = {'Authorization': f'Token {tokenPme}'}
+      # post1 = {'action':"createSupervision", "detailedPostId":31, "comment":"Les tâches du jour sont bien faites."}
+      # post2 = {'action':"createSupervision", "detailedPostId":29, "comment":"Tout est parfait, merci."}
       # post3 = {'action':"createSupervision", "detailedPostId":10, "comment":"Attention aux finitions."}
       # post4 = {'action':"createSupervision", "detailedPostId":9, "comment":"Le travail est fini, Youpi."}
-      post5 = {'action':"createSupervision", "datePostId":7, "comment":"Attention au travail de ce jour."}
-      for post in [post1, post2, post5]:
-        response = requests.post(url, headers=headersPme, json=post)
-    elif query == "uploadImageSupervision":
-      post = {'action':"uploadImageSupervision", "supervisionId":7, "ext":"png", "imageBase64":getDocStr(7)}
-      response = requests.post(url, headers=headers, json=post)
+      # post5 = {'action':"createSupervision", "datePostId":7, "comment":"Attention au travail de ce jour."}
+      # for post in [post1, post2, post5]:
+      #   response = requests.post(url, headers=headersPme, json=post)
+    # elif query == "uploadImageSupervision":
+      # post = {'action':"uploadImageSupervision", "supervisionId":7, "ext":"png", "imageBase64":getDocStr(7)}
+      # response = requests.post(url, headers=headers, json=post)
     elif query == "switchDraft":
       requests.get(url, headers=headers, params={"action":"switchDraft", "id":2})
       response = requests.get(url, headers=headers, params={"action":"switchDraft", "id":3})

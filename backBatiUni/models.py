@@ -234,9 +234,9 @@ class Company(CommonModel):
   
       elif field in self.manyToManyObject:
         if dictFormat:
-          listModel = RamData.ramStructure["Company"][field][self.id]
-        else:
           listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Company=self)]
+        else:
+          listModel = RamData.ramStructure["Company"][field][self.id]
         values.append(listModel)
       else:
         value = getattr(self, field, "") if getattr(self, field, None) else ""
@@ -541,14 +541,14 @@ class Post(CommonModel):
       elif field in self.manyToManyObject:
         if dictFormat:
           if self.subContractorName:
-              listModel = RamData.ramStructure["Mission"][field][self.id]
-          else:
-            listModel = RamData.ramStructure["Post"][field][self.id]
-        else:
-          if self.subContractorName:
             listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Post=self)]
           else:
             listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Mission=self)]
+        else:
+          if self.subContractorName:
+              listModel = RamData.ramStructure["Mission"][field][self.id]
+          else:
+            listModel = RamData.ramStructure["Post"][field][self.id]
         values.append(listModel)
     return values
 
@@ -642,9 +642,10 @@ class DatePost(CommonModel):
       elif field == "refused": values.append(self.refused)
       else:
         if dictFormat:
-          values.append(RamData.ramStructure["DetailedPost"][field][self.id])
+          print("DatePost", dictFormat, field)
+          values.append([objectModel.id for objectModel in manyToMany[field].objects.filter(DatePost=self)])
         else:
-          values.append([objectModel.id for objectModel in manyToMany["field"].objects.filter(DetailedPost=self)])
+          values.append(RamData.ramStructure["DatePost"][field][self.id])
     return values
 
   def dump(self):
