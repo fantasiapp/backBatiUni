@@ -630,9 +630,27 @@ class DatePost(CommonModel):
       elif datePost.Mission:
         RamData.ramStructure["Mission"]["DatePost"][datePost.Mission.id].append(datePost.id)
 
+  def computeValues(self, listFields, user, dictFormat=False):
+    values = []
+    manyToMany = {"Supervision":Supervision, "DetailedPost":DetailedPost}
+    for index in range(len(listFields)):
+      field = listFields[index]
+
+      if field == "date": values.append(self.date.strftime("%Y-%m-%d") if self.date else "")
+      elif field == "deleted": values.append(self.deleted)
+      elif field == "validated": values.append(self.validated)
+      elif field == "refused": values.append(self.refused)
+      else:
+        if dictFormat:
+          values.append([objectModel.id for objectModel in manyToMany["field"].objects.filter(DetailedPost=self)])
+        else:
+          values.append(RamData.ramStructure["DetailedPost"][field][self.id])
+    return values
+
   def dump(self):
     date = self.date.strftime("%Y-%m-%d") if self.date else ""
     supervisions = [supervision.id for supervision in Supervision.objects.filter(DatePost=self)]
+
     return [date, self.deleted, self.validated, supervisions]
 
 class Notification(CommonModel):
