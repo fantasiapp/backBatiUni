@@ -207,7 +207,7 @@ class Company(CommonModel):
 
   def computeValues(self, listFields, user, dictFormat=False):
     values = []
-    manyToMany = {"LabelForCompany":LabelForCompany, "JobForCompany":JobForCompany, "Disponibility":Disponibility, "File":File, "Notification":Notification}
+    manyToMany = {"LabelForCompany":LabelForCompany, "JobForCompany":JobForCompany, "Disponibility":Disponibility, "Post":Post, "Mission":Mission, "File":File, "Notification":Notification}
     postMission = {"Post":Post, "Mission":Mission}
     for index in range(len(listFields)):
       field = listFields[index]
@@ -233,20 +233,7 @@ class Company(CommonModel):
       elif field == "allQualifications": values.append(self.allQualifications if self.allQualifications else "")
   
       elif field in self.manyToManyObject:
-        if field in manyToMany:
-          if field == "Notification":
-            listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Company=self)]
-          elif dictFormat:
-            listModel = {objectModel.id:objectModel.dump() for objectModel in manyToMany[field].objects.filter(Company=self)}
-          else:
-            listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Company=self)]
-            # listModel = RamData.ramStructure["Company"][field][self.id]
-        else:
-          if dictFormat:
-            listModel = [objectModel.id for objectModel in postMission[field].objects.filter(Company=self)]
-          else:
-            listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Company=self)]
-            # listModel = RamData.ramStructure["Company"][field][self.id]
+        listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Company=self)]
         values.append(listModel)
       else:
         value = getattr(self, field, "") if getattr(self, field, None) else ""
