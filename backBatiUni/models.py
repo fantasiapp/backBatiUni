@@ -547,7 +547,7 @@ class Post(CommonModel):
             listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Post=self)]
         else:
           if self.subContractorName:
-              listModel = RamData.ramStructure["Mission"][field][self.id]
+            listModel = RamData.ramStructure["Mission"][field][self.id]
           else:
             listModel = RamData.ramStructure["Post"][field][self.id]
         values.append(listModel)
@@ -645,6 +645,7 @@ class DatePost(CommonModel):
       elif field == "refused": values.append(self.refused)
       else:
         # if dictFormat:
+        print("computeValue", field, manyToMany[field].objects.filter(DatePost=self))
         values.append([objectModel.id for objectModel in manyToMany[field].objects.filter(DatePost=self)])
         # else:
         #   values.append(RamData.ramStructure["DatePost"][field][self.id])
