@@ -641,11 +641,10 @@ class DatePost(CommonModel):
       elif field == "validated": values.append(self.validated)
       elif field == "refused": values.append(self.refused)
       else:
-        if dictFormat:
-          print("DatePost", dictFormat, field)
-          values.append([objectModel.id for objectModel in manyToMany[field].objects.filter(DatePost=self)])
-        else:
-          values.append(RamData.ramStructure["DatePost"][field][self.id])
+        # if dictFormat:
+        values.append([objectModel.id for objectModel in manyToMany[field].objects.filter(DatePost=self)])
+        # else:
+        #   values.append(RamData.ramStructure["DatePost"][field][self.id])
     return values
 
   def dump(self):
