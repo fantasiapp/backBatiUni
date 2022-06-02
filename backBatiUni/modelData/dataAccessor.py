@@ -709,6 +709,7 @@ class DataAccessor():
       date = datetime.strptime(data["date"], "%Y-%m-%d")
       datePost = DatePost.objects.get(Mission=mission, date=date)
       datePostId = datePost.id
+      print("datePostId", datePostId)
       stillExist = True
       if data["state"]:
         if datePost.deleted:
@@ -728,7 +729,7 @@ class DataAccessor():
       if stillExist:
         datePost.validated = True
         datePost.save()
-      if not datePost.deleted:
+      if stillExist:
         return {"validateMissionDate":"OK", "type":"Mission", "fatherId":mission.id, "datePost":{datePost.id:datePost.computeValues(datePost.listFields(), currentUser, dictFormat=True)}}
       return {"validateMissionDate":"OK", "fatherId":datePostId, "deleted":"yes","mission":{mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}}
     return {"validateMissionDate":"Error", "messages":f'field {data["field"]} is not recognize'}
