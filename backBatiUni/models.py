@@ -549,9 +549,11 @@ class Post(CommonModel):
       elif field in self.manyToManyObject:
         if dictFormat:
           if self.subContractorName:
-            listModel = {objectModel.id:objectModel.dump() for objectModel in manyToMany[field].objects.filter(Mission=self)}
+            listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Mission=self)]
+            # listModel = {objectModel.id:objectModel.dump() for objectModel in manyToMany[field].objects.filter(Mission=self)}
           else:
-            listModel = {objectModel.id:objectModel.dump() for objectModel in manyToMany[field].objects.filter(Post=self)}
+            listModel = {objectModel.id for objectModel in manyToMany[field].objects.filter(Post=self)}
+            # listModel = {objectModel.id:objectModel.dump() for objectModel in manyToMany[field].objects.filter(Post=self)}
         else:
           if self.subContractorName:
             if field != "Candidate":
