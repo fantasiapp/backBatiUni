@@ -541,9 +541,10 @@ class Post(CommonModel):
       elif field in self.manyToManyObject:
         if dictFormat:
           if self.subContractorName:
-            listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Post=self)]
-          else:
+            print("Mission", field, manyToMany[field].objects.filter(Mission=self))
             listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Mission=self)]
+          else:
+            listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Post=self)]
         else:
           if self.subContractorName:
               listModel = RamData.ramStructure["Mission"][field][self.id]
@@ -629,6 +630,8 @@ class DatePost(CommonModel):
         RamData.ramStructure["Post"]["DatePost"][datePost.Post.id].append(datePost.id)
       elif datePost.Mission:
         RamData.ramStructure["Mission"]["DatePost"][datePost.Mission.id].append(datePost.id)
+      elif datePost.DetailedPost:
+        RamData.ramStructure["DetailedPost"]["DatePost"][datePost.DetailedPost.id].append(datePost.id)
 
   def computeValues(self, listFields, user, dictFormat=False):
     values = []
