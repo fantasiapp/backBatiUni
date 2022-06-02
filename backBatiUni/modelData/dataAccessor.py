@@ -728,8 +728,11 @@ class DataAccessor():
         datePost.validated = True
         datePost.save()
       if not datePost.deleted:
-        return {"validateMissionDate":"OK", "type":"Mission", "fatherId":mission.id, "datePost":{datePost.id:datePost.computeValues(datePost.listFields(), currentUser, dictFormat=True)}}
-      return {"validateMissionDate":"OK", "datePostId":datePostId, "deleted":"yes","mission":{mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}}
+        response = {"validateMissionDate":"OK", "type":"Mission", "fatherId":mission.id, "datePost":{datePost.id:datePost.computeValues(datePost.listFields(), currentUser, dictFormat=True)}}
+      else:
+        response = {"validateMissionDate":"OK", "fatherId":datePostId, "deleted":"yes","mission":{mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}}
+      print("respone validateMissionDate", response)
+      return response
     return {"validateMissionDate":"Error", "messages":f'field {data["field"]} is not recognize'}
 
 
