@@ -235,7 +235,7 @@ class Company(CommonModel):
       elif field in self.manyToManyObject:
         if field in manyToMany:
           if field == "Notification":
-            listModel = RamData.ramStructure["Company"]["Notification"][self.id]
+            listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Company=self)]
           elif dictFormat:
             listModel = {objectModel.id:objectModel.dump() for objectModel in manyToMany[field].objects.filter(Company=self)}
           else:
@@ -262,8 +262,11 @@ class Disponibility(CommonModel):
   @classmethod
   def generateRamStructure(cls):
     RamData.ramStructure["Company"]["Disponibility"] = deepcopy(RamData.allCompany)
+    RamData.ramStructure["Company"]["Notifications"] = deepcopy(RamData.allCompany)
     for disponibility in Disponibility.objects.all():
       RamData.ramStructure["Company"]["Disponibility"][disponibility.Company.id].append(disponibility.id)
+    for notification in Notification.objects.all():
+      RamData.ramStructure["Company"]["Disponibility"][notification.Company.id].append(disponibility.id)
 
   @classmethod
   def listFields(cls):
@@ -494,7 +497,7 @@ class Post(CommonModel):
 
   def computeValues(self, listFields, user, dictFormat=False):
     values = []
-    manyToMany = {"DetailedPost":DetailedPost, "File":File, "Candidate":Candidate} #, "DatePost":DatePost
+    manyToMany = {"DetailedPost":DetailedPost, "File":File, "Candidate":Candidate, "DatePost":DatePost} #, "DatePost":DatePost
     for field in listFields:
       if field == "Company": values.append(self.Company.id if self.Company else "")
       elif field == "Job": values.append(self.Job.id if self.Job else "")
@@ -544,6 +547,7 @@ class Post(CommonModel):
       elif field == "endDate": values.append(self.endDate.strftime("%Y-%m-%d") if self.endDate else "")
 
       elif field in self.manyToManyObject:
+        print("fields start", field, self.id)
         if dictFormat:
           if self.subContractorName:
             listModel = {objectModel.id:objectModel.dump() for objectModel in manyToMany[field].objects.filter(Mission=self)}
@@ -552,8 +556,10 @@ class Post(CommonModel):
         else:
           if self.subContractorName:
             if field != "Candidate":
+              print("fields mission", RamData.ramStructure["Mission"], field, self.id)
               listModel = RamData.ramStructure["Mission"][field][self.id]
           else:
+            print("fields post", RamData.ramStructure["Post"], field, self.id)
             listModel = RamData.ramStructure["Post"][field][self.id]
         values.append(listModel)
     return values
