@@ -233,7 +233,10 @@ class Company(CommonModel):
       elif field == "allQualifications": values.append(self.allQualifications if self.allQualifications else "")
   
       elif field in self.manyToManyObject:
-        listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Company=self)]
+        if dictFormat:
+          listModel = RamData.ramStructure["Company"][field][self.id]
+        else:
+          listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Company=self)]
         values.append(listModel)
       else:
         value = getattr(self, field, "") if getattr(self, field, None) else ""
@@ -538,17 +541,14 @@ class Post(CommonModel):
       elif field in self.manyToManyObject:
         if dictFormat:
           if self.subContractorName:
-            listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Mission=self)]
-            # listModel = {objectModel.id:objectModel.dump() for objectModel in manyToMany[field].objects.filter(Mission=self)}
-          else:
-            listModel = {objectModel.id for objectModel in manyToMany[field].objects.filter(Post=self)}
-            # listModel = {objectModel.id:objectModel.dump() for objectModel in manyToMany[field].objects.filter(Post=self)}
-        else:
-          if self.subContractorName:
-            if field != "Candidate":
               listModel = RamData.ramStructure["Mission"][field][self.id]
           else:
             listModel = RamData.ramStructure["Post"][field][self.id]
+        else:
+          if self.subContractorName:
+            listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Post=self)]
+          else:
+            listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Mission=self)]
         values.append(listModel)
     return values
 
