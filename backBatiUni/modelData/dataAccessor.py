@@ -38,12 +38,12 @@ class DataAccessor():
     if profile == "user":
       RamData.fillUpRamStructure()
     t1 = time()
-    print(f"queries executed in {(t1-t0):.4f}s")
+    # print(f"queries executed in {(t1-t0):.4f}s")
     for table in cls.loadTables[profile]:
       t1 = time()
       dictAnswer.update(table.dumpStructure(user))
       t2 = time()
-      print(f'Function {table} executed in {(t2-t1):.4f}s')
+      # print(f'Function {table} executed in {(t2-t1):.4f}s')
     print(f"total executed in {(t2-t0):.4f}s")
     dictAnswer["timestamp"] = datetime.now().timestamp()
     with open(f"./backBatiUni/modelData/{profile}Data.json", 'w') as jsonFile:

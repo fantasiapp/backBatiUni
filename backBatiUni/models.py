@@ -239,12 +239,14 @@ class Company(CommonModel):
           elif dictFormat:
             listModel = {objectModel.id:objectModel.dump() for objectModel in manyToMany[field].objects.filter(Company=self)}
           else:
-            listModel = RamData.ramStructure["Company"][field][self.id]
+            listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Company=self)]
+            # listModel = RamData.ramStructure["Company"][field][self.id]
         else:
           if dictFormat:
             listModel = [objectModel.id for objectModel in postMission[field].objects.filter(Company=self)]
           else:
-            listModel = RamData.ramStructure["Company"][field][self.id]
+            listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Company=self)]
+            # listModel = RamData.ramStructure["Company"][field][self.id]
         values.append(listModel)
       else:
         value = getattr(self, field, "") if getattr(self, field, None) else ""
