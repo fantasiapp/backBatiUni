@@ -729,7 +729,7 @@ class DataAccessor():
         datePost.save()
       if not datePost.deleted:
         return {"validateMissionDate":"OK", "type":"Mission", "fatherId":mission.id, "datePost":{datePost.id:datePost.computeValues(datePost.listFields(), currentUser, dictFormat=True)}}
-      return {"validateMissionDate":"OK", "detailedPostId":datePostId, "deleted":"yes","mission":{mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}, "datePost":{}}
+      return {"validateMissionDate":"OK", "datePostId":datePostId, "deleted":"yes","mission":{mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}}
     return {"validateMissionDate":"Error", "messages":f'field {data["field"]} is not recognize'}
 
 
