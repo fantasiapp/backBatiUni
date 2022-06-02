@@ -547,7 +547,6 @@ class Post(CommonModel):
       elif field == "endDate": values.append(self.endDate.strftime("%Y-%m-%d") if self.endDate else "")
 
       elif field in self.manyToManyObject:
-        print("fields start", field, self.id)
         if dictFormat:
           if self.subContractorName:
             listModel = {objectModel.id:objectModel.dump() for objectModel in manyToMany[field].objects.filter(Mission=self)}
@@ -556,10 +555,8 @@ class Post(CommonModel):
         else:
           if self.subContractorName:
             if field != "Candidate":
-              print("fields mission", RamData.ramStructure["Mission"], field, self.id)
               listModel = RamData.ramStructure["Mission"][field][self.id]
           else:
-            print("fields post", RamData.ramStructure["Post"], field, self.id)
             listModel = RamData.ramStructure["Post"][field][self.id]
         values.append(listModel)
     return values
