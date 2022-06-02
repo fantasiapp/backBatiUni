@@ -642,9 +642,9 @@ class DatePost(CommonModel):
       elif field == "refused": values.append(self.refused)
       else:
         if dictFormat:
-          values.append([objectModel.id for objectModel in manyToMany["field"].objects.filter(DetailedPost=self)])
-        else:
           values.append(RamData.ramStructure["DetailedPost"][field][self.id])
+        else:
+          values.append([objectModel.id for objectModel in manyToMany["field"].objects.filter(DetailedPost=self)])
     return values
 
   def dump(self):
