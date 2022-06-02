@@ -494,7 +494,7 @@ class Post(CommonModel):
 
   def computeValues(self, listFields, user, dictFormat=False):
     values = []
-    manyToMany = {"DetailedPost":DetailedPost, "File":File, "Candidate":Candidate, "DatePost":DatePost}
+    manyToMany = {"DetailedPost":DetailedPost, "File":File, "Candidate":Candidate} #, "DatePost":DatePost
     for field in listFields:
       if field == "Company": values.append(self.Company.id if self.Company else "")
       elif field == "Job": values.append(self.Job.id if self.Job else "")

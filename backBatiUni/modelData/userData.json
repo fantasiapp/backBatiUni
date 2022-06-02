@@ -1,5 +1,5 @@
 {
-   "currentUser": 4,
+   "currentUser": 3,
    "UserProfileFields": [
       "userName",
       "Company",
@@ -19,20 +19,21 @@
       10
    ],
    "UserProfileValues": {
-      "4": [
-         "pme",
-         4,
-         "Jean-Luc",
-         "Walter",
+      "3": [
+         "st",
+         3,
+         "Th\u00e9ophile",
+         "Traitant",
          "",
-         "+33634090697",
-         "pme",
-         "0634090698",
+         "0629350418",
+         "st",
          "",
-         [],
+         "",
          [
-            1
-         ]
+            2,
+            3
+         ],
+         []
       ]
    },
    "CompanyFields": [
@@ -180,7 +181,12 @@
             11,
             12,
             13,
-            14
+            14,
+            20,
+            21,
+            22,
+            23,
+            24
          ]
       ],
       "4": [
@@ -1047,6 +1053,41 @@
          true,
          [],
          []
+      ],
+      "24": [
+         "2022-04-20",
+         false,
+         false,
+         [],
+         []
+      ],
+      "25": [
+         "2022-04-21",
+         false,
+         false,
+         [],
+         []
+      ],
+      "26": [
+         "2022-04-22",
+         false,
+         false,
+         [],
+         []
+      ],
+      "27": [
+         "2022-04-23",
+         false,
+         false,
+         [],
+         []
+      ],
+      "28": [
+         "2022-04-24",
+         false,
+         false,
+         [],
+         []
       ]
    },
    "MissionFields": [
@@ -1158,7 +1199,12 @@
             8,
             9,
             10,
-            23
+            23,
+            24,
+            25,
+            26,
+            27,
+            28
          ],
          3
       ],
@@ -1267,115 +1313,125 @@
       2
    ],
    "NotificationValues": {
-      "1": [
-         2,
+      "6": [
          "",
          3,
-         "PME",
-         1654101903.433385,
-         "Un nouveau sous traitant : Sous-traitant pour le chantier du 106 rue du Cherche-Midi 75006 Paris a postul\u00e9.",
-         false,
-         "ST"
-      ],
-      "2": [
          "",
-         3,
-         3,
-         "PME",
-         1654101903.453249,
-         "Un nouveau sous traitant : Sous-traitant pour le chantier du 36 rue Dauphine 75006 Paris a postul\u00e9.",
+         "ST",
+         1654101904.139612,
+         "Votre candidature pour le chantier du 36 rue Dauphine 75006 Paris a \u00e9t\u00e9 retenue.",
          false,
-         "ST"
+         "PME"
       ],
-      "3": [
+      "8": [
          "",
          4,
-         3,
-         "PME",
-         1654101903.489487,
-         "Un nouveau sous traitant : Sous-traitant pour le chantier du 28 rue de Fleurus 75006 Paris a postul\u00e9.",
-         false,
-         "ST"
-      ],
-      "4": [
-         5,
          "",
-         3,
-         "PME",
-         1654101903.517398,
-         "Un nouveau sous traitant : Sous-traitant pour le chantier du 34 rue Guynemer 75006 Paris a postul\u00e9.",
+         "ST",
+         1654101904.237948,
+         "Votre candidature pour le chantier du 28 rue de Fleurus 75006 Paris a \u00e9t\u00e9 retenue.",
          false,
-         "ST"
+         "PME"
       ],
-      "5": [
-         2,
-         "",
-         6,
-         "PME",
-         1654101903.684385,
-         "Un nouveau sous traitant : Sous-traitant 2 pour le chantier du 106 rue du Cherche-Midi 75006 Paris a postul\u00e9.",
-         false,
-         "ST"
-      ],
-      "9": [
+      "10": [
          "",
          4,
-         3,
-         "PME",
-         1654101904.413711,
+         "",
+         "ST",
+         1654101904.588412,
          "Le contrat pour le chantier du 28 rue de Fleurus 75006 Paris  a \u00e9t\u00e9 sign\u00e9.",
          false,
-         "ST"
+         "PME"
       ],
-      "15": [
+      "11": [
          "",
          3,
          "",
-         "PME",
-         1654101905.581535,
-         "Votre horaire de d\u00e9but pour le chantier du 36 rue Dauphine 75006 Paris est maintenant valid\u00e9e et est 07:00.",
+         "ST",
+         1654101905.399866,
+         "Votre horaire de d\u00e9part pour le chantier du 36 rue Dauphine 75006 Paris va chang\u00e9 et pour 07:00, \u00e0 vous de valider la modification.",
          false,
          "alert"
       ],
-      "16": [
+      "12": [
          "",
          3,
          "",
-         "PME",
-         1654101905.602621,
-         "Votre horaire de fin de journ\u00e9e pour le chantier du 36 rue Dauphine 75006 Paris a \u00e9t\u00e9 refus\u00e9e.",
+         "ST",
+         1654101905.400752,
+         "Votre horaire de fin de journ\u00e9e pour le chantier du 36 rue Dauphine 75006 Paris va changer et pour 17:00, \u00e0 vous de valider la modification.",
          false,
          "alert"
       ],
-      "17": [
+      "13": [
          "",
          3,
          "",
-         "PME",
-         1654101905.625834,
-         "Le retrait de la journ\u00e9e de travail du 2022-04-15 pour le chantier du 36 rue Dauphine 75006 Paris a \u00e9t\u00e9 refus\u00e9.",
+         "ST",
+         1654101905.402937,
+         "Votre journ\u00e9e de travail du 2022-04-15 pour le chantier du 36 rue Dauphine 75006 Paris est propos\u00e9e \u00e0 la suppression, \u00e0 vous de valider la modification.",
          false,
          "alert"
       ],
-      "18": [
+      "14": [
          "",
          3,
          "",
-         "PME",
-         1654101905.662445,
-         "La journ\u00e9e de travail du 2022-04-19 pour le chantier du 36 rue Dauphine 75006 Paris est maintenant valid\u00e9e.",
+         "ST",
+         1654101905.405444,
+         "Une journ\u00e9e de travail pour le chantier du 36 rue Dauphine 75006 Paris vous est propos\u00e9e 2022-04-19, \u00e0 vous de valider la proposition.",
          false,
          "alert"
       ],
-      "19": [
+      "20": [
          "",
-         4,
          3,
-         "PME",
-         1654101906.460198,
-         "La mission du 28 rue de Fleurus 75006 Paris a \u00e9t\u00e9 not\u00e9e.",
+         "",
+         "ST",
+         1654157972.717741,
+         "Une journ\u00e9e de travail pour le chantier du 36 rue Dauphine 75006 Paris vous est propos\u00e9e 2022-04-20, \u00e0 vous de valider la proposition.",
          false,
-         "ST"
+         "alert"
+      ],
+      "21": [
+         "",
+         3,
+         "",
+         "ST",
+         1654157972.719099,
+         "Une journ\u00e9e de travail pour le chantier du 36 rue Dauphine 75006 Paris vous est propos\u00e9e 2022-04-21, \u00e0 vous de valider la proposition.",
+         false,
+         "alert"
+      ],
+      "22": [
+         "",
+         3,
+         "",
+         "ST",
+         1654157972.720178,
+         "Une journ\u00e9e de travail pour le chantier du 36 rue Dauphine 75006 Paris vous est propos\u00e9e 2022-04-22, \u00e0 vous de valider la proposition.",
+         false,
+         "alert"
+      ],
+      "23": [
+         "",
+         3,
+         "",
+         "ST",
+         1654157972.721325,
+         "Une journ\u00e9e de travail pour le chantier du 36 rue Dauphine 75006 Paris vous est propos\u00e9e 2022-04-23, \u00e0 vous de valider la proposition.",
+         false,
+         "alert"
+      ],
+      "24": [
+         "",
+         3,
+         "",
+         "ST",
+         1654157972.722238,
+         "Une journ\u00e9e de travail pour le chantier du 36 rue Dauphine 75006 Paris vous est propos\u00e9e 2022-04-24, \u00e0 vous de valider la proposition.",
+         false,
+         "alert"
       ]
    },
    "BlockedCandidateFields": [
@@ -1396,5 +1452,5 @@
          "2022-06-01"
       ]
    },
-   "timestamp": 1654112504.166762
+   "timestamp": 1654158019.373094
 }

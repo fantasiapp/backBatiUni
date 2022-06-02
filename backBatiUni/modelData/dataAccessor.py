@@ -707,6 +707,7 @@ class DataAccessor():
     if data["field"] == "date":
       date = datetime.strptime(data["date"], "%Y-%m-%d")
       datePost = DatePost.objects.get(Mission=mission, date=date)
+      datePostId = datePost.id
       stillExist = True
       if data["state"]:
         if datePost.deleted:
@@ -727,8 +728,8 @@ class DataAccessor():
         datePost.validated = True
         datePost.save()
       if not datePost.deleted:
-        return {"validateMissionDate":"OK", "mission":{mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}, "datePost":{datePost.id:datePost.computeValues(datePost.listFields(), currentUser, dictFormat=True)}}
-      return {"validateMissionDate":"OK", "mission":{mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}, "datePost":{}}
+        return {"validateMissionDate":"OK", "type":"Mission", "fatherId":mission.id, "datePost":{datePost.id:datePost.computeValues(datePost.listFields(), currentUser, dictFormat=True)}}
+      return {"validateMissionDate":"OK", "detailedPostId":datePostId, "deleted":"yes","mission":{mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}, "datePost":{}}
     return {"validateMissionDate":"Error", "messages":f'field {data["field"]} is not recognize'}
 
 
@@ -766,6 +767,11 @@ class DataAccessor():
 
   @classmethod
   def __notificationViewed(cls, data, currentUser):
+    print("__notificationViewed", data)
+    company = Company.objects.filter(id=data["companyId"])
+    if not company:
+      return {"notificationViewed":"Error", "messages":f"{data['companyId']} does not exist"}
+    company = company[0]
     company = Company.objects.get(id=data["companyId"])
     notifications = Notification.objects.filter(Company=company, Role=data["role"])
     for notification in notifications:
