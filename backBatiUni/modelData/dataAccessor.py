@@ -678,7 +678,7 @@ class DataAccessor():
     print("validateMissionDate", data)
     mission, answer = cls.__validateMissionTimeTable(data)
     if answer:
-      return {"validateMissionDate":"OK", "update":"yes", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
+      return {"validateMissionDate":"OK", "update":"yes", "type":"Mission", "Mission":{mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}}
     return cls.__validateMissionDateAction(data, currentUser, mission)
     
   @classmethod
