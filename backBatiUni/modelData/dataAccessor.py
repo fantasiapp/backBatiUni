@@ -1101,6 +1101,9 @@ class DataAccessor():
   def giveRecommandation(cls, data):
     del data["action"]
     print("giveRecommandation", data)
+    company = Company.objects.get(id=data["companyRecommanded"])
+    if Recommandation.objects.filter(companyRecommanded=company, companyNameRecommanding=value['companyNameRecommanding']):
+      return {"newPassword":"Warning", "messages":"La recommandation existe déjà"}
     kwargs = {"date":timezone.now()}
     for key, value in data.items():
       if key == "companyRecommanded":

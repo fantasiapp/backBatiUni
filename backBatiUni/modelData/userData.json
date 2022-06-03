@@ -1318,5 +1318,127 @@
          "2022-06-03"
       ]
    },
-   "timestamp": 1654264521.830453
+   "RecommandationFields": [
+      "companyRecommanded",
+      "firstNameRecommanding",
+      "lastNameRecommanding",
+      "companyNameRecommanding",
+      "qualityStars",
+      "qualityComment",
+      "securityStars",
+      "securityComment",
+      "organisationStars",
+      "organisationComment",
+      "date"
+   ],
+   "RecommandationIndices": [
+      0
+   ],
+   "RecommandationValues": {
+      "1": [
+         3,
+         "Maxime",
+         "Baraton",
+         "Fantasiapp",
+         4,
+         "Un travail remarquable",
+         5,
+         "Une s\u00e9curit\u00e9 digne de la Nasa",
+         4,
+         "Rien \u00e0 dire",
+         "2022-06-03"
+      ],
+      "2": [
+         3,
+         "Dyvia",
+         "Gaultier",
+         "Loreal",
+         5,
+         "Un travail bien fait",
+         5,
+         "Une s\u00e9curit\u00e9 digne de la Nasa",
+         4,
+         "Rien \u00e0 dire",
+         "2022-06-03"
+      ],
+      "3": [
+         3,
+         "William",
+         "Baraton",
+         "Fantasiapp",
+         4,
+         "Un travail remarquable",
+         5,
+         "Une s\u00e9curit\u00e9 digne de la Nasa",
+         4,
+         "Rien \u00e0 dire",
+         "2022-06-03"
+      ],
+      "4": [
+         3,
+         "Lucas",
+         "Gaultier",
+         "Loreal",
+         5,
+         "Un travail bien fait",
+         5,
+         "Une s\u00e9curit\u00e9 digne de la Nasa",
+         4,
+         "Rien \u00e0 dire",
+         "2022-06-03"
+      ],
+      "5": [
+         3,
+         "Sarah",
+         "Baraton",
+         "Fantasiapp",
+         4,
+         "Un travail remarquable",
+         5,
+         "Une s\u00e9curit\u00e9 digne de la Nasa",
+         4,
+         "Rien \u00e0 dire",
+         "2022-06-03"
+      ],
+      "6": [
+         3,
+         "Cassiop\u00e9e",
+         "Gaultier",
+         "Loreal",
+         5,
+         "Un travail bien fait",
+         5,
+         "Une s\u00e9curit\u00e9 digne de la Nasa",
+         4,
+         "Rien \u00e0 dire",
+         "2022-06-03"
+      ],
+      "7": [
+         3,
+         "Jean-Luc",
+         "Baraton",
+         "Fantasiapp",
+         4,
+         "Un travail remarquable",
+         5,
+         "Une s\u00e9curit\u00e9 digne de la Nasa",
+         4,
+         "Rien \u00e0 dire",
+         "2022-06-03"
+      ],
+      "8": [
+         3,
+         "Maude",
+         "Gaultier",
+         "Loreal",
+         5,
+         "Un travail bien fait",
+         5,
+         "Une s\u00e9curit\u00e9 digne de la Nasa",
+         4,
+         "Rien \u00e0 dire",
+         "2022-06-03"
+      ]
+   },
+   "timestamp": 1654266679.262845
 }

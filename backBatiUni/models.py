@@ -1025,5 +1025,8 @@ class Recommandation(CommonModel):
   organisationComment = models.CharField('company name of recommander', max_length=3000, null=False, default="", blank=True)
   date = models.DateField(verbose_name="Date de l'inscription", null=True, default=None)
 
+  class Meta:
+    verbose_name = "Recommandation"
+
 
 
