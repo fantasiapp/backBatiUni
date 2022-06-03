@@ -717,7 +717,7 @@ class Candidate(CommonModel):
   def computeValues(self, listFields, user, dictFormat=False):
     values = []
     for field in listFields:
-      if field == "Company": values.append(self.Company if self.Company else "")
+      if field == "Company": values.append(self.Company.id if self.Company else "")
       elif field == "contact": values.append(self.contact)
       elif field == "isChoosen": values.append(self.isChoosen)
       elif field == "isRefused": values.append(self.isRefused)
