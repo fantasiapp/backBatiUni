@@ -626,6 +626,7 @@ class DatePost(CommonModel):
     RamData.ramStructure["Mission"]["DatePost"] = deepcopy(RamData.allMission)
     for datePost in DatePost.objects.all():
       if datePost.Post:
+        print("line 629", RamData.ramStructure["Post"])
         RamData.ramStructure["Post"]["DatePost"][datePost.Post.id].append(datePost.id)
       elif datePost.Mission:
         print("line 631", RamData.ramStructure["Mission"])
