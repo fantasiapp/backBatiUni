@@ -685,23 +685,17 @@ class DataAccessor():
   def __validateMissionTimeTable(cls, data):
     mission = Mission.objects.get(id=data["missionId"])
     answer = False
-    if data["field"] == "hourlyStart":
+    if data["field"] == "hourly":
       answer = True
       if data["state"]:
-        Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"Votre horaire de début pour le chantier du {mission.address} est maintenant validée et est {mission.hourlyStart}.", timestamp=datetime.now().timestamp())
+        Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"Vos horaires pour le chantier du {mission.address} sont maintenant validées.", timestamp=datetime.now().timestamp())
         mission.hourlyStart = mission.hourlyStartChange
-      else:
-        Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"Votre horaire de début pour le chantier du {mission.address} a été refusée.", timestamp=datetime.now().timestamp())
-      mission.hourlyStartChange = ''
-    elif data["field"] == "hourlyEnd":
-      answer = True
-      if data["state"]:
-        Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"Votre horaire de fin de journée pour le chantier du {mission.address} est maintenant validée et est {mission.hourlyStart}.", timestamp=datetime.now().timestamp())
         mission.hourlyEnd = mission.hourlyEndChange
       else:
-         Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"Votre horaire de fin de journée pour le chantier du {mission.address} a été refusée.", timestamp=datetime.now().timestamp())
+        Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"Vos modifications d'horaire pour le chantier du {mission.address} a été refusée.", timestamp=datetime.now().timestamp())
+      mission.hourlyStartChange = ''
       mission.hourlyEndChange = ''
-    mission.save()
+      mission.save()
     return mission, answer
 
   @classmethod
