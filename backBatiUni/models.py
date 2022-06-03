@@ -541,7 +541,6 @@ class Post(CommonModel):
       elif field in self.manyToManyObject:
         if dictFormat:
           if self.subContractorName:
-            print("Mission", field, manyToMany[field].objects.filter(Mission=self))
             listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Mission=self)]
           else:
             listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Post=self)]
@@ -714,6 +713,8 @@ class Candidate(CommonModel):
   date = models.DateField(verbose_name="Date de candidature ou date d'acceptation", null=False, default=timezone.now)
   amount = models.FloatField("Prix unitaire", null=False, default=0.0)
   unitOfTime = models.CharField("Unité de temps", max_length=128, null=True, default="Prix Total")
+
+  def computeValues(self, listFields, user, dictFormat=False): return [self.Job.id, self.number]
 
   class Meta:
     unique_together = ('Post', 'Mission', 'Company')
