@@ -1012,7 +1012,18 @@ class BlockedCandidate(CommonModel):
     verbose_name = "BlockedCandidate"
     unique_together = ('blocker', 'blocked')
 
-    
+class Recommandation(CommonModel):
+  companyRecommanded =  models.ForeignKey(Company, verbose_name='Company who is recommanded', related_name='recommanded', on_delete=models.PROTECT, null=True, default=None)
+  firstNameRecommanding = models.CharField('first name of recommander', max_length=128, null=False, default="", blank=True)
+  lastNameRecommanding = models.CharField('last name of recommander', max_length=128, null=False, default="", blank=True)
+  companyNameRecommanding = models.CharField('company name of recommander', max_length=128, null=False, default="", blank=True)
+  qualityStars = models.IntegerField("Notation sous forme d'étoile", null=False, default=0.0)
+  qualityComment = models.CharField('company name of recommander', max_length=3000, null=False, default="", blank=True)
+  securityStars = models.IntegerField("Notation sous forme d'étoile", null=False, default=0.0)
+  securityComment = models.CharField('company name of recommander', max_length=3000, null=False, default="", blank=True)
+  organisationStars = models.IntegerField("Notation sous forme d'étoile", null=False, default=0.0)
+  organisationComment = models.CharField('company name of recommander', max_length=3000, null=False, default="", blank=True)
+  date = models.DateField(verbose_name="Date de l'inscription", null=True, default=None)
 
 
 

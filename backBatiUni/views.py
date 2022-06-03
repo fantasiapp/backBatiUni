@@ -69,6 +69,9 @@ class Initialize(APIView):
     jsonString = jsonBin.decode("utf8")
     data = json.loads(jsonString)  
     if "action" in data and data["action"] == "newPassword":  return Response(DataAccessor.newPassword(data))
+    elif "action" in data and data["action"] == "giveRecommandation":
+      print("action", )
+      return Response(DataAccessor.giveRecommandation(data))
     return Response(DataAccessor().register(data))
 
 class CreateBase(DefaultView):

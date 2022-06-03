@@ -1099,6 +1099,8 @@ class DataAccessor():
 
   @classmethod
   def giveRecommandation(cls, data):
+    del data["action"]
+    print("giveRecommandation", data)
     kwargs = {"date":timezone.now()}
     for key, value in data.items():
       if key == "companyRecommanded":
@@ -1106,7 +1108,7 @@ class DataAccessor():
         kwargs[key] = company
       else:
         kwargs[key] = value
-    Recommandation.objects.create(*kwargs)
+    Recommandation.objects.create(**kwargs)
     return {"newPassword":"OK", "messages":"Recommandation recorded"}
 
       
