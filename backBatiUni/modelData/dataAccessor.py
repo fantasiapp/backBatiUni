@@ -1099,5 +1099,6 @@ class DataAccessor():
   @classmethod
   def giveRecommandation(cls, data):
     for key, label in data.items():
+      pass
       
     
