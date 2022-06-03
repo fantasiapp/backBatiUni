@@ -714,7 +714,18 @@ class Candidate(CommonModel):
   amount = models.FloatField("Prix unitaire", null=False, default=0.0)
   unitOfTime = models.CharField("Unité de temps", max_length=128, null=True, default="Prix Total")
 
-  def computeValues(self, listFields, user, dictFormat=False): return [self.Job.id, self.number]
+  def computeValues(self, listFields, user, dictFormat=False):
+    values = []
+    for field in listFields:
+      if field == "Company": values.append(self.Company if self.Company else "")
+      elif field == "contact": values.append(self.contact)
+      elif field == "isChoosen": values.append(self.isChoosen)
+      elif field == "isRefused": values.append(self.isRefused)
+      elif field == "isViewed": values.append(self.isViewed)
+      elif field == "date": values.append(self.date.strftime("%Y-%m-%d") if self.date else "")
+      elif field == "amount": values.append(self.amount)
+      elif field == "unitOfTime": values.append(self.unitOfTime)
+    return [self.contact, self.number]
 
   class Meta:
     unique_together = ('Post', 'Mission', 'Company')
