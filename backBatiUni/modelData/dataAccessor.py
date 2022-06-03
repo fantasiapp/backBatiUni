@@ -1094,11 +1094,19 @@ class DataAccessor():
 
   @classmethod
   def askRecommandation(cls, mail):
-    pass
+    return {"askRecommandation":"OK", "messages":"Work in progress"}
 
   @classmethod
   def giveRecommandation(cls, data):
-    for key, label in data.items():
-      pass
+    kwargs = {"date":timezone.now()}
+    for key, value in data.items():
+      if key == "companyRecommanded":
+        company = Company.objects.get(id=value)
+        kwargs[key] = company
+      else:
+        kwargs[key] = value
+    Recommandation.objects.create(*kwargs)
+    return {"newPassword":"OK", "messages":"Recommandation recorded"}
+
       
     
