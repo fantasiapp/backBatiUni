@@ -689,8 +689,10 @@ class DataAccessor():
       answer = True
       if data["state"]:
         Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"Vos horaires pour le chantier du {mission.address} sont maintenant validées.", timestamp=datetime.now().timestamp())
-        mission.hourlyStart = mission.hourlyStartChange
-        mission.hourlyEnd = mission.hourlyEndChange
+        if mission.hourlyStartChange:
+          mission.hourlyStart = mission.hourlyStartChange
+        if mission.hourlyEndChange:
+          mission.hourlyEnd = mission.hourlyEndChange
       else:
         Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"Vos modifications d'horaire pour le chantier du {mission.address} a été refusée.", timestamp=datetime.now().timestamp())
       mission.hourlyStartChange = ''
