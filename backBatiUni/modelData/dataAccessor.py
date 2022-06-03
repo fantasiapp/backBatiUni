@@ -1094,8 +1094,12 @@ class DataAccessor():
     return {"newPassword":"Warning", "messages":"work in progress"}
 
   @classmethod
-  def askRecommandation(cls, mail):
-    return {"askRecommandation":"OK", "messages":"Work in progress"}
+  def askRecommandation(cls, mail, currentUser):
+    userProfile = UserProfile.objects.filter(token=data["token"])
+    response = SmtpConnector(cls.portSmtp).askRecomandation(mail, token, userProfile.firstName, userProfile.lastName, userProfile.Company.name)
+    if "status" in response and response["status"]:
+      return  {"askRecommandation":"OK", "messages": f"Demande de recommandation envoyée"}
+    return {"askRecommandation":"Warning", "messages":f"Echec de l'envoi"}
 
   @classmethod
   def giveRecommandation(cls, data):
@@ -1113,6 +1117,7 @@ class DataAccessor():
         kwargs[key] = value
     Recommandation.objects.create(**kwargs)
     return {"newPassword":"OK", "messages":"Recommandation recorded"}
+    
 
       
     

@@ -258,7 +258,7 @@ class CreateNewDataBase:
   def fillupNotification(self, table): return {}
   def fillupInviteFriend(self, table): return {}
   def fillupBlockedCandidate(self, table): return {}
-  def fillupBlockedRecommandation(self, table): return {}
+  def fillupRecommandation(self, table): return {}
 
   def fillupJob(self, table):
     for job in self.listJobs:
