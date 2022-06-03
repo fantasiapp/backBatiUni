@@ -558,6 +558,7 @@ class DataAccessor():
     if blockData:
       blockData[0].status = status
       blockData[0].save()
+      blockedCandidate = blockData[0]
     else:
       blockedCandidate = BlockedCandidate.objects.create(blocker=blockingCompany, blocked=blockedCompany, status=status, date=timezone.now())
     return {"blockCompany":"OK", blockedCandidate.id:blockedCandidate.computeValues(blockedCandidate.listFields(), currentUser, dictFormat=True)}
