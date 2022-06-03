@@ -16,7 +16,7 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 0
+numberCompanies = 100
 emailList, missionList, emailListPME, emailListST = {}, {}, [], []
 
 arguments = sys.argv
@@ -373,10 +373,21 @@ def executeQuery():
       response = requests.post(url, headers=headers, json=post)
   elif query == "blockCompany":
       response = requests.get(url, headers=headers, params={"action":"blockCompany", "companyId":1, "status":"true"})
+  elif query == "giveRecommandation":
+    post1 = {"companyRecommandedId":3, "firstNameRecommanding":"Maxime", "lastNameRecommanding":"Baraton", "companyNameRecommanding":"Fantasiapp", "qualityStars":4, "qualityComment":"Un travail remarquable", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
+    post2 = {"companyRecommandedId":3, "firstNameRecommanding":"Dyvia", "lastNameRecommanding":"Gaultier", "companyNameRecommanding":"Loreal", "qualityStars":5, "qualityComment":"Un travail bien fait", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
+    post3 = {"companyRecommandedId":3, "firstNameRecommanding":"William", "lastNameRecommanding":"Baraton", "companyNameRecommanding":"Fantasiapp", "qualityStars":4, "qualityComment":"Un travail remarquable", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
+    post4 = {"companyRecommandedId":3, "firstNameRecommanding":"Lucas", "lastNameRecommanding":"Gaultier", "companyNameRecommanding":"Loreal", "qualityStars":5, "qualityComment":"Un travail bien fait", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
+    post5 = {"companyRecommandedId":3, "firstNameRecommanding":"Sarah", "lastNameRecommanding":"Baraton", "companyNameRecommanding":"Fantasiapp", "qualityStars":4, "qualityComment":"Un travail remarquable", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
+    post6 = {"companyRecommandedId":3, "firstNameRecommanding":"Cassiopée", "lastNameRecommanding":"Gaultier", "companyNameRecommanding":"Loreal", "qualityStars":5, "qualityComment":"Un travail bien fait", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
+    post7 = {"companyRecommandedId":3, "firstNameRecommanding":"Jean-Luc", "lastNameRecommanding":"Baraton", "companyNameRecommanding":"Fantasiapp", "qualityStars":4, "qualityComment":"Un travail remarquable", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
+    post8 = {"companyRecommandedId":3, "firstNameRecommanding":"Maude", "lastNameRecommanding":"Gaultier", "companyNameRecommanding":"Loreal", "qualityStars":5, "qualityComment":"Un travail bien fait", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
+    for post in [post1, post2, post3, post4, post5, post6, post7, post8]:
+      response = requests.post(url, headers=headers, json=post)
   else:
     print("no answer")
 if query == "all":
-  keys = ["buildDB", "register", "registerConfirm", "registerMany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "setFavorite", "uploadFile", "downloadFile", "applyPost", "switchDraft", "handleCandidateForPost", "signContract", "modifyDetailedPost", "createSupervision", "modifyMissionDate", "validateMissionDate", "uploadImageSupervision", "isViewed", "closeMission", "closeMissionST", "boostPost", "blockCompany"]
+  keys = ["buildDB", "register", "registerConfirm", "registerMany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "setFavorite", "uploadFile", "downloadFile", "applyPost", "switchDraft", "handleCandidateForPost", "signContract", "modifyDetailedPost", "createSupervision", "modifyMissionDate", "validateMissionDate", "uploadImageSupervision", "isViewed", "closeMission", "closeMissionST", "boostPost", "blockCompany", "askRecommandation"]
   for key in keys:
     query = key
     executeQuery()

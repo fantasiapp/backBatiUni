@@ -559,8 +559,8 @@ class DataAccessor():
       blockData[0].status = status
       blockData[0].save()
     else:
-      BlockedCandidate.objects.create(blocker=blockingCompany, blocked=blockedCompany, status=status, date=timezone.now())
-    return {"blockCompany":"OK", "messages":f"{blockedCompany.name} est maintenant bloquée"}
+      blockedCandidate = BlockedCandidate.objects.create(blocker=blockingCompany, blocked=blockedCompany, status=status, date=timezone.now())
+    return {"blockCompany":"OK", blockedCandidate.id:blockedCandidate.computeValues(blockedCandidate.listFields(), currentUser, dictFormat=True)}
 
 
   @classmethod
@@ -1091,4 +1091,13 @@ class DataAccessor():
       user.save()
       return {"newPassword":"OK"}
     return {"newPassword":"Warning", "messages":"work in progress"}
+
+  @classmethod
+  def askRecommandation(cls, mail):
+    pass
+
+  @classmethod
+  def giveRecommandation(cls, data):
+    for key, label in data.items():
+      
     
