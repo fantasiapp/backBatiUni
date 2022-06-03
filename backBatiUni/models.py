@@ -628,6 +628,7 @@ class DatePost(CommonModel):
       if datePost.Post:
         RamData.ramStructure["Post"]["DatePost"][datePost.Post.id].append(datePost.id)
       elif datePost.Mission:
+        print("line 631", RamData.ramStructure["Mission"])
         RamData.ramStructure["Mission"]["DatePost"][datePost.Mission.id].append(datePost.id)
       elif datePost.DetailedPost:
         RamData.ramStructure["DetailedPost"]["DatePost"][datePost.DetailedPost.id].append(datePost.id)
@@ -1027,6 +1028,7 @@ class Recommandation(CommonModel):
 
   class Meta:
     verbose_name = "Recommandation"
+    unique_together = ('companyRecommanded', 'companyNameRecommanding')
 
 
 
