@@ -725,7 +725,7 @@ class Candidate(CommonModel):
       elif field == "date": values.append(self.date.strftime("%Y-%m-%d") if self.date else "")
       elif field == "amount": values.append(self.amount)
       elif field == "unitOfTime": values.append(self.unitOfTime)
-    return [self.contact, self.number]
+    return values
 
   class Meta:
     unique_together = ('Post', 'Mission', 'Company')
