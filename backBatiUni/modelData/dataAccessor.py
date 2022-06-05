@@ -475,7 +475,6 @@ class DataAccessor():
         favorite[0].delete()
         print("favoritePost deleted", postId, value, UserProfile.id)
     elif value == "true" and not favorite:
-      print("favoritePost created", postId, value, UserProfile.id)
       FavoritePost.objects.create(UserProfile=userProfile, postId=postId)
     return {"setFavorite":"OK"}
 
@@ -525,6 +524,7 @@ class DataAccessor():
       mission = candidate.Mission
       for model in [DetailedPost, File, Notification]:
         for modelObject in model.objects.all():
+          print("handleCandidateForPost",  modelObject.Post, postId)
           if modelObject.Post and modelObject.Post.id == postId:
             modelObject.Post = None
             modelObject.Mission = mission
