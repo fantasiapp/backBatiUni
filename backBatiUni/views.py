@@ -21,6 +21,7 @@ class Data(DefaultView):
     if 'action' in request.GET and self.confirmToken(request.user):
       currentUser = request.user
       action = request.GET["action"]
+      print("get", request.GET)
       if action == "getUserData": return Response(DataAccessor.getData("user", currentUser))
       elif action == "getEnterpriseDataFrom": return Response(DataAccessor.getEnterpriseDataFrom(request, currentUser))
       elif action == "deletePost": return Response(DataAccessor.deletePost(request.GET["id"]))
@@ -37,6 +38,7 @@ class Data(DefaultView):
       elif action == "setFavorite": return Response(DataAccessor.setFavorite(request.GET["Post"], request.GET["value"], currentUser))
       elif action == "isViewed": return Response(DataAccessor.isViewed(request.GET["Post"], currentUser))
       elif action == "inviteFriend": return Response(DataAccessor.inviteFriend(request.GET["mail"], request.GET["register"], currentUser))
+      elif action == "inviteFriend": return Response(DataAccessor.askRecommandation(request.GET["email"], currentUser))
       return Response({"data GET":"Error", "messages":{"action":action}})
     return Response({"data GET":"Warning", "messages":"La confirmation par mail n'est pas réalisée."})
 

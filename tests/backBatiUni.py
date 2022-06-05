@@ -16,7 +16,7 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 10
+numberCompanies = 20
 emailList, missionList, emailListPME, emailListST = {}, {}, [], []
 
 arguments = sys.argv
@@ -126,17 +126,16 @@ def executeQuery():
     if query in ["emptyDB", "buildDB"]:
       token = queryForToken("jlw", "pwd")
       print("user jlw")
-    elif query in ["uploadPost" , "modifyPost", "getPost", "switchDraft", "handleCandidateForPost", "modifyMissionDate", "getUserData", "closeMission", "notificationViewed", "boostDuration", "isViewed", "blockCompany"]:
+    elif query in ["uploadPost", "deletePost", "modifyPost", "getPost", "switchDraft", "handleCandidateForPost", "modifyMissionDate", "getUserData", "closeMission", "notificationViewed", "boostDuration", "isViewed", "blockCompany"]:
       print("user pme")
       token = queryForToken("pme", "pwd")
     else:
       token = queryForToken("st", "pwd")
     url = f'{address}/data/'
     headers = {'Authorization': f'Token {token}'}
+    tokenPme = queryForToken("pme", "pwd")
+    headersPme = {'Authorization': f'Token {tokenPme}'}
     if query == "getUserData":
-      # token = queryForToken("st", "pwd")
-      # headers = {'Authorization': f'Token {token}'}
-      # print("user = st")
       response = requests.get(url, headers=headers, params={"action":"getUserData"})
     elif query == "postModifyPwd":
       post = {"action":"modifyPwd", "oldPwd":"pwd", "newPwd":"pwd"}
@@ -173,7 +172,7 @@ def executeQuery():
           token = queryForToken("pme", "pwd")
           if id in emailListPME:
             token = queryForToken(mail, "pwd")
-          elif random.random() < 0.3:
+          elif random.random() < 0.6:
             flagMission = True
           headersNew = {'Authorization': f'Token {token}'}
           street = ''.join(random.choice(string.ascii_letters) for x in range(8))
@@ -222,16 +221,14 @@ def executeQuery():
               requests.get(url, headers=headers, params={'action':"setFavorite", "value":"true", "Post":id})
               requests.get(url, headers=headersNew, params={'action':"setFavorite", "value":"true", "Post":id})
     elif query == "removeFavorite":
-      response = requests.get(url, headers=headers, params={'action':"removeFavorite", "value":"false", "Post":3})
-    # elif query == "deletePost":
-    #   print("deletePost")
-    #   post = {'action':"uploadPost", "address":"129 rue de Paris 92100 Boulogne", "Job":9, "numberOfPeople":3, "dueDate":"2022-02-15", "startDate":"2022-02-16", "endDate":"2022-02-28", "manPower":True, "counterOffer":True, "hourlyStart":"7:30", "hourlyEnd":"17:30", "currency":"€", "description":"Première description d'un chantier", "amount":65243.10, "DetailedPost":["lavabo", "baignoire"]}
-    #   response = requests.post(url, headers=headers, json=post)
-    #   id = None
-    #   for key, value in json.loads(response.text).items():
-    #     if key != "action":
-    #       id = key
-    #     response = requests.get(url, headers=headers, params={"action":"deletePost", "id":id})
+      response = requests.get(url, headers=headers, params={'action':"setFavorite", "value":"false", "Post":3})
+    elif query == "deletePost":
+      print("deletePost")
+      post = {'action':"uploadPost", "address":"129 rue de Paris 92100 Boulogne", "Job":9, "numberOfPeople":3, "dueDate":"2022-02-15", "startDate":"2022-02-16", "endDate":"2022-02-28", "manPower":True, "counterOffer":True, "hourlyStart":"7:30", "hourlyEnd":"17:30", "currency":"€", "description":"Première description d'un chantier", "amount":65243.10, "DetailedPost":["lavabo", "baignoire"]}
+      response = requests.post(url, headers=headers, json=post)
+      for key in json.loads(response.text).keys():
+        if key != "uploadPost":
+          response = requests.get(url, headers=headers, params={"action":"deletePost", "id":key})
     elif query == "modifyDisponibility":
       post = {'action':"modifyDisponibility", "disponibility":[["2022-02-13", "Disponible"], ["2022-02-14", "Disponible Sous Conditions"], ["2022-02-15", "Non Disponible"]]}
       response = requests.post(url, headers=headers, json=post)
@@ -248,80 +245,84 @@ def executeQuery():
       response = None
     elif query == "deleteFile":
       response = requests.get(url, headers=headers, params={"action":"deleteFile", "id":3})
-    elif query == "applyPost":
-      requests.get(url, headers=headers, params={'action':"applyPost", "Post":2, "amount":800, "devis":"Par Jour"})
-      requests.get(url, headers=headers, params={'action':"applyPost", "Post":3, "amount":1000, "devis":"Par Jour"})
-      requests.get(url, headers=headers, params={'action':"applyPost", "Post":4, "amount":1200, "devis":"Par Jour"})
-      requests.get(url, headers=headers, params={'action':"applyPost", "Post":5})
-      tokenSt2 = queryForToken("st2", "pwd")
-      headers = {'Authorization': f'Token {tokenSt2}'}
-      response = requests.get(url, headers=headers, params={'action':"applyPost", "Post":2, "amount":1500, "devis":"Par Jour"})
-      if numberCompanies:
-        headers = {'Authorization': f'Token {token}'}
-        for id, values in missionList.items():
-          requests.get(url, headers=headers, params={'action':"applyPost", "Post":id, "amount":values["amount"] / 2, "devis":"Par Jour"})
+
+    elif query == "switchDraft":
+      requests.get(url, headers=headers, params={"action":"switchDraft", "id":2})
+      requests.get(url, headers=headers, params={"action":"switchDraft", "id":6})
+      requests.get(url, headers=headers, params={"action":"switchDraft", "id":4})
+      requests.get(url, headers=headers, params={"action":"switchDraft", "id":5})
+      response = requests.get(url, headers=headers, params={"action":"switchDraft", "id":3})
+
+    elif query == "duplicatePost":
+      response = requests.get(url, headers=headers, params={"action":"duplicatePost", "id":2})
+
+    elif query == "getPost":
+      response = requests.get(url, headers=headers, params={"action":"getPost"})
+
     elif query == "isViewed":
       response = requests.get(url, headers=headers, params={'action':"isViewed", "Post":4})
       for id in missionList.keys():
         response = requests.get(url, headers=headers, params={'action':"isViewed", "Post":id})
+
+
+    elif query == "applyPost":
+      requests.get(url, headers=headers, params={'action':"applyPost", "Post":2, "amount":800, "devis":"Par Jour"})
+      requests.get(url, headers=headers, params={'action':"applyPost", "Post":3, "amount":1000, "devis":"Par Jour"})
+      requests.get(url, headers=headers, params={'action':"applyPost", "Post":4})
+      requests.get(url, headers=headers, params={'action':"applyPost", "Post":5})
+      tokenSt2 = queryForToken("st2", "pwd")
+      headers = {'Authorization': f'Token {tokenSt2}'}
+      response = requests.get(url, headers=headers, params={'action':"applyPost", "Post":6, "amount":1500, "devis":"Par Jour"})
+      if numberCompanies:
+        
+        headers = {'Authorization': f'Token {token}'}
+        for id, values in missionList.items():
+          requests.get(url, headers=headers, params={'action':"applyPost", "Post":id, "amount":values["amount"] / 2, "devis":"Par Jour"})
+          values["candidateId"] = 3
+          
     elif query == "handleCandidateForPost":
       requests.get(url, headers=headers, params={'action':"handleCandidateForPost", "Candidate":2, "response":"true"})
-      requests.get(url, headers=headers, params={'action':"handleCandidateForPost", "Candidate":5, "response":"false"})
-      response = requests.get(url, headers=headers, params={'action':"handleCandidateForPost", "Candidate":3, "response":"true"})
+      requests.get(url, headers=headers, params={'action':"handleCandidateForPost", "Candidate":3, "response":"true"})
+      requests.get(url, headers=headers, params={'action':"handleCandidateForPost", "Candidate":4, "response":"false"})
+      requests.get(url, headers=headers, params={'action':"handleCandidateForPost", "Candidate":5, "response":"true"})
+      response = requests.get(url, headers=headers, params={'action':"handleCandidateForPost", "Candidate":1, "response":"true"})
       if numberCompanies:
         for id, values in missionList.items():
           if random.random() > 0.7:
-            requests.get(url, headers=headers, params={'action':"handleCandidateForPost", "Candidate":id + 1, "response":"true"})
+            print("handleCandidateForPost", id)
+            requests.get(url, headers=headers, params={'action':"handleCandidateForPost", "Candidate":values["candidateId"], "response":"true"})
             values["mission"] = True
+
     elif query == "signContract":
       requests.get(url, headers=headers, params={"action":"signContract", "missionId":4, "view":"ST"})
-      tokenPme = queryForToken("pme", "pwd")
       if numberCompanies:
         for id, values in missionList.items():
           if "mission" in values:
             requests.get(url, headers=headers, params={"action":"signContract", "missionId":id, "view":"ST"})
-      headersPme = {'Authorization': f'Token {tokenPme}'}
       response = requests.get(url, headers=headersPme, params={"action":"signContract", "missionId":4, "view":"PME"})
       if numberCompanies:
         for id, values in missionList.items():
           if "mission" in values:
             requests.get(url, headers=headers, params={"action":"signContract", "missionId":id, "view":"PME"})
-    # elif query == "createSupervision":
-      # post1 = {'action':"createSupervision", "detailedPostId":31, "comment":"J'ai fini."}
-      # post2 = {'action':"createSupervision", "detailedPostId":29, "comment":"OK pour les tâches du jour."}
-      # post3 = {'action':"createSupervision", "detailedPostId":10, "comment":"Pas de souci aujourd'hui."}
-      # post4 = {'action':"createSupervision", "detailedPostId":9, "comment":"Le chantier est terminé."}
-      # post5 = {'action':"createSupervision", "datePostId":7, "comment":"Voila une tâche difficile."}
-      # for post in [post1, post2, post5]:
-      #   response = requests.post(url, headers=headers, json=post)
-      # tokenPme = queryForToken("pme", "pwd")
-      # headersPme = {'Authorization': f'Token {tokenPme}'}
-      # post1 = {'action':"createSupervision", "detailedPostId":31, "comment":"Les tâches du jour sont bien faites."}
-      # post2 = {'action':"createSupervision", "detailedPostId":29, "comment":"Tout est parfait, merci."}
-      # post3 = {'action':"createSupervision", "detailedPostId":10, "comment":"Attention aux finitions."}
-      # post4 = {'action':"createSupervision", "detailedPostId":9, "comment":"Le travail est fini, Youpi."}
-      # post5 = {'action':"createSupervision", "datePostId":7, "comment":"Attention au travail de ce jour."}
-      # for post in [post1, post2, post5]:
-      #   response = requests.post(url, headers=headersPme, json=post)
-    # elif query == "uploadImageSupervision":
-      # post = {'action':"uploadImageSupervision", "supervisionId":7, "ext":"png", "imageBase64":getDocStr(7)}
-      # response = requests.post(url, headers=headers, json=post)
-    elif query == "switchDraft":
-      requests.get(url, headers=headers, params={"action":"switchDraft", "id":2})
-      response = requests.get(url, headers=headers, params={"action":"switchDraft", "id":3})
-      requests.get(url, headers=headers, params={"action":"switchDraft", "id":6})
-      requests.get(url, headers=headers, params={"action":"switchDraft", "id":4})
-      requests.get(url, headers=headers, params={"action":"switchDraft", "id":5})
-    elif query == "duplicatePost":
-      response = requests.get(url, headers=headers, params={"action":"duplicatePost", "id":1})
-    elif query == "getPost":
-      response = requests.get(url, headers=headers, params={"action":"getPost"})
-    elif query == "buildDB":
-      url = f'{address}/createBase/'
-      response = requests.get(url, headers=headers, params={"action":"reload"})
-    elif query == "emptyDB":
-      url = f'{address}/createBase/'
-      response = requests.get(url, headers=headers, params={"action":"emptyDB"})
+            requests.get(url, headers=headersPme, params={"action":"signContract", "missionId":id, "view":"PME"})
+    elif query == "createSupervision":
+      post1 = {'action':"createSupervision", "detailedPostId":3, "comment":"J'ai fini."}
+      post2 = {'action':"createSupervision", "detailedPostId":4, "comment":"OK pour les tâches du jour."}
+      post3 = {'action':"createSupervision", "detailedPostId":5, "comment":"Pas de souci aujourd'hui."}
+      post4 = {'action':"createSupervision", "detailedPostId":6, "comment":"Le chantier est terminé."}
+      post5 = {'action':"createSupervision", "datePostId":7, "comment":"Voila une tâche difficile."}
+      for post in [post1, post2, post3, post4, post5]:
+        requests.post(url, headers=headers, json=post)
+      post1 = {'action':"createSupervision", "detailedPostId":3, "comment":"Les tâches du jour sont bien faites."}
+      post2 = {'action':"createSupervision", "detailedPostId":4, "comment":"Tout est parfait, merci."}
+      post3 = {'action':"createSupervision", "detailedPostId":5, "comment":"Attention aux finitions."}
+      post4 = {'action':"createSupervision", "detailedPostId":6, "comment":"Le travail est fini, Youpi."}
+      post5 = {'action':"createSupervision", "datePostId":7, "comment":"Attention au travail de ce jour."}
+      for post in [post1, post2, post3, post4, post5]:
+        response = requests.post(url, headers=headersPme, json=post)
+    elif query == "uploadImageSupervision":
+      post = {'action':"uploadImageSupervision", "supervisionId":7, "ext":"png", "imageBase64":getDocStr(7)}
+      response = requests.post(url, headers=headers, json=post)
     elif query == "createDetailedPost":
       post = {"action":"createDetailedPost", "postId":1, "content":"Réparer le lavabo une nouvelle fois", "dateId":21}
       response = requests.post(url, headers=headers, json=post)
@@ -329,11 +330,11 @@ def executeQuery():
       post1 = {"action":"modifyDetailedPost", "detailedPost":{"id":9, "content":"Nettoyer le chantier", "validated":True}, "unset":False, "datePostId":11}
       post2 = {"action":"modifyDetailedPost", "detailedPost":{"id":5, "refused":True}, "unset":False, "datePostId":7}
       post3 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "refused":True}, "unset":False, "datePostId":7}
-      # post4 = {"action":"modifyDetailedPost", "detailedPost":{"id":10, "dateId":10, "validated":True}, "unset":False}
-      # post5 = {"action":"modifyDetailedPost", "detailedPost":{"id":5, "dateId":5, "validated":False}, "unset":False}
+      post4 = {"action":"modifyDetailedPost", "detailedPost":{"id":11, "dateId":14, "validated":True}, "unset":False}
+      post5 = {"action":"modifyDetailedPost", "detailedPost":{"id":12, "dateId":14, "validated":False}, "unset":False}
       # post6 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "dateId":6, "validated":False}, "unset":False}
-      # post6 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "dateId":6, "validated":False}, "unset":True}
-      # post6 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "dateId":6, "validated":False}, "unset":False}
+      # post7 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "dateId":6, "validated":False}, "unset":True}
+      # post8 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "dateId":6, "validated":False}, "unset":False}
       for post in [post1, post2, post3]: #[post4, post5, post6]:
         response = requests.post(url, headers=headers, json=post)
     elif query == "deleteDetailedPost":
@@ -387,7 +388,7 @@ def executeQuery():
   else:
     print("no answer")
 if query == "all":
-  keys = ["buildDB", "register", "registerConfirm", "registerMany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "modifyPost", "getPost", "setFavorite", "uploadFile", "downloadFile", "applyPost", "switchDraft", "handleCandidateForPost", "signContract", "modifyDetailedPost", "createSupervision", "modifyMissionDate", "validateMissionDate", "uploadImageSupervision", "isViewed", "closeMission", "closeMissionST", "boostPost", "blockCompany", "giveRecommandation"]
+  keys = ["buildDB", "register", "registerConfirm", "registerMany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "deletePost", "modifyPost", "getPost", "setFavorite", "removeFavorite", "uploadFile", "downloadFile", "switchDraft", "uploadFile", "downloadFile", "applyPost", "isViewed", "handleCandidateForPost", "signContract", "createSupervision", "uploadImageSupervision"]#, "modifyDetailedPost", "modifyMissionDate", "validateMissionDate", "closeMission", "closeMissionST", "boostPost", "blockCompany", "giveRecommandation"]
   for key in keys:
     query = key
     executeQuery()

@@ -626,10 +626,8 @@ class DatePost(CommonModel):
     RamData.ramStructure["Mission"]["DatePost"] = deepcopy(RamData.allMission)
     for datePost in DatePost.objects.all():
       if datePost.Post:
-        print("line 629", RamData.ramStructure["Post"])
         RamData.ramStructure["Post"]["DatePost"][datePost.Post.id].append(datePost.id)
       elif datePost.Mission:
-        print("line 631", RamData.ramStructure["Mission"])
         RamData.ramStructure["Mission"]["DatePost"][datePost.Mission.id].append(datePost.id)
       elif datePost.DetailedPost:
         RamData.ramStructure["DetailedPost"]["DatePost"][datePost.DetailedPost.id].append(datePost.id)
@@ -883,6 +881,7 @@ class File(CommonModel):
       if file.Post:
         RamData.ramStructure["Post"]["File"][file.Post.id].append(file.id)
       if file.Mission:
+        print(file.Mission, RamData.ramStructure["Mission"]["File"])
         RamData.ramStructure["Mission"]["File"][file.Mission.id].append(file.id)
 
 
