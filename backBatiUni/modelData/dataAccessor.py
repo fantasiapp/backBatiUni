@@ -524,7 +524,7 @@ class DataAccessor():
       mission = candidate.Mission
       for model in [DetailedPost, File, Notification]:
         for modelObject in model.objects.all():
-          print("handleCandidateForPost",  modelObject.Post, postId)
+          print("handleCandidateForPost",  model, modelObject.Post, postId)
           if modelObject.Post and modelObject.Post.id == postId:
             modelObject.Post = None
             modelObject.Mission = mission
@@ -584,6 +584,7 @@ class DataAccessor():
 
   @classmethod
   def signContract(cls, missionId, view, currentUser):
+    print("signContract", missionId)
     mission = Mission.objects.get(id=missionId)
     contractImage = File.objects.get(id=mission.contract)
     if view == "PME":

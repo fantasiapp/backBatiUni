@@ -49,16 +49,27 @@ def getDocStr(index = 0):
 def executeQuery():
   print()
   print("query", query)
-  now, data, response, url , headers = datetime.now().strftime("%Y-%m-%d"), None, None, f'{address}/initialize/', {"content-type":"Application/Json"}
-  if query == "register":
-    headers = {}
+  now, data, response, url , headersStart = datetime.now().strftime("%Y-%m-%d"), None, None, f'{address}/initialize/', {"content-type":"Application/Json"}
+  if query in ["emptyDB", "buildDB"]:
+      token = queryForToken("jlw", "pwd")
+      print("user jlw")
+      response = requests.get(f'{address}/createBase/', headers= {'Authorization': f'Token {token}'}, params={"action":"reload"})
+      print(response)
+  elif query == "register":
     post1 = {"firstname":"Augustin","lastname":"Alleaume","email":"aa","password":"pwd","company":{'id': 2, 'name': 'BATIUNI', 'address': '9 rue Vintimille Paris 75009', 'activity': 'Activité inconnue', 'siret': '40422352100018', 'ntva': 'FR49404223521'},"Role":3,"proposer":"","jobs":[1,2,80]}
     post2 = {"firstname":"Théophile","lastname":"Traitant","email":"st","password":"pwd","company":{'id': 3, 'name': 'Sous-traitant', 'address': '74 ave des Sous-traitants Paris 75008', 'activity': 'Activité inconnue', 'siret': '40422352100021', 'ntva': 'FR49404223522'},"Role":2,"proposer":"","jobs":[1,2,80]}
     post3 = {"firstname":"Eric","lastname":"Entreprise","email":"pme","password":"pwd","company":{'id': 4, 'name': 'PME', 'address': '74 ave des PME Paris 75008', 'activity': 'Activité inconnue', "amount":52, 'siret': '40422352100019', 'ntva': 'FR49404223523'},"Role":1,"proposer":"","jobs":[1,2,9]}
     post4 = {"firstname":"a","lastname":"a","email":"both","password":"pwd","company":{'id': 5, 'name': 'both', 'address': '74 ave des deux Paris 75008', 'activity': 'Activité inconnue', 'siret': '40422352100020', 'ntva': 'FR4940422352'},"Role":3,"proposer":"","jobs":[1,2,80]}
     post5 = {"firstname":"Tanguy","lastname":"Traitant","email":"st2","password":"pwd","company":{'id': 6, 'name': 'Sous-traitant 2', 'address': '78 rue des Sous-traitants Paris 75008', 'activity': 'Activité inconnue', 'siret': '40422352100048', 'ntva': 'FR49404223553'},"Role":2,"proposer":"","jobs":[1,2,80]}
     for post in [post1, post2, post3, post4, post5]:
-      response = requests.post(url, headers=headers, json=post)
+      response = requests.post(url, headers=headersStart, json=post)
+
+  elif query == "registerConfirm":
+    requests.get(f'{address}/initialize/', headers=headersStart, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
+    requests.get(f'{address}/initialize/', headers=headersStart, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
+    requests.get(f'{address}/initialize/', headers=headersStart, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
+    requests.get(f'{address}/initialize/', headers=headersStart, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
+    response = requests.get(f'{address}/initialize/', headers=headersStart, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
 
 
   elif query == "registerMany" and numberCompanies:
@@ -112,21 +123,13 @@ def executeQuery():
       post = {"action":"modifyDisponibility", "disponibility":dispoNature}
       response = requests.post(f'{address}/data/', headers=headers, json=post)
 
-  elif query == "registerConfirm":
-    requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
-    requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
-    requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
-    requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
-    response = requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
   elif query == "getGeneralData":
-    response = requests.get(url, headers=headers, params={"action":"getGeneralData"})
+    response = requests.get(url, headers=headersStart, params={"action":"getGeneralData"})
   elif query == "forgetPassword":
-    response = requests.get(url, headers=headers, params={"action":"forgetPassword", "email":"walter.jeanluc@gmail.com"})
+    response = requests.get(url, headers=headersStart, params={"action":"forgetPassword", "email":"walter.jeanluc@gmail.com"})
   else:
-    if query in ["emptyDB", "buildDB"]:
-      token = queryForToken("jlw", "pwd")
-      print("user jlw")
-    elif query in ["uploadPost", "deletePost", "modifyPost", "getPost", "switchDraft", "handleCandidateForPost", "modifyMissionDate", "getUserData", "closeMission", "notificationViewed", "boostDuration", "isViewed", "blockCompany"]:
+    
+    if query in ["uploadPost", "deletePost", "modifyPost", "getPost", "switchDraft", "handleCandidateForPost", "modifyMissionDate", "getUserData", "closeMission", "notificationViewed", "boostDuration", "isViewed", "blockCompany"]:
       print("user pme")
       token = queryForToken("pme", "pwd")
     else:
