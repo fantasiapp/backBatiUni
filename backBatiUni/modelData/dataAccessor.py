@@ -524,7 +524,7 @@ class DataAccessor():
       mission = candidate.Mission
       for model in [DetailedPost, File, Notification]:
         for modelObject in model.objects.all():
-          print("handleCandidateForPost",  model, modelObject.Post, postId)
+          # print("handleCandidateForPost",  model, modelObject.Post, postId)
           if modelObject.Post and modelObject.Post.id == postId:
             modelObject.Post = None
             modelObject.Mission = mission

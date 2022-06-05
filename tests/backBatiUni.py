@@ -16,7 +16,7 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 20
+numberCompanies = 50
 emailList, missionList, emailListPME, emailListST = {}, {}, [], []
 
 arguments = sys.argv
@@ -37,7 +37,6 @@ def queryForToken(userName, password):
   data = json.dumps({"username": userName, "password": password})
   response = requests.post(tokenUrl, headers=headers, data=data)
   dictResponse = json.loads(response.text)
-  # print("queryForToken", userName, password, dictresponse)
   return dictResponse['token']
 
 def getDocStr(index = 0):
@@ -54,7 +53,6 @@ def executeQuery():
       token = queryForToken("jlw", "pwd")
       print("user jlw")
       response = requests.get(f'{address}/createBase/', headers= {'Authorization': f'Token {token}'}, params={"action":"reload"})
-      print(response)
   elif query == "register":
     post1 = {"firstname":"Augustin","lastname":"Alleaume","email":"aa","password":"pwd","company":{'id': 2, 'name': 'BATIUNI', 'address': '9 rue Vintimille Paris 75009', 'activity': 'Activité inconnue', 'siret': '40422352100018', 'ntva': 'FR49404223521'},"Role":3,"proposer":"","jobs":[1,2,80]}
     post2 = {"firstname":"Théophile","lastname":"Traitant","email":"st","password":"pwd","company":{'id': 3, 'name': 'Sous-traitant', 'address': '74 ave des Sous-traitants Paris 75008', 'activity': 'Activité inconnue', 'siret': '40422352100021', 'ntva': 'FR49404223522'},"Role":2,"proposer":"","jobs":[1,2,80]}
@@ -104,7 +102,6 @@ def executeQuery():
       requests.get(f'{address}/initialize/', headers=headers, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
 
     for companyId, mail in emailList.items():
-      # print("emailList", i)
       token = queryForToken(mail, "pwd")
       headers = {'Authorization': f'Token {token}'}
       capital = str(math.floor(10000 + random.random() * 100000))
@@ -301,6 +298,7 @@ def executeQuery():
       if numberCompanies:
         for id, values in missionList.items():
           if "mission" in values:
+            print("mission values", values)
             requests.get(url, headers=headers, params={"action":"signContract", "missionId":id, "view":"ST"})
       response = requests.get(url, headers=headersPme, params={"action":"signContract", "missionId":4, "view":"PME"})
       if numberCompanies:
@@ -391,7 +389,7 @@ def executeQuery():
   else:
     print("no answer")
 if query == "all":
-  keys = ["buildDB", "register", "registerConfirm", "registerMany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "deletePost", "modifyPost", "getPost", "setFavorite", "removeFavorite", "uploadFile", "downloadFile", "switchDraft", "uploadFile", "downloadFile", "applyPost", "isViewed", "handleCandidateForPost", "signContract", "createSupervision", "uploadImageSupervision"]#, "modifyDetailedPost", "modifyMissionDate", "validateMissionDate", "closeMission", "closeMissionST", "boostPost", "blockCompany", "giveRecommandation"]
+  keys = ["buildDB", "register", "registerConfirm", "registerMany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "deletePost", "modifyPost", "getPost", "setFavorite", "removeFavorite", "uploadFile", "downloadFile", "switchDraft", "uploadFile", "downloadFile", "applyPost", "isViewed", "handleCandidateForPost"]#, "signContract", "createSupervision", "uploadImageSupervision", "modifyDetailedPost", "modifyMissionDate", "validateMissionDate", "closeMission", "closeMissionST", "boostPost", "blockCompany", "giveRecommandation"]
   for key in keys:
     query = key
     executeQuery()
