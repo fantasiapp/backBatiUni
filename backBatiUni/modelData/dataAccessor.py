@@ -1023,12 +1023,14 @@ class DataAccessor():
     if company.Role.id == 1:
       return {"modifyDisponibility":"Error", "messages":f"User company is not sub contractor {company.name}"}
     Disponibility.objects.filter(Company=company).delete()
+    print("")
     print("modifyDisponibility", listValue)
     for date, nature in listValue:
       print("modifyDisponibility", date, nature)
       if not nature in ["Disponible", "Disponible Sous Conditions"]:
         messages[date] = f"nature incorrect: {nature} replaced by Disponible"
         nature = "Disponible"
+        print("modifyDisponibility value",  Disponibility.objects.filter(Company=company, date=datetime.strptime(date, "%Y-%m-%d")))
         if date and not Disponibility.objects.filter(Company=company, date=datetime.strptime(date, "%Y-%m-%d")):
           Disponibility.objects.create(Company=company, date=datetime.strptime(date, "%Y-%m-%d"), nature=nature)
     answer = {"modifyDisponibility":"OK"}
