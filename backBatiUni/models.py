@@ -244,7 +244,7 @@ class Company(CommonModel):
     return values
 
 class Disponibility(CommonModel):
-  Company = models.ForeignKey(Company, on_delete=models.PROTECT, blank=False, null=False)
+  Company = models.ForeignKey(Company, related_name='CompanyDisponible', on_delete=models.PROTECT, blank=False, null=True, default=None)
   date = models.DateField(verbose_name="Date de disponibilité", null=True, default=None)
   nature = models.CharField('Disponibilité', unique=False, max_length=32, null=True, default="Disponible")
 
@@ -272,7 +272,7 @@ class Disponibility(CommonModel):
 class JobForCompany(CommonModel):
   Job = models.ForeignKey(Job, on_delete=models.PROTECT, blank=False, null=False)
   number = models.IntegerField("Nombre de profils ayant ce metier", null=False, default=1)
-  Company = models.ForeignKey(Company, on_delete=models.PROTECT, blank=False, null=False)
+  Company = models.ForeignKey(Company, related_name='CompanyJob', on_delete=models.PROTECT, blank=False, null=False)
 
   @classmethod
   def generateRamStructure(cls):
@@ -298,7 +298,7 @@ class JobForCompany(CommonModel):
 class LabelForCompany(CommonModel):
   Label = models.ForeignKey(Label, on_delete=models.PROTECT, blank=False, null=False)
   date = models.DateField(verbose_name="Date de péremption", null=True, default=None)
-  Company = models.ForeignKey(Company, on_delete=models.PROTECT, blank=False, null=False)
+  Company = models.ForeignKey(Company, related_name='CompanyLabel', on_delete=models.PROTECT, blank=False, null=False)
 
   class Meta:
     unique_together = ('Label', 'Company')
@@ -329,7 +329,7 @@ class LabelForCompany(CommonModel):
 
 class UserProfile(CommonModel):
   userNameInternal = models.ForeignKey(User, on_delete=models.PROTECT, null=True, default=None)
-  Company = models.ForeignKey(Company, on_delete=models.PROTECT, blank=False, null=False)
+  Company = models.ForeignKey(Company, related_name='CompanyProfile', on_delete=models.PROTECT, blank=False, null=False)
   firstName = models.CharField("Prénom", max_length=128, blank=False, default="Inconnu")
   lastName = models.CharField("Nom de famille", max_length=128, blank=False, default="Inconnu")
   proposer = models.IntegerField(blank=False, null=True, default=None)
@@ -418,7 +418,7 @@ class ViewPost(CommonModel):
     return [favorite for favorite in cls.objects.filter(UserProfile=userProfile)]
 
 class Post(CommonModel):
-  Company = models.ForeignKey(Company, related_name='Company', verbose_name='Société demandeuse', on_delete=models.PROTECT, null=True, default=None) 
+  Company = models.ForeignKey(Company, related_name='CompanyOfPost', verbose_name='Société demandeuse', on_delete=models.PROTECT, null=True, default=None) 
   Job = models.ForeignKey(Job, verbose_name='Métier', on_delete=models.PROTECT, blank=False, default=None) 
   numberOfPeople = models.IntegerField("Nombre de personne(s) demandées", blank=False, null=False, default=1)
   address = models.CharField("Adresse du chantier", max_length=1024, null=True, default=None)
