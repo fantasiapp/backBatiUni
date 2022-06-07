@@ -1029,8 +1029,8 @@ class DataAccessor():
       if not nature in ["Disponible", "Disponible Sous Conditions"]:
         messages[date] = f"nature incorrect: {nature} replaced by Disponible"
         nature = "Disponible"
-      test = Disponibility.objects.create(Company=company, date=datetime.strptime(date, "%Y-%m-%d"), nature=nature)
-      print(date, test.date)
+        if date and not Disponibility.objects.filter(Company=company, date=datetime.strptime(date, "%Y-%m-%d"):
+          Disponibility.objects.create(Company=company, date=datetime.strptime(date, "%Y-%m-%d"), nature=nature)
     answer = {"modifyDisponibility":"OK"}
     answer.update({disponibility.id:[disponibility.date.strftime("%Y-%m-%d"), disponibility.nature] for disponibility in Disponibility.objects.filter(Company=company)})
     if messages:

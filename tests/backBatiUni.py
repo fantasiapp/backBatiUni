@@ -16,7 +16,7 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 30
+numberCompanies = 10
 emailList, missionList, emailListPME, emailListST = {}, {}, [], []
 
 arguments = sys.argv
@@ -116,7 +116,7 @@ def executeQuery():
       token = queryForToken(emailList[i], "pwd")
       headers = {'Authorization': f'Token {token}'}
       disponibilities = [now, (datetime.now() + timedelta(days=1, hours=0)).strftime("%Y-%m-%d"), (datetime.now() + timedelta(days=2, hours=0)).strftime("%Y-%m-%d"), (datetime.now() + timedelta(days=3, hours=0)).strftime("%Y-%m-%d")]
-      dispoNature = [(dispo, "Disponible" if random.random() > 0.6 else "Disponible Sous Conditions") for dispo in disponibilities]
+      dispoNature = [(dispo, "Disponible" if random.random() > 0.33 else "Disponible Sous Conditions") for dispo in disponibilities]
       post = {"action":"modifyDisponibility", "disponibility":dispoNature}
       response = requests.post(f'{address}/data/', headers=headers, json=post)
 
