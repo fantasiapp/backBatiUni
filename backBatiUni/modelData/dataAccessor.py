@@ -194,7 +194,6 @@ class DataAccessor():
     cls.__getGeoCoordinates(objectPost)
     if listObject:
       for subObject in listObject:
-        print("listObject", subObject, objectPost.id)
         subObject.Post = objectPost
         subObject.save()
     return {"uploadPost":"OK", objectPost.id:objectPost.computeValues(objectPost.listFields(), currentUser, True)}
@@ -1118,7 +1117,7 @@ class DataAccessor():
     print("giveRecommandation", data)
     company = Company.objects.get(id=data["companyRecommanded"])
     if Recommandation.objects.filter(companyRecommanded=company, companyNameRecommanding=data['companyNameRecommanding']):
-      return {"newPassword":"Warning", "messages":"La recommandation existe déjà"}
+      return {"giveRecommandation":"Warning", "messages":"La recommandation existe déjà"}
     kwargs = {"date":timezone.now()}
     for key, value in data.items():
       if key == "companyRecommanded":
