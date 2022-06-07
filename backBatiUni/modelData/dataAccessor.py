@@ -361,7 +361,10 @@ class DataAccessor():
       """Une fois que le datePost existe surement, on peut mettre à jour"""
       for field in ["content", "validated", "refused"]:
         if field in data:
-          setattr(detailedPost, field, data[field])
+          print("field", field)
+          if not field in ["id, dateId"]:
+            print("field", field, detailedPost.id, data[field])
+            setattr(detailedPost, field, data[field])
       detailedPost.save()
       return cls.__detailedPostComputeAnswer(detailedPost, currentUser)
     else:

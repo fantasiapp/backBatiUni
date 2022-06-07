@@ -328,12 +328,13 @@ def executeQuery():
       post = {"action":"createDetailedPost", "postId":1, "content":"Réparer le lavabo une nouvelle fois", "dateId":21}
       response = requests.post(url, headers=headers, json=post)
     elif query == "modifyDetailedPost":
-      post1 = {"action":"modifyDetailedPost", "detailedPost":{"id":9, "content":"Nettoyer le chantier", "validated":True}, "unset":False, "datePostId":11}
-      post2 = {"action":"modifyDetailedPost", "detailedPost":{"id":5, "refused":True}, "unset":False, "datePostId":7}
-      post3 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "refused":True}, "unset":False, "datePostId":7}
+      # post1 = {"action":"modifyDetailedPost", "detailedPost":{"id":9, "content":"Nettoyer le chantier", "validated":True}, "unset":False, "datePostId":11}
+      # post2 = {"action":"modifyDetailedPost", "detailedPost":{"id":5, "refused":True}, "unset":False, "datePostId":7}
+      # post3 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "refused":True}, "unset":False, "datePostId":7}
       post4 = {"action":"modifyDetailedPost", "detailedPost":{"id":15, "dateId":17, "validated":True}, "unset":False}
       post5 = {"action":"modifyDetailedPost", "detailedPost":{"id":16, "dateId":18, "validated":False}, "unset":False}
-      for post in [post1, post2, post3, post4, post5]:
+      # for post in [post1, post2, post3, post4, post5]:
+      for post in [post4, post5]:
         response = requests.post(url, headers=headers, json=post)
 
     elif query == "deleteDetailedPost":
@@ -385,7 +386,7 @@ def executeQuery():
   else:
     print("no answer")
 if query == "all":
-  keys = ["buildDB", "register", "registerConfirm", "registerMany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "deletePost", "modifyPost", "getPost", "setFavorite", "removeFavorite", "uploadFile", "downloadFile", "switchDraft", "isViewed", "applyPost", "handleCandidateForPost", "signContract", "modifyMissionDate", "validateMissionDate", "createSupervision", "uploadImageSupervision", "modifyDetailedPost", "closeMission", "closeMissionST", "boostPost", "blockCompany", "giveRecommandation"]#
+  keys = ["buildDB", "register", "registerConfirm", "registerMany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "deletePost", "modifyPost", "getPost", "setFavorite", "removeFavorite", "uploadFile", "downloadFile", "switchDraft", "isViewed", "applyPost", "handleCandidateForPost", "signContract", "modifyMissionDate", "validateMissionDate"]#, "createSupervision", "uploadImageSupervision", "modifyDetailedPost", "closeMission", "closeMissionST", "boostPost", "blockCompany", "giveRecommandation"]#
   for key in keys:
     query = key
     executeQuery()
