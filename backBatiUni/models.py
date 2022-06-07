@@ -255,11 +255,11 @@ class Disponibility(CommonModel):
   @classmethod
   def generateRamStructure(cls):
     RamData.ramStructure["Company"]["Disponibility"] = deepcopy(RamData.allCompany)
-    RamData.ramStructure["Company"]["Notifications"] = deepcopy(RamData.allCompany)
+    RamData.ramStructure["Company"]["Notification"] = deepcopy(RamData.allCompany)
     for disponibility in Disponibility.objects.all():
       RamData.ramStructure["Company"]["Disponibility"][disponibility.Company.id].append(disponibility.id)
     for notification in Notification.objects.all():
-      RamData.ramStructure["Company"]["Disponibility"][notification.Company.id].append(notification.id)
+      RamData.ramStructure["Company"]["Notification"][notification.Company.id].append(notification.id)
 
   @classmethod
   def listFields(cls):
