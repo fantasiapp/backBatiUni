@@ -194,6 +194,7 @@ class DataAccessor():
     cls.__getGeoCoordinates(objectPost)
     if listObject:
       for subObject in listObject:
+        print("listObject", objectPost)
         subObject.Post = objectPost
         subObject.save()
     return {"uploadPost":"OK", objectPost.id:objectPost.computeValues(objectPost.listFields(), currentUser, True)}
