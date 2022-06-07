@@ -260,6 +260,7 @@ class Disponibility(CommonModel):
       RamData.ramStructure["Company"]["Disponibility"][disponibility.Company.id].append(disponibility.id)
     for notification in Notification.objects.all():
       RamData.ramStructure["Company"]["Notification"][notification.Company.id].append(notification.id)
+    print("Disponibility", RamData.ramStructure["Company"]["Disponibility"])
 
   @classmethod
   def listFields(cls):
