@@ -16,7 +16,7 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 20
+numberCompanies = 10
 emailList, missionList, emailListPME, emailListST = {}, {}, [], []
 
 arguments = sys.argv
@@ -385,7 +385,7 @@ def executeQuery():
   else:
     print("no answer")
 if query == "all":
-  keys = ["buildDB", "register", "registerConfirm", "registerMany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "deletePost", "modifyPost", "getPost", "setFavorite", "removeFavorite", "uploadFile", "downloadFile", "switchDraft", "isViewed", "applyPost", "handleCandidateForPost", "signContract", "createSupervision", "uploadImageSupervision", "modifyDetailedPost", "modifyMissionDate", "validateMissionDate", "closeMission", "closeMissionST", "boostPost", "blockCompany", "giveRecommandation"]
+  keys = ["buildDB", "register", "registerConfirm", "registerMany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "deletePost", "modifyPost", "getPost", "setFavorite", "removeFavorite", "uploadFile", "downloadFile", "switchDraft", "isViewed", "applyPost", "handleCandidateForPost", "signContract"]#, "modifyMissionDate", "validateMissionDate", "createSupervision", "uploadImageSupervision", "modifyDetailedPost"]#, "closeMission", "closeMissionST", "boostPost", "blockCompany", "giveRecommandation"]
   for key in keys:
     query = key
     executeQuery()

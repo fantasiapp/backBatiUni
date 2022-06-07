@@ -71,7 +71,7 @@ class Initialize(APIView):
     data = json.loads(jsonString)  
     if "action" in data and data["action"] == "newPassword":  return Response(DataAccessor.newPassword(data))
     elif "action" in data and data["action"] == "giveRecommandation":
-      print("action", )
+      print("action", data)
       return Response(DataAccessor.giveRecommandation(data))
     return Response(DataAccessor().register(data))
 

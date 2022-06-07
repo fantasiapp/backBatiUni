@@ -646,13 +646,13 @@ class DataAccessor():
       if task.date:
         strDate = task.date.strftime("%Y-%m-%d")
         if not strDate in data["calendar"]:
+          date = datetime.strptime(strDate, "%Y-%m-%d")
+          datePost = DatePost.objects.get(Mission=mission, date=date)
           if DetailedPost.objects.filter(DatePost=datePost):
             return {"modifyMissionDate":"Error", "messages":"DatePost contains detailedPost"}
           if Supervision.objects.filter(DatePost=datePost):
             return {"modifyMissionDate":"Error", "messages":"DatePost contains Supervision"}
           Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role="ST", content=f"Votre journée de travail du {strDate} pour le chantier du {mission.address} est proposée à la suppression, à vous de valider la modification.", timestamp=datetime.now().timestamp())
-          date = datetime.strptime(strDate, "%Y-%m-%d")
-          datePost = DatePost.objects.get(Mission=mission, date=date)
           datePost.deleted = True
           datePost.validated = False
           datePost.save()
