@@ -91,9 +91,10 @@ class SmtpConnector:
       print("askRecomandation", params, self.url)
       response = requests.get(url=self.url, headers=self.headers, params=params)
       data = json.loads(response.text)
+      print("askRecomandation", data)
       return data
     except:
-      data = {"inviteFriend":"Error", "messages":"work in progress"}
+      data = {"askRecomandation":"Error", "messages":"Failure in sending query"}
     return data
 
 

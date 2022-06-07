@@ -1105,6 +1105,8 @@ class DataAccessor():
   def askRecommandation(cls, mail, currentUser):
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     response = SmtpConnector(cls.portSmtp).askRecomandation(mail, userProfile.firstName, userProfile.lastName, userProfile.Company.name)
+    print("askRecommandation dataAccessor", response)
+
     if "status" in response and response["status"]:
       return  {"askRecommandation":"OK", "messages": f"Demande de recommandation envoyée"}
     return {"askRecommandation":"Warning", "messages":f"Echec de l'envoi"}
