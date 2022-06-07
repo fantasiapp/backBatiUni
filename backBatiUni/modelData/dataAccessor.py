@@ -353,6 +353,7 @@ class DataAccessor():
     datePost = DatePost.objects.get(id=datePostId) if datePostId else None
     detailedPost = DetailedPost.objects.get(id=data["id"])
     if not unset:
+      print("not unset")
       if not detailedPost.DatePost or datePost.id != detailedPost.DatePost.id:
         detailedPost = DetailedPost.objects.create(
           content=detailedPost.content,
@@ -368,6 +369,7 @@ class DataAccessor():
       detailedPost.save()
       return cls.__detailedPostComputeAnswer(detailedPost, currentUser)
     else:
+    print("unset")
       """retrait d'une detailed post"""
       if detailedPost.Mission:
         return {"modifyDetailedPost":"Warning", "messages":f"Not yet implemented"}
