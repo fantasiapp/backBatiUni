@@ -250,6 +250,7 @@ class Disponibility(CommonModel):
 
   class Meta:
     verbose_name = "Disponibility"
+    unique_together = ('Company', 'date')
 
   @classmethod
   def generateRamStructure(cls):
@@ -700,6 +701,9 @@ class Notification(CommonModel):
     missionId = self.Mission.id if self.Mission else ""
     subContractorId = self.subContractor.id if self.subContractor else ""
     return [postId, missionId, subContractorId, self.Role, self.timestamp, self.content, self.content, self.hasBeenViewed, self.nature]
+
+  def sendPhoneNotification():
+    pass
 
 
 class Candidate(CommonModel):
