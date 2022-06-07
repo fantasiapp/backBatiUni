@@ -2958,7 +2958,116 @@
       "date",
       "nature"
    ],
-   "DisponibilityValues": {},
+   "DisponibilityValues": {
+      "1": [
+         "2022-06-07",
+         "Disponible Sous Conditions"
+      ],
+      "2": [
+         "2022-06-08",
+         "Disponible Sous Conditions"
+      ],
+      "3": [
+         "2022-06-09",
+         "Disponible Sous Conditions"
+      ],
+      "4": [
+         "2022-06-10",
+         "Disponible"
+      ],
+      "5": [
+         "2022-06-07",
+         "Disponible Sous Conditions"
+      ],
+      "6": [
+         "2022-06-08",
+         "Disponible"
+      ],
+      "7": [
+         "2022-06-09",
+         "Disponible"
+      ],
+      "8": [
+         "2022-06-10",
+         "Disponible Sous Conditions"
+      ],
+      "9": [
+         "2022-06-07",
+         "Disponible Sous Conditions"
+      ],
+      "10": [
+         "2022-06-08",
+         "Disponible Sous Conditions"
+      ],
+      "11": [
+         "2022-06-09",
+         "Disponible Sous Conditions"
+      ],
+      "12": [
+         "2022-06-10",
+         "Disponible"
+      ],
+      "13": [
+         "2022-06-07",
+         "Disponible Sous Conditions"
+      ],
+      "14": [
+         "2022-06-08",
+         "Disponible"
+      ],
+      "15": [
+         "2022-06-09",
+         "Disponible"
+      ],
+      "16": [
+         "2022-06-10",
+         "Disponible"
+      ],
+      "17": [
+         "2022-06-07",
+         "Disponible"
+      ],
+      "18": [
+         "2022-06-08",
+         "Disponible Sous Conditions"
+      ],
+      "19": [
+         "2022-06-09",
+         "Disponible"
+      ],
+      "20": [
+         "2022-06-10",
+         "Disponible"
+      ],
+      "21": [
+         "2022-06-07",
+         "Disponible Sous Conditions"
+      ],
+      "22": [
+         "2022-06-08",
+         "Disponible"
+      ],
+      "23": [
+         "2022-06-09",
+         "Disponible Sous Conditions"
+      ],
+      "24": [
+         "2022-06-10",
+         "Disponible"
+      ],
+      "25": [
+         "2022-06-13",
+         "Disponible"
+      ],
+      "26": [
+         "2022-06-14",
+         "Disponible Sous Conditions"
+      ],
+      "27": [
+         "2022-06-15",
+         "Disponible"
+      ]
+   },
    "SupervisionFields": [
       "author",
       "companyId",
@@ -3262,5 +3371,5 @@
          "2022-06-07"
       ]
    },
-   "timestamp": 1654627905.926747
+   "timestamp": 1654627980.285538
 }

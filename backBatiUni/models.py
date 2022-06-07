@@ -260,18 +260,12 @@ class Disponibility(CommonModel):
       RamData.ramStructure["Company"]["Disponibility"][disponibility.Company.id].append(disponibility.id)
     for notification in Notification.objects.all():
       RamData.ramStructure["Company"]["Notification"][notification.Company.id].append(notification.id)
-    print("Disponibility", RamData.ramStructure["Company"]["Disponibility"])
 
   @classmethod
   def listFields(cls):
     superList = super().listFields()
     superList.remove("Company")
     return superList
-
-  # @classmethod
-  # def filter(cls, user):
-  #   userProfile = UserProfile.objects.get(userNameInternal=user)
-  #   return cls.objects.filter(Company=userProfile.Company)
 
   def dump(self): return [self.date.strftime("%Y-%m-%d") if self.date else "", self.nature]
 
@@ -889,10 +883,8 @@ class File(CommonModel):
       if file.Company:
         RamData.ramStructure["Company"]["File"][file.Company.id].append(file.id)
       if file.Post:
-        # print("generateRamStructure File Post", file.Post, RamData.ramStructure["Post"]["File"])
         RamData.ramStructure["Post"]["File"][file.Post.id].append(file.id)
       if file.Mission:
-        # print("generateRamStructure File", file.Mission, RamData.ramStructure["Mission"]["File"])
         RamData.ramStructure["Mission"]["File"][file.Mission.id].append(file.id)
 
 

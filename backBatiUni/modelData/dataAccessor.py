@@ -187,7 +187,7 @@ class DataAccessor():
   @classmethod
   def __uploadPost(cls, dictData, currentUser):
     kwargs, listObject = cls.__createPostKwargs(dictData, currentUser)
-    print("uploadPost", kwargs)
+    # print("uploadPost", kwargs)
     if "uploadPost" in kwargs and kwargs["uploadPost"] == "Error":
       return kwargs
     objectPost = Post.objects.create(**kwargs)
@@ -248,7 +248,6 @@ class DataAccessor():
             else:
               listObject.append(modelObject.objects.create(content=content))
     kwargs["contactName"] = f"{userProfile.firstName} {userProfile.lastName}"
-    print("kwargs", kwargs)
     return kwargs, listObject
 
 
@@ -316,7 +315,6 @@ class DataAccessor():
     candidate.isViewed = True
     candidate.save()
     post = candidate.Post
-    print("candidateViewed", candidateId, post)
     if post:
       return {"candidateViewed":"OK", post.id:post.computeValues(post.listFields(), currentUser, True)}
     else:
@@ -336,7 +334,6 @@ class DataAccessor():
       kwargs["Mission"] = mission
     if "content" in data:
       kwargs["content"] = data["content"]
-    print("kwargs", kwargs)
     detailedPost2 = DetailedPost.objects.create(**kwargs)
     kwargs["DatePost"] = DatePost.objects.get(id=data["dateId"])
     del kwargs["Mission"]
@@ -382,7 +379,6 @@ class DataAccessor():
   @classmethod
   def __detailedPostComputeAnswer(cls, detailedPost, currentUser, functionName="modifyDetailedPost", detailedPost2=None):
     typeDetailedPost = "Post" if detailedPost.Post else "Mission"
-    print("detailedPostComputeAnswer", detailedPost.id, detailedPost.Post, detailedPost.Mission, detailedPost.DatePost)
     if detailedPost.DatePost:
       fatherId = detailedPost.DatePost.id
       typeDetailedPost = "DatePost"
@@ -432,7 +428,6 @@ class DataAccessor():
       kwargs["comment"] = data["comment"]
     if "date" in data and data["date"]:
       kwargs["date"] = datetime.strptime(data["date"], "%Y-%m-%d")
-    print("kwargs", kwargs)
     supervision = Supervision.objects.create(**kwargs)
     if supervision:
       return  cls.__supervisionAnswer(supervision, currentUser)
@@ -497,7 +492,6 @@ class DataAccessor():
     if post:
       post = post[0]
       for candidate in Candidate.objects.filter(Post=post):
-        print("deletePost", candidate.id, candidate.Company)
         Notification.objects.create(nature="PME", Company=candidate.Company, Role="ST", content=f"L'annonce sur le chantier du {candidate.Post.address} de la société { post.Company.name } a été supprimé.", timestamp=datetime.now().timestamp())
         candidate.delete()
       for notification in Notification.objects.filter(Post=post):
@@ -505,7 +499,6 @@ class DataAccessor():
         notification.save()
       for classObject in [DetailedPost, DatePost, DetailedPost, File]:
         for object in classObject.objects.filter(Post=post):
-          print("deletePost", object, object.id)
           object.delete()
       post.delete()
       return {"deletePost":"OK", "id":id}
@@ -527,7 +520,6 @@ class DataAccessor():
       mission = candidate.Mission
       for model in [DetailedPost, File, Notification]:
         for modelObject in model.objects.all():
-          # print("handleCandidateForPost",  model, modelObject.Post, postId)
           if modelObject.Post and modelObject.Post.id == postId:
             modelObject.Post = None
             modelObject.Mission = mission
@@ -714,7 +706,6 @@ class DataAccessor():
       date = datetime.strptime(data["date"], "%Y-%m-%d")
       datePost = DatePost.objects.get(Mission=mission, date=date)
       datePostId = datePost.id
-      print("datePostId", datePostId)
       stillExist = True
       if data["state"]:
         if datePost.deleted:
@@ -880,7 +871,6 @@ class DataAccessor():
     file = None
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path + data['ext']) if data['ext'] != "txt" else fileStr
-      print("isFile", objectFile.path)
       with open(objectFile.path, "wb") as outfile:
           outfile.write(file.file.getbuffer())
       return {"uploadFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)[:-1]}
@@ -945,7 +935,6 @@ class DataAccessor():
       if message:
         return {"modifyUser":"Warning", "messages":message, "valueModified": valueModified}
       company = userProfile.Company
-      print("__updateUserInfo", userProfile.Company.id)
       return {"modifyUser":"OK","UserProfile":{userProfile.id:userProfile.computeValues(userProfile.listFields(), user, True)}, "Company":{company.id:company.computeValues(company.listFields(), user, True)}}
     return {"modifyUser":"Warning", "messages":"Pas de valeur à mettre à jour"}
     
@@ -1019,18 +1008,15 @@ class DataAccessor():
 
   @classmethod
   def __modifyDisponibility(cls, listValue, user):
+    print("modifyDisponibility", listValue)
     company, messages = UserProfile.objects.get(userNameInternal=user).Company, {}
     if company.Role.id == 1:
       return {"modifyDisponibility":"Error", "messages":f"User company is not sub contractor {company.name}"}
     Disponibility.objects.filter(Company=company).delete()
-    print("")
-    print("modifyDisponibility", listValue)
     for date, nature in listValue:
-      print("modifyDisponibility", date, nature)
       if not nature in ["Disponible", "Disponible Sous Conditions"]:
         messages[date] = f"nature incorrect: {nature} replaced by Disponible"
         nature = "Disponible"
-      print("modifyDisponibility value",  Disponibility.objects.filter(Company=company, date=datetime.strptime(date, "%Y-%m-%d")))
       if date and not Disponibility.objects.filter(Company=company, date=datetime.strptime(date, "%Y-%m-%d")):
         Disponibility.objects.create(Company=company, date=datetime.strptime(date, "%Y-%m-%d"), nature=nature)
     answer = {"modifyDisponibility":"OK"}
