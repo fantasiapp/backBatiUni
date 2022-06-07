@@ -1023,6 +1023,7 @@ class DataAccessor():
     if company.Role.id == 1:
       return {"modifyDisponibility":"Error", "messages":f"User company is not sub contractor {company.name}"}
     Disponibility.objects.filter(Company=company).delete()
+    print("modifyDisponibility", listValue)
     for date, nature in listValue:
       print("modifyDisponibility", date, nature)
       if not nature in ["Disponible", "Disponible Sous Conditions"]:
