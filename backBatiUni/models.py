@@ -879,10 +879,10 @@ class File(CommonModel):
       if file.Company:
         RamData.ramStructure["Company"]["File"][file.Company.id].append(file.id)
       if file.Post:
-        print("generateRamStructure File Post", file.Post, RamData.ramStructure["Post"]["File"])
+        # print("generateRamStructure File Post", file.Post, RamData.ramStructure["Post"]["File"])
         RamData.ramStructure["Post"]["File"][file.Post.id].append(file.id)
       if file.Mission:
-        print("generateRamStructure File", file.Mission, RamData.ramStructure["Mission"]["File"])
+        # print("generateRamStructure File", file.Mission, RamData.ramStructure["Mission"]["File"])
         RamData.ramStructure["Mission"]["File"][file.Mission.id].append(file.id)
 
 

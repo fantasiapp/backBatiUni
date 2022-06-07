@@ -382,6 +382,7 @@ class DataAccessor():
   @classmethod
   def __detailedPostComputeAnswer(cls, detailedPost, currentUser, functionName="modifyDetailedPost", detailedPost2=None):
     typeDetailedPost = "Post" if detailedPost.Post else "Mission"
+    print("detailedPostComputeAnswer", detailedPost.Post, detailedPost.Mission, detailedPost.DatePost)
     if detailedPost.DatePost:
       fatherId = detailedPost.DatePost.id
       typeDetailedPost = "DatePost"
@@ -1113,7 +1114,7 @@ class DataAccessor():
       else:
         kwargs[key] = value
     Recommandation.objects.create(**kwargs)
-    return {"newPassword":"OK", "messages":"Recommandation recorded"}
+    return {"giveRecommandation":"OK", "messages":"Recommandation recorded"}
     
 
       

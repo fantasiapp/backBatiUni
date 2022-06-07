@@ -16,7 +16,7 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 50
+numberCompanies = 20
 emailList, missionList, emailListPME, emailListST = {}, {}, [], []
 
 arguments = sys.argv
@@ -217,7 +217,7 @@ def executeQuery():
           if id in emailListST:
             token = queryForToken(mail, "pwd")
             headersNew = {'Authorization': f'Token {token}'}
-            if random.random() > .3:
+            if random.random() > .6:
               requests.get(url, headers=headers, params={'action':"setFavorite", "value":"true", "Post":id})
               requests.get(url, headers=headersNew, params={'action':"setFavorite", "value":"true", "Post":id})
     elif query == "removeFavorite":
@@ -277,8 +277,10 @@ def executeQuery():
         
         headers = {'Authorization': f'Token {token}'}
         for id, values in missionList.items():
-          requests.get(url, headers=headers, params={'action':"applyPost", "Post":id, "amount":values["amount"] / 2, "devis":"Par Jour"})
-          values["candidateId"] = 3
+          data = requests.get(url, headers=headers, params={'action':"applyPost", "Post":id, "amount":values["amount"] / 2, "devis":"Par Jour"})
+          data = json.loads(data.text)
+          values["candidateId"] = data[str(id)][25][-1]
+          print("applyPost", values)
           
     elif query == "handleCandidateForPost":
       requests.get(url, headers=headers, params={'action':"handleCandidateForPost", "Candidate":2, "response":"true"})
@@ -288,23 +290,21 @@ def executeQuery():
       response = requests.get(url, headers=headers, params={'action':"handleCandidateForPost", "Candidate":1, "response":"true"})
       if numberCompanies:
         for id, values in missionList.items():
+          print("before", id, values)
           if random.random() > 0.7:
-            print("handleCandidateForPost", id)
-            requests.get(url, headers=headers, params={'action':"handleCandidateForPost", "Candidate":values["candidateId"], "response":"true"})
+            print("handleCandidateForPost post", id, "candidate", values)
+            data = requests.get(url, headers=headers, params={'action':"handleCandidateForPost", "Candidate":values["candidateId"], "response":"true"})
+            print("handleCandidateForPost", json.loads(data.text))
             values["mission"] = True
 
     elif query == "signContract":
       requests.get(url, headers=headers, params={"action":"signContract", "missionId":4, "view":"ST"})
-      if numberCompanies:
-        for id, values in missionList.items():
-          if "mission" in values:
-            print("mission values", values)
-            requests.get(url, headers=headers, params={"action":"signContract", "missionId":id, "view":"ST"})
       response = requests.get(url, headers=headersPme, params={"action":"signContract", "missionId":4, "view":"PME"})
       if numberCompanies:
         for id, values in missionList.items():
           if "mission" in values:
-            requests.get(url, headers=headers, params={"action":"signContract", "missionId":id, "view":"PME"})
+            print("mission values", id, values)
+            requests.get(url, headers=headers, params={"action":"signContract", "missionId":id, "view":"ST"})
             requests.get(url, headers=headersPme, params={"action":"signContract", "missionId":id, "view":"PME"})
     elif query == "createSupervision":
       post1 = {'action':"createSupervision", "detailedPostId":3, "comment":"J'ai fini."}
@@ -333,27 +333,23 @@ def executeQuery():
       post3 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "refused":True}, "unset":False, "datePostId":7}
       post4 = {"action":"modifyDetailedPost", "detailedPost":{"id":11, "dateId":14, "validated":True}, "unset":False}
       post5 = {"action":"modifyDetailedPost", "detailedPost":{"id":12, "dateId":14, "validated":False}, "unset":False}
-      # post6 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "dateId":6, "validated":False}, "unset":False}
-      # post7 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "dateId":6, "validated":False}, "unset":True}
-      # post8 = {"action":"modifyDetailedPost", "detailedPost":{"id":6, "dateId":6, "validated":False}, "unset":False}
-      for post in [post1, post2, post3]: #[post4, post5, post6]:
+      for post in [post1, post2, post3, post4, post5]:
         response = requests.post(url, headers=headers, json=post)
+
     elif query == "deleteDetailedPost":
-      post = {"action":"deleteDetailedPost", "detailedPostId":9}
+      post = {"action":"deleteDetailedPost", "detailedPostId":14}
       response = requests.post(url, headers=headers, json=post)
-    # elif query == "modifyMissionDate":
-    #   post = {"action":"modifyMissionDate", "missionId": 3, "hourlyStart":"06:02", "hourlyEnd":"19:02", "calendar":['2022-04-16', '2022-04-17', '2022-04-18', '2022-04-19']}
-      # response = requests.post(url, headers=headers, json=post)
-    # elif query == "validateMissionDate":
-      # post1 = {'action':"validateMissionDate", "missionId": 3, "field":"hourlyStart", "state":True, "date":""}
-      # post2 = {'action':"validateMissionDate", "missionId": 3, "field":"hourlyEnd", "state":False, "date":""}
-      # post3 = {'action':"validateMissionDate", "missionId": 3, "field":"date", "state":False, "date":"2022-04-15"}
-      # post4 = {'action':"validateMissionDate", "missionId": 3, "field":"date", "state":True, "date":"2022-04-19"}
-      # for post in [post1, post2, post3, post4]:
-      #   response = requests.post(url, headers=headers, json=post)
-      # post1 = {'action':"validateMissionDate", "missionId": 3, "field":"date", "state":False, "date":"2022-06-01"}
-      # response = requests.post(url, headers=headers, json=post1)
-      # print("test", response)
+
+    elif query == "modifyMissionDate":
+      post = {"action":"modifyMissionDate", "missionId": 3, "hourlyStart":"06:02", "hourlyEnd":"19:02", "calendar":['2022-04-16', '2022-04-17', '2022-04-18', '2022-04-19']}
+      response = requests.post(url, headers=headers, json=post)
+    elif query == "validateMissionDate":
+      post1 = {'action':"validateMissionDate", "missionId": 3, "field":"hourlyStart", "state":True}
+      post2 = {'action':"validateMissionDate", "missionId": 3, "field":"hourlyEnd", "state":False}
+      post3 = {'action':"validateMissionDate", "missionId": 3, "field":"date", "state":False, "date":"2022-04-15"}
+      post4 = {'action':"validateMissionDate", "missionId": 3, "field":"date", "state":True, "date":"2022-04-19"}
+      for post in [post1, post2, post3, post4]:
+        response = requests.post(url, headers=headers, json=post)
     elif query == "closeMission":
       post = {"action":"closeMission", "missionId": 4, "qualityStars":4, "qualityComment":"très bon travail", "securityStars":4, "securityComment":"Un vrai sous-traitant qualibat", "organisationStars":5, "organisationComment":"Une organisation parfaite"}
       response = requests.post(url, headers=headers, json=post)
@@ -363,33 +359,33 @@ def executeQuery():
     elif query == "notificationViewed":
       post = {"action":"notificationViewed", "companyId": 4, "role":"PME"}
       response = requests.post(url, headers=headers, json=post)
+    elif query in ["downloadFile", "uploadSupervision"]:
+      print(f"{query}: not checked")
+    elif query == "inviteFriend":
+      response = requests.get(url, headers=headers, params={"action":"inviteFriend", "mail":"jeanluc.walter@fantasiapp.com"})
+    elif query == "boostPost":
+        post = {"action":"boostPost", "postId":2, "duration":0}
+        response = requests.post(url, headers=headers, json=post)
+    elif query == "blockCompany":
+        response = requests.get(url, headers=headers, params={"action":"blockCompany", "companyId":1, "status":"true"})
+    elif query == "giveRecommandation":
+      post1 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"Maxime", "lastNameRecommanding":"Baraton", "companyNameRecommanding":"Fantasiapp", "qualityStars":4, "qualityComment":"Un travail remarquable", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
+      post2 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"Dyvia", "lastNameRecommanding":"Gaultier", "companyNameRecommanding":"Loreal", "qualityStars":5, "qualityComment":"Un travail bien fait", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
+      post3 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"William", "lastNameRecommanding":"Baraton", "companyNameRecommanding":"Fantasiapp", "qualityStars":4, "qualityComment":"Un travail remarquable", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
+      post4 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"Lucas", "lastNameRecommanding":"Gaultier", "companyNameRecommanding":"Loreal", "qualityStars":5, "qualityComment":"Un travail bien fait", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
+      post5 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"Sarah", "lastNameRecommanding":"Baraton", "companyNameRecommanding":"Fantasiapp", "qualityStars":4, "qualityComment":"Un travail remarquable", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
+      post6 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"Cassiopée", "lastNameRecommanding":"Gaultier", "companyNameRecommanding":"Loreal", "qualityStars":5, "qualityComment":"Un travail bien fait", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
+      post7 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"Jean-Luc", "lastNameRecommanding":"Baraton", "companyNameRecommanding":"Fantasiapp", "qualityStars":4, "qualityComment":"Un travail remarquable", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
+      post8 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"Maude", "lastNameRecommanding":"Gaultier", "companyNameRecommanding":"Loreal", "qualityStars":5, "qualityComment":"Un travail bien fait", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
+      for post in [post1, post2, post3, post4, post5, post6, post7, post8]:
+        response = requests.post(f'{address}/initialize/', headers=headers, json=post)
   if response and query != "downloadFile":
     data = json.loads(response.text)
     print("data", data)
-  elif query in ["downloadFile", "uploadSupervision"]:
-    print(f"{query}: not checked")
-  elif query == "inviteFriend":
-    response = requests.get(url, headers=headers, params={"action":"inviteFriend", "mail":"jeanluc.walter@fantasiapp.com"})
-  elif query == "boostPost":
-      post = {"action":"boostPost", "postId":2, "duration":0}
-      response = requests.post(url, headers=headers, json=post)
-  elif query == "blockCompany":
-      response = requests.get(url, headers=headers, params={"action":"blockCompany", "companyId":1, "status":"true"})
-  elif query == "giveRecommandation":
-    post1 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"Maxime", "lastNameRecommanding":"Baraton", "companyNameRecommanding":"Fantasiapp", "qualityStars":4, "qualityComment":"Un travail remarquable", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
-    post2 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"Dyvia", "lastNameRecommanding":"Gaultier", "companyNameRecommanding":"Loreal", "qualityStars":5, "qualityComment":"Un travail bien fait", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
-    post3 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"William", "lastNameRecommanding":"Baraton", "companyNameRecommanding":"Fantasiapp", "qualityStars":4, "qualityComment":"Un travail remarquable", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
-    post4 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"Lucas", "lastNameRecommanding":"Gaultier", "companyNameRecommanding":"Loreal", "qualityStars":5, "qualityComment":"Un travail bien fait", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
-    post5 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"Sarah", "lastNameRecommanding":"Baraton", "companyNameRecommanding":"Fantasiapp", "qualityStars":4, "qualityComment":"Un travail remarquable", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
-    post6 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"Cassiopée", "lastNameRecommanding":"Gaultier", "companyNameRecommanding":"Loreal", "qualityStars":5, "qualityComment":"Un travail bien fait", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
-    post7 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"Jean-Luc", "lastNameRecommanding":"Baraton", "companyNameRecommanding":"Fantasiapp", "qualityStars":4, "qualityComment":"Un travail remarquable", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
-    post8 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"Maude", "lastNameRecommanding":"Gaultier", "companyNameRecommanding":"Loreal", "qualityStars":5, "qualityComment":"Un travail bien fait", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
-    for post in [post1, post2, post3, post4, post5, post6, post7, post8]:
-      response = requests.post(f'{address}/initialize/', headers=headers, json=post)
   else:
     print("no answer")
 if query == "all":
-  keys = ["buildDB", "register", "registerConfirm", "registerMany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "deletePost", "modifyPost", "getPost", "setFavorite", "removeFavorite", "uploadFile", "downloadFile", "switchDraft", "uploadFile", "downloadFile", "applyPost", "isViewed", "handleCandidateForPost"]#, "signContract", "createSupervision", "uploadImageSupervision", "modifyDetailedPost", "modifyMissionDate", "validateMissionDate", "closeMission", "closeMissionST", "boostPost", "blockCompany", "giveRecommandation"]
+  keys = ["buildDB", "register", "registerConfirm", "registerMany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "deletePost", "modifyPost", "getPost", "setFavorite", "removeFavorite", "uploadFile", "downloadFile", "switchDraft", "isViewed", "applyPost", "handleCandidateForPost", "signContract", "createSupervision", "uploadImageSupervision", "modifyDetailedPost", "modifyMissionDate", "validateMissionDate", "closeMission", "closeMissionST", "boostPost", "blockCompany", "giveRecommandation"]
   for key in keys:
     query = key
     executeQuery()
