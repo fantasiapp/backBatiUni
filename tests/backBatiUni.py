@@ -230,7 +230,7 @@ def executeQuery():
         if key != "uploadPost":
           response = requests.get(url, headers=headers, params={"action":"deletePost", "id":key})
     elif query == "modifyDisponibility":
-      post = {'action':"modifyDisponibility", "disponibility":[["2022-02-13", "Disponible"], ["2022-02-14", "Disponible Sous Conditions"], ["2022-02-15", "Non Disponible"]]}
+      post = {'action':"modifyDisponibility", "disponibility":[["2022-06-13", "Disponible"], ["2022-06-14", "Disponible Sous Conditions"], ["2022-06-15", "Non Disponible"]]}
       response = requests.post(url, headers=headers, json=post)
     elif query == "uploadFile":
       file1 = {'action':"uploadFile", "ext":"png", "name":"Qualibat", "fileBase64":getDocStr(0), "nature":"labels", "expirationDate":"2022-02-12"}

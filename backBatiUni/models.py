@@ -268,10 +268,10 @@ class Disponibility(CommonModel):
     superList.remove("Company")
     return superList
 
-  @classmethod
-  def filter(cls, user):
-    userProfile = UserProfile.objects.get(userNameInternal=user)
-    return cls.objects.filter(Company=userProfile.Company)
+  # @classmethod
+  # def filter(cls, user):
+  #   userProfile = UserProfile.objects.get(userNameInternal=user)
+  #   return cls.objects.filter(Company=userProfile.Company)
 
   def dump(self): return [self.date.strftime("%Y-%m-%d") if self.date else "", self.nature]
 
