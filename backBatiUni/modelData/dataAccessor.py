@@ -714,6 +714,10 @@ class DataAccessor():
       stillExist = True
       if data["state"]:
         if datePost.deleted:
+          if DetailedPost.objects.filter(DatePost=datePost):
+            return {"validateMissionDate":"Error", "messages":"DatePost contains detailedPost"}
+          if Supervision.objects.filter(DatePost=datePost):
+            return {"validateMissionDate":"Error", "messages":"DatePost contains Supervision"}
           stillExist = False
           datePost.delete()
           Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"La journée de travail du {data['date']} pour le chantier du {mission.address} a été refusée.", timestamp=datetime.now().timestamp())

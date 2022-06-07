@@ -385,7 +385,7 @@ def executeQuery():
   else:
     print("no answer")
 if query == "all":
-  keys = ["buildDB", "register", "registerConfirm", "registerMany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "deletePost"] #, "modifyPost", "getPost", "setFavorite", "removeFavorite", "uploadFile", "downloadFile", "switchDraft", "isViewed", "applyPost", "handleCandidateForPost", "signContract", "createSupervision", "uploadImageSupervision", "modifyDetailedPost", "modifyMissionDate", "validateMissionDate", "closeMission", "closeMissionST", "boostPost", "blockCompany", "giveRecommandation"]
+  keys = ["buildDB", "register", "registerConfirm", "registerMany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "deletePost", "modifyPost", "getPost", "setFavorite", "removeFavorite", "uploadFile", "downloadFile", "switchDraft", "isViewed", "applyPost", "handleCandidateForPost", "signContract", "createSupervision", "uploadImageSupervision", "modifyDetailedPost", "modifyMissionDate", "validateMissionDate", "closeMission", "closeMissionST", "boostPost", "blockCompany", "giveRecommandation"]
   for key in keys:
     query = key
     executeQuery()
