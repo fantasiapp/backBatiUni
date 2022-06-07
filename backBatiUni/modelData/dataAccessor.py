@@ -353,7 +353,6 @@ class DataAccessor():
     datePost = DatePost.objects.get(id=datePostId) if datePostId else None
     detailedPost = DetailedPost.objects.get(id=data["id"])
     if not unset:
-      print("not unset")
       if not detailedPost.DatePost or datePost.id != detailedPost.DatePost.id:
         detailedPost = DetailedPost.objects.create(
           content=detailedPost.content,
@@ -362,14 +361,10 @@ class DataAccessor():
       """Une fois que le datePost existe surement, on peut mettre à jour"""
       for field in ["content", "validated", "refused"]:
         if field in data:
-          print("field", field)
-          if not field in ["id, dateId"]:
-            print("field", field, detailedPost.id, data[field])
             setattr(detailedPost, field, data[field])
       detailedPost.save()
       return cls.__detailedPostComputeAnswer(detailedPost, currentUser)
     else:
-      print("unset")
       """retrait d'une detailed post"""
       if detailedPost.Mission:
         return {"modifyDetailedPost":"Warning", "messages":f"Not yet implemented"}
@@ -1028,6 +1023,7 @@ class DataAccessor():
     if company.Role.id == 1:
       return {"modifyDisponibility":"Error", "messages":f"User company is not sub contractor {company.name}"}
     Disponibility.objects.filter(Company=company).delete()
+    print("modifyDisponibility", date, nature)
     for date, nature in listValue:
       if not nature in ["Disponible", "Disponible Sous Conditions"]:
         messages[date] = f"nature incorrect: {nature} replaced by Disponible"
@@ -1132,6 +1128,11 @@ class DataAccessor():
         kwargs[key] = value
     Recommandation.objects.create(**kwargs)
     return {"giveRecommandation":"OK", "messages":"Recommandation recorded"}
+
+  @classmethod
+  def giveRecommandation(cls, data, currentUser):
+
+
     
 
       
