@@ -1129,9 +1129,6 @@ class DataAccessor():
     Recommandation.objects.create(**kwargs)
     return {"giveRecommandation":"OK", "messages":"Recommandation recorded"}
 
-  @classmethod
-  def giveRecommandation(cls, data, currentUser):
-
 
     
 
