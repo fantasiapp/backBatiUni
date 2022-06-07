@@ -81,17 +81,17 @@ class SmtpConnector:
 
   def askRecomandation(self, mail, firstName, lastName, company):
     params = {
-      "action": "askRecomandation",
+      "action": "askRecommandation",
       "mail": mail,
       "firstName": firstName,
       "lastName": lastName,
       "company": company,
     }
     try:
-      print("askRecomandation", params, self.url)
+      print("askRecommandation", params, self.url)
       response = requests.get(url=self.url, headers=self.headers, params=params)
       data = json.loads(response.text)
-      print("askRecomandation", data)
+      print("askRecommandation", data)
       return data
     except:
       data = {"askRecomandation":"Error", "messages":"Failure in sending query"}
