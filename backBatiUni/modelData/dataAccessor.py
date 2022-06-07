@@ -382,7 +382,7 @@ class DataAccessor():
   @classmethod
   def __detailedPostComputeAnswer(cls, detailedPost, currentUser, functionName="modifyDetailedPost", detailedPost2=None):
     typeDetailedPost = "Post" if detailedPost.Post else "Mission"
-    print("detailedPostComputeAnswer", detailedPost.Post, detailedPost.Mission, detailedPost.DatePost)
+    print("detailedPostComputeAnswer", detailedPost.id, detailedPost.Post, detailedPost.Mission, detailedPost.DatePost)
     if detailedPost.DatePost:
       fatherId = detailedPost.DatePost.id
       typeDetailedPost = "DatePost"
@@ -646,6 +646,10 @@ class DataAccessor():
       if task.date:
         strDate = task.date.strftime("%Y-%m-%d")
         if not strDate in data["calendar"]:
+          if DetailedPost.objects.filter(DatePost=datePost):
+            return {"modifyMissionDate":"Error", "messages":"DatePost contains detailedPost"}
+          if Supervision.objects.filter(DatePost=datePost):
+            return {"modifyMissionDate":"Error", "messages":"DatePost contains Supervision"}
           Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role="ST", content=f"Votre journée de travail du {strDate} pour le chantier du {mission.address} est proposée à la suppression, à vous de valider la modification.", timestamp=datetime.now().timestamp())
           date = datetime.strptime(strDate, "%Y-%m-%d")
           datePost = DatePost.objects.get(Mission=mission, date=date)
@@ -1099,7 +1103,7 @@ class DataAccessor():
 
   @classmethod
   def askRecommandation(cls, mail, currentUser):
-    userProfile = UserProfile.objects.filter(token=data["token"])
+    userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     response = SmtpConnector(cls.portSmtp).askRecomandation(mail, token, userProfile.firstName, userProfile.lastName, userProfile.Company.name)
     if "status" in response and response["status"]:
       return  {"askRecommandation":"OK", "messages": f"Demande de recommandation envoyée"}
