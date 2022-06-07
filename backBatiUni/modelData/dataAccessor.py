@@ -369,7 +369,7 @@ class DataAccessor():
       detailedPost.save()
       return cls.__detailedPostComputeAnswer(detailedPost, currentUser)
     else:
-    print("unset")
+      print("unset")
       """retrait d'une detailed post"""
       if detailedPost.Mission:
         return {"modifyDetailedPost":"Warning", "messages":f"Not yet implemented"}
