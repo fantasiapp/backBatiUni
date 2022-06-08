@@ -61,6 +61,7 @@ class DataAccessor():
     if token != "token not received" or data["email"] == "jeanluc":
       userProfile = cls.__registerAction(data, token)
       cls.__checkIfHaveBeenInvited(userProfile, data['proposer'], data['email'])
+      print("register", "OK")
       return {"register":"OK"}
     cls.__registerAction(data, "empty token")
     return {"register":"Error", "messages":"token not received"}
@@ -947,19 +948,27 @@ class DataAccessor():
   @classmethod
   def __updateUserInfo(cls, data, user):
     print("__updateUserInfo", data)
+    valuesSaved = {"JobForCompany":{}, "LabelForCompany":{}}
     if "UserProfile" in data:
-      message, valueModified, userProfile = {}, {"UserProfile":{}}, UserProfile.objects.get(id=data["UserProfile"]["id"])
-      flagModified = cls.__setValuesForUser(data["UserProfile"], user, message, valueModified["UserProfile"], userProfile, False)
+      message, userProfile = {}, UserProfile.objects.get(id=data["UserProfile"]["id"])
+      flagModified, valuesSaved = cls.__setValuesForUser(data["UserProfile"], user, message, userProfile, False, valuesSaved)
       if not flagModified:
         message["general"] = "Aucun champ n'a été modifié" 
       if message:
-        return {"modifyUser":"Warning", "messages":message, "valueModified": valueModified}
+        return {"modifyUser":"Warning", "messages":message}
       company = userProfile.Company
-      return {"modifyUser":"OK","UserProfile":{userProfile.id:userProfile.computeValues(userProfile.listFields(), user, True)}, "Company":{company.id:company.computeValues(company.listFields(), user, True)}}
+      userProfileDump = {userProfile.id:userProfile.computeValues(userProfile.listFields(), user, True)}
+      companyDump = {company.id:company.computeValues(company.listFields(), user, True)}
+      response = {"modifyUser":"OK","UserProfile":userProfileDump, "Company":companyDump}
+      if valuesSaved['JobForCompany']:
+        response["JobForCompany"] = valuesSaved['JobForCompany']
+      if valuesSaved['LabelForCompany']:
+        response["LabelForCompany"] = valuesSaved['LabelForCompany']
+      return response
     return {"modifyUser":"Warning", "messages":"Pas de valeur à mettre à jour"}
     
   @classmethod
-  def __setValuesForUser(cls, dictValue, user, message, valueModified, objectInstance, flagModified):
+  def __setValuesForUser(cls, dictValue, user, message, objectInstance, flagModified, valuesSaved):
     for fieldName, value in dictValue.items():
       valueToSave = value
       if fieldName != "id" and fieldName != 'userName':
@@ -969,13 +978,10 @@ class DataAccessor():
         except:
           pass
         if fieldObject and isinstance(fieldObject, models.ForeignKey):
-          valueModified[fieldName], instance = {}, getattr(objectInstance, fieldName)
-          flagModifiedNew = cls.__setValuesForUser(value, user, message, valueModified[fieldName], instance, flagModified)
-          flagModified = flagModifiedNew if not flagModified else flagModified
+          flag, values = cls.__setValuesForUser(value, user, message, getattr(objectInstance, fieldName), flagModified, valuesSaved)
+          if flag: flagModified = True
         elif fieldName in objectInstance.manyToManyObject:
-          valueModified[fieldName] = {}
-          flagModifiedNew = cls.__setValuesLabelJob(fieldName, value, valueModified[fieldName], user)
-          flagModified = flagModifiedNew if not flagModified else flagModified
+          valuesSaved[fieldName] = cls.__setValuesLabelJob(fieldName, value, user)
         elif getattr(objectInstance, fieldName, "does not exist") != "does not exist":
           if fieldObject and isinstance(fieldObject, models.DateField):
             valueToSave = value.strftime("%Y-%m-%d") if value else None
@@ -986,22 +992,21 @@ class DataAccessor():
           if valueToSave != objectInstance.getAttr(fieldName):
             objectInstance.setAttr(fieldName, valueToSave)
             objectInstance.save()
-            valueModified[fieldName] = value
             flagModified = True
         else:
           message[fieldName] = "is not a field"
-    return flagModified
+    return flagModified or valuesSaved["JobForCompany"] or valuesSaved["LabelForCompany"], valuesSaved
 
   @classmethod
-  def __setValuesLabelJob(cls, modelName, dictValue, valueModified, user):
+  def __setValuesLabelJob(cls, modelName, dictValue, user):
     if modelName == "JobForCompany":
-      return cls.__setValuesJob(dictValue, valueModified, user)
+      return cls.__setValuesJob(dictValue, user)
     else:
-      return cls.__setValuesLabel(dictValue, valueModified, user)
+      return cls.__setValuesLabel(dictValue, user)
 
   @classmethod
-  def __setValuesJob(cls, dictValue, valueModified, user):
-    company = UserProfile.objects.get(userNameInternal=user).Company
+  def __setValuesJob(cls, dictValue, user):
+    company, listJobForCompany = UserProfile.objects.get(userNameInternal=user).Company, {}
     jobForCompany = JobForCompany.objects.filter(Company=company)
     if jobForCompany:
       jobForCompany.delete()
@@ -1010,20 +1015,20 @@ class DataAccessor():
         job = Job.objects.get(id=listValue[0])
         jobForCompany = JobForCompany.objects.create(Job=job, number=listValue[1], Company=company)
         if jobForCompany.number != 0:
-          valueModified[jobForCompany.id] = [jobForCompany.Job.id, jobForCompany.number]
-    return True
+          listJobForCompany[jobForCompany.id] = [jobForCompany.Job.id, jobForCompany.number]
+    return listJobForCompany
 
   @classmethod
-  def __setValuesLabel(cls, dictValue, valueModified, user):
-    company = UserProfile.objects.get(userNameInternal=user).Company
+  def __setValuesLabel(cls, dictValue, user):
+    company, listLabelForCompany = UserProfile.objects.get(userNameInternal=user).Company, {}
     LabelForCompany.objects.filter(Company=company).delete()
     for listValue in dictValue:
       label = Label.objects.get(id=listValue[0])
       date = datetime.strptime(listValue[1], "%Y-%m-%d") if listValue[1] else None
       labelForCompany = LabelForCompany.objects.create(Label=label, date=date, Company=company)
       date = labelForCompany.date.strftime("%Y-%m-%d") if labelForCompany.date else ""
-      valueModified[labelForCompany.id] = [labelForCompany.Label.id, date]
-    return True
+      listLabelForCompany[labelForCompany.id] = [labelForCompany.Label.id, date]
+    return listLabelForCompany
 
   @classmethod
   def __modifyDisponibility(cls, listValue, user):

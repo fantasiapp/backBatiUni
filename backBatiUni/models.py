@@ -779,6 +779,7 @@ class DetailedPost(CommonModel):
   def generateRamStructure(cls):
     RamData.ramStructure["Post"]["DetailedPost"] = deepcopy(RamData.allPost)
     RamData.ramStructure["Mission"]["DetailedPost"] = deepcopy(RamData.allMission)
+    RamData.ramStructure["DatePost"]["DetailedPost"] = deepcopy(RamData.allDatePost)
     for detailed in DetailedPost.objects.all():
       if detailed.Post:
         RamData.ramStructure["Post"]["DetailedPost"][detailed.Post.id].append(detailed.id)
