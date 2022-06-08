@@ -32,7 +32,7 @@ class DataAccessor():
   @classmethod
   def getData(cls, profile, user):
     if not UserProfile.objects.filter(userNameInternal=user) and profile == "user":
-      {"register":"Error", "messages":"currentUser does not exist"} 
+      {"register":"Error", "messages":"currentUser does not exist"}
     dictAnswer = {"currentUser":UserProfile.objects.get(userNameInternal=user).id} if profile == "user" else {}
     t0 = time()
     if profile == "user":
@@ -52,7 +52,7 @@ class DataAccessor():
 
   @classmethod
   def register(cls, data):
-    if data["again"]:
+    if "again" in data and data["again"]:
       return cls.registerAgain(data)
     message = cls.__registerCheck(data, {})
     if message:
@@ -68,7 +68,7 @@ class DataAccessor():
 
   @classmethod
   def registerAgain(cls, data):
-    userProfile = UserProfile.filter(email=data["email"])
+    userProfile = UserProfile.objects.filter(email=data["email"])
     token = SmtpConnector(cls.portSmtp).register(data["firstname"], data["lastname"], data["email"])
     if token != "token not received":
       userProfile = cls.__registerAction(data, token)
