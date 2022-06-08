@@ -725,6 +725,7 @@ class DataAccessor():
   def __validateMissionDateAction(cls, data, currentUser, mission):
     if data["field"] == "date":
       date = datetime.strptime(data["date"], "%Y-%m-%d")
+      print("__validateMissionDateAction", mission.id, date)
       datePost = DatePost.objects.get(Mission=mission, date=date)
       datePostId = datePost.id
       stillExist = True
