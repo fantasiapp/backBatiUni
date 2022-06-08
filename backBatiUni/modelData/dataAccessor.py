@@ -950,11 +950,10 @@ class DataAccessor():
   def __updateUserInfo(cls, data, user):
     print("__updateUserInfo", data)
     valuesSaved = {"JobForCompany":{}, "LabelForCompany":{}}
-    if "UserProfile" in data:
-      message, userProfile = {}, UserProfile.objects.get(id=data["UserProfile"]["id"])
-      flagModified, valuesSaved = cls.__setValuesForUser(data["UserProfile"], user, message, userProfile, False, valuesSaved)
-      if not flagModified:
-        message["general"] = "Aucun champ n'a été modifié" 
+    message, userProfile = {}, UserProfile.objects.get(userNameInternal=user)
+    print(userProfile, user, data)
+    if "UserProfile" in data and data["UserProfile"]:
+      valuesSaved = cls.__setValuesForUser(data["UserProfile"], user, message, userProfile, valuesSaved)
       if message:
         return {"modifyUser":"Warning", "messages":message}
       company = userProfile.Company
@@ -968,7 +967,7 @@ class DataAccessor():
     return {"modifyUser":"Warning", "messages":"Pas de valeur à mettre à jour"}
     
   @classmethod
-  def __setValuesForUser(cls, dictValue, user, message, objectInstance, flagModified, valuesSaved):
+  def __setValuesForUser(cls, dictValue, user, message, objectInstance, valuesSaved):
     for fieldName, value in dictValue.items():
       valueToSave = value
       if fieldName != "id" and fieldName != 'userName':
@@ -978,8 +977,7 @@ class DataAccessor():
         except:
           pass
         if fieldObject and isinstance(fieldObject, models.ForeignKey):
-          flag, values = cls.__setValuesForUser(value, user, message, getattr(objectInstance, fieldName), flagModified, valuesSaved)
-          if flag: flagModified = True
+          cls.__setValuesForUser(value, user, message, getattr(objectInstance, fieldName), valuesSaved)
         elif fieldName in objectInstance.manyToManyObject:
           valuesSaved[fieldName] = cls.__setValuesLabelJob(fieldName, value, user)
         elif getattr(objectInstance, fieldName, "does not exist") != "does not exist":
@@ -992,10 +990,9 @@ class DataAccessor():
           if valueToSave != objectInstance.getAttr(fieldName):
             objectInstance.setAttr(fieldName, valueToSave)
             objectInstance.save()
-            flagModified = True
         else:
           message[fieldName] = "is not a field"
-    return flagModified or valuesSaved["JobForCompany"] or valuesSaved["LabelForCompany"], valuesSaved
+    return valuesSaved
 
   @classmethod
   def __setValuesLabelJob(cls, modelName, dictValue, user):
