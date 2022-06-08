@@ -948,10 +948,9 @@ class DataAccessor():
 
   @classmethod
   def __updateUserInfo(cls, data, user):
-    print("__updateUserInfo", data)
+    print("__updateUserInfo", user, data)
     valuesSaved = {"JobForCompany":{}, "LabelForCompany":{}}
     message, userProfile = {}, UserProfile.objects.get(userNameInternal=user)
-    print(userProfile, user, data)
     if "UserProfile" in data and data["UserProfile"]:
       valuesSaved = cls.__setValuesForUser(data["UserProfile"], user, message, userProfile, valuesSaved)
       if message:
@@ -1020,11 +1019,13 @@ class DataAccessor():
     company, listLabelForCompany = UserProfile.objects.get(userNameInternal=user).Company, {}
     LabelForCompany.objects.filter(Company=company).delete()
     for listValue in dictValue:
+      print("__setValuesLabel", listValue)
       label = Label.objects.get(id=listValue[0])
       date = datetime.strptime(listValue[1], "%Y-%m-%d") if listValue[1] else None
       labelForCompany = LabelForCompany.objects.create(Label=label, date=date, Company=company)
       date = labelForCompany.date.strftime("%Y-%m-%d") if labelForCompany.date else ""
       listLabelForCompany[labelForCompany.id] = [labelForCompany.Label.id, date]
+    print("__setValuesLabel", listLabelForCompany)
     return listLabelForCompany
 
   @classmethod

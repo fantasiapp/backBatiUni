@@ -341,13 +341,15 @@ def executeQuery():
       response = requests.post(url, headers=headers, json=post)
 
     elif query == "modifyMissionDate":
-      post = {"action":"modifyMissionDate", "missionId": 3, "hourlyStart":"06:02", "hourlyEnd":"19:02", "calendar":['2022-04-16', '2022-04-17', '2022-04-18', '2022-04-19']}
-      response = requests.post(url, headers=headers, json=post)
+      post1 = {"action":"modifyMissionDate", "missionId": 3, "hourlyStart":"06:02", "hourlyEnd":"19:02"}
+      post2 = {"action":"modifyMissionDate", "missionId": 3, "calendar":['2022-06-16', '2022-06-17', '2022-06-18', '2022-06-19']}
+      for post in [post1, post2]:
+        response = requests.post(url, headers=headers, json=post)
     elif query == "validateMissionDate":
       post1 = {'action':"validateMissionDate", "missionId": 3, "field":"hourlyStart", "state":True}
       post2 = {'action':"validateMissionDate", "missionId": 3, "field":"hourlyEnd", "state":False}
-      post3 = {'action':"validateMissionDate", "missionId": 3, "field":"date", "state":False, "date":"2022-04-15"}
-      post4 = {'action':"validateMissionDate", "missionId": 3, "field":"date", "state":True, "date":"2022-04-19"}
+      post3 = {'action':"validateMissionDate", "missionId": 3, "field":"date", "state":False, "date":"2022-06-15"}
+      post4 = {'action':"validateMissionDate", "missionId": 3, "field":"date", "state":True, "date":"2022-06-19"}
       for post in [post1, post2, post3, post4]:
         response = requests.post(url, headers=headers, json=post)
     elif query == "closeMission":
