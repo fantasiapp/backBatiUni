@@ -960,10 +960,9 @@ class DataAccessor():
       userProfileDump = {userProfile.id:userProfile.computeValues(userProfile.listFields(), user, True)}
       companyDump = {company.id:company.computeValues(company.listFields(), user, True)}
       response = {"modifyUser":"OK","UserProfile":userProfileDump, "Company":companyDump}
-      if valuesSaved['JobForCompany']:
-        response["JobForCompany"] = valuesSaved['JobForCompany']
-      if valuesSaved['LabelForCompany']:
-        response["LabelForCompany"] = valuesSaved['LabelForCompany']
+      for fieldName in ['JobForCompany', 'LabelForCompany']:
+        if valuesSaved[fieldName]:
+          response[fieldName] = valuesSaved[fieldName]
       return response
     return {"modifyUser":"Warning", "messages":"Pas de valeur à mettre à jour"}
     
