@@ -947,7 +947,7 @@ class DataAccessor():
     print("__updateUserInfo", data)
     if "UserProfile" in data:
       message, valueModified, userProfile = {}, {"UserProfile":{}}, UserProfile.objects.get(id=data["UserProfile"]["id"])
-      flagModified = cls.__setValues(data["UserProfile"], user, message, valueModified["UserProfile"], userProfile, False)
+      flagModified = cls.__setValuesForUser(data["UserProfile"], user, message, valueModified["UserProfile"], userProfile, False)
       if not flagModified:
         message["general"] = "Aucun champ n'a été modifié" 
       if message:
@@ -957,7 +957,7 @@ class DataAccessor():
     return {"modifyUser":"Warning", "messages":"Pas de valeur à mettre à jour"}
     
   @classmethod
-  def __setValues(cls, dictValue, user, message, valueModified, objectInstance, flagModified):
+  def __setValuesForUser(cls, dictValue, user, message, valueModified, objectInstance, flagModified):
     for fieldName, value in dictValue.items():
       valueToSave = value
       if fieldName != "id" and fieldName != 'userName':
@@ -975,7 +975,6 @@ class DataAccessor():
           flagModifiedNew = cls.__setValuesLabelJob(fieldName, value, valueModified[fieldName], user)
           flagModified = flagModifiedNew if not flagModified else flagModified
         elif getattr(objectInstance, fieldName, "does not exist") != "does not exist":
-          # valueToSave = value == "true"
           if fieldObject and isinstance(fieldObject, models.DateField):
             valueToSave = value.strftime("%Y-%m-%d") if value else None
           elif fieldObject and isinstance(fieldObject, models.IntegerField):

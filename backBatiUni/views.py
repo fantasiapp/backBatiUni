@@ -68,12 +68,12 @@ class Initialize(APIView):
   def post(self, request):
     jsonBin = request.body
     jsonString = jsonBin.decode("utf8")
-    data = json.loads(jsonString)  
+    data = json.loads(jsonString)
+    print("post content", data)
     if "action" in data and data["action"] == "newPassword":  return Response(DataAccessor.newPassword(data))
-    elif "action" in data and data["action"] == "giveRecommandation":
-      print("action", data)
-      return Response(DataAccessor.giveRecommandation(data))
-    return Response(DataAccessor().register(data))
+    elif "action" in data and data["action"] == "giveRecommandation": return Response(DataAccessor.giveRecommandation(data))
+    elif "action" in data and data["action"] == "register": return Response(DataAccessor().register(data))
+    else: return Response({"Error":f"Action unknown"})
 
 class CreateBase(DefaultView):
   def get(self, request):
