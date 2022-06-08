@@ -231,7 +231,10 @@ class DataAccessor():
           else:
             return {"uploadPost":"Error", "messages":{fieldName:"is not documented"}}, False
         if fieldObject and isinstance(fieldObject, models.DateField):
-          date = datetime.strptime(dictData[fieldName], "%Y-%m-%d") if dictData[fieldName] else None
+          try:
+            date = datetime.strptime(dictData[fieldName], "%Y-%m-%d") if dictData[fieldName] else None
+          except ValueError:
+            return {"uploadPost":"Error", "messages":{date:"is not properly formated"}}, False
           kwargs[fieldName]=date
         if fieldObject and isinstance(fieldObject, models.IntegerField):
           kwargs[fieldName]=int(dictData[fieldName]) if dictData[fieldName] else 0
