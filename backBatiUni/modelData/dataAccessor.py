@@ -968,7 +968,7 @@ class DataAccessor():
           pass
         if fieldObject and isinstance(fieldObject, models.ForeignKey):
           valueModified[fieldName], instance = {}, getattr(objectInstance, fieldName)
-          flagModifiedNew = cls.__setValues(value, user, message, valueModified[fieldName], instance, flagModified)
+          flagModifiedNew = cls.__setValuesForUser(value, user, message, valueModified[fieldName], instance, flagModified)
           flagModified = flagModifiedNew if not flagModified else flagModified
         elif fieldName in objectInstance.manyToManyObject:
           valueModified[fieldName] = {}
