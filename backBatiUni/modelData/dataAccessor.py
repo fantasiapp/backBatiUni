@@ -1098,7 +1098,7 @@ class DataAccessor():
   @classmethod
   def askRecommandation(cls, mail, currentUser):
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
-    response = SmtpConnector(cls.portSmtp).askRecomandation(mail, userProfile.firstName, userProfile.lastName, userProfile.Company.name)
+    response = SmtpConnector(cls.portSmtp).askRecomandation(mail, userProfile.firstName, userProfile.lastName, userProfile.Company.name, userProfile.Company.id)
     print("askRecommandation dataAccessor", response)
 
     if "status" in response and response["status"]:
