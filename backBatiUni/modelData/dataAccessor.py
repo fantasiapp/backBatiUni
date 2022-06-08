@@ -234,7 +234,7 @@ class DataAccessor():
           try:
             date = datetime.strptime(dictData[fieldName], "%Y-%m-%d") if dictData[fieldName] else None
           except ValueError:
-            return {"uploadPost":"Error", "messages":{date:"is not properly formated"}}, False
+            return {"uploadPost":"Error", "messages":f"{dictData[fieldName]}:is not properly formated"}
           kwargs[fieldName]=date
         if fieldObject and isinstance(fieldObject, models.IntegerField):
           kwargs[fieldName]=int(dictData[fieldName]) if dictData[fieldName] else 0
