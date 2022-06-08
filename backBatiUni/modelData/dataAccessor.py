@@ -69,11 +69,12 @@ class DataAccessor():
   @classmethod
   def registerAgain(cls, data):
     userProfile = UserProfile.objects.filter(email=data["email"])
-    token = SmtpConnector(cls.portSmtp).register(data["firstname"], data["lastname"], data["email"])
-    if token != "token not received":
-      userProfile = cls.__registerAction(data, token)
-      cls.__checkIfHaveBeenInvited(userProfile, data['proposer'], data['email'])
-      return {"register":"OK"}
+    if userProfile:
+      userProfile = userProfile[0]
+      token = SmtpConnector(cls.portSmtp).register(data["firstname"], data["lastname"], data["email"])
+      if token != "token not received":
+        userProfile.token = token
+        return {"register":"OK"}
     cls.__registerAction(data, "empty token")
     return {"register":"Error", "messages":"token not received"}
 
