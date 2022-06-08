@@ -685,10 +685,10 @@ class DataAccessor():
     candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
     subContractor = candidate.Company
     roleST = "ST"
-    if mission.hourlyStart != data["hourlyStart"] and data["hourlyStart"]:
+    if "hourlyStart" in data and mission.hourlyStart != data["hourlyStart"]:
       mission.hourlyStartChange = data["hourlyStart"]
       Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role=roleST, content=f"Votre horaire de départ pour le chantier du {mission.address} va changé et pour {mission.hourlyStart}, à vous de valider la modification.", timestamp=datetime.now().timestamp())
-    if mission.hourlyEnd != data["hourlyEnd"] and data["hourlyEnd"]:
+    if "hourlyEnd" in data and mission.hourlyEnd != data["hourlyEnd"]:
       mission.hourlyEndChange = data["hourlyEnd"]
       Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role=roleST, content=f"Votre horaire de fin de journée pour le chantier du {mission.address} va changer et pour {mission.hourlyEnd}, à vous de valider la modification.", timestamp=datetime.now().timestamp())
     mission.save()
