@@ -74,6 +74,7 @@ class DataAccessor():
       token = SmtpConnector(cls.portSmtp).register(data["firstname"], data["lastname"], data["email"])
       if token != "token not received":
         userProfile.token = token
+        userProfile.save()
         return {"register":"OK"}
     cls.__registerAction(data, "empty token")
     return {"register":"Error", "messages":"token not received"}
