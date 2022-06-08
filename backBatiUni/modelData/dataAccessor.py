@@ -187,7 +187,7 @@ class DataAccessor():
   @classmethod
   def __uploadPost(cls, dictData, currentUser):
     kwargs, listObject = cls.__createPostKwargs(dictData, currentUser)
-    # print("uploadPost", kwargs)
+    print("uploadPost", kwargs)
     if "uploadPost" in kwargs and kwargs["uploadPost"] == "Error":
       return kwargs
     objectPost = Post.objects.create(**kwargs)
@@ -234,7 +234,7 @@ class DataAccessor():
           try:
             date = datetime.strptime(dictData[fieldName], "%Y-%m-%d") if dictData[fieldName] else None
           except ValueError:
-            return {"uploadPost":"Error", "messages":f"{dictData[fieldName]}:is not properly formated"}
+            return {"uploadPost":"Error", "messages":f"{dictData[fieldName]} is not properly formated"}, False
           kwargs[fieldName]=date
         if fieldObject and isinstance(fieldObject, models.IntegerField):
           kwargs[fieldName]=int(dictData[fieldName]) if dictData[fieldName] else 0

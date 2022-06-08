@@ -29,7 +29,8 @@ class RamData():
     cls.allMission = {mission.id:[] for mission in Mission.objects.all() if mission.subContractorName}
     cls.allCompany = {company.id:[] for company in Company.objects.all()}
     cls.allDatePost = {datePost.id:[] for datePost in DatePost.objects.all()}
-    cls.ramStructure = {"Company":{}, "Post":{}, "Mission":{}, "DetailedPost":{}, "DatePost":{}}
+    cls.allDetailedPost = {detailPost.id:[] for detailPost in DetailedPost.objects.all()}
+    cls.ramStructure = {"Company":{}, "Post":{}, "Mission":{}, "DetailedPost":{}, "DatePost":{}, "DetailedPost":{}}
     for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
       classObject.generateRamStructure()
 
@@ -630,8 +631,6 @@ class DatePost(CommonModel):
         RamData.ramStructure["Post"]["DatePost"][datePost.Post.id].append(datePost.id)
       elif datePost.Mission:
         RamData.ramStructure["Mission"]["DatePost"][datePost.Mission.id].append(datePost.id)
-      elif datePost.DetailedPost:
-        RamData.ramStructure["DetailedPost"]["DatePost"][datePost.DetailedPost.id].append(datePost.id)
 
   def computeValues(self, listFields, user, dictFormat=False):
     values = []
@@ -785,6 +784,8 @@ class DetailedPost(CommonModel):
         RamData.ramStructure["Post"]["DetailedPost"][detailed.Post.id].append(detailed.id)
       if detailed.Mission:
         RamData.ramStructure["Mission"]["DetailedPost"][detailed.Mission.id].append(detailed.id)
+      if detailed.DatePost:
+        RamData.ramStructure["DatePost"]["DetailedPost"][detailed.DatePost.id].append(detailed.id)
     
   def computeValues(self, listFields, user, dictFormat=False):
     values = []
