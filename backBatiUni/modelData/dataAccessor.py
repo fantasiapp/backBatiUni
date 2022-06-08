@@ -973,7 +973,7 @@ class DataAccessor():
         try:
           fieldObject = objectInstance._meta.get_field(fieldName)
         except:
-          pass
+          message = f"{fieldName} is not a field"
         if fieldObject and isinstance(fieldObject, models.ForeignKey):
           cls.__setValuesForUser(value, user, message, getattr(objectInstance, fieldName), valuesSaved)
         elif fieldName in objectInstance.manyToManyObject:
@@ -988,8 +988,6 @@ class DataAccessor():
           if valueToSave != objectInstance.getAttr(fieldName):
             objectInstance.setAttr(fieldName, valueToSave)
             objectInstance.save()
-        else:
-          message[fieldName] = "is not a field"
     return valuesSaved
 
   @classmethod
@@ -1018,13 +1016,11 @@ class DataAccessor():
     company, listLabelForCompany = UserProfile.objects.get(userNameInternal=user).Company, {}
     LabelForCompany.objects.filter(Company=company).delete()
     for listValue in dictValue:
-      print("__setValuesLabel", listValue)
       label = Label.objects.get(id=listValue[0])
       date = datetime.strptime(listValue[1], "%Y-%m-%d") if listValue[1] else None
       labelForCompany = LabelForCompany.objects.create(Label=label, date=date, Company=company)
       date = labelForCompany.date.strftime("%Y-%m-%d") if labelForCompany.date else ""
       listLabelForCompany[labelForCompany.id] = [labelForCompany.Label.id, date]
-    print("__setValuesLabel", listLabelForCompany)
     return listLabelForCompany
 
   @classmethod
