@@ -717,7 +717,6 @@ class Notification(CommonModel):
     for token in tokenList:
       post = {"notification":{"title":notification.title, "body":notification.content}, "to":token}
     response = requests.post(cls.url, headers=headers, json=post)
-    print("createAndSend", token, response, json.loads(response.text))
 
 
 
