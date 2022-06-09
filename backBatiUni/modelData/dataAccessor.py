@@ -306,6 +306,10 @@ class DataAccessor():
         DetailedPost.objects.filter(Post=post).delete()
         for content in dictData["DetailedPost"]:
           DetailedPost.objects.create(Post=post, content=content)
+      postDump = {post.id:post.computeValues(post.listFields(), currentUser, True)}
+      datePostDump = [{date.id:date.computeValues(date.listFields(), currentUser, True) for date in DatePost.objects.filter(Post = post)}]
+      detailedPostDump = [{detailedPost.id:detailedPost.computeValues(detailedPost.listFields(), currentUser, True) for detailedPost in DetailedPost.objects.filter(Post = post)}]
+      return {"modifyPost":"OK", "Post":postDump, "DatePost":datePostDump, "DetailedPost":detailedPostDump}
       return {"modifyPost":"OK", post.id:post.computeValues(post.listFields(), currentUser, True)}
     return {"modifyPost":"Error", "messages":f"{dictData['id']} is not a Post id"}
 

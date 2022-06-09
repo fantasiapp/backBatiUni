@@ -223,12 +223,14 @@ def executeQuery():
     elif query == "removeFavorite":
       response = requests.get(url, headers=headers, params={'action':"setFavorite", "value":"false", "Post":3})
     elif query == "deletePost":
-      print("deletePost")
-      post = {'action':"uploadPost", "address":"129 rue de Paris 92100 Boulogne", "Job":9, "numberOfPeople":3, "dueDate":"2022-02-15", "startDate":"2022-02-16", "endDate":"2022-02-28", "manPower":True, "counterOffer":True, "hourlyStart":"7:30", "hourlyEnd":"17:30", "currency":"€", "description":"Première description d'un chantier", "amount":65243.10, "DetailedPost":["lavabo", "baignoire"]}
-      response = requests.post(url, headers=headers, json=post)
-      for key in json.loads(response.text).keys():
-        if key != "uploadPost":
-          response = requests.get(url, headers=headers, params={"action":"deletePost", "id":key})
+      # print("deletePost")
+      # post = {'action':"uploadPost", "address":"129 rue de Paris 92100 Boulogne", "Job":9, "numberOfPeople":3, "dueDate":"2022-02-15", "startDate":"2022-02-16", "endDate":"2022-02-28", "manPower":True, "counterOffer":True, "hourlyStart":"7:30", "hourlyEnd":"17:30", "currency":"€", "description":"Première description d'un chantier", "amount":65243.10, "DetailedPost":["lavabo", "baignoire"]}
+      # response = requests.post(url, headers=headers, json=post)
+      # for key in json.loads(response.text).keys():
+      #   if key != "uploadPost":
+      #     print(key)
+      #     response = requests.get(url, headers=headers, params={"action":"deletePost", "id":key})
+      pass
     elif query == "modifyDisponibility":
       post = {'action':"modifyDisponibility", "disponibility":[["2022-06-13", "Disponible"], ["2022-06-14", "Disponible Sous Conditions"], ["2022-06-15", "Non Disponible"]]}
       response = requests.post(url, headers=headers, json=post)
