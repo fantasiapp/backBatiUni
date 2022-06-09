@@ -286,7 +286,7 @@ class JobForCompany(CommonModel):
     for jobForCompany in JobForCompany.objects.all():
       # if not "jobForCompany" in RamData.ramStructure["Company"]:
           # print("bug ramStructure 288", RamData.ramStructure["Company"], jobForCompany.Post.id, jobForCompany.id)
-      if not jobForCompany.Company:
+      if jobForCompany.Company:
         RamData.ramStructure["Company"]["JobForCompany"][jobForCompany.Company.id].append(jobForCompany.id)
       else:
         print("jobForCompany", jobForCompany)
