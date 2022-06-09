@@ -236,7 +236,6 @@ class DataAccessor():
 
   @classmethod
   def __createPostKwargs(cls, dictData, currentUser):
-    print("dictData", dictData)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     kwargs, listFields, listObject = {"Company":userProfile.Company, "startDate":None, "endDate":None, "subContractorName":None}, Post.listFields(), []
     for fieldName, value in dictData.items():
@@ -880,13 +879,11 @@ class DataAccessor():
       if isCompany:
         company = UserProfile.objects.get(userNameInternal=currentUser).Company
         response["Company"] = {company.id:company.computeValues(company.listFields(), currentUser, True)}
-      print("deleteFile", response)
       return response
     return {"deleteFile":"Error", "messages":f"No file width id {id}"}
 
   @classmethod
   def __uploadFile(cls, data, currentUser):
-    print("uploadFile", data)
     if not "ext" in data or data["ext"] == "???" or not "fileBase64" in data:
       return {"uploadFile":"Warning", "messages":f"Aucune image n'est associé à la demande"}
     if not data['ext'] in File.authorizedExtention:
@@ -916,6 +913,7 @@ class DataAccessor():
       return {"uploadFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)[:-1]}
     except:
       if file: file.delete()
+      print("uploadFile", "Le fichier ne peut être sauvegardé")
       return {"uploadFile":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
 
 
