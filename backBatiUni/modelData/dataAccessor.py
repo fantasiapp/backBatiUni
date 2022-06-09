@@ -214,7 +214,10 @@ class DataAccessor():
       for subObject in listObject:
         subObject.Post = objectPost
         subObject.save()
-    return {"uploadPost":"OK", objectPost.id:objectPost.computeValues(objectPost.listFields(), currentUser, True)}
+    postDump = {objectPost.id:objectPost.computeValues(objectPost.listFields(), currentUser, True)}
+    datePostDump = [{date.id:date.computeValues(date.listFields(), currentUser, True) for date in objectPost.DatePost}]
+    detailedPostDump = [{detailedPost.id:detailedPost.computeValues(detailedPost.listFields(), currentUser, True) for detailedPost in objectPost.DetailedPost}]
+    return {"uploadPost":"OK", "Post":postDump, "DatePost":datePostDump, "DetailedPost":detailedPostDump}
 
   @classmethod
   def __getGeoCoordinates(cls, objectPost):

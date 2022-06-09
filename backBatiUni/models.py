@@ -633,6 +633,7 @@ class DatePost(CommonModel):
       if datePost.Post:
         RamData.ramStructure["Post"]["DatePost"][datePost.Post.id].append(datePost.id)
       elif datePost.Mission:
+        print("bug ramStructure 636", (RamData.ramStructure["Mission"]))
         RamData.ramStructure["Mission"]["DatePost"][datePost.Mission.id].append(datePost.id)
 
   def computeValues(self, listFields, user, dictFormat=False):
