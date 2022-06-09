@@ -633,7 +633,7 @@ class DatePost(CommonModel):
       if datePost.Post:
         RamData.ramStructure["Post"]["DatePost"][datePost.Post.id].append(datePost.id)
       elif datePost.Mission:
-        print("bug ramStructure 636", (RamData.ramStructure["Mission"]))
+        # print("bug ramStructure 636", (RamData.ramStructure["Mission"]))
         RamData.ramStructure["Mission"]["DatePost"][datePost.Mission.id].append(datePost.id)
 
   def computeValues(self, listFields, user, dictFormat=False):
@@ -710,9 +710,8 @@ class Notification(CommonModel):
 
   @classmethod
   def createAndSend(cls, **kwargs):
-    token = kwargs["userProfile"].tokenNotification
-    del kwargs["userProfile"]
     notification = cls.objects.create(**kwargs)
+    token = notification.Company.tokenNotification
     headers= {'Content-Type': 'application/json', 'Authorization': f'key = {cls.key}'}
     post = {"notification":{"title":notification.title, "body":notification.content}, "to":token}
     response = requests.post(cls.url, headers=headers, json=post)

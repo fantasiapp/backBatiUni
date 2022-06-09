@@ -312,7 +312,6 @@ class DataAccessor():
       datePostDump = [{date.id:date.computeValues(date.listFields(), currentUser, True) for date in DatePost.objects.filter(Post = post)}]
       detailedPostDump = [{detailedPost.id:detailedPost.computeValues(detailedPost.listFields(), currentUser, True) for detailedPost in DetailedPost.objects.filter(Post = post)}]
       return {"modifyPost":"OK", "Post":postDump, "DatePost":datePostDump, "DetailedPost":detailedPostDump}
-      return {"modifyPost":"OK", post.id:post.computeValues(post.listFields(), currentUser, True)}
     return {"modifyPost":"Error", "messages":f"{dictData['id']} is not a Post id"}
 
   @classmethod
@@ -335,7 +334,7 @@ class DataAccessor():
     amount = 0.0 if amount == "undefined" else amount
     candidate = Candidate.objects.create(Post=post, Company=subContractor, amount=amount, contact=contact, unitOfTime=unitOfTime)
     # Notification.objects.create(Post=post, Company=company, subContractor=subContractor, nature="ST", Role="PME", content=f"Un nouveau sous traitant : {subContractor.name} pour le chantier du {post.address} a postulé.", timestamp=datetime.now().timestamp())
-    Notification.createAndSend(Post=post, Company=company, subContractor=subContractor, nature="ST", Role="PME", content=f"Un nouveau sous traitant : {subContractor.name} pour le chantier du {post.address} a postulé.", timestamp=datetime.now().timestamp(), userProfile=userProfile)
+    Notification.createAndSend(Post=post, Company=company, title="Nouveau candidat", subContractor=subContractor, nature="ST", Role="PME", content=f"Un nouveau sous traitant : {subContractor.name} pour le chantier du {post.address} a postulé.", timestamp=datetime.now().timestamp())
     postDump = {post.id:post.computeValues(post.listFields(), currentUser, True)}
     candidateDump = {candidate.id:candidate.computeValues(candidate.listFields(), currentUser, True)}
     return {"applyPost":"OK", "Post":postDump, "Candidate":candidateDump}
