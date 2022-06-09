@@ -760,11 +760,12 @@ class Candidate(CommonModel):
   @classmethod
   def generateRamStructure(cls):
     RamData.ramStructure["Post"]["Candidate"] = deepcopy(RamData.allPost)
+    RamData.ramStructure["Mission"]["Candidate"] = deepcopy(RamData.allMission)
     for candidate in Candidate.objects.all():
       if candidate.Post and candidate.Post.id in RamData.ramStructure["Post"]["Candidate"]:
-        if not "Candidate" in RamData.ramStructure["Post"]:
-          print("bug ramStructure 636", RamData.ramStructure["Mission"], candidate.Post.id, candidate.id)
         RamData.ramStructure["Post"]["Candidate"][candidate.Post.id].append(candidate.id)
+      if candidate.Mission and candidate.Mission.id in RamData.ramStructure["Mission"]["Candidate"]:
+        RamData.ramStructure["Mission"]["Candidate"][candidate.Mission.id].append(candidate.id)
 
   @classmethod
   def listFields(cls):
