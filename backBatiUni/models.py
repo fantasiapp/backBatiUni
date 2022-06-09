@@ -8,6 +8,7 @@ import base64
 import datetime
 from django.apps import apps
 from pdf2image import convert_from_path
+import requests
 
 import whatimage
 import pyheif
@@ -666,6 +667,9 @@ class Notification(CommonModel):
   content = models.CharField("Contenu du Post", max_length=1024, null=False, default="")
   hasBeenViewed = models.BooleanField("A été vu", null=False, default=False)
   nature = models.CharField("Nature de la notification", max_length=64, null=False, default="other")
+  title = models.CharField("Nature de la notification", max_length=128, null=False, default="Titre par défaut")
+  url = "https://fcm.googleapis.com/fcm/send"
+  key = "AAAABTLuxMI:APA91bFfnZnDEzRqfuoZNfhaWH6BtbREG0OdWWxVirhbSoxZkHzJcweXrS5_yREwPI9lZmtFk7Qvht3mi9KkWBVOfjCNsyCUzIwhLMiL5kcEuBgxVZ09E5mDSrSHV-M_0CdZvFoJ56Qn"
 
   @classmethod
   def generateRamStructure(cls):
@@ -702,8 +706,16 @@ class Notification(CommonModel):
     subContractorId = self.subContractor.id if self.subContractor else ""
     return [postId, missionId, subContractorId, self.Role, self.timestamp, self.content, self.content, self.hasBeenViewed, self.nature]
 
-  def sendPhoneNotification():
-    pass
+  @classmethod
+  def createAndSend(cls, **kwargs):
+    token = kwargs["userProfile"].tokenNotification
+    del kwargs["userProfile"]
+    notification = cls.objects.create(**kwargs)
+    headers= {'Content-Type': 'application/json', 'Authorization': f'key = {cls.key}'}
+    post = {"notification":{"title":notification.title, "body":notification.content}, "to":token}
+    response = requests.post(cls.url, headers=headers, json=post)
+    print("createAndSend", token, response)
+
 
 
 class Candidate(CommonModel):
