@@ -1,5 +1,6 @@
 from ast import DictComp
 from fileinput import isstdin
+from this import d
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -635,7 +636,8 @@ class DatePost(CommonModel):
       if datePost.Post:
         RamData.ramStructure["Post"]["DatePost"][datePost.Post.id].append(datePost.id)
       elif datePost.Mission:
-        # print("bug ramStructure 636", (RamData.ramStructure["Mission"]))
+        if not "DatePost" in RamData.ramStructure["Mission"]:
+          print("bug ramStructure 636", RamData.ramStructure["Mission"], datePost.Mission.id, datePost.id)
         RamData.ramStructure["Mission"]["DatePost"][datePost.Mission.id].append(datePost.id)
 
   def computeValues(self, listFields, user, dictFormat=False):
