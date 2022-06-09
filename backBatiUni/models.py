@@ -759,7 +759,7 @@ class Candidate(CommonModel):
   @classmethod
   def listFields(cls):
       superList = super().listFields()
-      for fieldName in ["Post", "Mission"]:
+      for fieldName in ["Post", "Mission", "unitOfTime"]:
         index = superList.index(fieldName)
         del superList[index]
       return superList
