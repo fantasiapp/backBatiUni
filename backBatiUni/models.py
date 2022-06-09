@@ -548,17 +548,17 @@ class Post(CommonModel):
       elif field == "startDate": values.append(self.startDate.strftime("%Y-%m-%d") if self.startDate else "")
       elif field == "endDate": values.append(self.endDate.strftime("%Y-%m-%d") if self.endDate else "")
 
-      # elif field in self.manyToManyObject:
-      if dictFormat:
-        if self.subContractorName:
-          listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Mission=self)]
+      elif field in self.manyToManyObject:
+        if dictFormat:
+          if self.subContractorName:
+            listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Mission=self)]
+          else:
+            listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Post=self)]
         else:
-          listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Post=self)]
-        # else:
-        #   if self.subContractorName:
-        #     listModel = RamData.ramStructure["Mission"][field][self.id]
-        #   else:
-        #     listModel = RamData.ramStructure["Post"][field][self.id]
+          if self.subContractorName:
+            listModel = RamData.ramStructure["Mission"][field][self.id]
+          else:
+            listModel = RamData.ramStructure["Post"][field][self.id]
         values.append(listModel)
     return values
 
