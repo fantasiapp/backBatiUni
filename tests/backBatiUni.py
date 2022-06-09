@@ -16,7 +16,7 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 5
+numberCompanies = 100
 emailList, missionList, emailListPME, emailListST, detailedPost = {}, {}, [], [], {}
 
 arguments = sys.argv
@@ -207,7 +207,7 @@ def executeQuery():
           
 
     elif query == "modifyPost":
-      post = {'action':"modifyPost", "id":1, "address":"126 rue de Paris 92100 Boulogne", "Job":5, "numberOfPeople":2, "dueDate":"2022-03-15", "startDate":"2022-03-16", "endDate":"2022-04-28", "manPower":False, "counterOffer":False, "hourlyStart":"07:00", "hourlyEnd":"17:00", "currency":"€", "description":"Deuxième description d'un chantier", "amount":24456.10, "DetailedPost":["salle de bain", "douche", "lavabo"], "DatePost":["2022-05-15", "2022-05-16", "2022-05-17"]}
+      post = {'action':"modifyPost", "id":1, "address":"126 rue de Paris 92100 Boulogne", "Job":5, "numberOfPeople":2, "dueDate":"2022-03-15", "startDate":"2022-03-16", "endDate":"2022-04-28", "manPower":False, "counterOffer":False, "hourlyStart":"07:00", "hourlyEnd":"17:00", "currency":"€", "description":"Deuxième description d'un chantier", "amount":24456.10, "DetailedPost":["salle de bain", "douche", "lavabo"], "DatePost":["2022-06-15", "2022-06-16", "2022-06-17"]}
       response = requests.post(url, headers=headers, json=post)
     elif query == "setFavorite":
       requests.get(url, headers=headers, params={'action':"setFavorite", "value":"true", "Post":2})
@@ -374,12 +374,12 @@ def executeQuery():
     elif query == "giveRecommandation":
       post1 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"Maxime", "lastNameRecommanding":"Baraton", "companyNameRecommanding":"Fantasiapp", "qualityStars":4, "qualityComment":"Un travail remarquable", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
       post2 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"Dyvia", "lastNameRecommanding":"Gaultier", "companyNameRecommanding":"Loreal", "qualityStars":5, "qualityComment":"Un travail bien fait", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
-      post3 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"William", "lastNameRecommanding":"Baraton", "companyNameRecommanding":"Fantasiapp", "qualityStars":4, "qualityComment":"Un travail remarquable", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
-      post4 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"Lucas", "lastNameRecommanding":"Gaultier", "companyNameRecommanding":"Loreal", "qualityStars":5, "qualityComment":"Un travail bien fait", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
-      post5 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"Sarah", "lastNameRecommanding":"Baraton", "companyNameRecommanding":"Fantasiapp", "qualityStars":4, "qualityComment":"Un travail remarquable", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
-      post6 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"Cassiopée", "lastNameRecommanding":"Gaultier", "companyNameRecommanding":"Loreal", "qualityStars":5, "qualityComment":"Un travail bien fait", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
-      post7 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"Jean-Luc", "lastNameRecommanding":"Baraton", "companyNameRecommanding":"Fantasiapp", "qualityStars":4, "qualityComment":"Un travail remarquable", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
-      post8 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"Maude", "lastNameRecommanding":"Gaultier", "companyNameRecommanding":"Loreal", "qualityStars":5, "qualityComment":"Un travail bien fait", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
+      post3 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"William", "lastNameRecommanding":"Baraton", "companyNameRecommanding":"Carrefour", "qualityStars":4, "qualityComment":"Un travail remarquable", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
+      post4 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"Lucas", "lastNameRecommanding":"Gaultier", "companyNameRecommanding":"Microsoft", "qualityStars":5, "qualityComment":"Un travail bien fait", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
+      post5 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"Sarah", "lastNameRecommanding":"Baraton", "companyNameRecommanding":"BatiUni", "qualityStars":4, "qualityComment":"Un travail remarquable", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
+      post6 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"Cassiopée", "lastNameRecommanding":"Gaultier", "companyNameRecommanding":"Artech", "qualityStars":5, "qualityComment":"Un travail bien fait", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
+      post7 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"Jean-Luc", "lastNameRecommanding":"Baraton", "companyNameRecommanding":"Reportive", "qualityStars":4, "qualityComment":"Un travail remarquable", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
+      post8 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"Maude", "lastNameRecommanding":"Gaultier", "companyNameRecommanding":"Google", "qualityStars":5, "qualityComment":"Un travail bien fait", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
       for post in [post1, post2, post3, post4, post5, post6, post7, post8]:
         response = requests.post(f'{address}/initialize/', headers=headers, json=post)
   if response and query != "downloadFile":
