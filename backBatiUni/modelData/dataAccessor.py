@@ -1,5 +1,6 @@
 from email.headerregistry import ContentTransferEncodingHeader
 from lib2to3.pgen2 import token
+from this import d
 from django.forms import EmailInput
 from ..models import *
 from django.contrib.auth.models import User
@@ -180,6 +181,7 @@ class DataAccessor():
       elif data["action"] == "modifySupervision": return cls.__modifySupervision(data, currentUser)
       elif data["action"] == "deleteSupervision": return cls.__deleteSupervision(data, currentUser)
       elif data["action"] == "uploadFile": return cls.__uploadFile(data, currentUser)
+      elif data["action"] == "modifyFile": return cls.__modifyFile(data, currentUser)
       elif data["action"] == "modifyDisponibility": return cls.__modifyDisponibility(data["disponibility"], currentUser)
       elif data["action"] == "uploadImageSupervision": return cls.__uploadImageSupervision(data, currentUser)
       elif data["action"] == "modifyMissionDate": return cls.__modifyMissionDate(data, currentUser)
@@ -882,7 +884,9 @@ class DataAccessor():
 
   @classmethod
   def __uploadFile(cls, data, currentUser):
-    if not "ext" in data or data["ext"] == "???" or not "fileBase64" in data:
+    print("uploadFile", data)
+    if not "ext" in data or data["ext"] == "???":
+      return cls.__uploadFileFields()
       return {"uploadFile":"Warning", "messages":f"Aucune image n'est associé à la demande"}
     if not data['ext'] in File.authorizedExtention:
       return {"uploadFile":"Warning", "messages":f"L'extention {data['ext']} n'est pas traitée"}
@@ -912,6 +916,21 @@ class DataAccessor():
     except:
       if file: file.delete()
       return {"uploadFile":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
+
+
+  @classmethod
+  def __modifyFile(cls, data, currentUser):
+    file = File.objects.get(id=data["fileId"])
+    if "name" in data and file.name != data["name"]: file.name =  data["name"]
+    if "ext" in data and file.name != data["ext"] and data["ext"] in cls.authorizedExtention:
+      file.ext =  data["ext"]
+    if "nature" in data and file.name != data["nature"]: file.name =  data["nature"]
+    if "expirationDate" in data:
+      expirationDate = datetime.strptime(data["expirationDate"], "%Y-%m-%d")
+      if expirationDate != file.expirationDate:
+        file.expirationDate = expirationDate
+    file.save()
+    return {"modifyFile":"OK", file.id:file.computeValues(file.listFields(), currentUser, True)[:-1]}
       
 
   @classmethod
