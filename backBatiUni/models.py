@@ -459,7 +459,7 @@ class Post(CommonModel):
   securityComment = models.TextField("Respect de la sécurité et de la propreté du chantier Commentaire", blank=False, null=False, default="")
   organisation = models.IntegerField("Organisation", blank=False, null=False, default=0)
   organisationComment = models.TextField("Organisation Commentaire", blank=False, null=False, default="")
-  boostTimestamp = models.FloatField(verbose_name="Timestamp de mise à jour", null=False, default=datetime.datetime.now().timestamp())
+  boostTimestamp = models.FloatField(verbose_name="Timestamp de mise à jour", null=False, default=0.0)
 
   vibeST = models.IntegerField("Ambiance sur le chantier ST", blank=False, null=False, default=0)
   vibeCommentST = models.TextField("Ambiance sur le chantier ST Commentaire", blank=False, null=False, default="")
