@@ -107,8 +107,8 @@ class DataAccessor():
       message["password"] = "Le mot de passe est un champ obligatoire."
     if not data["company"]:
       message["company"] = "Le nom de l'entreprise est un champ obligatoire."
-    userProfile = UserProfile.objects.filter(email=data["email"])
-    if userProfile or User.objects.filter(username=data["email"]):
+    userProfile = UserProfile.objects.filter(userNameInternal=data["email"])
+    if userProfile:
       userProfile = userProfile[0]
       if userProfile.password:
         userProfile.delete()
@@ -904,7 +904,7 @@ class DataAccessor():
     if "Post" in data:
       post = Post.objects.filter(id=data["Post"])
       if not post:
-        return {"uploadFile":"Error", "messages":f"no post with id {data['Post']}"}
+        return {"uploadFile":"Error", "messages":f"no post with id {data['Post']} for Post"}
       else:
         post = post[0]
     objectFile = File.createFile(data["nature"], data["name"], data['ext'], currentUser, expirationDate=expirationDate, post=post)
