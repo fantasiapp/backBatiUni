@@ -278,11 +278,14 @@ class DataAccessor():
 
   @classmethod
   def __computeStartEndDate(cls, limitDate, strDate):
-    date = datetime.strptime(strDate, "%Y-%m-%d")
-    if not limitDate["startDate"] or limitDate["startDate"] > date:
-      limitDate["startDate"] = date
-    if not limitDate["endDate"] or limitDate["endDate"] < date:
-      limitDate["endDate"] = date
+    if strDate:
+      date = datetime.strptime(strDate, "%Y-%m-%d")
+      if not limitDate["startDate"] or limitDate["startDate"] > date:
+        limitDate["startDate"] = date
+      if not limitDate["endDate"] or limitDate["endDate"] < date:
+        limitDate["endDate"] = date
+    else:
+      print("__computeStartEndDate pb date null")
     
 
 
