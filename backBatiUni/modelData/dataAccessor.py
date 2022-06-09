@@ -1147,6 +1147,7 @@ class DataAccessor():
     print("giveNotificationToken", token, currentUser.id)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     userProfile.token = token
+    userProfile.save()
     return {"giveNotificationToken":"OK"}
 
 
