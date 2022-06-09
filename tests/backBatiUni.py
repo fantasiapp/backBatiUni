@@ -16,7 +16,7 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 10
+numberCompanies = 0
 emailList, missionList, emailListPME, emailListST, detailedPost = {}, {}, [], [], {}
 
 arguments = sys.argv
@@ -394,7 +394,7 @@ def executeQuery():
   else:
     print("no answer")
 if query == "all":
-  keys = ["buildDB", "register", "registerConfirm", "registerMany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "deletePost", "modifyPost", "getPost", "setFavorite", "removeFavorite", "uploadFile", "modifyFile", "downloadFile", "switchDraft", "isViewed", "applyPost", "handleCandidateForPost", "signContract", "modifyMissionDate", "validateMissionDate", "createSupervision", "uploadImageSupervision", "modifyDetailedPost", "modifyDisponibility", "closeMission", "closeMissionST", "boostPost", "blockCompany", "giveRecommandation", "giveNotificationToken"]#
+  keys = ["buildDB", "register", "registerConfirm", "registerMany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "deletePost", "modifyPost", "getPost", "setFavorite", "removeFavorite", "uploadFile", "modifyFile", "downloadFile", "switchDraft", "isViewed", "applyPost"]#, "handleCandidateForPost", "signContract", "modifyMissionDate", "validateMissionDate", "createSupervision", "uploadImageSupervision", "modifyDetailedPost", "modifyDisponibility", "closeMission", "closeMissionST", "boostPost", "blockCompany", "giveRecommandation", "giveNotificationToken"]#
   for key in keys:
     query = key
     executeQuery()
