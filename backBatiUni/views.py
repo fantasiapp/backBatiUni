@@ -38,6 +38,7 @@ class Data(DefaultView):
       elif action == "isViewed": return Response(DataAccessor.isViewed(request.GET["Post"], currentUser))
       elif action == "inviteFriend": return Response(DataAccessor.inviteFriend(request.GET["mail"], request.GET["register"], currentUser))
       elif action == "askRecommandation": return Response(DataAccessor.askRecommandation(request.GET["email"], currentUser))
+      elif action == "giveNotificationToken": return Response(DataAccessor.giveNotificationToken(request.GET["data"], currentUser))
       return Response({"data GET":"Error", "messages":{"action":action}})
     return Response({"data GET":"Warning", "messages":"La confirmation par mail n'est pas réalisée."})
 

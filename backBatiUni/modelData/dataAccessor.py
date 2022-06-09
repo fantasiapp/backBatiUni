@@ -1142,6 +1142,16 @@ class DataAccessor():
     Recommandation.objects.create(**kwargs)
     return {"giveRecommandation":"OK", "messages":"Recommandation recorded"}
 
+  @classmethod
+  def giveNotificationToken(cls, token, currentUser):
+    print("giveNotificationToken", token, currentUser.id)
+    userProfile = UserProfile.objects.get(userNameInternal=currentUser)
+    userProfile.token = token
+    return {"giveNotificationToken":"OK"}
+
+
+
+
 
     
 
