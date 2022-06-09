@@ -337,6 +337,7 @@ class DataAccessor():
     Notification.createAndSend(Post=post, Company=company, title="Nouveau candidat", subContractor=subContractor, nature="ST", Role="PME", content=f"Un nouveau sous traitant : {subContractor.name} pour le chantier du {post.address} a postulé.", timestamp=datetime.now().timestamp())
     postDump = {post.id:post.computeValues(post.listFields(), currentUser, True)}
     candidateDump = {candidate.id:candidate.computeValues(candidate.listFields(), currentUser, True)}
+    print(postDump)
     return {"applyPost":"OK", "Post":postDump, "Candidate":candidateDump}
 
 

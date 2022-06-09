@@ -16,7 +16,7 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 10
+numberCompanies = 5
 emailList, missionList, emailListPME, emailListST, detailedPost = {}, {}, [], [], {}
 
 arguments = sys.argv
@@ -283,8 +283,8 @@ def executeQuery():
         for id, values in missionList.items():
           data = requests.get(url, headers=headers, params={'action':"applyPost", "Post":id, "amount":values["amount"] / 2, "devis":"Par Jour"})
           data = json.loads(data.text)
-          values["candidateId"] = data[str(id)][25][-1]
-          print("applyPost", values)
+          postDump = list(data["Post"].values())[0]
+          values["candidateId"] = postDump[25][-1]
           
     elif query == "handleCandidateForPost":
       requests.get(url, headers=headers, params={'action':"handleCandidateForPost", "Candidate":2, "response":"true"})
@@ -394,7 +394,7 @@ def executeQuery():
   else:
     print("no answer")
 if query == "all":
-  keys = ["buildDB", "register", "registerConfirm", "registerMany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "deletePost", "modifyPost", "getPost", "setFavorite", "removeFavorite", "uploadFile", "modifyFile", "downloadFile", "switchDraft", "isViewed", "applyPost"]#, "handleCandidateForPost", "signContract", "modifyMissionDate", "validateMissionDate", "createSupervision", "uploadImageSupervision", "modifyDetailedPost", "modifyDisponibility", "closeMission", "closeMissionST", "boostPost", "blockCompany", "giveRecommandation", "giveNotificationToken"]#
+  keys = ["buildDB", "register", "registerConfirm", "registerMany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "deletePost", "modifyPost", "getPost", "setFavorite", "removeFavorite", "uploadFile", "modifyFile", "downloadFile", "switchDraft", "isViewed", "applyPost", "handleCandidateForPost", "signContract", "modifyMissionDate", "validateMissionDate", "createSupervision", "uploadImageSupervision", "modifyDetailedPost", "modifyDisponibility", "closeMission", "closeMissionST", "boostPost", "blockCompany", "giveRecommandation", "giveNotificationToken"]#
   for key in keys:
     query = key
     executeQuery()
