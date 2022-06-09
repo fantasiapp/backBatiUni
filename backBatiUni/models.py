@@ -284,12 +284,10 @@ class JobForCompany(CommonModel):
   def generateRamStructure(cls):
     RamData.ramStructure["Company"]["JobForCompany"] = deepcopy(RamData.allCompany)
     for jobForCompany in JobForCompany.objects.all():
-      # if not "jobForCompany" in RamData.ramStructure["Company"]:
-          # print("bug ramStructure 288", RamData.ramStructure["Company"], jobForCompany.Post.id, jobForCompany.id)
+      if not "jobForCompany" in RamData.ramStructure["Company"]:
+          print("bug ramStructure 288", RamData.ramStructure["Company"], jobForCompany.Company.id, jobForCompany.id)
       if jobForCompany.Company:
         RamData.ramStructure["Company"]["JobForCompany"][jobForCompany.Company.id].append(jobForCompany.id)
-      else:
-        print("jobForCompany", jobForCompany)
 
   def computeValues(self, listFields, user, dictFormat=False): return [self.Job.id, self.number]
 
