@@ -711,9 +711,11 @@ class Notification(CommonModel):
   @classmethod
   def createAndSend(cls, **kwargs):
     notification = cls.objects.create(**kwargs)
-    token = notification.Company.tokenNotification
+    company = notification.Company
+    tokenList = [userProfile.token for userProfile in UserProfile.objects.filter(Company=company)]
     headers= {'Content-Type': 'application/json', 'Authorization': f'key = {cls.key}'}
-    post = {"notification":{"title":notification.title, "body":notification.content}, "to":token}
+    for token in tokenList:
+      post = {"notification":{"title":notification.title, "body":notification.content}, "to":token}
     response = requests.post(cls.url, headers=headers, json=post)
     print("createAndSend", token, response, json.loads(response.text))
 
