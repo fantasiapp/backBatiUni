@@ -16,6 +16,7 @@ from PIL import Image
 from cairosvg import svg2png
 from time import sleep, time
 from copy import deepcopy
+import json
 
 
 class RamData():
@@ -714,7 +715,7 @@ class Notification(CommonModel):
     headers= {'Content-Type': 'application/json', 'Authorization': f'key = {cls.key}'}
     post = {"notification":{"title":notification.title, "body":notification.content}, "to":token}
     response = requests.post(cls.url, headers=headers, json=post)
-    print("createAndSend", token, response)
+    print("createAndSend", token, response, json.loads(response.text))
 
 
 
