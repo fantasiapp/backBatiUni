@@ -857,13 +857,19 @@ class DataAccessor():
     return {"downloadFile":"OK", id:fileList}
 
   @classmethod
-  def deleteFile(cls, id):
+  def deleteFile(cls, id, currentUser):
     file = File.objects.filter(id=id)
     if file:
       file = file[0]
+      isCompany = file.nature in ["admin", "labels"]
       os.remove(file.path)
       file.delete()
-      return {"deleteFile":"OK", "id":id}
+      response = {"deleteFile":"OK", "id":id}
+      if isCompany:
+        company = UserProfile.objects.get(userNameInternal=currentUser).Company
+        response["Company"] = {company.id:company.computeValues(company.listFields(), currentUser, True)}
+      print("deleteFile", response)
+      return response
     return {"deleteFile":"Error", "messages":f"No file width id {id}"}
 
 
@@ -999,7 +1005,7 @@ class DataAccessor():
 
   @classmethod
   def __setValuesJob(cls, dictValue, user):
-    company, listJobForCompany = UserProfile.objects.get(userNameInternal=user).Company, {}
+    company, listJobForCompany = UserProfile.objects.get(userNameInternal=user).Company, []
     jobForCompany = JobForCompany.objects.filter(Company=company)
     if jobForCompany:
       jobForCompany.delete()
@@ -1008,19 +1014,19 @@ class DataAccessor():
         job = Job.objects.get(id=listValue[0])
         jobForCompany = JobForCompany.objects.create(Job=job, number=listValue[1], Company=company)
         if jobForCompany.number != 0:
-          listJobForCompany[jobForCompany.id] = [jobForCompany.Job.id, jobForCompany.number]
+          listJobForCompany.append({jobForCompany.id:[jobForCompany.Job.id, jobForCompany.number]})
     return listJobForCompany
 
   @classmethod
   def __setValuesLabel(cls, dictValue, user):
-    company, listLabelForCompany = UserProfile.objects.get(userNameInternal=user).Company, {}
+    company, listLabelForCompany = UserProfile.objects.get(userNameInternal=user).Company, []
     LabelForCompany.objects.filter(Company=company).delete()
     for listValue in dictValue:
       label = Label.objects.get(id=listValue[0])
       date = datetime.strptime(listValue[1], "%Y-%m-%d") if listValue[1] else None
       labelForCompany = LabelForCompany.objects.create(Label=label, date=date, Company=company)
       date = labelForCompany.date.strftime("%Y-%m-%d") if labelForCompany.date else ""
-      listLabelForCompany[labelForCompany.id] = [labelForCompany.Label.id, date]
+      listLabelForCompany.append({labelForCompany.id:[labelForCompany.Label.id, date]})
     return listLabelForCompany
 
   @classmethod
