@@ -382,6 +382,8 @@ def executeQuery():
       post8 = {"action":"giveRecommandation", "companyRecommanded":3, "firstNameRecommanding":"Maude", "lastNameRecommanding":"Gaultier", "companyNameRecommanding":"Google", "qualityStars":5, "qualityComment":"Un travail bien fait", "securityStars":5, "securityComment":"Une sécurité digne de la Nasa", "organisationStars":4, "organisationComment":"Rien à dire"}
       for post in [post1, post2, post3, post4, post5, post6, post7, post8]:
         response = requests.post(f'{address}/initialize/', headers=headers, json=post)
+    elif query == "giveNotificationToken":
+      response = requests.get(url, headers=headers, params={"action":"giveNotificationToken", "token":"La valeur du token qui devrait être enregistée"})
   if response and query != "downloadFile":
     data = json.loads(response.text)
     print("data", data)
