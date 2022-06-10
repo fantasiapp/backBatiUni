@@ -918,7 +918,8 @@ class DataAccessor():
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path + data['ext']) if data['ext'] != "txt" else fileStr
       with open(objectFile.path, "wb") as outfile:
           outfile.write(file.file.getbuffer())
-      return {"uploadFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)[:-1]}
+          print("uploadFile", objectFile.id, objectFile.computeValues(objectFile.listFields(), currentUser, True)[:-1])
+          return {"uploadFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)[:-1]}
     except:
       if file: file.delete()
       print("uploadFile", "Le fichier ne peut être sauvegardé")
