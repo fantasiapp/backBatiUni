@@ -47,8 +47,8 @@ class DataAccessor():
       # print(f'Function {table} executed in {(t2-t1):.4f}s')
     print(f"total executed in {(t2-t0):.4f}s")
     dictAnswer["timestamp"] = datetime.now().timestamp()
-    # with open(f"./backBatiUni/modelData/{profile}Data.json", 'w') as jsonFile:
-    #   json.dump(dictAnswer, jsonFile, indent = 3)
+    with open(f"./backBatiUni/modelData/{profile}Data.json", 'w') as jsonFile:
+      json.dump(dictAnswer, jsonFile, indent = 3)
     return dictAnswer
 
   @classmethod
@@ -935,6 +935,7 @@ class DataAccessor():
     name = data["name"] if "name" in data else objectFile.name
     ext = data["ext"] if "ext" and data["ext"] != "???" in data else objectFile.ext
     suppress = "fileBase64" in data and data["fileBase64"]
+    print("modifyFile", data["ext"], suppress)
     objectFile = File.createFile(nature, name, ext, currentUser, expirationDate=expirationDate, post=post, mission=mission, detailedPost=None, suppress=suppress)
     if "fileBase64" in data and data["fileBase64"]:
       try:
@@ -942,7 +943,7 @@ class DataAccessor():
         print("path", objectFile.path)
         with open(objectFile.path, "wb") as outfile:
           outfile.write(file.file.getbuffer())
-          {"modifyFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
+          # {"modifyFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
       except ValueError:
         file.delete()
         return {"modifyFile":"Error", "messages":f"File of id {file.id} has not been saved"}
