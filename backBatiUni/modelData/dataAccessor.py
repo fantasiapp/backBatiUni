@@ -922,7 +922,7 @@ class DataAccessor():
 
   @classmethod
   def __modifyFile(cls, data, currentUser):
-    print("modifyFile start", data)
+    print("modifyFile start", list(data.keys()))
     file = File.objects.get(id=data["fileId"])
     if "name" in data and file.name != data["name"]: file.name =  data["name"]
     if "ext" in data and file.name != data["ext"] and data["ext"] in File.authorizedExtention:
@@ -933,6 +933,14 @@ class DataAccessor():
       if expirationDate != file.expirationDate:
         file.expirationDate = expirationDate
     file.save()
+    if "fileBase64" in data and data["fileBase64"]:
+      try:
+        file = ContentFile(base64.urlsafe_b64decode(data["fileBase64"]), name=file.path + data['ext']) if data['ext'] != "txt" else data["fileBase64"]
+        with open(file.path, "wb") as outfile:
+          outfile.write(file.file.getbuffer())
+      except ValueError:
+        file.delete()
+        return {"modifyFile":"Error", "messages":f"File of id {file.id} has not been saved"}
     print("return ", {"modifyFile":"OK", file.id:file.computeValues(file.listFields(), currentUser, True)[:-1]})
     return {"modifyFile":"OK", file.id:file.computeValues(file.listFields(), currentUser, True)[:-1]}
       
