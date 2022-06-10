@@ -1030,8 +1030,8 @@ class File(CommonModel):
     if objectFile:
       objectFile = objectFile[0]
       oldPath = objectFile.path
-      if os.path.exists(oldPath):
-        os.remove(oldPath)
+      # if os.path.exists(oldPath):
+      #   os.remove(oldPath)
       objectFile.path = path
       objectFile.timestamp = datetime.datetime.now().timestamp()
       objectFile.ext = ext
