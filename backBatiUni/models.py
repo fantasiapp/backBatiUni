@@ -820,6 +820,7 @@ class DetailedPost(CommonModel):
         RamData.ramStructure["Mission"]["DetailedPost"][detailed.Mission.id].append(detailed.id)
       if detailed.DatePost:
         RamData.ramStructure["DatePost"]["DetailedPost"][detailed.DatePost.id].append(detailed.id)
+    print("MissionDetailedPost exist")
     
   def computeValues(self, listFields, user, dictFormat=False):
     values = []
