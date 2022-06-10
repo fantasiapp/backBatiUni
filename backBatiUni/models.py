@@ -1035,6 +1035,7 @@ class File(CommonModel):
     if objectFile:
       objectFile = objectFile[0]
       oldPath = objectFile.path
+      print("oldPath", suppress)
       if os.path.exists(oldPath) and suppress:
         os.remove(oldPath)
       objectFile.path = path
