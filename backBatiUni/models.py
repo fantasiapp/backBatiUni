@@ -952,9 +952,13 @@ class File(CommonModel):
     return getattr(self, fieldName, answer)
 
   def readFile(self, path):
-    with open(path, "rb") as fileData:
-        encoded_string = base64.b64encode(fileData.read())
-        return encoded_string.decode("utf-8")
+    try:
+      with open(path, "rb") as fileData:
+          encoded_string = base64.b64encode(fileData.read())
+          return encoded_string.decode("utf-8")
+    except ValueError:
+      print("readFile", os.getcwd(), os.listdir('files/avatars'))
+      return None
 
 
   def encodedStringListForPdf(self):
