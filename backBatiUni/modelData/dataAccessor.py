@@ -891,6 +891,7 @@ class DataAccessor():
 
   @classmethod
   def __uploadFile(cls, data, currentUser):
+    print("uploadFile start", list(data.keys()))
     if not "ext" in data or data["ext"] == "???" or not "fileBase64" in data:
       return {"uploadFile":"Warning", "messages":f"Aucune image n'est associé à la demande"}
     if not data['ext'] in File.authorizedExtention:
@@ -935,7 +936,7 @@ class DataAccessor():
     ext = data["ext"] if "ext" and data["ext"] != "???" in data else objectFile.ext
     objectFile = File.createFile(nature, name, ext, currentUser, expirationDate=expirationDate, post=post, mission=mission, detailedPost=None)
     if "fileBase64" in data and data["fileBase64"]:
-      print(data["fileBase64"])
+      print("modifyFile", data["fileBase64"])
       try:
         file = ContentFile(base64.urlsafe_b64decode(data["fileBase64"]), name=objectFile.path + data['ext']) if data['ext'] != "txt" else data["fileBase64"]
         print("path", objectFile.path)
