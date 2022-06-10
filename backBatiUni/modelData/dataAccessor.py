@@ -942,6 +942,7 @@ class DataAccessor():
         print("path", objectFile.path)
         with open(objectFile.path, "wb") as outfile:
           outfile.write(file.file.getbuffer())
+          {"modifyFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
       except ValueError:
         file.delete()
         return {"modifyFile":"Error", "messages":f"File of id {file.id} has not been saved"}
