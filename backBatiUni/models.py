@@ -769,7 +769,7 @@ class Candidate(CommonModel):
       if candidate.Post and candidate.Post.id in RamData.ramStructure["Post"]["Candidate"]:
         RamData.ramStructure["Post"]["Candidate"][candidate.Post.id].append(candidate.id)
       if candidate.Mission and candidate.Mission.id in RamData.ramStructure["Mission"]["Candidate"]:
-        RamData.ramStructure["Mission"]["Candidate"][candidate.Missiona.id].append(candidate.id)
+        RamData.ramStructure["Mission"]["Candidate"][candidate.Mission.id].append(candidate.id)
 
   @classmethod
   def listFields(cls):
