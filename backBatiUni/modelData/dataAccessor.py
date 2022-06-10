@@ -15,7 +15,7 @@ from django.core.files.base import ContentFile
 from ..smtpConnector import SmtpConnector
 import json
 import secrets
-
+from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -877,6 +877,9 @@ class DataAccessor():
     if file:
       file = file[0]
       isCompany = file.nature in ["admin", "labels"]
+      if not Path(file.path).is_file():
+        return {"deleteFile":"Error", "messages":f"No file with path {file.path}"}
+
       os.remove(file.path)
       file.delete()
       response = {"deleteFile":"OK", "id":id}
