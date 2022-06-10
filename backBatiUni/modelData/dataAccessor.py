@@ -934,7 +934,7 @@ class DataAccessor():
       try:
         file = ContentFile(base64.urlsafe_b64decode(data["fileBase64"]), name=objectFile.path + data['ext']) if data['ext'] != "txt" else data["fileBase64"]
         print("path", objectFile.path)
-        with open(file.path, "wb") as outfile:
+        with open(objectFile.path, "wb") as outfile:
           outfile.write(file.file.getbuffer())
       except ValueError:
         file.delete()
