@@ -939,8 +939,8 @@ class DataAccessor():
       except ValueError:
         file.delete()
         return {"modifyFile":"Error", "messages":f"File of id {file.id} has not been saved"}
-    print("return ", {"modifyFile":"OK", file.id:file.computeValues(file.listFields(), currentUser, True)[:-1]})
-    return {"modifyFile":"OK", file.id:file.computeValues(file.listFields(), currentUser, True)[:-1]}
+    print("return ", {"modifyFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)[:-1]})
+    return {"modifyFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)[:-1]}
       
 
   @classmethod
