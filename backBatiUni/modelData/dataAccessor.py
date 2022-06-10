@@ -924,17 +924,21 @@ class DataAccessor():
   def __modifyFile(cls, data, currentUser):
     print("modifyFile start", list(data.keys()))
     file = File.objects.get(id=data["fileId"])
+    expirationDate = datetime.strptime(data["expirationDate"], "%Y-%m-%d") if "expirationDate" in data and data["expirationDate"] else None
+    post, mission, detailedPost, supervision = file.Post, file.Mission, file.DetailedPost, file.Supervision
+    nature = data["nature"] if "nature" in data else file.nature
+    name = data["name"] if "name" in data else file.name
+    ext = data["ext"] if "ext" and data["ext"] != "???" in data else file.ext
+    file = File.createFile(nature, name, ext, currentUser, expirationDate=expirationDate, post=post, mission=mission, detailedPost=detailedPost, supervision=supervision)
     if "fileBase64" in data and data["fileBase64"]:
       try:
         file = ContentFile(base64.urlsafe_b64decode(data["fileBase64"]), name=file.path + data['ext']) if data['ext'] != "txt" else data["fileBase64"]
+        print("path", file.path)
         with open(file.path, "wb") as outfile:
           outfile.write(file.file.getbuffer())
       except ValueError:
         file.delete()
         return {"modifyFile":"Error", "messages":f"File of id {file.id} has not been saved"}
-    expirationDate = datetime.strptime(data["expirationDate"], "%Y-%m-%d") if "expirationDate" in data and data["expirationDate"] else None
-    post, mission, detailedPost, supervision = file.Post, file.Mission, file.DetailedPost, file.Supervision
-    file = File.createFile(data["nature"], data["name"], data['ext'], currentUser, expirationDate=expirationDate, post=post, mission=mission, detailedPost=detailedPost, supervision=supervision)
     print("return ", {"modifyFile":"OK", file.id:file.computeValues(file.listFields(), currentUser, True)[:-1]})
     return {"modifyFile":"OK", file.id:file.computeValues(file.listFields(), currentUser, True)[:-1]}
       
