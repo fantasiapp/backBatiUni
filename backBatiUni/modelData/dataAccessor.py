@@ -923,11 +923,11 @@ class DataAccessor():
   @classmethod
   def __modifyFile(cls, data, currentUser):
     print("modifyFile start", list(data.keys()))
-    fileObject = File.objects.get(id=data["fileId"])
+    objectFile = File.objects.get(id=data["fileId"])
     expirationDate = datetime.strptime(data["expirationDate"], "%Y-%m-%d") if "expirationDate" in data and data["expirationDate"] else None
-    post, mission = file.Post, file.Mission
-    nature = data["nature"] if "nature" in data else file.nature
-    name = data["name"] if "name" in data else file.name
+    post, mission = objectFile.Post, objectFile.Mission
+    nature = data["nature"] if "nature" in data else objectFile.nature
+    name = data["name"] if "name" in data else objectFile.name
     ext = data["ext"] if "ext" and data["ext"] != "???" in data else file.ext
     objectFile = File.createFile(nature, name, ext, currentUser, expirationDate=expirationDate, post=post, mission=mission, detailedPost=None)
     if "fileBase64" in data and data["fileBase64"]:
