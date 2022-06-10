@@ -923,17 +923,17 @@ class DataAccessor():
   @classmethod
   def __modifyFile(cls, data, currentUser):
     print("modifyFile start", list(data.keys()))
-    file = File.objects.get(id=data["fileId"])
+    fileObject = File.objects.get(id=data["fileId"])
     expirationDate = datetime.strptime(data["expirationDate"], "%Y-%m-%d") if "expirationDate" in data and data["expirationDate"] else None
     post, mission = file.Post, file.Mission
     nature = data["nature"] if "nature" in data else file.nature
     name = data["name"] if "name" in data else file.name
     ext = data["ext"] if "ext" and data["ext"] != "???" in data else file.ext
-    file = File.createFile(nature, name, ext, currentUser, expirationDate=expirationDate, post=post, mission=mission, detailedPost=None)
+    fileObject = File.createFile(nature, name, ext, currentUser, expirationDate=expirationDate, post=post, mission=mission, detailedPost=None)
     if "fileBase64" in data and data["fileBase64"]:
       try:
         file = ContentFile(base64.urlsafe_b64decode(data["fileBase64"]), name=file.path + data['ext']) if data['ext'] != "txt" else data["fileBase64"]
-        print("path", file.path)
+        print("path", fileObject.path)
         with open(file.path, "wb") as outfile:
           outfile.write(file.file.getbuffer())
       except ValueError:
