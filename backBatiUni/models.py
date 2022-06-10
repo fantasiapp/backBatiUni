@@ -18,6 +18,8 @@ from cairosvg import svg2png
 from time import sleep, time
 from copy import deepcopy
 import json
+import shutil
+
 
 
 class RamData():
@@ -1038,6 +1040,9 @@ class File(CommonModel):
       print("oldPath", suppress)
       if os.path.exists(oldPath) and suppress:
         os.remove(oldPath)
+        if objectFile.ext == "pdf":
+          pathToRemove = object.objectFile.replace(".pdf", "/")
+          shutil.rmtree(pathToRemove, ignore_errors=True)
       objectFile.path = path
       objectFile.timestamp = datetime.datetime.now().timestamp()
       objectFile.ext = ext
