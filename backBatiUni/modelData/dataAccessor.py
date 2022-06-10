@@ -47,8 +47,8 @@ class DataAccessor():
       # print(f'Function {table} executed in {(t2-t1):.4f}s')
     print(f"total executed in {(t2-t0):.4f}s")
     dictAnswer["timestamp"] = datetime.now().timestamp()
-    with open(f"./backBatiUni/modelData/{profile}Data.json", 'w') as jsonFile:
-      json.dump(dictAnswer, jsonFile, indent = 3)
+    # with open(f"./backBatiUni/modelData/{profile}Data.json", 'w') as jsonFile:
+    #   json.dump(dictAnswer, jsonFile, indent = 3)
     return dictAnswer
 
   @classmethod
@@ -878,7 +878,6 @@ class DataAccessor():
       file = file[0]
       isCompany = file.nature in ["admin", "labels"]
       if not Path(file.path).is_file():
-        print(f"No file with path {file.path}", os.listdir("./files/"), os.listdir("./files/admin"), os.getcwd())
         return {"deleteFile":"Error", "messages":f"No file with path {file.path}"}
       os.remove(file.path)
       file.delete()
@@ -935,9 +934,9 @@ class DataAccessor():
     nature = data["nature"] if "nature" in data else objectFile.nature
     name = data["name"] if "name" in data else objectFile.name
     ext = data["ext"] if "ext" and data["ext"] != "???" in data else objectFile.ext
-    objectFile = File.createFile(nature, name, ext, currentUser, expirationDate=expirationDate, post=post, mission=mission, detailedPost=None)
+    suppress = "fileBase64" in data and data["fileBase64"]
+    objectFile = File.createFile(nature, name, ext, currentUser, expirationDate=expirationDate, post=post, mission=mission, detailedPost=None, suppress=suppress)
     if "fileBase64" in data and data["fileBase64"]:
-      print("modifyFile", data["fileBase64"])
       try:
         file = ContentFile(base64.urlsafe_b64decode(data["fileBase64"]), name=objectFile.path + data['ext']) if data['ext'] != "txt" else data["fileBase64"]
         print("path", objectFile.path)

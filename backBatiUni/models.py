@@ -1004,7 +1004,7 @@ class File(CommonModel):
     return {}
 
   @classmethod
-  def createFile(cls, nature, name, ext, user, expirationDate = None, post=None, mission=None, detailedPost=None, supervision=None):
+  def createFile(cls, nature, name, ext, user, expirationDate = None, post=None, mission=None, detailedPost=None, supervision=None, suppress = False):
     userProfile = UserProfile.objects.get(userNameInternal=user)
     objectFile, mission = None, None
     if nature == "userImage":
@@ -1030,8 +1030,8 @@ class File(CommonModel):
     if objectFile:
       objectFile = objectFile[0]
       oldPath = objectFile.path
-      # if os.path.exists(oldPath):
-      #   os.remove(oldPath)
+      if os.path.exists(oldPath) and suppress:
+        os.remove(oldPath)
       objectFile.path = path
       objectFile.timestamp = datetime.datetime.now().timestamp()
       objectFile.ext = ext
