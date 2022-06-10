@@ -1041,7 +1041,7 @@ class File(CommonModel):
       if os.path.exists(oldPath) and suppress:
         os.remove(oldPath)
         if objectFile.ext == "pdf":
-          pathToRemove = object.objectFile.replace(".pdf", "/")
+          pathToRemove = objectFile.path.replace(".pdf", "/")
           shutil.rmtree(pathToRemove, ignore_errors=True)
       objectFile.path = path
       objectFile.timestamp = datetime.datetime.now().timestamp()
