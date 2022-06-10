@@ -47,8 +47,8 @@ class DataAccessor():
       # print(f'Function {table} executed in {(t2-t1):.4f}s')
     print(f"total executed in {(t2-t0):.4f}s")
     dictAnswer["timestamp"] = datetime.now().timestamp()
-    with open(f"./backBatiUni/modelData/{profile}Data.json", 'w') as jsonFile:
-      json.dump(dictAnswer, jsonFile, indent = 3)
+    # with open(f"./backBatiUni/modelData/{profile}Data.json", 'w') as jsonFile:
+    #   json.dump(dictAnswer, jsonFile, indent = 3)
     return dictAnswer
 
   @classmethod
