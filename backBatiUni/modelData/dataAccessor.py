@@ -922,6 +922,7 @@ class DataAccessor():
 
   @classmethod
   def __modifyFile(cls, data, currentUser):
+    print("modifyFile start", data)
     file = File.objects.get(id=data["fileId"])
     if "name" in data and file.name != data["name"]: file.name =  data["name"]
     if "ext" in data and file.name != data["ext"] and data["ext"] in cls.authorizedExtention:
@@ -932,6 +933,7 @@ class DataAccessor():
       if expirationDate != file.expirationDate:
         file.expirationDate = expirationDate
     file.save()
+    print("return ", {"modifyFile":"OK", file.id:file.computeValues(file.listFields(), currentUser, True)[:-1]})
     return {"modifyFile":"OK", file.id:file.computeValues(file.listFields(), currentUser, True)[:-1]}
       
 

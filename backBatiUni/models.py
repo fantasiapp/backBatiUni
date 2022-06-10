@@ -556,8 +556,12 @@ class Post(CommonModel):
             listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Post=self)]
         else:
           if self.subContractorName:
+            if not self.id in RamData.ramStructure["Post"][field]:
+              print("bug Mission 561", field, self.id)
             listModel = RamData.ramStructure["Mission"][field][self.id]
           else:
+            if not self.id in RamData.ramStructure["Post"][field]:
+              print("bug Post 561", field, self.id)
             listModel = RamData.ramStructure["Post"][field][self.id]
         values.append(listModel)
     return values
@@ -765,7 +769,7 @@ class Candidate(CommonModel):
       if candidate.Post and candidate.Post.id in RamData.ramStructure["Post"]["Candidate"]:
         RamData.ramStructure["Post"]["Candidate"][candidate.Post.id].append(candidate.id)
       if candidate.Mission and candidate.Mission.id in RamData.ramStructure["Mission"]["Candidate"]:
-        RamData.ramStructure["Mission"]["Candidate"][candidate.Mission.id].append(candidate.id)
+        RamData.ramStructure["Mission"]["Candidate"][candidate.Missiona.id].append(candidate.id)
 
   @classmethod
   def listFields(cls):
