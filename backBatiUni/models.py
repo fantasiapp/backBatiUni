@@ -556,13 +556,16 @@ class Post(CommonModel):
             listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Post=self)]
         else:
           if self.subContractorName:
-            if not self.id in RamData.ramStructure["Post"][field]:
+            if not self.id in RamData.ramStructure["Mission"][field]:
               print("bug Mission 561", field, self.id)
+              print("bug Mission 561", RamData.ramStructure["Mission"][field])
             listModel = RamData.ramStructure["Mission"][field][self.id]
           else:
             if not self.id in RamData.ramStructure["Post"][field]:
               print("bug Post 561", field, self.id)
+              print("bug Post 561", RamData.ramStructure["Post"][field])
             listModel = RamData.ramStructure["Post"][field][self.id]
+            
         values.append(listModel)
     return values
 
