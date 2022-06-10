@@ -925,7 +925,7 @@ class DataAccessor():
     print("modifyFile start", list(data.keys()))
     file = File.objects.get(id=data["fileId"])
     expirationDate = datetime.strptime(data["expirationDate"], "%Y-%m-%d") if "expirationDate" in data and data["expirationDate"] else None
-    post, mission, supervision = file.Post, file.Mission
+    post, mission = file.Post, file.Mission
     nature = data["nature"] if "nature" in data else file.nature
     name = data["name"] if "name" in data else file.name
     ext = data["ext"] if "ext" and data["ext"] != "???" in data else file.ext
