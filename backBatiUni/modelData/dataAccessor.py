@@ -878,8 +878,8 @@ class DataAccessor():
       file = file[0]
       isCompany = file.nature in ["admin", "labels"]
       if not Path(file.path).is_file():
+        print(f"No file with path {file.path}", os.listdir("."), os.listdir("./files"), os.getcwd())
         return {"deleteFile":"Error", "messages":f"No file with path {file.path}"}
-
       os.remove(file.path)
       file.delete()
       response = {"deleteFile":"OK", "id":id}
