@@ -925,7 +925,7 @@ class DataAccessor():
     print("modifyFile start", data)
     file = File.objects.get(id=data["fileId"])
     if "name" in data and file.name != data["name"]: file.name =  data["name"]
-    if "ext" in data and file.name != data["ext"] and data["ext"] in cls.authorizedExtention:
+    if "ext" in data and file.name != data["ext"] and data["ext"] in File.authorizedExtention:
       file.ext =  data["ext"]
     if "nature" in data and file.name != data["nature"]: file.name =  data["nature"]
     if "expirationDate" in data:
