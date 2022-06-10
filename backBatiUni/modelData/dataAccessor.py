@@ -928,7 +928,7 @@ class DataAccessor():
     post, mission = objectFile.Post, objectFile.Mission
     nature = data["nature"] if "nature" in data else objectFile.nature
     name = data["name"] if "name" in data else objectFile.name
-    ext = data["ext"] if "ext" and data["ext"] != "???" in data else file.ext
+    ext = data["ext"] if "ext" and data["ext"] != "???" in data else objectFile.ext
     objectFile = File.createFile(nature, name, ext, currentUser, expirationDate=expirationDate, post=post, mission=mission, detailedPost=None)
     if "fileBase64" in data and data["fileBase64"]:
       try:
