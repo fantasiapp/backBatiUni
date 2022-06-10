@@ -937,6 +937,7 @@ class DataAccessor():
     suppress = "fileBase64" in data and len(data["fileBase64"]) != 0
     print("modifyFile", data["ext"], suppress)
     objectFile = File.createFile(nature, name, ext, currentUser, expirationDate=expirationDate, post=post, mission=mission, detailedPost=None, suppress=suppress)
+    print("modifyFile", objectFile.ext)
     if "fileBase64" in data and data["fileBase64"]:
       try:
         file = ContentFile(base64.urlsafe_b64decode(data["fileBase64"]), name=objectFile.path + data['ext']) if data['ext'] != "txt" else data["fileBase64"]
