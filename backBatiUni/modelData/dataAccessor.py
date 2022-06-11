@@ -107,7 +107,7 @@ class DataAccessor():
       message["password"] = "Le mot de passe est un champ obligatoire."
     if not data["company"]:
       message["company"] = "Le nom de l'entreprise est un champ obligatoire."
-    print("email", data["email"])
+    print("email", data)
     userProfile = UserProfile.objects.filter(email=data["email"])
     if userProfile:
       userProfile = userProfile[0]
