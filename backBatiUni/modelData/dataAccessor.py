@@ -935,7 +935,10 @@ class DataAccessor():
     name = data["name"] if "name" in data else objectFile.name
     ext = data["ext"] if "ext" in data and data["ext"] != "???" else objectFile.ext
     suppress = "fileBase64" in data and len(data["fileBase64"]) != 0
-    print("modifyFile", data["ext"], suppress)
+    for key in data.keys():
+      if key != "fileBase64":
+        print("__modifyFile", key, data[key])
+    print("modifyFile", ext, suppress)
     objectFile = File.createFile(nature, name, ext, currentUser, expirationDate=expirationDate, post=post, mission=mission, detailedPost=None, suppress=suppress)
     print("modifyFile", objectFile.ext)
     if "fileBase64" in data and data["fileBase64"]:
