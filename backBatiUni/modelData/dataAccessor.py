@@ -196,6 +196,10 @@ class DataAccessor():
 
   @classmethod
   def __changeUserImage(cls, dictData, currentUser):
+    if not dictData['ext'] in File.authorizedExtention:
+      return {"changeUserImage":"Warning", "messages":f"L'extention {dictData['ext']} n'est pas traitée"}
+    else:
+      dictData['ext'] = File.authorizedExtention[dictData['ext']]
     fileStr = dictData["imageBase64"]
     if not dictData["name"]:
       return {"changeUserImage":"Error", "messages":"field name is empty"}
