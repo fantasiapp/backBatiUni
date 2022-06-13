@@ -913,6 +913,7 @@ class DataAccessor():
         post = post[0]
     objectFile = File.createFile(data["nature"], data["name"], data['ext'], currentUser, expirationDate=expirationDate, post=post)
     file = None
+    print("uploadFile path", objectFile.id, objectFile.path + data['ext'])
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path + data['ext']) if data['ext'] != "txt" else fileStr
       with open(objectFile.path, "wb") as outfile:
@@ -969,7 +970,7 @@ class DataAccessor():
     file = None
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path + data['ext']) if data['ext'] != "txt" else fileStr
-      print("uploadImageSupervision path", objectFile.path + data['ext'])
+      print("uploadImageSupervision path", objectFile.id, objectFile.path + data['ext'])
       with open(objectFile.path, "wb") as outfile:
           outfile.write(file.file.getbuffer())
       return {"uploadImageSupervision":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True), "supervisionId":supervision.id}
