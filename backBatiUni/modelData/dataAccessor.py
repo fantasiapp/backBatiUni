@@ -913,7 +913,7 @@ class DataAccessor():
         post = post[0]
     objectFile = File.createFile(data["nature"], data["name"], data['ext'], currentUser, expirationDate=expirationDate, post=post)
     file = None
-    print("uploadFile path", objectFile.id, objectFile.path + data['ext'])
+    print("uploadFile path", objectFile.id, objectFile.path)
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if data['ext'] != "txt" else fileStr
       with open(objectFile.path, "wb") as outfile:
