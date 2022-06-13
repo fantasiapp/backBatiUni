@@ -965,9 +965,11 @@ class DataAccessor():
       return {"uploadImageSupervision":"Error", "messages":"field fileBase64 is empty"}
     supervision = Supervision.objects.get(id=data["supervisionId"])
     objectFile = File.createFile("supervision", "supervision", data['ext'], currentUser, supervision=supervision)
+    print("uploadImageSupervision before", objectFile.path + data['ext'])
     file = None
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path + data['ext']) if data['ext'] != "txt" else fileStr
+      print("uploadImageSupervision path", objectFile.path + data['ext'])
       with open(objectFile.path, "wb") as outfile:
           outfile.write(file.file.getbuffer())
       return {"uploadImageSupervision":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True), "supervisionId":supervision.id}
