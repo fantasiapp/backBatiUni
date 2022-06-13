@@ -917,8 +917,8 @@ class DataAccessor():
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path + data['ext']) if data['ext'] != "txt" else fileStr
       with open(objectFile.path, "wb") as outfile:
         outfile.write(file.file.getbuffer())
-      print("uploadFile", objectFile.id, objectFile.computeValues(objectFile.listFields(), currentUser, True)[:-1])
-      return {"uploadFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)[:-1]}
+      print("uploadFile", objectFile.id, objectFile.computeValues(objectFile.listFields(), currentUser, True))
+      return {"uploadFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
     except:
       if file: file.delete()
       print("uploadFile", "Le fichier ne peut être sauvegardé")
@@ -951,8 +951,8 @@ class DataAccessor():
       except ValueError:
         file.delete()
         return {"modifyFile":"Error", "messages":f"File of id {file.id} has not been saved"}
-    print("return ", {"modifyFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)[:-1]})
-    return {"modifyFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)[:-1]}
+    print("return ", {"modifyFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)})
+    return {"modifyFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
       
 
   @classmethod
@@ -970,7 +970,7 @@ class DataAccessor():
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path + data['ext']) if data['ext'] != "txt" else fileStr
       with open(objectFile.path, "wb") as outfile:
           outfile.write(file.file.getbuffer())
-      return {"uploadImageSupervision":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)[:-1], "supervisionId":supervision.id}
+      return {"uploadImageSupervision":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True), "supervisionId":supervision.id}
     except:
       if file: file.delete()
       return {"uploadImageSupervision":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
