@@ -124,7 +124,7 @@ class DataAccessor():
   def __registerAction(cls, data, token):
     print("registerAction", data)
     companyData = data['company']
-    company = Company.objects.create(name=companyData['name'], address=companyData['address'], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'])
+    company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'])
     cls.__getGeoCoordinates(company)
     company.Role = Role.objects.get(id=data['Role'])
     company.save()

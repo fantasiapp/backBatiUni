@@ -196,6 +196,7 @@ class Company(CommonModel):
   starsST = models.IntegerField("Notation sous forme d'étoile", null=False, default=0.0)
   starsPME = models.IntegerField("Notation sous forme d'étoile", null=False, default=0.0)
   companyPhone = models.CharField("Téléphone du standard", max_length=128, blank=False, null=True, default=None)
+  companyMail = models.CharField("mail de la company", max_length=256, null=True, default=None)
   amount = models.FloatField("Montant sous-traitant", null=True, default=None)
   unity = models.CharField("Unité du montant", max_length=64, null=True, default=None)
   latitude = models.FloatField("Latitude", null=True, default=None)
