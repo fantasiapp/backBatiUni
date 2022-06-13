@@ -887,6 +887,7 @@ class DataAccessor():
       if isCompany:
         company = UserProfile.objects.get(userNameInternal=currentUser).Company
         response["Company"] = {company.id:company.computeValues(company.listFields(), currentUser, True)}
+        print("deleteFile", response)
       return response
     return {"deleteFile":"Error", "messages":f"No file width id {id}"}
 
