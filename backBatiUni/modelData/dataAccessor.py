@@ -107,7 +107,6 @@ class DataAccessor():
       message["password"] = "Le mot de passe est un champ obligatoire."
     if not data["company"]:
       message["company"] = "Le nom de l'entreprise est un champ obligatoire."
-    print("email", data)
     userProfile = UserProfile.objects.filter(email=data["email"])
     if userProfile:
       userProfile = userProfile[0]
@@ -344,7 +343,6 @@ class DataAccessor():
     Notification.createAndSend(Post=post, Company=company, title="Nouveau candidat", subContractor=subContractor, nature="ST", Role="PME", content=f"Un nouveau sous traitant : {subContractor.name} pour le chantier du {post.address} a postulé.", timestamp=datetime.now().timestamp())
     postDump = {post.id:post.computeValues(post.listFields(), currentUser, True)}
     candidateDump = {candidate.id:candidate.computeValues(candidate.listFields(), currentUser, True)}
-    print(postDump)
     return {"applyPost":"OK", "Post":postDump, "Candidate":candidateDump}
 
 
@@ -744,7 +742,6 @@ class DataAccessor():
   def __validateMissionDateAction(cls, data, currentUser, mission):
     if data["field"] == "date":
       date = datetime.strptime(data["date"], "%Y-%m-%d")
-      print("__validateMissionDateAction", mission.id, date)
       datePost = DatePost.objects.get(Mission=mission, date=date)
       datePostId = datePost.id
       stillExist = True
@@ -877,6 +874,7 @@ class DataAccessor():
 
   @classmethod
   def deleteFile(cls, id, currentUser):
+    print("deleteFile", id)
     file = File.objects.filter(id=id)
     if file:
       file = file[0]
@@ -894,8 +892,7 @@ class DataAccessor():
 
   @classmethod
   def __uploadFile(cls, data, currentUser):
-    print(data["fileBase64"])
-    print("uploadFile start", list(data.keys()))
+    print("uploadFile", list(data.keys()))
     if not "ext" in data or not "fileBase64" in data:
       return {"uploadFile":"Warning", "messages":f"Le fichier n'est pas conforme"}
     if not data['ext'] in File.authorizedExtention:
@@ -920,23 +917,19 @@ class DataAccessor():
         post = post[0]
     objectFile = File.createFile(data["nature"], data["name"], data['ext'], currentUser, expirationDate=expirationDate, post=post)
     file = None
-    print("uploadFile path", objectFile.id, objectFile.path)
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if data['ext'] != "txt" else fileStr
-      print("check file")
       with open(objectFile.path, "wb") as outfile:
         outfile.write(file.file.getbuffer())
-      print("uploadFile", objectFile.id, objectFile.computeValues(objectFile.listFields(), currentUser, True))
       return {"uploadFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
     except:
       if file: file.delete()
-      print("uploadFile", "Le fichier ne peut être sauvegardé")
       return {"uploadFile":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
 
 
   @classmethod
   def __modifyFile(cls, data, currentUser):
-    print("modifyFile start", list(data.keys()))
+    print("modifyFile", list(data.keys()))
     objectFile = File.objects.get(id=data["fileId"])
     expirationDate = datetime.strptime(data["expirationDate"], "%Y-%m-%d") if "expirationDate" in data and data["expirationDate"] else None
     post, mission = objectFile.Post, objectFile.Mission
@@ -944,22 +937,14 @@ class DataAccessor():
     name = data["name"] if "name" in data else objectFile.name
     ext = data["ext"] if "ext" in data and data["ext"] != "???" else objectFile.ext
     suppress = "fileBase64" in data and len(data["fileBase64"]) != 0
-    for key in data.keys():
-      if key != "fileBase64":
-        print("__modifyFile", key, data[key])
-    print("modifyFile", ext, suppress)
     objectFile = File.createFile(nature, name, ext, currentUser, expirationDate=expirationDate, post=post, mission=mission, detailedPost=None, suppress=suppress)
-    print("modifyFile", objectFile.ext)
     if "fileBase64" in data and data["fileBase64"]:
       try:
-        file = ContentFile(base64.urlsafe_b64decode(data["fileBase64"]), name=objectFile.path + data['ext']) if data['ext'] != "txt" else data["fileBase64"]
-        print("path", objectFile.path)
+        file = ContentFile(base64.urlsafe_b64decode(data["fileBase64"]), name=objectFile.path) if data['ext'] != "txt" else data["fileBase64"]
         with open(objectFile.path, "wb") as outfile:
           outfile.write(file.file.getbuffer())
-          # {"modifyFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
       except ValueError:
         return {"modifyFile":"Error", "messages":f"File of id {file.id} has not been saved"}
-    print("return ", {"modifyFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)})
     return {"modifyFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
       
 
@@ -975,11 +960,9 @@ class DataAccessor():
       return {"uploadImageSupervision":"Error", "messages":"field fileBase64 is empty"}
     supervision = Supervision.objects.get(id=data["supervisionId"])
     objectFile = File.createFile("supervision", "supervision", data['ext'], currentUser, supervision=supervision)
-    print("uploadImageSupervision before", objectFile.path)
     file = None
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path + data['ext']) if data['ext'] != "txt" else fileStr
-      print("uploadImageSupervision path", objectFile.id, objectFile.path)
       with open(objectFile.path, "wb") as outfile:
           outfile.write(file.file.getbuffer())
       return {"uploadImageSupervision":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True), "supervisionId":supervision.id}
