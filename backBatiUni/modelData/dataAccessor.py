@@ -915,7 +915,7 @@ class DataAccessor():
     file = None
     print("uploadFile path", objectFile.id, objectFile.path + data['ext'])
     try:
-      file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path + data['ext']) if data['ext'] != "txt" else fileStr
+      file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if data['ext'] != "txt" else fileStr
       with open(objectFile.path, "wb") as outfile:
         outfile.write(file.file.getbuffer())
       print("uploadFile", objectFile.id, objectFile.computeValues(objectFile.listFields(), currentUser, True))
