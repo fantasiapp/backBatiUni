@@ -895,12 +895,10 @@ class DataAccessor():
   @classmethod
   def __uploadFile(cls, data, currentUser):
     print("uploadFile start", list(data.keys()))
-    if not "ext" in data or data["ext"] == "???" or not "fileBase64" in data:
+    if not "ext" in data or data["ext"] == "???" or not "fileBase64" in data or not data['ext'] in File.authorizedExtention:
       return {"uploadFile":"Warning", "messages":f"L'extention {data['ext']} n'est pas traitée"}
     else:
       data['ext'] = File.authorizedExtention[data['ext']]
-    if not data['ext'] in File.authorizedExtention:
-      return {"uploadFile":"Warning", "messages":f"L'extention {data['ext']} n'est pas traitée"}
     fileStr, message = data["fileBase64"], {}
     for field in ["name", "ext", "nature"]:
       if not data[field]:
