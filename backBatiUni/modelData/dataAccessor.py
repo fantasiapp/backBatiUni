@@ -916,6 +916,7 @@ class DataAccessor():
     print("uploadFile path", objectFile.id, objectFile.path)
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if data['ext'] != "txt" else fileStr
+      print("check file")
       with open(objectFile.path, "wb") as outfile:
         outfile.write(file.file.getbuffer())
       print("uploadFile", objectFile.id, objectFile.computeValues(objectFile.listFields(), currentUser, True))
@@ -950,7 +951,6 @@ class DataAccessor():
           outfile.write(file.file.getbuffer())
           # {"modifyFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
       except ValueError:
-        file.delete()
         return {"modifyFile":"Error", "messages":f"File of id {file.id} has not been saved"}
     print("return ", {"modifyFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)})
     return {"modifyFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
@@ -961,6 +961,8 @@ class DataAccessor():
     print("uploadImageSupervision")
     if not data['ext'] in File.authorizedExtention:
       return {"uploadImageSupervision":"Warning", "messages":f"L'extention {data['ext']} n'est pas traitée"}
+    else:
+      data['ext'] = File.authorizedExtention[data['ext']]
     fileStr = data["imageBase64"]
     if not fileStr:
       return {"uploadImageSupervision":"Error", "messages":"field fileBase64 is empty"}
