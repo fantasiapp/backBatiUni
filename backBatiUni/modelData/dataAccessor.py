@@ -892,7 +892,9 @@ class DataAccessor():
   def __uploadFile(cls, data, currentUser):
     print("uploadFile start", list(data.keys()))
     if not "ext" in data or data["ext"] == "???" or not "fileBase64" in data:
-      return {"uploadFile":"Warning", "messages":f"Aucune image n'est associé à la demande"}
+      return {"uploadFile":"Warning", "messages":f"L'extention {data['ext']} n'est pas traitée"}
+    else:
+      data['ext'] = File.authorizedExtention[data['ext']]
     if not data['ext'] in File.authorizedExtention:
       return {"uploadFile":"Warning", "messages":f"L'extention {data['ext']} n'est pas traitée"}
     fileStr, message = data["fileBase64"], {}
@@ -968,11 +970,11 @@ class DataAccessor():
       return {"uploadImageSupervision":"Error", "messages":"field fileBase64 is empty"}
     supervision = Supervision.objects.get(id=data["supervisionId"])
     objectFile = File.createFile("supervision", "supervision", data['ext'], currentUser, supervision=supervision)
-    print("uploadImageSupervision before", objectFile.path + data['ext'])
+    print("uploadImageSupervision before", objectFile.path)
     file = None
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path + data['ext']) if data['ext'] != "txt" else fileStr
-      print("uploadImageSupervision path", objectFile.id, objectFile.path + data['ext'])
+      print("uploadImageSupervision path", objectFile.id, objectFile.path)
       with open(objectFile.path, "wb") as outfile:
           outfile.write(file.file.getbuffer())
       return {"uploadImageSupervision":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True), "supervisionId":supervision.id}
