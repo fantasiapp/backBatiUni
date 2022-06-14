@@ -697,10 +697,10 @@ class Notification(CommonModel):
     for notification in Notification.objects.all():
       RamData.ramStructure["Company"]["Notification"][notification.Company.id].append(notification.id)
 
-  # def computeValues(self, listFields, user, dictFormat=False):
+  # def computeValues(copy
+  # self, listFields, user, dictFormat=False):
   #   print("computeValue, notifications", [notification.id for notification in self.filter(user)])
   #   return [notification.id for notification in self.filter(user)]
-
 
   class Meta:
     verbose_name = "Notification"
@@ -817,6 +817,9 @@ class DetailedPost(CommonModel):
     RamData.ramStructure["Post"]["DetailedPost"] = deepcopy(RamData.allPost)
     RamData.ramStructure["Mission"]["DetailedPost"] = deepcopy(RamData.allMission)
     RamData.ramStructure["DatePost"]["DetailedPost"] = deepcopy(RamData.allDatePost)
+    if not "DetailedPost" in RamData.ramStructure["Post"]: print("warning bug 820", RamData.ramStructure["Post"])
+    if not "DetailedPost" in RamData.ramStructure["Mission"]: print("warning bug 820", RamData.ramStructure["Mission"])
+    if not "DetailedPost" in RamData.ramStructure["DatePost"]: print("warning bug 820", RamData.ramStructure["DatePost"])
     for detailed in DetailedPost.objects.all():
       if detailed.Post:
         RamData.ramStructure["Post"]["DetailedPost"][detailed.Post.id].append(detailed.id)
@@ -824,7 +827,7 @@ class DetailedPost(CommonModel):
         RamData.ramStructure["Mission"]["DetailedPost"][detailed.Mission.id].append(detailed.id)
       if detailed.DatePost:
         RamData.ramStructure["DatePost"]["DetailedPost"][detailed.DatePost.id].append(detailed.id)
-    print("MissionDetailedPost exist")
+
     
   def computeValues(self, listFields, user, dictFormat=False):
     values = []

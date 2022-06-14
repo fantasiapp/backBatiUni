@@ -16,7 +16,7 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 5
+numberCompanies = 50
 emailList, missionList, emailListPME, emailListST, detailedPost, candidateToUnapply = {}, {}, [], [], {}, None
 
 arguments = sys.argv
@@ -172,7 +172,7 @@ def executeQuery():
           token = queryForToken("pme", "pwd")
           if id in emailListPME:
             token = queryForToken(mail, "pwd")
-          elif random.random() < 0.6:
+          elif random.random() < 0.7:
             flagMission = True
           headersNew = {'Authorization': f'Token {token}'}
           street = ''.join(random.choice(string.ascii_letters) for x in range(8))
@@ -290,10 +290,12 @@ def executeQuery():
     elif query == "unapplyPost" and numberCompanies:
       headersUnapplyPost = {'Authorization': f'Token {token}'}
       for id, values in missionList.items():
-        if random.random() > 0.7 and "candidateId" in values:
+        rand = random.random()
+        if rand > 0.8 and "candidateId" in values:
           print("unapplyPost post", id, "candidate", values["candidateId"])
-          response = requests.get(url, headers=headersUnapplyPost, params={'action':"unapplyPost", "CandidatId":values["candidateId"], "postId":id})
+          response = requests.get(url, headers=headersUnapplyPost, params={'action':"unapplyPost", "candidateId":values["candidateId"], "postId":id})
           del values["candidateId"]
+          
           
     elif query == "handleCandidateForPost":
       requests.get(url, headers=headers, params={'action':"handleCandidateForPost", "Candidate":2, "response":"true"})
@@ -303,7 +305,7 @@ def executeQuery():
       response = requests.get(url, headers=headers, params={'action':"handleCandidateForPost", "Candidate":1, "response":"true"})
       if numberCompanies:
         for id, values in missionList.items():
-          if random.random() > 0.7 and "candidateId" in values:
+          if random.random() > 0.5 and "candidateId" in values:
             print("handleCandidateForPost post", id, "candidate", values)
             data = requests.get(url, headers=headers, params={'action':"handleCandidateForPost", "Candidate":values["candidateId"], "response":"true"})
             print("handleCandidateForPost", json.loads(data.text))
