@@ -32,7 +32,6 @@ class RamData():
   @classmethod
   def fillUpRamStructure(cls):
     if cls.isNotInUsed:
-      cls.isNotInUsed = False
       cls.allPost = {int(post.id):[] for post in Post.objects.all() if post.subContractorName == None}
       cls.allMission = {mission.id:[] for mission in Mission.objects.all() if mission.subContractorName}
       cls.allCompany = {company.id:[] for company in Company.objects.all()}
@@ -42,7 +41,6 @@ class RamData():
       cls.ramStructure = {"Company":{}, "Post":{}, "Mission":{}, "DetailedPost":{}, "DatePost":{}, "DetailedPost":{}}
       for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
         classObject.generateRamStructure()
-      cls.isNotInUsed = True
     else:
       print("isBlocked")
 
@@ -697,6 +695,7 @@ class Notification(CommonModel):
   content = models.CharField("Contenu du Post", max_length=1024, null=False, default="")
   hasBeenViewed = models.BooleanField("A été vu", null=False, default=False)
   nature = models.CharField("Nature de la notification", max_length=64, null=False, default="other")
+  category = models.CharField("Catégorie de la notification", max_length=64, null=False, default="other")
   title = models.CharField("Nature de la notification", max_length=128, null=False, default="Titre par défaut")
   url = "https://fcm.googleapis.com/fcm/send"
   key = "AAAABTLuxMI:APA91bFfnZnDEzRqfuoZNfhaWH6BtbREG0OdWWxVirhbSoxZkHzJcweXrS5_yREwPI9lZmtFk7Qvht3mi9KkWBVOfjCNsyCUzIwhLMiL5kcEuBgxVZ09E5mDSrSHV-M_0CdZvFoJ56Qn"
