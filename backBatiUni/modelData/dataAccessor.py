@@ -471,11 +471,13 @@ class DataAccessor():
     if "detailedPostId" in data and data["detailedPostId"]:
       detailedPost = DetailedPost.objects.get(id=data["detailedPostId"])
       kwargs["DetailedPost"] = detailedPost
-      mission = detailedPost.Mission
+      if detailedPost:
+        mission = detailedPost.Mission
     if "datePostId" in data and data["datePostId"]:
       datePost = DatePost.objects.get(id=data["datePostId"]) 
       kwargs["DatePost"] = datePost
-      mission = detailedPost.Mission
+      if datePost:
+        mission = detailedPost.Mission
     if "comment" in data:
       kwargs["comment"] = data["comment"]
     if "date" in data and data["date"]:
