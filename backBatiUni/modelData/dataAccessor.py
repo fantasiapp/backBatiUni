@@ -351,8 +351,8 @@ class DataAccessor():
     print("unapplyPost", postId, candidateId)
     candidate = Candidate.objects.get(id=candidateId)
     post = Post.objects.get(id=postId)
-    postDump = {post.id:post.computeValues(post.listFields(), currentUser, True)}
     candidate.delete()
+    postDump = {post.id:post.computeValues(post.listFields(), currentUser, True)}
     return {"unapplyPost":"OK", "Candidate":candidateId, "Post":postDump}
 
 
@@ -1094,6 +1094,21 @@ class DataAccessor():
       date = labelForCompany.date.strftime("%Y-%m-%d") if labelForCompany.date else ""
       listLabelForCompany.append({labelForCompany.id:[labelForCompany.Label.id, date]})
     return listLabelForCompany
+
+  @classmethod
+  def removeLabelForCompany(cls, labelId, user):
+    company = UserProfile.objects.get(userNameInternal=user).Company
+    label = LabelForCompany.objects.filter(id=labelId)
+    file = File.objects.filter(nature="labels", Company=company, name=label.Label.name)
+    response = {"removeLabelForCompany":"OK", "LabelForCompany":label.id}
+    if file:
+      response["File":file[0].id]
+      file[0].delete()
+    label.delete()
+    response["Company"] = {company.id:company.computeValues(company.listFields(), user, True)}
+    return response
+      
+
 
   @classmethod
   def __modifyDisponibility(cls, listValue, user):
