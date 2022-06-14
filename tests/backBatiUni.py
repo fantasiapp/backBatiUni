@@ -16,8 +16,8 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 50
-emailList, missionList, emailListPME, emailListST, detailedPost = {}, {}, [], [], {}
+numberCompanies = 10
+emailList, missionList, emailListPME, emailListST, detailedPost, candidateToUnapply = {}, {}, [], [], {}, None
 
 arguments = sys.argv
 if len(arguments) > 1:
@@ -285,6 +285,8 @@ def executeQuery():
           data = json.loads(data.text)
           postDump = list(data["Post"].values())[0]
           values["candidateId"] = postDump[25][-1]
+          candidateToUnapply = 0
+          print("applyPost", postDump, values)
           
     elif query == "handleCandidateForPost":
       requests.get(url, headers=headers, params={'action':"handleCandidateForPost", "Candidate":2, "response":"true"})
