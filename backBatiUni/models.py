@@ -27,18 +27,26 @@ class RamData():
   allPost = {}
   allMission = {}
   allCompany = {}
+  isNotInUsed = True
 
   @classmethod
   def fillUpRamStructure(cls):
-    cls.allPost = {int(post.id):[] for post in Post.objects.all() if post.subContractorName == None}
-    cls.allMission = {mission.id:[] for mission in Mission.objects.all() if mission.subContractorName}
-    cls.allCompany = {company.id:[] for company in Company.objects.all()}
-    cls.allDatePost = {datePost.id:[] for datePost in DatePost.objects.all()}
-    cls.allDetailedPost = {detailPost.id:[] for detailPost in DetailedPost.objects.all()}
-    print("empty fillUpRamStructure")
-    cls.ramStructure = {"Company":{}, "Post":{}, "Mission":{}, "DetailedPost":{}, "DatePost":{}, "DetailedPost":{}}
-    for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
-      classObject.generateRamStructure()
+    if cls.isNotInUsed:
+      cls.isNotInUsed = False
+      cls.allPost = {int(post.id):[] for post in Post.objects.all() if post.subContractorName == None}
+      cls.allMission = {mission.id:[] for mission in Mission.objects.all() if mission.subContractorName}
+      cls.allCompany = {company.id:[] for company in Company.objects.all()}
+      cls.allDatePost = {datePost.id:[] for datePost in DatePost.objects.all()}
+      cls.allDetailedPost = {detailPost.id:[] for detailPost in DetailedPost.objects.all()}
+      print("empty fillUpRamStructure")
+      cls.ramStructure = {"Company":{}, "Post":{}, "Mission":{}, "DetailedPost":{}, "DatePost":{}, "DetailedPost":{}}
+      for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
+        classObject.generateRamStructure()
+      cls.isNotInUsed = True
+    # else:
+    #   sleep(3)
+    #   cls.isNotInUsed = True
+
 
 class CommonModel(models.Model):
   manyToManyObject = []
@@ -737,8 +745,7 @@ class Notification(CommonModel):
     headers= {'Content-Type': 'application/json', 'Authorization': f'key = {cls.key}'}
     for token in tokenList:
       post = {"notification":{"title":notification.title, "body":notification.content}, "to":token}
-    response = requests.post(cls.url, headers=headers, json=post)
-    print("createAndSend", response)
+      requests.post(cls.url, headers=headers, json=post)
 
 
 

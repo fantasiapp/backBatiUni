@@ -27,6 +27,7 @@ class Data(DefaultView):
       elif action == "downloadFile": return Response(DataAccessor.downloadFile(request.GET["id"], currentUser))
       elif action == "deleteFile": return Response(DataAccessor.deleteFile(request.GET["id"], currentUser))
       elif action == "getPost": return Response(DataAccessor.getPost(currentUser))
+      elif action == "removeLabelForCompany": return Response(DataAccessor.removeLabelForCompany(request.GET["labelId"], currentUser))
       elif action == "handleCandidateForPost": return Response(DataAccessor.handleCandidateForPost(request.GET["Candidate"], request.GET["response"], currentUser))
       elif action == "blockCompany": return Response(DataAccessor.blockCompany(request.GET["companyId"], request.GET["status"], currentUser))
       elif action == "signContract": return Response(DataAccessor.signContract(request.GET["missionId"], request.GET["view"], currentUser))

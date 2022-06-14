@@ -17,7 +17,7 @@ userName, password = "st", "pwd"
 address = 'http://localhost:8000'
 query = "token"
 numberCompanies = 5
-emailList, missionList, emailListPME, emailListST, detailedPost, candidateToUnapply = {}, {}, [], [], {}, None
+emailList, missionList, emailListPME, emailListST, detailedPost, candidateToUnapply, labelList = {}, {}, [], [], {}, None, {}
 
 arguments = sys.argv
 if len(arguments) > 1:
@@ -69,6 +69,8 @@ def executeQuery():
     requests.get(f'{address}/initialize/', headers=headersStart, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
     response = requests.get(f'{address}/initialize/', headers=headersStart, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
 
+  elif query == "getGeneralData":
+    response = requests.get(url, headers=headersStart, params={"action":"getGeneralData"})
 
   elif query == "registerMany" and numberCompanies:
     dateForLabel = (datetime.now() + timedelta(days=100, hours=0)).strftime("%Y-%m-%d")
@@ -112,7 +114,23 @@ def executeQuery():
       LabelForCompany = [[math.floor(1 + random.random() * 9), dateForLabel], [math.floor(10 + random.random() * 9), dateForLabel], [math.floor(20 + random.random() * 7), dateForLabel]]
       post = {'action': 'modifyUser', 'UserProfile': {'id': companyId, 'cellPhone': '0629350418', 'Company': {'capital': capital, 'revenue': revenue, "webSite": webSite, "amount":amount, 'companyPhone': '0892976415', "allQualifications":True, 'JobForCompany':JobForCompany, 'LabelForCompany':LabelForCompany}}}
       response = requests.post(f'{address}/data/', headers=headers, json=post)
-      print("registerMany", response)
+      if companyId in emailList:
+        data = json.loads(response.text)
+        labelList[companyId] = json.loads(response.text)["LabelForCompany"]
+
+
+    generalData = requests.get(url, headers=headersStart, params={"action":"getGeneralData"})
+    generalData = json.loads(generalData.text)
+
+    for companyId, value in labelList.items():
+      tokenForImage = queryForToken(emailList[companyId], "pwd")
+      headersForImage = {'Authorization': f'Token {tokenForImage}'}
+      url = f'{address}/data/'
+      for labelValues in value:
+        for tupleLabel in labelValues.values():
+          fileName = generalData["LabelValues"][str(tupleLabel[0])]
+          file = {'action':"uploadFile", "ext":"png", "name":fileName, "fileBase64":getDocStr(0), "nature":"labels", "expirationDate":tupleLabel[1]}
+          data = requests.post(url, headers=headersForImage, json=file)
 
     for i in emailListST:
       token = queryForToken(emailList[i], "pwd")
@@ -122,8 +140,7 @@ def executeQuery():
       post = {"action":"modifyDisponibility", "disponibility":dispoNature}
       response = requests.post(f'{address}/data/', headers=headers, json=post)
 
-  elif query == "getGeneralData":
-    response = requests.get(url, headers=headersStart, params={"action":"getGeneralData"})
+
   elif query == "forgetPassword":
     response = requests.get(url, headers=headersStart, params={"action":"forgetPassword", "email":"walter.jeanluc@gmail.com"})
   else:
@@ -137,17 +154,30 @@ def executeQuery():
     headers = {'Authorization': f'Token {token}'}
     tokenPme = queryForToken("pme", "pwd")
     headersPme = {'Authorization': f'Token {tokenPme}'}
+
     if query == "getUserData":
       response = requests.get(url, headers=headers, params={"action":"getUserData"})
+
+    elif query == "removeLabelForCompany":
+      for value in labelList.values():
+        for dict in value:
+          for labelId in dict.keys():
+            if random.random() > 0.7:
+              print("removeLabelForCompany", labelId)
+              response = requests.get(url, headers=headers, params={'action':"removeLabelForCompany", "labelId":labelId})
+
+
     elif query == "postModifyPwd":
       post = {"action":"modifyPwd", "oldPwd":"pwd", "newPwd":"pwd"}
       response = requests.post(url, headers=headers, json=post)
+
     elif query == "modifyUser":
       now = "2022-01-12"
       post1 = {'action': 'modifyUser', 'UserProfile': {'id': 3, 'cellPhone': '0629350418', 'Company': {'capital': '307130', 'companyPhone': '0892976415', "amount":'28', "allQualifications":True, 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]]}}}
       post2 = {'action': 'modifyUser', 'UserProfile': {'id': 6, 'cellPhone': '0628340317', 'Company': {'capital': '207130', 'companyPhone': '0891966314', "amount":'52', "allQualifications":True, 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]]}}}
       requests.post(url, headers=headers, json=post1)
       response = requests.post(url, headers=headers, json=post2)
+
     elif query == "changeUserImage":
       tokenPme = queryForToken("pme", "pwd")
       headersPme = {'Authorization': f'Token {tokenPme}'}
@@ -159,6 +189,7 @@ def executeQuery():
       response = requests.post(url, headers=headersSt2, json=post)
       post = {'action':"changeUserImage", "ext":"png", "name":"image", "imageBase64":getDocStr(6)}
       requests.post(url, headers=headers, json=post)
+
     elif query == "uploadPost":
       post1 = {'action':"uploadPost", "longitude":2.237779 , "latitude":48.848776, "address":"128 rue de Paris 92100 Boulogne", "Job":6, "numberOfPeople":3, "dueDate":"2022-04-15", "startDate":"2022-02-16", "endDate":"2022-02-28", "DatePost":["2022-04-26", "2022-04-27", "2022-04-28"], "manPower":True, "counterOffer":True, "hourlyStart":"07:30", "hourlyEnd":"17:30", "currency":"€", "description":"Première description d'un chantier", "amount":65243.10, "DetailedPost":["lavabo", "baignoire"]}
       post2 = {'action':"uploadPost", "longitude":2.324877 , "latitude":48.841625, "address":"106 rue du Cherche-Midi 75006 Paris", "Job":5, "numberOfPeople":1, "dueDate":"2022-04-15", "startDate":"2022-03-16", "endDate":"2022-04-28", "DatePost":["2022-05-16", "2022-05-17", "2022-05-18"], "manPower":False, "counterOffer":True, "hourlyStart":"07:00", "hourlyEnd":"17:00", "currency":"€", "description":"Deuxième description d'un chantier", "amount":23456.10, "DetailedPost":["radiateur", "Chaudière"]}
@@ -286,7 +317,6 @@ def executeQuery():
           data = json.loads(data.text)
           postDump = list(data["Post"].values())[0]
           values["candidateId"] = postDump[25][-1]
-          candidateToUnapply = 0
           print("applyPost", postDump, values)
 
     elif query == "unapplyPost" and numberCompanies:
@@ -406,7 +436,7 @@ def executeQuery():
   else:
     print("no answer")
 if query == "all":
-  keys = ["buildDB", "register", "registerConfirm", "registerMany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "deletePost", "modifyPost", "getPost", "setFavorite", "removeFavorite", "uploadFile", "modifyFile", "downloadFile", "switchDraft", "isViewed", "applyPost", "unapplyPost", "handleCandidateForPost", "signContract", "modifyMissionDate", "validateMissionDate", "createSupervision", "uploadImageSupervision", "modifyDetailedPost", "modifyDisponibility", "closeMission", "closeMissionST", "boostPost", "blockCompany", "giveRecommandation", "giveNotificationToken"]#
+  keys = ["buildDB", "register", "registerConfirm", "getGeneralData", "registerMany", "modifyUser", "removeLabelForCompany"]#, "changeUserImage", "getUserData", "uploadPost", "deletePost", "modifyPost", "getPost", "setFavorite", "removeFavorite", "uploadFile", "modifyFile", "downloadFile", "switchDraft", "isViewed", "applyPost", "unapplyPost", "handleCandidateForPost", "signContract", "modifyMissionDate", "validateMissionDate", "createSupervision", "uploadImageSupervision", "modifyDetailedPost", "modifyDisponibility", "closeMission", "closeMissionST", "boostPost", "blockCompany", "giveRecommandation", "giveNotificationToken"]#
   for key in keys:
     query = key
     executeQuery()
