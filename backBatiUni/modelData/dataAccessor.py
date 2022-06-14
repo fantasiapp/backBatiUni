@@ -1098,7 +1098,7 @@ class DataAccessor():
   @classmethod
   def removeLabelForCompany(cls, labelId, user):
     company = UserProfile.objects.get(userNameInternal=user).Company
-    label = LabelForCompany.objects.filter(id=labelId)
+    label = LabelForCompany.objects.get(id=labelId)
     file = File.objects.filter(nature="labels", Company=company, name=label.Label.name)
     response = {"removeLabelForCompany":"OK", "LabelForCompany":label.id}
     if file:
@@ -1107,8 +1107,6 @@ class DataAccessor():
     label.delete()
     response["Company"] = {company.id:company.computeValues(company.listFields(), user, True)}
     return response
-      
-
 
   @classmethod
   def __modifyDisponibility(cls, listValue, user):
