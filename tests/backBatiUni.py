@@ -16,7 +16,7 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 50
+numberCompanies = 5
 emailList, missionList, emailListPME, emailListST, detailedPost, candidateToUnapply = {}, {}, [], [], {}, None
 
 arguments = sys.argv
@@ -109,8 +109,10 @@ def executeQuery():
       amount = math.floor(8 + random.random() * 70)
       webSite = "https://monWebSite.fr"
       JobForCompany = [[math.floor(1 + random.random() * 40), math.floor(1 + random.random() * 4)], [math.floor(41 + random.random() * 40), math.floor(1 + random.random() * 4)], [math.floor(81 + random.random() * 40), math.floor(1 + random.random() * 4)]]
-      post = {'action': 'modifyUser', 'UserProfile': {'id': companyId, 'cellPhone': '0629350418', 'Company': {'capital': capital, 'revenue': revenue, "webSite": webSite, "amount":amount, 'companyPhone': '0892976415', "allQualifications":True, 'JobForCompany':JobForCompany, 'LabelForCompany':[[1,dateForLabel], [2,dateForLabel]]}}}
-      requests.post(f'{address}/data/', headers=headers, json=post)
+      LabelForCompany = [[math.floor(1 + random.random() * 9), dateForLabel], [math.floor(10 + random.random() * 9), dateForLabel], [math.floor(20 + random.random() * 7), dateForLabel]]
+      post = {'action': 'modifyUser', 'UserProfile': {'id': companyId, 'cellPhone': '0629350418', 'Company': {'capital': capital, 'revenue': revenue, "webSite": webSite, "amount":amount, 'companyPhone': '0892976415', "allQualifications":True, 'JobForCompany':JobForCompany, 'LabelForCompany':LabelForCompany}}}
+      response = requests.post(f'{address}/data/', headers=headers, json=post)
+      print("registerMany", response)
 
     for i in emailListST:
       token = queryForToken(emailList[i], "pwd")

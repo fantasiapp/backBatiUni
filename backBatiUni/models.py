@@ -644,6 +644,8 @@ class DatePost(CommonModel):
   def generateRamStructure(cls):
     RamData.ramStructure["Post"]["DatePost"] = deepcopy(RamData.allPost)
     RamData.ramStructure["Mission"]["DatePost"] = deepcopy(RamData.allMission)
+    if not "DatePost" in RamData.ramStructure["Post"]: print("warning bug 820", RamData.ramStructure["Post"])
+    if not "DatePost" in RamData.ramStructure["Mission"]: print("warning bug 820", RamData.ramStructure["Mission"])
     for datePost in DatePost.objects.all():
       if datePost.Post:
         RamData.ramStructure["Post"]["DatePost"][datePost.Post.id].append(datePost.id)
