@@ -35,6 +35,7 @@ class RamData():
     cls.allCompany = {company.id:[] for company in Company.objects.all()}
     cls.allDatePost = {datePost.id:[] for datePost in DatePost.objects.all()}
     cls.allDetailedPost = {detailPost.id:[] for detailPost in DetailedPost.objects.all()}
+    print("empty fillUpRamStructure")
     cls.ramStructure = {"Company":{}, "Post":{}, "Mission":{}, "DetailedPost":{}, "DatePost":{}, "DetailedPost":{}}
     for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
       classObject.generateRamStructure()
