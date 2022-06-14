@@ -39,6 +39,7 @@ class DataAccessor():
     dictAnswer = {"currentUser":UserProfile.objects.get(userNameInternal=user).id} if profile == "user" else {}
     t0 = time()
     if profile == "user":
+      RamData.isNotInUsed = False
       RamData.fillUpRamStructure()
     t1 = time()
     # print(f"queries executed in {(t1-t0):.4f}s")
@@ -51,6 +52,7 @@ class DataAccessor():
     dictAnswer["timestamp"] = datetime.now().timestamp()
     # with open(f"./backBatiUni/modelData/{profile}Data.json", 'w') as jsonFile:
     #   json.dump(dictAnswer, jsonFile, indent = 3)
+    RamData.isNotInUsed = True
     return dictAnswer
 
   @classmethod

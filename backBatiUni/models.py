@@ -43,9 +43,8 @@ class RamData():
       for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
         classObject.generateRamStructure()
       cls.isNotInUsed = True
-    # else:
-    #   sleep(3)
-    #   cls.isNotInUsed = True
+    else:
+      print("isBlocked")
 
 
 class CommonModel(models.Model):
@@ -571,7 +570,7 @@ class Post(CommonModel):
             if not self.id in RamData.ramStructure["Mission"][field]:
               print("bug Mission 561", field, self.id)
               print("bug Mission 561", RamData.ramStructure["Mission"][field])
-            listModel = RamData.ramStructure["Mission"][field][self.id]
+            listModel = RamData.ramStructure["Mission"][field][self.id] if self.id in RamData.ramStructure["Mission"][field] else []
           else:
             if not self.id in RamData.ramStructure["Post"][field]:
               print("bug Post 561", field, self.id)
