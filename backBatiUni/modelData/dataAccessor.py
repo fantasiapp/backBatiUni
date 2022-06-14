@@ -17,6 +17,8 @@ import json
 import secrets
 from pathlib import Path
 from dotenv import load_dotenv
+from copy import copy
+
 
 load_dotenv()
 if os.getenv('PATH_MIDDLE'):
@@ -159,8 +161,8 @@ class DataAccessor():
       if inviteFriend:
         company = inviteFriend[0].invitationAuthor.Company
         role = "ST" if company.Role.id == 2 else "PME"
-        Notification.objects.create(Company=company, nature="alert", Role=role, content=f"{userProfile.firstName} {userProfile.lastName} de la société {userProfile.Company.name} s'est inscrit sur BatiUni. Vous êtes son parrain.", timestamp=datetime.now().timestamp())
-        Notification.objects.create(Company=userProfile.Company, nature="alert", Role=role, content=f"{userProfile.firstName} {userProfile.lastName} de la société {userProfile.Company.name} s'est inscrit sur BatiUni. Vous êtes son parrain.", timestamp=datetime.now().timestamp())
+        Notification.createAndSend(Company=company, title="Parrainage", nature="alert", Role=role, content=f"{userProfile.firstName} {userProfile.lastName} de la société {userProfile.Company.name} s'est inscrit sur BatiUni. Vous êtes son parrain.", timestamp=datetime.now().timestamp())
+        Notification.createAndSend(Company=userProfile.Company, title="Parrainage", nature="alert", Role=role, content=f"{userProfile.firstName} {userProfile.lastName} de la société {userProfile.Company.name} s'est inscrit sur BatiUni. Vous êtes son parrain.", timestamp=datetime.now().timestamp())
       return {"registerConfirm":"OK"}
     return {"registerConfirm":"Error", "messages":"wrong token or email"}
 
@@ -339,11 +341,18 @@ class DataAccessor():
       return {"applyPost":"Warning", "messages":f"Le sous-traitant {subContractor.name} a déjà postulé."}
     amount = 0.0 if amount == "undefined" else amount
     candidate = Candidate.objects.create(Post=post, Company=subContractor, amount=amount, contact=contact, unitOfTime=unitOfTime)
-    # Notification.objects.create(Post=post, Company=company, subContractor=subContractor, nature="ST", Role="PME", content=f"Un nouveau sous traitant : {subContractor.name} pour le chantier du {post.address} a postulé.", timestamp=datetime.now().timestamp())
     Notification.createAndSend(Post=post, Company=company, title="Nouveau candidat", subContractor=subContractor, nature="ST", Role="PME", content=f"Un nouveau sous traitant : {subContractor.name} pour le chantier du {post.address} a postulé.", timestamp=datetime.now().timestamp())
     postDump = {post.id:post.computeValues(post.listFields(), currentUser, True)}
     candidateDump = {candidate.id:candidate.computeValues(candidate.listFields(), currentUser, True)}
     return {"applyPost":"OK", "Post":postDump, "Candidate":candidateDump}
+
+  @classmethod
+  def unapplyPost(cls, postId, candidateId, currentUser):
+    candidate = Candidate.objects.get(id=candidateId)
+    post = Post.objects.get(id=postId)
+    postDump = {post.id:post.computeValues(post.listFields(), currentUser, True)}
+    candidate.delete()
+    return {"unapplyPost":"OK", "Candidate":candidateId, "Post":postDump}
 
 
   @classmethod
@@ -544,10 +553,12 @@ class DataAccessor():
 
   @classmethod
   def handleCandidateForPost(cls, candidateId, status, currentUser):
+    userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     candidate = Candidate.objects.get(id=candidateId)
     if candidate.Mission:
       return {"handleCandidateForPost":"Error", "messages":f"The post of id {candidate.Mission.id} is allready a mission"}
     postId = candidate.Post.id
+    addressWithNoNumber = cls.removefirstNumber(list(candidate.Post.address))
     if status == "true": candidate.isChoosen = True
     if status == "false": candidate.isRefused = True
     if candidate.isChoosen:
@@ -570,16 +581,26 @@ class DataAccessor():
         candidate.Mission.amount = candidate.amount
       cls.__updateDatePost(candidate.Mission)
       candidate.Mission.save()
-      Notification.objects.create(Mission=candidate.Mission, nature="PME", Company=candidate.Company, Role="ST", content=f"Votre candidature pour le chantier du {candidate.Mission.address} a été retenue.", timestamp=datetime.now().timestamp())
-      for otherCandidate in Candidate.objects.filter(Mission=mission):
-        if otherCandidate != candidate:
-          Notification.objects.create(Mission=candidate.Mission, nature="PME", Company=candidate.Company, Role="ST", content=f"Une autre candidature que la vôtre a été retenue pour le chantier du {candidate.Mission.address}.", timestamp=datetime.now().timestamp())
+      Notification.createAndSend(Mission=candidate.Mission, Company=candidate.Company, title="Candidature retenue", subContractor=userProfile.Company, nature="PME", Role="ST", content=f"Votre candidature pour le chantier du {candidate.Mission.address} a été retenue.", timestamp=datetime.now().timestamp())
+      for otherCandidate in Candidate.objects.filter(Post=mission, isRefused=False):
+        if otherCandidate.id != candidate.id:
+          Notification.createAndSend(Mission=otherCandidate.Post, Company=otherCandidate.Company, title="Candidature non retenue", subContractor=userProfile.Company, nature="PME", Role="ST", content=f"Une autre candidature que la vôtre a été retenue pour le chantier du {addressWithNoNumber}.", timestamp=datetime.now().timestamp())
+          otherCandidate.isRefused = True
+          otherCandidate.save()
       return {"handleCandidateForPost":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
     candidate.save()
-    Notification.objects.create(Post=candidate.Post, nature="PME", Company=candidate.Company, Role="ST", content=f"Votre candidature pour le chantier du {candidate.Post.address} n'a pas été retenue.", timestamp=datetime.now().timestamp())
+    Notification.createAndSend(Post=candidate.Post, Company=candidate.Company, title="Candidature refusée", subContractor=userProfile.Company, nature="PME", Role="ST", content=f"Votre candidature pour le chantier du {addressWithNoNumber} a été refusée.", timestamp=datetime.now().timestamp())
+    otherCandidate.isRefused = True
+    otherCandidate.save()
     post = candidate.Post
     return {"handleCandidateForPost":"OK", post.id:post.computeValues(post.listFields(), currentUser, dictFormat=True)}
 
+  @classmethod
+  def removefirstNumber(cls, listChar):
+    firstLetter = listChar.pop(0)
+    if firstLetter.isdigit() or firstLetter == " ":
+      return cls.removefirstNumber(listChar)
+    return firstLetter + "".join(listChar)
 
   @classmethod
   def blockCompany(cls, companyId, status, currentUser):
@@ -609,7 +630,6 @@ class DataAccessor():
 
   @classmethod
   def createContract(cls, mission, user):
-    contractImage = File.createFile("contract", "contract", "png", user, post=mission)
     source = "./files/documents/contractUnsigned.png"
     dest = contractImage.path
     shutil.copy2(source, dest)
@@ -618,6 +638,7 @@ class DataAccessor():
   @classmethod
   def signContract(cls, missionId, view, currentUser):
     print("signContract", missionId)
+    userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     mission = Mission.objects.get(id=missionId)
     contractImage = File.objects.get(id=mission.contract)
     if view == "PME":
@@ -630,10 +651,10 @@ class DataAccessor():
     contractImage.save()
     candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
     if view == "PME" :
-      Notification.objects.create(Mission=mission, nature="PME", Company=candidate.Company, Role="ST", content=f"Le contrat pour le chantier du {mission.address}  a été signé.", timestamp=datetime.now().timestamp())
+      Notification.createAndSend(Mission=mission, Company=candidate.Company, title="Signature de contrat", subContractor=mission.Company, nature="PME", Role="ST", content=f"Le contrat pour le chantier du {mission.address}  a été signé.", timestamp=datetime.now().timestamp())
       mission.signedByCompany = True
     else:
-      Notification.objects.create(Mission=mission, subContractor=candidate.Company, nature="ST", Company=mission.Company, Role="PME", content=f"Le contrat pour le chantier du {mission.address}  a été signé.", timestamp=datetime.now().timestamp())
+      Notification.createAndSend(Mission=mission, subContractor=candidate.Company, title="Signature de contrat", nature="ST", Company=mission.Company, Role="PME", content=f"Le contrat pour le chantier du {mission.address}  a été signé.", timestamp=datetime.now().timestamp())
       mission.signedBySubContractor = True
     mission.save()
     return {"signContract":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
@@ -682,7 +703,7 @@ class DataAccessor():
             return {"modifyMissionDate":"Error", "messages":"DatePost contains detailedPost"}
           if Supervision.objects.filter(DatePost=datePost):
             return {"modifyMissionDate":"Error", "messages":"DatePost contains Supervision"}
-          Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role="ST", content=f"Votre journée de travail du {strDate} pour le chantier du {mission.address} est proposée à la suppression, à vous de valider la modification.", timestamp=datetime.now().timestamp())
+          Notification.createAndSend(Mission=mission, nature="alert", title="Modification de la mission", Company=subContractor, Role="ST", content=f"Votre journée de travail du {strDate} pour le chantier du {mission.address} est proposée à la suppression, à vous de valider la modification.", timestamp=datetime.now().timestamp())
           datePost.deleted = True
           datePost.validated = False
           datePost.save()
@@ -693,7 +714,7 @@ class DataAccessor():
       date = datetime.strptime(strDate, "%Y-%m-%d")
       datePost = DatePost.objects.create(Mission=mission, date=date, validated=False)
       datePostList[datePost.id] = datePost
-      Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role="ST", content=f"Une journée de travail pour le chantier du {mission.address} vous est proposée {strDate}, à vous de valider la proposition.", timestamp=datetime.now().timestamp())
+      Notification.createAndSend(Mission=mission, nature="alert", title="Modification de la mission", Company=subContractor, Role="ST", content=f"Une journée de travail pour le chantier du {mission.address} vous est proposée {strDate}, à vous de valider la proposition.", timestamp=datetime.now().timestamp())
     return {"modifyMissionDate":"OK", "mission":{mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)} , "datePost":{id:datePost.computeValues(datePost.listFields(), currentUser, dictFormat=True) for id, datePost in datePostList.items()}}
 
   @classmethod
@@ -704,10 +725,10 @@ class DataAccessor():
     roleST = "ST"
     if "hourlyStart" in data and mission.hourlyStart != data["hourlyStart"]:
       mission.hourlyStartChange = data["hourlyStart"]
-      Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role=roleST, content=f"Votre horaire de départ pour le chantier du {mission.address} va changé et pour {mission.hourlyStart}, à vous de valider la modification.", timestamp=datetime.now().timestamp())
+      Notification.createAndSend(Mission=mission, nature="alert", title="Modification de la mission", Company=subContractor, Role=roleST, content=f"Votre horaire de départ pour le chantier du {mission.address} va changé et pour {mission.hourlyStart}, à vous de valider la modification.", timestamp=datetime.now().timestamp())
     if "hourlyEnd" in data and mission.hourlyEnd != data["hourlyEnd"]:
       mission.hourlyEndChange = data["hourlyEnd"]
-      Notification.objects.create(Mission=mission, nature="alert", Company=subContractor, Role=roleST, content=f"Votre horaire de fin de journée pour le chantier du {mission.address} va changer et pour {mission.hourlyEnd}, à vous de valider la modification.", timestamp=datetime.now().timestamp())
+      Notification.createAndSend(Mission=mission, nature="alert", title="Modification de la mission", Company=subContractor, Role=roleST, content=f"Votre horaire de fin de journée pour le chantier du {mission.address} va changer et pour {mission.hourlyEnd}, à vous de valider la modification.", timestamp=datetime.now().timestamp())
     mission.save()
     return mission, subContractor
 
@@ -726,13 +747,13 @@ class DataAccessor():
     if data["field"] == "hourly":
       answer = True
       if data["state"]:
-        Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"Vos horaires pour le chantier du {mission.address} sont maintenant validées.", timestamp=datetime.now().timestamp())
+        Notification.createAndSend(Mission=mission, nature="alert", title="Modification de la mission", Company=mission.Company, Role="PME", content=f"Vos horaires pour le chantier du {mission.address} sont maintenant validées.", timestamp=datetime.now().timestamp())
         if mission.hourlyStartChange:
           mission.hourlyStart = mission.hourlyStartChange
         if mission.hourlyEndChange:
           mission.hourlyEnd = mission.hourlyEndChange
       else:
-        Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"Vos modifications d'horaire pour le chantier du {mission.address} a été refusée.", timestamp=datetime.now().timestamp())
+        Notification.createAndSend(Mission=mission, nature="alert", title="Modification de la mission", Company=mission.Company, Role="PME", content=f"Vos modifications d'horaire pour le chantier du {mission.address} a été refusée.", timestamp=datetime.now().timestamp())
       mission.hourlyStartChange = ''
       mission.hourlyEndChange = ''
     mission.save()
@@ -753,17 +774,17 @@ class DataAccessor():
             return {"validateMissionDate":"Error", "messages":"DatePost contains Supervision"}
           stillExist = False
           datePost.delete()
-          Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"La journée de travail du {data['date']} pour le chantier du {mission.address} a été refusée.", timestamp=datetime.now().timestamp())
+          Notification.createAndSend(Mission=mission, nature="alert", Company=mission.Company, title="Modification de la mission", Role="PME", content=f"La journée de travail du {data['date']} pour le chantier du {mission.address} a été refusée.", timestamp=datetime.now().timestamp())
         else:
-          Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"La journée de travail du {data['date']} pour le chantier du {mission.address} est maintenant validée.", timestamp=datetime.now().timestamp())
+          Notification.createAndSend(Mission=mission, nature="alert", Company=mission.Company, title="Modification de la mission", Role="PME", content=f"La journée de travail du {data['date']} pour le chantier du {mission.address} est maintenant validée.", timestamp=datetime.now().timestamp())
       else:
         if datePost.deleted:
           datePost.deleted = False
-          Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"Le retrait de la journée de travail du {data['date']} pour le chantier du {mission.address} a été refusé.", timestamp=datetime.now().timestamp())
+          Notification.createAndSend(Mission=mission, nature="alert", Company=mission.Company, title="Modification de la mission", Role="PME", content=f"Le retrait de la journée de travail du {data['date']} pour le chantier du {mission.address} a été refusé.", timestamp=datetime.now().timestamp())
         else:
           stillExist = False
           datePost.delete()
-          Notification.objects.create(Mission=mission, nature="alert", Company=mission.Company, Role="PME", content=f"La journée supplémentaire de travail du {data['date']} pour le chantier du {mission.address} a été refusé.", timestamp=datetime.now().timestamp())
+          Notification.createAndSend(Mission=mission, nature="alert", Company=mission.Company, title="Modification de la mission", Role="PME", content=f"La journée supplémentaire de travail du {data['date']} pour le chantier du {mission.address} a été refusé.", timestamp=datetime.now().timestamp())
       if stillExist:
         datePost.validated = True
         datePost.save()
@@ -786,7 +807,6 @@ class DataAccessor():
     mission.isClosed = True
     mission.save()
     cls.__newStars(mission, "st")
-    candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
     return {"closeMission":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
 
   @classmethod
@@ -802,7 +822,7 @@ class DataAccessor():
     cls.__newStars(mission, "pme")
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     subContractor = userProfile.Company
-    Notification.objects.create(Mission=mission, subContractor=subContractor, nature="ST", Company=mission.Company, Role="PME", content=f"La mission du {mission.address} a été notée.", timestamp=datetime.now().timestamp())
+    Notification.createAndSend(Mission=mission, subContractor=subContractor, title="Modification de la mission", nature="ST", Company=mission.Company, Role="PME", content=f"La mission du {mission.address} a été notée.", timestamp=datetime.now().timestamp())
     return {"closeMissionST":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
 
   @classmethod
