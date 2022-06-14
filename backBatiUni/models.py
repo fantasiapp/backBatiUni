@@ -504,7 +504,9 @@ class Post(CommonModel):
   @classmethod
   def filter(cls, user):
     listMission = {candidate.Mission.id for candidate in Candidate.objects.all() if candidate.Mission != None}
-    return [post for post in Post.objects.all() if not post.id in listMission]
+    company = UserProfile.objects.get(userNameInternal=user).Company
+    listBlocked = [block.blocked.id for block in BlockedCandidate.objects.filter(blocker=company)]
+    return [post for post in Post.objects.all() if not post.id in listMission and not post.Company.id in listBlocked]
 
   def computeValues(self, listFields, user, dictFormat=False):
     values = []
@@ -614,7 +616,9 @@ class Mission(Post):
 
   @classmethod
   def filter(cls, user):
-    return [candidate.Mission for candidate in Candidate.objects.all() if candidate.Mission != None]
+    company = UserProfile.objects.get(userNameInternal=user).Company
+    listBlocked = [block.blocked.id for block in BlockedCandidate.objects.filter(blocker=company)]
+    return [candidate.Mission for candidate in Candidate.objects.all() if candidate.Mission != None and not candidate.Mission.id in listBlocked]
 
 
   # @classmethod
@@ -727,7 +731,7 @@ class Notification(CommonModel):
     userProfile = UserProfile.objects.get(userNameInternal=user)
     notifications = list(Notification.objects.filter(Company=userProfile.Company))
     notifications.sort(key=lambda notification: notification.timestamp, reverse=True)
-    return Notification.objects.filter(Company=userProfile.Company)
+    return notifications
 
   def dump(self):
     postId = self.Post.id if self.Post else ""
