@@ -348,6 +348,7 @@ class DataAccessor():
 
   @classmethod
   def unapplyPost(cls, postId, candidateId, currentUser):
+    print("unapplyPost", postId, candidateId)
     candidate = Candidate.objects.get(id=candidateId)
     post = Post.objects.get(id=postId)
     postDump = {post.id:post.computeValues(post.listFields(), currentUser, True)}
@@ -590,8 +591,8 @@ class DataAccessor():
       return {"handleCandidateForPost":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
     candidate.save()
     Notification.createAndSend(Post=candidate.Post, Company=candidate.Company, title="Candidature refusée", subContractor=userProfile.Company, nature="PME", Role="ST", content=f"Votre candidature pour le chantier du {addressWithNoNumber} a été refusée.", timestamp=datetime.now().timestamp())
-    otherCandidate.isRefused = True
-    otherCandidate.save()
+    candidate.isRefused = True
+    candidate.save()
     post = candidate.Post
     return {"handleCandidateForPost":"OK", post.id:post.computeValues(post.listFields(), currentUser, dictFormat=True)}
 

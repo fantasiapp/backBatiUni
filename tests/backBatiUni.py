@@ -16,7 +16,7 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 10
+numberCompanies = 5
 emailList, missionList, emailListPME, emailListST, detailedPost, candidateToUnapply = {}, {}, [], [], {}, None
 
 arguments = sys.argv
@@ -277,8 +277,7 @@ def executeQuery():
       tokenSt2 = queryForToken("st2", "pwd")
       headers = {'Authorization': f'Token {tokenSt2}'}
       response = requests.get(url, headers=headers, params={'action':"applyPost", "Post":6, "amount":1500, "devis":"Par Jour"})
-      if numberCompanies:
-        
+      if numberCompanies:  
         headers = {'Authorization': f'Token {token}'}
         for id, values in missionList.items():
           data = requests.get(url, headers=headers, params={'action':"applyPost", "Post":id, "amount":values["amount"] / 2, "devis":"Par Jour"})
@@ -287,6 +286,14 @@ def executeQuery():
           values["candidateId"] = postDump[25][-1]
           candidateToUnapply = 0
           print("applyPost", postDump, values)
+
+    elif query == "unapplyPost" and numberCompanies:
+      headersUnapplyPost = {'Authorization': f'Token {token}'}
+      for id, values in missionList.items():
+        if random.random() > 0.7 and "candidateId" in values:
+          print("unapplyPost post", id, "candidate", values["candidateId"])
+          response = requests.get(url, headers=headersUnapplyPost, params={'action':"unapplyPost", "CandidatId":values["candidateId"], "postId":id})
+          del values["candidateId"]
           
     elif query == "handleCandidateForPost":
       requests.get(url, headers=headers, params={'action':"handleCandidateForPost", "Candidate":2, "response":"true"})
@@ -296,8 +303,7 @@ def executeQuery():
       response = requests.get(url, headers=headers, params={'action':"handleCandidateForPost", "Candidate":1, "response":"true"})
       if numberCompanies:
         for id, values in missionList.items():
-          print("before", id, values)
-          if random.random() > 0.7:
+          if random.random() > 0.7 and "candidateId" in values:
             print("handleCandidateForPost post", id, "candidate", values)
             data = requests.get(url, headers=headers, params={'action':"handleCandidateForPost", "Candidate":values["candidateId"], "response":"true"})
             print("handleCandidateForPost", json.loads(data.text))
@@ -396,7 +402,7 @@ def executeQuery():
   else:
     print("no answer")
 if query == "all":
-  keys = ["buildDB", "register", "registerConfirm", "registerMany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "deletePost", "modifyPost", "getPost", "setFavorite", "removeFavorite", "uploadFile", "modifyFile", "downloadFile", "switchDraft", "isViewed", "applyPost", "handleCandidateForPost", "signContract", "modifyMissionDate", "validateMissionDate", "createSupervision", "uploadImageSupervision", "modifyDetailedPost", "modifyDisponibility", "closeMission", "closeMissionST", "boostPost", "blockCompany", "giveRecommandation", "giveNotificationToken"]#
+  keys = ["buildDB", "register", "registerConfirm", "registerMany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "deletePost", "modifyPost", "getPost", "setFavorite", "removeFavorite", "uploadFile", "modifyFile", "downloadFile", "switchDraft", "isViewed", "applyPost", "unapplyPost", "handleCandidateForPost", "signContract", "modifyMissionDate", "validateMissionDate", "createSupervision", "uploadImageSupervision", "modifyDetailedPost", "modifyDisponibility", "closeMission", "closeMissionST", "boostPost", "blockCompany", "giveRecommandation", "giveNotificationToken"]#
   for key in keys:
     query = key
     executeQuery()
