@@ -1121,7 +1121,7 @@ class DataAccessor():
     file = File.objects.filter(nature="labels", Company=company, name=label.Label.name)
     response = {"removeLabelForCompany":"OK", "LabelForCompany":label.id}
     if file:
-      response["File":file[0].id]
+      response["File"] = file[0].id
       file[0].delete()
     label.delete()
     response["Company"] = {company.id:company.computeValues(company.listFields(), user, True)}
