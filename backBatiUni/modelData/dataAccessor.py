@@ -466,19 +466,34 @@ class DataAccessor():
     print("createSupervision", data, currentUser.id)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     author = f'{userProfile.firstName} {userProfile.lastName}'
-    datePost, detailedPost = None, None
+    datePost, detailedPost, mission = None, None, None
     kwargs = {"DetailedPost":None, "author":author, "companyId":userProfile.Company.id,"comment":""}
     if "detailedPostId" in data and data["detailedPostId"]:
       detailedPost = DetailedPost.objects.get(id=data["detailedPostId"])
       kwargs["DetailedPost"] = detailedPost
+      mission = detailedPost.Mission
     if "datePostId" in data and data["datePostId"]:
       datePost = DatePost.objects.get(id=data["datePostId"]) 
       kwargs["DatePost"] = datePost
+      mission = detailedPost.Mission
     if "comment" in data:
       kwargs["comment"] = data["comment"]
     if "date" in data and data["date"]:
       kwargs["date"] = datetime.strptime(data["date"], "%Y-%m-%d")
     supervision = Supervision.objects.create(**kwargs)
+    candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
+    message = f"Un nouveau sous message pour le chantier du {mission.address} vous attend."
+    if userProfile.Company.id == candidate.Company.id:
+      company = mission.Company
+      subContractor = candidate.Company
+      nature = "PME"
+      role = "ST"
+    else:
+      company = candidate.Company
+      subContractor = mission.Company
+      nature = "ST"
+      role = "PME"
+    Notification.createAndSend(Mission=mission, Company=company, title="Nouveau message", category="supervision", subContractor=subContractor, nature=nature, Role=role, content=message, timestamp=datetime.now().timestamp())
     if supervision:
       return  cls.__supervisionAnswer(supervision, currentUser)
     return {"createSupervision":"Warning", "messages":"La supervision n'a pas été créée"}
