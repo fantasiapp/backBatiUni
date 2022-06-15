@@ -487,13 +487,13 @@ class DataAccessor():
     if userProfile.Company.id == candidate.Company.id:
       company = mission.Company
       subContractor = candidate.Company
-      nature = "PME"
-      role = "ST"
+      nature = "ST"
+      role = "PME"
     else:
       company = candidate.Company
       subContractor = mission.Company
-      nature = "ST"
-      role = "PME"
+      nature = "PME"
+      role = "ST"
     Notification.createAndSend(Mission=mission, Company=company, title="Nouveau message", category="supervision", subContractor=subContractor, nature=nature, Role=role, content=message, timestamp=datetime.now().timestamp())
     if supervision:
       return  cls.__supervisionAnswer(supervision, currentUser)
