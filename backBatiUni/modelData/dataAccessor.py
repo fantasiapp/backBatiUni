@@ -966,7 +966,9 @@ class DataAccessor():
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if data['ext'] != "txt" else fileStr
       with open(objectFile.path, "wb") as outfile:
         outfile.write(file.file.getbuffer())
-      cls.__addNewNotificationForMessage(userProfile, objectFile.post, f"Une nouveau image pour le chantier du {objectFile.post.address} vous attend.")
+      if file.nature == "supervision":
+        print("add Notification")
+        cls.__addNewNotificationForMessage(userProfile, objectFile.post, f"Une nouveau image pour le chantier du {objectFile.post.address} vous attend.")
       return {"uploadFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
     except:
       if file: file.delete()
