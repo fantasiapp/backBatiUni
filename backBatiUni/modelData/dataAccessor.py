@@ -482,8 +482,14 @@ class DataAccessor():
     if "date" in data and data["date"]:
       kwargs["date"] = datetime.strptime(data["date"], "%Y-%m-%d")
     supervision = Supervision.objects.create(**kwargs)
+    cls.__addNewNotificationForMessage(userProfile, mission, f"Un nouveau message pour le chantier du {mission.address} vous attend.")
+    if supervision:
+      return  cls.__supervisionAnswer(supervision, currentUser)
+    return {"createSupervision":"Warning", "messages":"La supervision n'a pas été créée"}
+
+  @classmethod
+  def __addNewNotificationForMessage(cls, userProfile, mission, message):
     candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
-    message = f"Un nouveau message pour le chantier du {mission.address} vous attend."
     if userProfile.Company.id == candidate.Company.id:
       company = mission.Company
       subContractor = candidate.Company
@@ -495,9 +501,6 @@ class DataAccessor():
       nature = "PME"
       role = "ST"
     Notification.createAndSend(Mission=mission, Company=company, title="Nouveau message", category="supervision", subContractor=subContractor, nature=nature, Role=role, content=message, timestamp=datetime.now().timestamp())
-    if supervision:
-      return  cls.__supervisionAnswer(supervision, currentUser)
-    return {"createSupervision":"Warning", "messages":"La supervision n'a pas été créée"}
 
   @classmethod
   def __supervisionAnswer(cls, supervision, currentUser):
@@ -934,6 +937,7 @@ class DataAccessor():
   @classmethod
   def __uploadFile(cls, data, currentUser):
     print("uploadFile", list(data.keys()))
+    userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     if not "ext" in data or not "fileBase64" in data:
       return {"uploadFile":"Warning", "messages":f"Le fichier n'est pas conforme"}
     if not data['ext'] in File.authorizedExtention:
@@ -962,6 +966,7 @@ class DataAccessor():
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if data['ext'] != "txt" else fileStr
       with open(objectFile.path, "wb") as outfile:
         outfile.write(file.file.getbuffer())
+      cls.__addNewNotificationForMessage(userProfile, objectFile.post, f"Une nouveau image pour le chantier du {objectFile.post.address} vous attend.")
       return {"uploadFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
     except:
       if file: file.delete()
