@@ -270,6 +270,8 @@ class Disponibility(CommonModel):
   def generateRamStructure(cls):
     RamData.ramStructure["Company"]["Disponibility"] = deepcopy(RamData.allCompany)
     RamData.ramStructure["Company"]["Notification"] = deepcopy(RamData.allCompany)
+    RamData.ramStructure["Company"]["Post"] = deepcopy(RamData.allCompany)
+    RamData.ramStructure["Company"]["Mission"] = deepcopy(RamData.allCompany)
     for disponibility in Disponibility.objects.all():
       if not "Disponibility" in RamData.ramStructure["Company"]:
         print("bug 259", RamData.ramStructure["Company"])
@@ -277,6 +279,7 @@ class Disponibility(CommonModel):
       RamData.ramStructure["Company"]["Disponibility"][disponibility.Company.id].append(disponibility.id)
     for notification in Notification.objects.all():
       RamData.ramStructure["Company"]["Notification"][notification.Company.id].append(notification.id)
+    
 
   @classmethod
   def listFields(cls):
@@ -590,9 +593,12 @@ class Mission(Post):
   @classmethod
   def generateRamStructure(cls):
     RamData.ramStructure["Company"]["Mission"] = deepcopy(RamData.allCompany)
-    for mission in Mission.objects.all():
-      if mission.subContractorName:
-        RamData.ramStructure["Company"]["Mission"][mission.Company.id].append(mission.id)
+    RamData.ramStructure["Company"]["Post"] = deepcopy(RamData.allCompany)
+    for post in Post.objects.all():
+      if post.subContractorName:
+        RamData.ramStructure["Company"]["Mission"][post.Company.id].append(post.id)
+      else:
+        RamData.ramStructure["Company"]["Post"][post.Company.id].append(post.id)
 
   @classmethod
   def listFields(cls):
