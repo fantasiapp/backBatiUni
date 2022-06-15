@@ -44,7 +44,7 @@ class RamData():
         print("fillupRamStructure", classObject)
         classObject.generateRamStructure()
     else:
-      print("isBlocked", datetime.datetime.now().timestamp(), cls.isUsed, cls.ramStructure)
+      print("isBlocked", datetime.datetime.now().timestamp(), cls.isUsed, cls.ramStructure["Company"])
 
 
 class CommonModel(models.Model):
