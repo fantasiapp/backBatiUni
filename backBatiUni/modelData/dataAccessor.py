@@ -480,7 +480,7 @@ class DataAccessor():
     if "date" in data and data["date"]:
       kwargs["date"] = datetime.strptime(data["date"], "%Y-%m-%d")
     if cls.__datePostIsNotValidate(datePost, detailedPost):
-      return {"createSupervision":"Warning", "messages":"Cette supervision est à une date qui n'est pas confirmée."}
+      return {"createSupervision":"Warning", "messages":"Date en attente de confirmation."}
     supervision = Supervision.objects.create(**kwargs)
     cls.__addNewNotificationForMessage(userProfile, mission, f"Un nouveau message pour le chantier du {mission.address} vous attend.")
     if supervision:
@@ -491,7 +491,7 @@ class DataAccessor():
   def __datePostIsNotValidate(cls, datePost, detailedPost):
     if detailedPost: datePost = detailedPost.DatePost
     print("__datePostIsNotValidate", datePost.id, datePost.validated)
-    return datePost.validated
+    return not datePost.validated
 
   @classmethod
   def __addNewNotificationForMessage(cls, userProfile, mission, message):

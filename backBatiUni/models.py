@@ -33,15 +33,14 @@ class RamData():
 
   @classmethod
   def fillUpRamStructure(cls):
-    print("empty fillUpRamStructure start")
     if not cls.isUsed or datetime.datetime.now().timestamp() - cls.isUsed > 30:
+      print("compute fillUpRamStructure")
       cls.isUsed = datetime.datetime.now().timestamp()
       cls.allPost = {int(post.id):[] for post in Post.objects.all() if post.subContractorName == None}
       cls.allMission = {mission.id:[] for mission in Mission.objects.all() if mission.subContractorName}
       cls.allCompany = {company.id:[] for company in Company.objects.all()}
       cls.allDatePost = {datePost.id:[] for datePost in DatePost.objects.all()}
       cls.allDetailedPost = {detailPost.id:[] for detailPost in DetailedPost.objects.all()}
-      print("empty fillUpRamStructure")
       cls.ramStructure = {"Company":{}, "Post":{}, "Mission":{}, "DetailedPost":{}, "DatePost":{}, "DetailedPost":{}}
       for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
         classObject.generateRamStructure()
