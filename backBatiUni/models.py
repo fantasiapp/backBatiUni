@@ -43,7 +43,7 @@ class RamData():
       for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
         classObject.generateRamStructure()
     else:
-      print("isBlocked")
+      print("isBlocked", datetime.datetime.now().timestamp(), cls.isUsed, cls.ramStructure)
 
 
 class CommonModel(models.Model):
