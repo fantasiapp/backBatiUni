@@ -1007,7 +1007,7 @@ class DataAccessor():
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     print("add Notification")
     objectFather = supervision.DetailedPost if supervision.DetailedPost else supervision.DatePost
-    cls.__addNewNotificationForMessage(userProfile, objectFather.Mission, f"Une nouveau image pour le chantier du {objectFile.post.address} vous attend.")
+    cls.__addNewNotificationForMessage(userProfile, objectFather.Mission, f"Une nouveau image pour le chantier du {objectFather.Mission.address} vous attend.")
     file = None
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path + data['ext']) if data['ext'] != "txt" else fileStr
