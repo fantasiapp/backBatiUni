@@ -471,10 +471,8 @@ class DataAccessor():
       detailedPost = DetailedPost.objects.get(id=data["detailedPostId"])
       kwargs["DetailedPost"] = detailedPost
       mission = detailedPost.Mission if detailedPost.Mission else detailedPost.DatePost.Mission
-      print("createSupervision detailedPostId", data["detailedPostId"], detailedPost.Mission, detailedPost.DatePost, mission)
     if "datePostId" in data and data["datePostId"]:
       datePost = DatePost.objects.get(id=data["datePostId"])
-      print("createSupervision datePostId", data["datePostId"], datePost.Mission, datePost.Post) 
       kwargs["DatePost"] = datePost
       mission = datePost.Mission
     if "comment" in data:
@@ -482,7 +480,6 @@ class DataAccessor():
     if "date" in data and data["date"]:
       kwargs["date"] = datetime.strptime(data["date"], "%Y-%m-%d")
     supervision = Supervision.objects.create(**kwargs)
-    print("createSupervision", mission)
     cls.__addNewNotificationForMessage(userProfile, mission, f"Un nouveau message pour le chantier du {mission.address} vous attend.")
     if supervision:
       return  cls.__supervisionAnswer(supervision, currentUser)
