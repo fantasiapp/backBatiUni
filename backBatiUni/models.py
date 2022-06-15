@@ -31,8 +31,8 @@ class RamData():
 
   @classmethod
   def fillUpRamStructure(cls):
-    if not cls.isUsed or datetime.now().timestamp() - cls.isUsed > 5:
-      cls.isUsed = datetime.now().timestamp()
+    if not cls.isUsed or datetime.datetime.now().timestamp() - cls.isUsed > 5:
+      cls.isUsed = datetime.datetime.now().timestamp()
       cls.allPost = {int(post.id):[] for post in Post.objects.all() if post.subContractorName == None}
       cls.allMission = {mission.id:[] for mission in Mission.objects.all() if mission.subContractorName}
       cls.allCompany = {company.id:[] for company in Company.objects.all()}
