@@ -937,7 +937,6 @@ class DataAccessor():
   @classmethod
   def __uploadFile(cls, data, currentUser):
     print("uploadFile", list(data.keys()))
-    userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     if not "ext" in data or not "fileBase64" in data:
       return {"uploadFile":"Warning", "messages":f"Le fichier n'est pas conforme"}
     if not data['ext'] in File.authorizedExtention:
@@ -961,10 +960,6 @@ class DataAccessor():
       else:
         post = post[0]
     objectFile = File.createFile(data["nature"], data["name"], data['ext'], currentUser, expirationDate=expirationDate, post=post)
-    print("add File", data["nature"])
-    if data["nature"] == "supervision":
-        print("add Notification")
-        cls.__addNewNotificationForMessage(userProfile, objectFile.post, f"Une nouveau image pour le chantier du {objectFile.post.address} vous attend.")
     file = None
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if data['ext'] != "txt" else fileStr
@@ -1009,6 +1004,9 @@ class DataAccessor():
       return {"uploadImageSupervision":"Error", "messages":"field fileBase64 is empty"}
     supervision = Supervision.objects.get(id=data["supervisionId"])
     objectFile = File.createFile("supervision", "supervision", data['ext'], currentUser, supervision=supervision)
+    userProfile = UserProfile.objects.get(userNameInternal=currentUser)
+    print("add Notification")
+    cls.__addNewNotificationForMessage(userProfile, objectFile.post, f"Une nouveau image pour le chantier du {objectFile.post.address} vous attend.")
     file = None
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path + data['ext']) if data['ext'] != "txt" else fileStr
