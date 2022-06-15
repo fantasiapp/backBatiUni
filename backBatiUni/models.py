@@ -41,6 +41,7 @@ class RamData():
       print("empty fillUpRamStructure")
       cls.ramStructure = {"Company":{}, "Post":{}, "Mission":{}, "DetailedPost":{}, "DatePost":{}, "DetailedPost":{}}
       for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
+        print("fillupRamStructure", classObject)
         classObject.generateRamStructure()
     else:
       print("isBlocked", datetime.datetime.now().timestamp(), cls.isUsed, cls.ramStructure)
