@@ -293,6 +293,7 @@ class JobForCompany(CommonModel):
 
   @classmethod
   def generateRamStructure(cls):
+    print("generateRamStructure")
     RamData.ramStructure["Company"]["JobForCompany"] = deepcopy(RamData.allCompany)
     for jobForCompany in JobForCompany.objects.all():
       if jobForCompany.Company:
