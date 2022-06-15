@@ -33,8 +33,7 @@ class RamData():
 
   @classmethod
   def fillUpRamStructure(cls):
-    if not cls.isUsed or datetime.datetime.now().timestamp() - cls.isUsed > 30:
-      print("compute fillUpRamStructure")
+    if not cls.isUsed or datetime.datetime.now().timestamp() - cls.lastTimeStamp > 30:
       cls.isUsed = datetime.datetime.now().timestamp()
       cls.allPost = {int(post.id):[] for post in Post.objects.all() if post.subContractorName == None}
       cls.allMission = {mission.id:[] for mission in Mission.objects.all() if mission.subContractorName}
@@ -43,12 +42,11 @@ class RamData():
       cls.allDetailedPost = {detailPost.id:[] for detailPost in DetailedPost.objects.all()}
       cls.ramStructure = {"Company":{}, "Post":{}, "Mission":{}, "DetailedPost":{}, "DatePost":{}, "DetailedPost":{}}
       for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
-        print("generateRamStructure", classObject)
         classObject.generateRamStructure()
       cls.ramStructureComplete = cls.ramStructure
       cls.timestamp = cls.isUsed
     else:
-      print("isBlocked", datetime.datetime.now().timestamp() - cls.isUsed if cls.isUsed else cls.isUsed)
+      print("isBlocked", datetime.datetime.now().timestamp() - cls.lastTimeStamp if cls.isUsed else cls.isUsed)
 
 
 class CommonModel(models.Model):
@@ -838,9 +836,6 @@ class DetailedPost(CommonModel):
     RamData.ramStructure["Post"]["DetailedPost"] = deepcopy(RamData.allPost)
     RamData.ramStructure["Mission"]["DetailedPost"] = deepcopy(RamData.allMission)
     RamData.ramStructure["DatePost"]["DetailedPost"] = deepcopy(RamData.allDatePost)
-    if not "DetailedPost" in RamData.ramStructure["Post"]: print("warning bug 820", RamData.ramStructure["Post"])
-    if not "DetailedPost" in RamData.ramStructure["Mission"]: print("warning bug 820", RamData.ramStructure["Mission"])
-    if not "DetailedPost" in RamData.ramStructure["DatePost"]: print("warning bug 820", RamData.ramStructure["DatePost"])
     for detailed in DetailedPost.objects.all():
       if detailed.Post:
         RamData.ramStructure["Post"]["DetailedPost"][detailed.Post.id].append(detailed.id)
@@ -861,10 +856,10 @@ class DetailedPost(CommonModel):
       elif field == "refused": values.append(self.refused)
 
       else:
-        if dictFormat:
-          values.append({objectModel.id:objectModel.dump() for objectModel in Supervision.objects.filter(DetailedPost=self)})
-        else:
+        if not dictFormat and self.id in RamData.ramStructureComplete["DetailedPost"][field]:
           values.append(RamData.ramStructureComplete["DetailedPost"][field][self.id])
+        else:
+          values.append({objectModel.id:objectModel.dump() for objectModel in Supervision.objects.filter(DetailedPost=self)})
     return values
 
   def dump(self):
@@ -1062,12 +1057,10 @@ class File(CommonModel):
     if objectFile:
       objectFile = objectFile[0]
       oldPath = objectFile.path
-      print("oldPath", suppress)
       if os.path.exists(oldPath) and suppress:
         os.remove(oldPath)
         if objectFile.ext == "pdf":
           pathToRemove = objectFile.path.replace(".pdf", "/")
-          print("createFile, path to remove", pathToRemove)
           shutil.rmtree(pathToRemove, ignore_errors=True)
       objectFile.path = path
       objectFile.timestamp = datetime.datetime.now().timestamp()
@@ -1075,7 +1068,6 @@ class File(CommonModel):
       if expirationDate:
         objectFile.expirationDate = expirationDate
       objectFile.save()
-      print("createFile", objectFile.ext)
     else:
       objectFile = cls.objects.create(nature=nature, name=name, path=path, ext=ext, Company=company, expirationDate=expirationDate, Post=post, Mission=mission, Supervision=supervision)
     return objectFile

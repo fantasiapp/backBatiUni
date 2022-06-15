@@ -721,6 +721,7 @@ class DataAccessor():
   def __modifyMissionDateAction(cls, data, currentUser, mission, subContractor):
     data["calendar"] = list(set(data["calendar"]))
     data["calendar"] = [date for date in data["calendar"] if date] if "calendar" in data else []
+    print("modifyMissionDate", data["calendar"])
     existingDateMission = DatePost.objects.filter(Mission=mission)
     datePostList = {}
     for task in existingDateMission:

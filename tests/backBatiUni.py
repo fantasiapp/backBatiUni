@@ -16,7 +16,7 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 50
+numberCompanies = 100
 emailList, missionList, emailListPME, emailListST, detailedPost, candidateToUnapply, labelList = {}, {}, [], [], {}, None, {}
 
 arguments = sys.argv
@@ -86,7 +86,7 @@ def executeQuery():
         establishmentValue = data["EstablishmentsValues"]['0']
         firstName = ''.join(random.choice(string.ascii_letters) for x in range(6))
         mail = establishmentValue[0][:3]
-        role = 1 if random.random() < 0.3 else 2
+        role = 1 if random.random() < 0.5 else 2
         lastName = "Traitant" if role == 2 else "Entreprise"
         jobs = [math.floor(1 + random.random() * 40), math.floor(41 + random.random() * 40), math.floor(81 + random.random() * 60)]
         company = {"id":companyId, 'name':establishmentValue[0], 'address': establishmentValue[1], 'activity': establishmentValue[2], 'siret': establishmentValue[3], 'ntva': establishmentValue[4]}
