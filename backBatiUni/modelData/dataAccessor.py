@@ -490,6 +490,7 @@ class DataAccessor():
   @classmethod
   def __datePostIsNotValidate(cls, datePost, detailedPost):
     if detailedPost: datePost = detailedPost.DatePost
+    print("__datePostIsNotValidate", datePost.id, datePost.validated)
     return datePost.validated
 
   @classmethod
