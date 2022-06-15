@@ -39,7 +39,6 @@ class DataAccessor():
     dictAnswer = {"currentUser":UserProfile.objects.get(userNameInternal=user).id} if profile == "user" else {}
     t0 = time()
     if profile == "user":
-      # RamData.isUsed = False
       RamData.fillUpRamStructure()
     t1 = time()
     # print(f"queries executed in {(t1-t0):.4f}s")
@@ -52,7 +51,7 @@ class DataAccessor():
     dictAnswer["timestamp"] = datetime.now().timestamp()
     with open(f"./backBatiUni/modelData/{profile}Data.json", 'w') as jsonFile:
       json.dump(dictAnswer, jsonFile, indent = 3)
-    # RamData.isUsed = True
+    RamData.isUsed = False
     return dictAnswer
 
   @classmethod
@@ -484,7 +483,7 @@ class DataAccessor():
       kwargs["date"] = datetime.strptime(data["date"], "%Y-%m-%d")
     supervision = Supervision.objects.create(**kwargs)
     candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
-    message = f"Un nouveau sous message pour le chantier du {mission.address} vous attend."
+    message = f"Un nouveau message pour le chantier du {mission.address} vous attend."
     if userProfile.Company.id == candidate.Company.id:
       company = mission.Company
       subContractor = candidate.Company
