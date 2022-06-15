@@ -293,7 +293,7 @@ class JobForCompany(CommonModel):
 
   @classmethod
   def generateRamStructure(cls):
-    print("generateRamStructure")
+    print("generateRamStructure JobForCompany")
     RamData.ramStructure["Company"]["JobForCompany"] = deepcopy(RamData.allCompany)
     for jobForCompany in JobForCompany.objects.all():
       if jobForCompany.Company:
@@ -303,7 +303,7 @@ class JobForCompany(CommonModel):
 
   class Meta:
     unique_together = ('Job', 'Company')
-    verbose_name = "JobForCompany"
+    verbose_name = "JobForCompany" d
 
   @classmethod
   def listFields(cls):
