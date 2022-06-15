@@ -961,14 +961,15 @@ class DataAccessor():
       else:
         post = post[0]
     objectFile = File.createFile(data["nature"], data["name"], data['ext'], currentUser, expirationDate=expirationDate, post=post)
+    print("add File", data["nature"])
+    if data["nature"] == "supervision":
+        print("add Notification")
+        cls.__addNewNotificationForMessage(userProfile, objectFile.post, f"Une nouveau image pour le chantier du {objectFile.post.address} vous attend.")
     file = None
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if data['ext'] != "txt" else fileStr
       with open(objectFile.path, "wb") as outfile:
         outfile.write(file.file.getbuffer())
-      if file.nature == "supervision":
-        print("add Notification")
-        cls.__addNewNotificationForMessage(userProfile, objectFile.post, f"Une nouveau image pour le chantier du {objectFile.post.address} vous attend.")
       return {"uploadFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
     except:
       if file: file.delete()
