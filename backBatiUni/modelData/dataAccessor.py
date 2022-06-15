@@ -471,7 +471,7 @@ class DataAccessor():
       detailedPost = DetailedPost.objects.get(id=data["detailedPostId"])
       print("createSupervision detailedPostId", data["detailedPostId"], detailedPost.Mission, detailedPost.Post)
       kwargs["DetailedPost"] = detailedPost
-      mission = detailedPost.Mission
+      mission = detailedPost.Mission if detailedPost.Mission else detailedPost.DatePost.Mission
     if "datePostId" in data and data["datePostId"]:
       datePost = DatePost.objects.get(id=data["datePostId"])
       print("createSupervision datePostId", data["datePostId"], datePost.Mission, datePost.Post) 
