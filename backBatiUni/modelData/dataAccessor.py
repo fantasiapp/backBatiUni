@@ -749,7 +749,7 @@ class DataAccessor():
     subContractor = candidate.Company
     roleST = "ST"
     if "hourlyStart" in data and mission.hourlyStart != data["hourlyStart"]:
-      mission.hourlyStartChange = data["hourlyStart"]**
+      mission.hourlyStartChange = data["hourlyStart"]
       Notification.createAndSend(Mission=mission, nature="alert", title="Modification de la mission", Company=subContractor, Role=roleST, content=f"Votre horaire de début pour le chantier du {mission.address} va changer, à vous de valider la modification.", timestamp=datetime.now().timestamp())
     if "hourlyEnd" in data and mission.hourlyEnd != data["hourlyEnd"]:
       mission.hourlyEndChange = data["hourlyEnd"]
