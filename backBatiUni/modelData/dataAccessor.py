@@ -48,7 +48,7 @@ class DataAccessor():
       t2 = time()
       # print(f'Function {table} executed in {(t2-t1):.4f}s')
     print(f"total executed in {(t2-t0):.4f}s")
-    dictAnswer["timestamp"] = datetime.now().timestamp()
+    dictAnswer["timestamp"] = RamData.lastTimeStamp
     with open(f"./backBatiUni/modelData/{profile}Data.json", 'w') as jsonFile:
       json.dump(dictAnswer, jsonFile, indent = 3)
     RamData.isUsed = False

@@ -24,6 +24,8 @@ import shutil
 
 class RamData():
   ramStructure = {}
+  lastTimeStamp = 0
+  ramStructureComplete = {}
   allPost = {}
   allMission = {}
   allCompany = {}
@@ -31,7 +33,8 @@ class RamData():
 
   @classmethod
   def fillUpRamStructure(cls):
-    if not cls.isUsed or datetime.datetime.now().timestamp() - cls.isUsed > 5:
+    print("empty fillUpRamStructure start")
+    if not cls.isUsed or datetime.datetime.now().timestamp() - cls.isUsed > 30:
       cls.isUsed = datetime.datetime.now().timestamp()
       cls.allPost = {int(post.id):[] for post in Post.objects.all() if post.subContractorName == None}
       cls.allMission = {mission.id:[] for mission in Mission.objects.all() if mission.subContractorName}
@@ -43,8 +46,10 @@ class RamData():
       for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
         print("fillupRamStructure", classObject)
         classObject.generateRamStructure()
+      cls.ramStructureComplete = cls.ramStructure
+      cls.timestamp = cls.isUsed
     else:
-      print("isBlocked", datetime.datetime.now().timestamp(), cls.isUsed, cls.ramStructure["Company"])
+      print("isBlocked", cls.isUsed, cls.ramStructure["Company"])
 
 
 class CommonModel(models.Model):
@@ -297,7 +302,6 @@ class JobForCompany(CommonModel):
 
   @classmethod
   def generateRamStructure(cls):
-    print("generateRamStructure JobForCompany")
     RamData.ramStructure["Company"]["JobForCompany"] = deepcopy(RamData.allCompany)
     for jobForCompany in JobForCompany.objects.all():
       if jobForCompany.Company:
@@ -573,15 +577,15 @@ class Post(CommonModel):
             listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Post=self)]
         else:
           if self.subContractorName:
-            if not self.id in RamData.ramStructure["Mission"][field]:
+            if not self.id in RamData.ramStructureComplete["Mission"][field]:
               print("bug Mission 561", field, self.id)
-              print("bug Mission 561", RamData.ramStructure["Mission"][field])
-            listModel = RamData.ramStructure["Mission"][field][self.id] if self.id in RamData.ramStructure["Mission"][field] else []
+              print("bug Mission 561", RamData.ramStructureComplete["Mission"][field])
+            listModel = RamData.ramStructureComplete["Mission"][field][self.id] if self.id in RamData.ramStructureComplete["Mission"][field] else []
           else:
-            if not self.id in RamData.ramStructure["Post"][field]:
+            if not self.id in RamData.ramStructureComplete["Post"][field]:
               print("bug Post 561", field, self.id)
-              print("bug Post 561", RamData.ramStructure["Post"][field])
-            listModel = RamData.ramStructure["Post"][field][self.id]
+              print("bug Post 561", RamData.ramStructureComplete["Post"][field])
+            listModel = RamData.ramStructureComplete["Post"][field][self.id]
             
         values.append(listModel)
     return values
@@ -864,7 +868,7 @@ class DetailedPost(CommonModel):
         if dictFormat:
           values.append({objectModel.id:objectModel.dump() for objectModel in Supervision.objects.filter(DetailedPost=self)})
         else:
-          values.append(RamData.ramStructure["DetailedPost"][field][self.id])
+          values.append(RamData.ramStructureComplete["DetailedPost"][field][self.id])
     return values
 
   def dump(self):
