@@ -33,7 +33,7 @@ class RamData():
 
   @classmethod
   def fillUpRamStructure(cls):
-    if not cls.isUsed and datetime.datetime.now().timestamp() - cls.isUsed > 30:
+    if not cls.isUsed or datetime.datetime.now().timestamp() - cls.isUsed > 30:
       print("compute fillUpRamStructure")
       cls.isUsed = datetime.datetime.now().timestamp()
       cls.allPost = {int(post.id):[] for post in Post.objects.all() if post.subContractorName == None}
