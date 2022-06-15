@@ -482,6 +482,7 @@ class DataAccessor():
     if "date" in data and data["date"]:
       kwargs["date"] = datetime.strptime(data["date"], "%Y-%m-%d")
     supervision = Supervision.objects.create(**kwargs)
+    print("createSupervision", mission)
     cls.__addNewNotificationForMessage(userProfile, mission, f"Un nouveau message pour le chantier du {mission.address} vous attend.")
     if supervision:
       return  cls.__supervisionAnswer(supervision, currentUser)
@@ -489,6 +490,7 @@ class DataAccessor():
 
   @classmethod
   def __addNewNotificationForMessage(cls, userProfile, mission, message):
+    
     candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
     if userProfile.Company.id == candidate.Company.id:
       company = mission.Company
@@ -747,11 +749,11 @@ class DataAccessor():
     subContractor = candidate.Company
     roleST = "ST"
     if "hourlyStart" in data and mission.hourlyStart != data["hourlyStart"]:
-      mission.hourlyStartChange = data["hourlyStart"]
-      Notification.createAndSend(Mission=mission, nature="alert", title="Modification de la mission", Company=subContractor, Role=roleST, content=f"Votre horaire de départ pour le chantier du {mission.address} va changé et pour {mission.hourlyStart}, à vous de valider la modification.", timestamp=datetime.now().timestamp())
+      mission.hourlyStartChange = data["hourlyStart"]**
+      Notification.createAndSend(Mission=mission, nature="alert", title="Modification de la mission", Company=subContractor, Role=roleST, content=f"Votre horaire de début pour le chantier du {mission.address} va changer, à vous de valider la modification.", timestamp=datetime.now().timestamp())
     if "hourlyEnd" in data and mission.hourlyEnd != data["hourlyEnd"]:
       mission.hourlyEndChange = data["hourlyEnd"]
-      Notification.createAndSend(Mission=mission, nature="alert", title="Modification de la mission", Company=subContractor, Role=roleST, content=f"Votre horaire de fin de journée pour le chantier du {mission.address} va changer et pour {mission.hourlyEnd}, à vous de valider la modification.", timestamp=datetime.now().timestamp())
+      Notification.createAndSend(Mission=mission, nature="alert", title="Modification de la mission", Company=subContractor, Role=roleST, content=f"Votre horaire de fin de journée pour le chantier du {mission.address} va changer, à vous de valider la modification.", timestamp=datetime.now().timestamp())
     mission.save()
     return mission, subContractor
 
@@ -1007,7 +1009,7 @@ class DataAccessor():
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     print("add Notification")
     objectFather = supervision.DetailedPost if supervision.DetailedPost else supervision.DatePost
-    cls.__addNewNotificationForMessage(userProfile, objectFather.Mission, f"Une nouveau image pour le chantier du {objectFather.Mission.address} vous attend.")
+    cls.__addNewNotificationForMessage(userProfile, objectFather.Mission, f"Une nouvelle image pour le chantier du {objectFather.Mission.address} vous attend.")
     file = None
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path + data['ext']) if data['ext'] != "txt" else fileStr
