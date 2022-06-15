@@ -303,7 +303,7 @@ class JobForCompany(CommonModel):
 
   class Meta:
     unique_together = ('Job', 'Company')
-    verbose_name = "JobForCompany" d
+    verbose_name = "JobForCompany"
 
   @classmethod
   def listFields(cls):
