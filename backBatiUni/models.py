@@ -35,7 +35,7 @@ class RamData():
   @classmethod
   def fillUpRamStructure(cls):
     if not cls.isUsed or datetime.datetime.now().timestamp() - cls.isUsed > 30:
-      print("compute fillUpRamStructure", cls.isUsed, datetime.datetime.now().timestamp())
+      print("compute fillUpRamStructure")
       cls.isUsed = datetime.datetime.now().timestamp()
       cls.allPost = {int(post.id):[] for post in Post.objects.all() if post.subContractorName == None}
       cls.allMission = {mission.id:[] for mission in Mission.objects.all() if mission.subContractorName}
@@ -44,7 +44,7 @@ class RamData():
       cls.allDetailedPost = {detailPost.id:[] for detailPost in DetailedPost.objects.all()}
       cls.ramStructure = {"Company":{}, "Post":{}, "Mission":{}, "DetailedPost":{}, "DatePost":{}, "DetailedPost":{}}
       for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
-        # print("generateRamStructure", classObject)
+        print("generateRamStructure", classObject)
         classObject.generateRamStructure()
       cls.ramStructureComplete = cls.ramStructure
       cls.timestamp = cls.isUsed
@@ -253,7 +253,7 @@ class Company(CommonModel):
       elif field == "allQualifications": values.append(self.allQualifications if self.allQualifications else "")
   
       elif field in self.manyToManyObject:
-        if dictFormat:
+        if dictFormat or not self.id in RamData.ramStructureComplete["Company"][field]:
           listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Company=self)]
         else:
           listModel = RamData.ramStructureComplete["Company"][field][self.id]
@@ -570,23 +570,16 @@ class Post(CommonModel):
       elif field == "endDate": values.append(self.endDate.strftime("%Y-%m-%d") if self.endDate else "")
 
       elif field in self.manyToManyObject:
-        if dictFormat:
-          if self.subContractorName:
+        if self.subContractorName:
+          if dictFormat or not self.id in RamData.ramStructureComplete["Mission"][field]:
             listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Mission=self)]
           else:
-            listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Post=self)]
+            listModel = RamData.ramStructureComplete["Mission"][field][self.id]
         else:
-          if self.subContractorName:
-            if not self.id in RamData.ramStructureComplete["Mission"][field]:
-              print("bug Mission 561", field, self.id)
-              print("bug Mission 561", RamData.ramStructureComplete["Mission"][field])
-            listModel = RamData.ramStructureComplete["Mission"][field][self.id] if self.id in RamData.ramStructureComplete["Mission"][field] else []
+          if dictFormat or not self.id in RamData.ramStructureComplete["Post"][field]:
+            listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Post=self)]
           else:
-            if not self.id in RamData.ramStructureComplete["Post"][field]:
-              print("bug Post 561", field, self.id)
-              print("bug Post 561", RamData.ramStructureComplete["Post"][field])
             listModel = RamData.ramStructureComplete["Post"][field][self.id]
-            
         values.append(listModel)
     return values
 
@@ -859,10 +852,10 @@ class DetailedPost(CommonModel):
       elif field == "refused": values.append(self.refused)
 
       else:
-        if not dictFormat and self.id in RamData.ramStructureComplete["DetailedPost"][field]:
-          values.append(RamData.ramStructureComplete["DetailedPost"][field][self.id])
+        if dictFormat or not self.id in RamData.ramStructureComplete["DetailedPost"][field]:
+          values.append([objectModel.id for objectModel in Supervision.objects.filter(DetailedPost=self)])
         else:
-          values.append({objectModel.id:objectModel.dump() for objectModel in Supervision.objects.filter(DetailedPost=self)})
+          values.append(RamData.ramStructureComplete["DetailedPost"][field][self.id])
     return values
 
   def dump(self):
