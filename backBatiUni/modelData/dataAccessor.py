@@ -163,7 +163,7 @@ class DataAccessor():
         company = inviteFriend[0].invitationAuthor.Company
         role = "ST" if company.Role.id == 2 else "PME"
         Notification.createAndSend(Company=company, title="Parrainage", nature="alert", Role=role, content=f"{userProfile.firstName} {userProfile.lastName} de la société {userProfile.Company.name} s'est inscrit sur BatiUni. Vous êtes son parrain.", timestamp=datetime.now().timestamp())
-        Notification.createAndSend(Company=userProfile.Company, title="Parrainage", nature="alert", Role=role, content=f"{userProfile.firstName} {userProfile.lastName} de la société {userProfile.Company.name} s'est inscrit sur BatiUni. Vous êtes son parrain.", timestamp=datetime.now().timestamp())
+        Notification.createAndSend(Company=userProfile.Company, title="Parrainage", nature="alert", Role=role, content=f"Vous êtes parrainé par la société {company.name}", timestamp=datetime.now().timestamp())
       return {"registerConfirm":"OK"}
     return {"registerConfirm":"Error", "messages":"wrong token or email"}
 
@@ -895,8 +895,10 @@ class DataAccessor():
     if companyRole == "st":
       listMission = [(candidate.Mission.quality + candidate.Mission.security + candidate.Mission.organisation) / 3 for candidate in Candidate.objects.filter(Company = subContractor, isChoosen = True) if candidate.Mission.isClosed]
       subContractor.starsST = round(sum(listMission)/len(listMission)) if len(listMission) else 0
+      Notification.createAndSend(Company=company, subContractor=subContractor, title="Evaluation", nature="PME", Role="ST", content=f"La société {company} vient de vous évaluer.", timestamp=datetime.now().timestamp())
       subContractor.save()
     else:
+      Notification.createAndSend(Company=subContractor, subContractor=company, title="Evaluation", nature="ST", Role="PME", content=f"La société {candidate[0].Company} vient de vous évaluer.", timestamp=datetime.now().timestamp())
       listMission = [(mission.vibeST + mission.securityST + mission.organisationST) / 3 for mission in Mission.objects.filter(Company=company, isClosed=True)]
       company.starsPME = round(sum(listMission)/len(listMission)) if len(listMission) else 0
       company.save()
