@@ -643,7 +643,7 @@ class DataAccessor():
       blockedCandidate = blockData[0]
     else:
       blockedCandidate = BlockedCandidate.objects.create(blocker=blockingCompany, blocked=blockedCompany, status=status, date=timezone.now())
-    cls.cleanMissionBlocked(blockedCompany, )
+    cls.cleanMissionBlocked(blockedCompany, blockingCompany)
     return {"blockCompany":"OK", blockedCandidate.id:blockedCandidate.computeValues(blockedCandidate.listFields(), currentUser, dictFormat=True)}
 
   @classmethod
