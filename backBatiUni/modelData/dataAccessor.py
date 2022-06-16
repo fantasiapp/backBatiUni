@@ -1132,7 +1132,7 @@ class DataAccessor():
       print("inside loop", sameLogin, sameLogin[0].id)
       if sameLogin[0].id == user.id: return None
       return f"Cet email est déjà utilisé."
-    print("oldValues", user.userName, userProfile.email)
+    print("oldValues", user.username, userProfile.email)
     user.userName = newUserName
     user.save()
     userProfile.email = newUserName
