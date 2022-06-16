@@ -649,6 +649,7 @@ class DataAccessor():
   @classmethod
   def blockCompany(cls, blockedCompany, blockingCompany):
     for candidate in Candidate.objects.filter(Company=blockedCompany):
+      print("candidate", candidate.id)
       if candidate.Post and candidate.Post.Company.id == blockingCompany.id and not candidate.Post.Company.subContractorName:
         print("candidate deleted"), candidate.id
         candidate.delete()

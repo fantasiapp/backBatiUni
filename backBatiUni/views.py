@@ -54,7 +54,6 @@ class Data(DefaultView):
       currentUser = request.user
       jsonBin = request.body
       jsonString = jsonBin.decode("utf8")
-      print("post start", json.loads(jsonString))
       response = DataAccessor().dataPost(jsonString, currentUser)
       # print("post response", response)
       return DefaultView.myResponse(response)
@@ -65,7 +64,6 @@ class Initialize(APIView):
   def get(self, request):
     if 'action' in request.GET:
       action = request.GET["action"]
-      print("initialize action", action)
       if action == "getGeneralData":
         return Response(DataAccessor().getData("general", False))
       elif action == "registerConfirm":
