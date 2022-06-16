@@ -11,7 +11,7 @@ class DefaultView(APIView):
   permission_classes = (IsAuthenticated,)
 
   @classmethod
-  def myResponse (json):
+  def myResponse (cls, json):
     json["timestamp"] = datetime.now().timestamp()
     return Response(json)
 
