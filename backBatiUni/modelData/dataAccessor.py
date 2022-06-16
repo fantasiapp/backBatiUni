@@ -832,6 +832,7 @@ class DataAccessor():
     print("closeMission", data)
     mission = Mission.objects.get(id=data["missionId"])
     if mission.isClosed:
+      print("mission is closed")
       return {"closeMission":"Error ", "Error":f"Mission of id {mission.id} is allready closed."}
     mission.quality = data["qualityStars"]
     mission.qualityComment = data["qualityComment"]
@@ -841,21 +842,24 @@ class DataAccessor():
     mission.organisationComment = data["organisationComment"]
     mission.isClosed = True
     mission.save()
-    message = cls.__newStars(mission, "st")
+    message = cls.__newStars(mission, "pme")
     if message: return message
     return {"closeMission":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
 
   @classmethod
   def __closeMissionST(cls, data, currentUser):
     mission = Mission.objects.get(id=data["missionId"])
-    mission.vibeST = data["vibeSTStars"]
+    if mission.vibeST + mission.securityST + mission.organisationST != 0:
+      print("mission ST is quoted")
+      return {"closeMission":"Error ", "Error":f"Mission of id {mission.id} is allready quoted."}
+    mission.vibeST = data["vibeSTStars"] 
     mission.vibeCommentST = data["vibeSTComment"]
     mission.securityST = data["securitySTStars"]
     mission.securityCommentST = data["securitySTComment"]
     mission.organisationST = data["organisationSTStars"]
     mission.organisationCommentST = data["organisationSTComment"]
     mission.save()
-    cls.__newStars(mission, "pme")
+    cls.__newStars(mission, "st")
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     subContractor = userProfile.Company
     Notification.createAndSend(Mission=mission, subContractor=subContractor, title="Modification de la mission", nature="ST", Company=mission.Company, Role="PME", content=f"La mission du {mission.address} a été clôturée.", timestamp=datetime.now().timestamp())
