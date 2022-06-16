@@ -891,7 +891,6 @@ class DataAccessor():
     if not company:
       return {"notificationViewed":"Error", "messages":f"{data['companyId']} does not exist"}
     company = company[0]
-    company = Company.objects.get(id=data["companyId"])
     notifications = Notification.objects.filter(Company=company, Role=data["role"])
     for notification in notifications:
       notification.hasBeenViewed = True
@@ -927,7 +926,7 @@ class DataAccessor():
       subContractor.save()
       print("new evaluation st", company.id, subContractor.id)
     else:
-      Notification.createAndSend(Company=subContractor, subContractor=company, title="Modification de la mission", nature="ST", Role="PME", content=f"La société {subContractor.name} a clôtuvient de vous évaluer.", timestamp=datetime.now().timestamp())
+      Notification.createAndSend(Company=subContractor, subContractor=company, title="Modification de la mission", nature="ST", Role="PME", content=f"La société {subContractor.name} vient de vous évaluer.", timestamp=datetime.now().timestamp())
       listMission = [(mission.vibeST + mission.securityST + mission.organisationST) / 3 for mission in Mission.objects.filter(Company=company, isClosed=True)]
       company.starsPME = round(sum(listMission)/len(listMission)) if len(listMission) else 0
       print("new evaluation pme", company.id, subContractor.id)
