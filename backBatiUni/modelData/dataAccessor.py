@@ -865,7 +865,7 @@ class DataAccessor():
     mission.organisationComment = data["organisationComment"]
     mission.isClosed = True
     mission.save()
-    cls.__newStars(mission, "pme")
+    cls.__newStars(mission, "st")
     return {"closeMission":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
 
   @classmethod
@@ -881,7 +881,7 @@ class DataAccessor():
     mission.organisationST = data["organisationSTStars"]
     mission.organisationCommentST = data["organisationSTComment"]
     mission.save()
-    cls.__newStars(mission, "st")
+    cls.__newStars(mission, "pme")
     return {"closeMissionST":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
 
   @classmethod
