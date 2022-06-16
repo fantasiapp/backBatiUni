@@ -447,7 +447,7 @@ class ViewPost(CommonModel):
 
 class Post(CommonModel):
   Company = models.ForeignKey(Company, related_name='CompanyOfPost', verbose_name='Société demandeuse', on_delete=models.PROTECT, null=True, default=None) 
-  Job = models.ForeignKey(Job, verbose_name='Métier', on_delete=models.PROTECT, blank=False, default=None) 
+  Job = models.ForeignKey(Job, verbose_name='Métier', on_delete=models.PROTECT, null=True, default=None) 
   numberOfPeople = models.IntegerField("Nombre de personne(s) demandées", blank=False, null=False, default=1)
   address = models.CharField("Adresse du chantier", max_length=1024, null=True, default=None)
   latitude = models.FloatField("Latitude", null=True, default=None)
