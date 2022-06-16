@@ -10,6 +10,11 @@ import json
 class DefaultView(APIView):
   permission_classes = (IsAuthenticated,)
 
+  @classmethod
+  def myResponse (json):
+    json["timestamp"] = datetime.now().timestamp()
+    return Response(json)
+
   def confirmToken(self, user):
     userProfile = UserProfile.objects.filter(userNameInternal=user)
     if userProfile:
@@ -21,7 +26,7 @@ class Data(DefaultView):
     if 'action' in request.GET and self.confirmToken(request.user):
       currentUser = request.user
       action = request.GET["action"]
-      if action == "getUserData": return Response(DataAccessor.getData("user", currentUser))
+      if action == "getUserData": return DefaultView.myResponse(DataAccessor.getData("user", currentUser))
       elif action == "getEnterpriseDataFrom": return Response(DataAccessor.getEnterpriseDataFrom(request, currentUser))
       elif action == "deletePost": return Response(DataAccessor.deletePost(request.GET["id"]))
       elif action == "downloadFile": return Response(DataAccessor.downloadFile(request.GET["id"], currentUser))
