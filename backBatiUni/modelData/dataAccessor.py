@@ -1131,6 +1131,7 @@ class DataAccessor():
     if len(sameLogin) == 1:
       if sameLogin[0].id == userProfile.id: return None
       return f"Cet email est déjà utilisé."
+    print("oldValues", user.userName, userProfile.email)
     user.userName = newUserName
     user.save()
     userProfile.email = newUserName
