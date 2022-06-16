@@ -890,8 +890,8 @@ class DataAccessor():
   @classmethod
   def __newStars(cls, mission, companyRole):
     print("__newStars")
-    candidate = Candidate.objects.filter(isChoosen=True, Mission=mission)
-    subContractor = candidate[0].Company
+    candidate = Candidate.objects.get(isChoosen=True, Mission=mission)
+    subContractor = candidate.Company
     company = mission.Company
     if companyRole == "st":
       if candidate.Mission.quality + candidate.Mission.security + candidate.Mission.organisation:
