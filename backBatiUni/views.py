@@ -12,7 +12,7 @@ class DefaultView(APIView):
 
   @classmethod
   def myResponse (cls, json):
-    json["timestamp"] = datetime.now().timestamp()
+    json["timestamp"] = datetime.datetime.now().timestamp()
     return Response(json)
 
   def confirmToken(self, user):
