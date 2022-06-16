@@ -881,7 +881,7 @@ class DataAccessor():
     notifications = Notification.objects.filter(Post=post, Role=data["role"]) | Notification.objects.filter(Mission=post, Role=data["role"])
     for notification in notifications:
       notification.hasBeenViewed = True
-      notification.saved()
+      notification.save()
     notifications = Notification.objects.filter(Company=company, Role=data["role"])
     response = {"Notification":[{notification.id:notification.computeValues(notification.listFields(), currentUser, dictFormat=True)} for notification in notifications]}
     response["notificationPostViewed"] = "OK"
