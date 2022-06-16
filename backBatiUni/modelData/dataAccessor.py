@@ -919,17 +919,17 @@ class DataAccessor():
     candidate = Candidate.objects.get(isChoosen=True, Mission=mission)
     subContractor = candidate.Company
     company = mission.Company
-    if companyRole == "pme":
+    if companyRole == "st":
       listMission = [(mission.quality + mission.security + mission.organisation) / 3 for candidate in Candidate.objects.filter(Company = subContractor, isChoosen = True) if candidate.Mission.isClosed]
       subContractor.starsST = round(sum(listMission)/len(listMission)) if len(listMission) else 0
       Notification.createAndSend(Company=subContractor, subContractor=company, title="Modification de la mission", nature="PME", Role="ST", content=f"La société {company.name} vient de vous évaluer.", timestamp=datetime.now().timestamp())
       subContractor.save()
-      print("new evaluation pme", company.id, subContractor.id)
+      print("new evaluation st", company.id, subContractor.id)
     else:
       Notification.createAndSend(Company=company, subContractor=subContractor, title="Modification de la mission", nature="ST", Role="PME", content=f"La société {subContractor.name} vient de vous évaluer.", timestamp=datetime.now().timestamp())
       listMission = [(mission.vibeST + mission.securityST + mission.organisationST) / 3 for mission in Mission.objects.filter(Company=company, isClosed=True)]
       company.starsPME = round(sum(listMission)/len(listMission)) if len(listMission) else 0
-      print("new evaluation st", company.id, subContractor.id)
+      print("new evaluation pme", company.id, subContractor.id)
       company.save()
     print("newStars","OK", candidate.Mission.id)
     return False
