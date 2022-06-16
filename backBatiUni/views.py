@@ -54,6 +54,7 @@ class Data(DefaultView):
       currentUser = request.user
       jsonBin = request.body
       jsonString = jsonBin.decode("utf8")
+      print("post start", json.loads(jsonString))
       response = DataAccessor().dataPost(jsonString, currentUser)
       # print("post response", response)
       return DefaultView.myResponse(response)
