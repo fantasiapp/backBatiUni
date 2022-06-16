@@ -351,7 +351,6 @@ class DataAccessor():
 
   @classmethod
   def unapplyPost(cls, postId, candidateId, currentUser):
-    print("unapplyPost", postId, candidateId)
     candidate = Candidate.objects.get(id=candidateId)
     post = Post.objects.get(id=postId)
     candidate.delete()
@@ -644,7 +643,16 @@ class DataAccessor():
       blockedCandidate = blockData[0]
     else:
       blockedCandidate = BlockedCandidate.objects.create(blocker=blockingCompany, blocked=blockedCompany, status=status, date=timezone.now())
+    cls.cleanMissionBlocked(blockedCompany, )
     return {"blockCompany":"OK", blockedCandidate.id:blockedCandidate.computeValues(blockedCandidate.listFields(), currentUser, dictFormat=True)}
+
+  @classmethod
+  def blockCompany(cls, blockedCompany, blockingCompany):
+    for candidate in Candidate.objects.filter(Company=blockedCompany):
+      if candidate.Post and candidate.Post.Company.id == blockingCompany.id and not candidate.Post.Company.subContractorName:
+        print("candidate deleted"), candidate.id
+        candidate.delete()
+        
 
 
   @classmethod
@@ -722,7 +730,6 @@ class DataAccessor():
   def __modifyMissionDateAction(cls, data, currentUser, mission, subContractor):
     data["calendar"] = list(set(data["calendar"]))
     data["calendar"] = [date for date in data["calendar"] if date] if "calendar" in data else []
-    print("modifyMissionDate", data["calendar"])
     existingDateMission = DatePost.objects.filter(Mission=mission)
     datePostList = {}
     for task in existingDateMission:
@@ -860,7 +867,6 @@ class DataAccessor():
     mission.organisationCommentST = data["organisationSTComment"]
     mission.save()
     cls.__newStars(mission, "st")
-    
     return {"closeMissionST":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
 
   @classmethod

@@ -515,7 +515,9 @@ class Post(CommonModel):
   def filter(cls, user):
     listMission = {candidate.Mission.id for candidate in Candidate.objects.all() if candidate.Mission != None}
     company = UserProfile.objects.get(userNameInternal=user).Company
-    listBlocked = [block.blocked.id for block in BlockedCandidate.objects.filter(blocker=company)]
+    listBlocked = [block.blocker.id for block in BlockedCandidate.objects.filter(blocked=company)]
+    print("listBlocked", listBlocked)
+    print([post for post in Post.objects.all() if not post.id in listMission and not post.Company.id in listBlocked])
     return [post for post in Post.objects.all() if not post.id in listMission and not post.Company.id in listBlocked]
 
   def computeValues(self, listFields, user, dictFormat=False):
@@ -630,7 +632,7 @@ class Mission(Post):
   @classmethod
   def filter(cls, user):
     company = UserProfile.objects.get(userNameInternal=user).Company
-    listBlocked = [block.blocked.id for block in BlockedCandidate.objects.filter(blocker=company)]
+    listBlocked = [block.blocker.id for block in BlockedCandidate.objects.filter(blocked=company)]
     return [candidate.Mission for candidate in Candidate.objects.all() if candidate.Mission != None and not candidate.Mission.id in listBlocked]
 
 
@@ -811,6 +813,13 @@ class Candidate(CommonModel):
   def dump(self):
     date = self.date.strftime("%Y-%m-%d") if self.date else ""
     return [self.Company.id, self.contact, self.isChoosen, self.isRefused, self.isViewed, date, self.amount, self.unitOfTime]
+
+  @classmethod
+  def filter(cls, user):
+    company = UserProfile.objects.get(userNameInternal=user).Company
+    listBlocked = [block.blocked.id for block in BlockedCandidate.objects.filter(blocker=company)]
+    print("filter candidate", [candidate for candidate in Candidate.objects.all() if not candidate.id in listBlocked])
+    return [candidate for candidate in Candidate.objects.all() if not candidate.id in listBlocked]
 
 class DetailedPost(CommonModel):
   Post = models.ForeignKey(Post, related_name='Post', verbose_name='Annonce associée', on_delete=models.PROTECT, null=True, default=None)
