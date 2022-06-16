@@ -258,8 +258,8 @@ class DataAccessor():
           objectForeign = foreign.objects.filter(id=value)
           if objectForeign:
             kwargs[fieldName]=objectForeign[0]
-          else:
-            return {"uploadPost":"Error", "messages":{fieldName:"is not documented"}}, False
+          # else:
+          #   return {"uploadPost":"Error", "messages":{fieldName:"is not documented"}}, False
         if fieldObject and isinstance(fieldObject, models.DateField):
           try:
             date = datetime.strptime(dictData[fieldName], "%Y-%m-%d") if dictData[fieldName] else None
