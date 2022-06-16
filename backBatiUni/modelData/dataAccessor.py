@@ -851,28 +851,11 @@ class DataAccessor():
 
   @classmethod
   def __closeMission(cls, data, currentUser):
-    userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     print("closeMission", data)
     mission = Mission.objects.get(id=data["missionId"])
     if mission.isClosed:
       print("mission is closed")
       return {"closeMission":"Error ", "Error":f"Mission of id {mission.id} is allready closed."}
-    mission.vibeST = data["vibeSTStars"] 
-    mission.vibeCommentST = data["vibeSTComment"]
-    mission.securityST = data["securitySTStars"]
-    mission.securityCommentST = data["securitySTComment"]
-    mission.organisationST = data["organisationSTStars"]
-    mission.organisationCommentST = data["organisationSTComment"]
-    mission.save()
-    cls.__newStars(mission, "st")
-    return {"closeMission":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
-
-  @classmethod
-  def __closeMissionST(cls, data, currentUser):
-    mission = Mission.objects.get(id=data["missionId"])
-    if mission.vibeST + mission.securityST + mission.organisationST != 0:
-      print("mission ST is quoted")
-      return {"closeMission":"Error ", "Error":f"Mission of id {mission.id} is allready quoted."}
     mission.quality = data["qualityStars"]
     mission.qualityComment = data["qualityComment"]
     mission.security = data["securityStars"]
@@ -880,6 +863,23 @@ class DataAccessor():
     mission.organisation = data["organisationStars"]
     mission.organisationComment = data["organisationComment"]
     mission.isClosed = True
+    mission.save()
+    cls.__newStars(mission, "st")
+    return {"closeMission":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
+
+  @classmethod
+  def __closeMissionST(cls, data, currentUser):
+    print("closeMission", data)
+    mission = Mission.objects.get(id=data["missionId"])
+    if mission.vibeST + mission.securityST + mission.organisationST != 0:
+      print("mission ST is quoted")
+      return {"closeMission":"Error ", "Error":f"Mission of id {mission.id} is allready quoted."}
+    mission.vibeST = data["vibeSTStars"] 
+    mission.vibeCommentST = data["vibeSTComment"]
+    mission.securityST = data["securitySTStars"]
+    mission.securityCommentST = data["securitySTComment"]
+    mission.organisationST = data["organisationSTStars"]
+    mission.organisationCommentST = data["organisationSTComment"]
     mission.save()
     cls.__newStars(mission, "pme")
     return {"closeMissionST":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
@@ -920,15 +920,14 @@ class DataAccessor():
     subContractor = candidate.Company
     company = mission.Company
     if companyRole == "st":
-      listMission = [(mission.vibeST + mission.securityST + mission.organisationST) / 3 for mission in Mission.objects.filter(Company=subContractor, isClosed=True)]
+      listMission = [(mission.quality + mission.security + mission.organisation) / 3 for candidate in Candidate.objects.filter(Company = subContractor, isChoosen = True) if candidate.Mission.isClosed]
       subContractor.starsST = round(sum(listMission)/len(listMission)) if len(listMission) else 0
       Notification.createAndSend(Company=subContractor, subContractor=company, title="Modification de la mission", nature="PME", Role="ST", content=f"La société {company.name} vient de vous évaluer.", timestamp=datetime.now().timestamp())
       subContractor.save()
       print("new evaluation st", company.id, subContractor.id)
     else:
-      listMission = [(candidate.mission.quality + candidate.mission.security + candidate.mission.organisation) / 3 for candidate in Candidate.objects.filter(Company = company, isChoosen = True) if candidate.Mission.isClosed]
       Notification.createAndSend(Company=company, subContractor=subContractor, title="Modification de la mission", nature="ST", Role="PME", content=f"La société {subContractor.name} vient de vous évaluer.", timestamp=datetime.now().timestamp())
-      
+      listMission = [(mission.vibeST + mission.securityST + mission.organisationST) / 3 for mission in Mission.objects.filter(Company=company, isClosed=True)]
       company.starsPME = round(sum(listMission)/len(listMission)) if len(listMission) else 0
       print("new evaluation pme", company.id, subContractor.id)
       company.save()
