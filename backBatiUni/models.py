@@ -19,6 +19,7 @@ from time import sleep, time
 from copy import deepcopy
 import json
 import shutil
+from itertools import chain
 
 
 
@@ -43,7 +44,7 @@ class RamData():
       cls.allDetailedPost = {detailPost.id:[] for detailPost in DetailedPost.objects.all()}
       cls.ramStructure = {"Company":{}, "Post":{}, "Mission":{}, "DetailedPost":{}, "DatePost":{}, "DetailedPost":{}}
       for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
-        print("generateRamStructure", classObject)
+        # print("generateRamStructure", classObject)
         classObject.generateRamStructure()
       cls.ramStructureComplete = cls.ramStructure
       cls.timestamp = cls.isUsed
