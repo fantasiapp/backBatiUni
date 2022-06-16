@@ -869,20 +869,22 @@ class DataAccessor():
     for notification in notifications:
       notification.hasBeenViewed = True
       notification.save()
-    response = {notification.id:notification.computeValues(notification.listFields(), currentUser, dictFormat=True) for notification in notifications}
+    response = {"Notification":[{notification.id:notification.computeValues(notification.listFields(), currentUser, dictFormat=True)} for notification in notifications]}
     response["notificationViewed"] = "OK"
     return response
 
   @classmethod
   def __notificationPostViewed(cls, data, currentUser):
     print("__notificationViewed", data)
+    company = UserProfile.objects.get(userNameInternal=currentUser).Company
     post = Post.objects.get(id=data["postId"])
     notifications = Notification.objects.filter(Post=post, Role=data["role"]) + Notification.objects.filter(Mission=post, Role=data["role"])
     for notification in notifications:
       notification.hasBeenViewed = True
       notification.saved()
-    response = {"Notifications":{notification.id:notification.computeValues(notification.listFields(), currentUser, dictFormat=True) for notification in notifications}}
-    response["notificationViewed"] = "OK"
+    notifications = Notification.objects.filter(Company=company, Role=data["role"])
+    response = {"Notification":[{notification.id:notification.computeValues(notification.listFields(), currentUser, dictFormat=True)} for notification in notifications]}
+    response["notificationPostViewed"] = "OK"
     return response
 
   @classmethod
