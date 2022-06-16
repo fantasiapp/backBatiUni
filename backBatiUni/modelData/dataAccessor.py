@@ -647,7 +647,7 @@ class DataAccessor():
     return {"blockCompany":"OK", blockedCandidate.id:blockedCandidate.computeValues(blockedCandidate.listFields(), currentUser, dictFormat=True)}
 
   @classmethod
-  def blockCompany(cls, blockedCompany, blockingCompany):
+  def cleanMissionBlocked(cls, blockedCompany, blockingCompany):
     for candidate in Candidate.objects.filter(Company=blockedCompany):
       print("candidate", candidate.id)
       if candidate.Post and candidate.Post.Company.id == blockingCompany.id and not candidate.Post.Company.subContractorName:
