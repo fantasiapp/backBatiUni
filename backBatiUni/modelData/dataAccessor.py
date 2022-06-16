@@ -854,7 +854,7 @@ class DataAccessor():
     cls.__newStars(mission, "pme")
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     subContractor = userProfile.Company
-    Notification.createAndSend(Mission=mission, subContractor=subContractor, title="Modification de la mission", nature="ST", Company=mission.Company, Role="PME", content=f"La mission du {mission.address} a été notée.", timestamp=datetime.now().timestamp())
+    Notification.createAndSend(Mission=mission, subContractor=subContractor, title="Modification de la mission", nature="ST", Company=mission.Company, Role="PME", content=f"La mission du {mission.address} a été clôturée.", timestamp=datetime.now().timestamp())
     return {"closeMissionST":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
 
   @classmethod
@@ -895,11 +895,11 @@ class DataAccessor():
     if companyRole == "st":
       listMission = [(candidate.Mission.quality + candidate.Mission.security + candidate.Mission.organisation) / 3 for candidate in Candidate.objects.filter(Company = subContractor, isChoosen = True) if candidate.Mission.isClosed]
       subContractor.starsST = round(sum(listMission)/len(listMission)) if len(listMission) else 0
-      Notification.createAndSend(Company=company, subContractor=subContractor, title="Evaluation", nature="PME", Role="ST", content=f"La société {company} vient de vous évaluer.", timestamp=datetime.now().timestamp())
+      Notification.createAndSend(Company=company, subContractor=subContractor, title="Modification de la mission", nature="PME", Role="ST", content=f"La société {company} vient de vous évaluer.", timestamp=datetime.now().timestamp())
       print("new evaluation st")
       subContractor.save()
     else:
-      Notification.createAndSend(Company=subContractor, subContractor=company, title="Evaluation", nature="ST", Role="PME", content=f"La société {candidate[0].Company} vient de vous évaluer.", timestamp=datetime.now().timestamp())
+      Notification.createAndSend(Company=subContractor, subContractor=company, title="Modification de la mission", nature="ST", Role="PME", content=f"La société {candidate[0].Company} vient de vous évaluer.", timestamp=datetime.now().timestamp())
       listMission = [(mission.vibeST + mission.securityST + mission.organisationST) / 3 for mission in Mission.objects.filter(Company=company, isClosed=True)]
       company.starsPME = round(sum(listMission)/len(listMission)) if len(listMission) else 0
       print("new evaluation pme")
