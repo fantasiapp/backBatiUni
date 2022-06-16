@@ -920,7 +920,7 @@ class DataAccessor():
     subContractor = candidate.Company
     company = mission.Company
     if companyRole == "st":
-      listMission = [(mission.quality + mission.security + mission.organisation) / 3 for candidate in Candidate.objects.filter(Company = subContractor, isChoosen = True) if candidate.Mission.isClosed]
+      listMission = [(candidate.Mission.quality + candidate.Mission.security + candidate.Mission.organisation) / 3 for candidate in Candidate.objects.filter(Company = subContractor, isChoosen = True) if candidate.Mission.isClosed]
       print("listMission", listMission)
       subContractor.starsST = round(sum(listMission)/len(listMission)) if len(listMission) else 0
       Notification.createAndSend(Company=subContractor, subContractor=company, title="Modification de la mission", nature="PME", Role="ST", content=f"La société {company.name} vient de vous évaluer pour le chantier du {mission.address}.", timestamp=datetime.now().timestamp())
