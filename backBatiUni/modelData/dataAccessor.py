@@ -1129,6 +1129,7 @@ class DataAccessor():
     print("__changeUserProfileName", userProfile, newUserName)
     sameLogin = UserProfile.objects.filter(userNameInternal=user)
     if len(sameLogin) == 1:
+      print("inside loop", sameLogin, sameLogin[0].id)
       if sameLogin[0].id == userProfile.id: return None
       return f"Cet email est déjà utilisé."
     print("oldValues", user.userName, userProfile.email)
