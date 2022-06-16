@@ -515,7 +515,7 @@ class Post(CommonModel):
   def filter(cls, user):
     listMission = {candidate.Mission.id for candidate in Candidate.objects.all() if candidate.Mission != None}
     company = UserProfile.objects.get(userNameInternal=user).Company
-    listBlocked = [block.blocker.id for block in BlockedCandidate.objects.filter(blocked=company)]
+    listBlocked = [block.blocker.id for block in BlockedCandidate.objects.filter(blocked=company, status=True)]
     return [post for post in Post.objects.all() if not post.id in listMission and not post.Company.id in listBlocked]
 
   def computeValues(self, listFields, user, dictFormat=False):
