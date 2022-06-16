@@ -171,7 +171,6 @@ class DataAccessor():
   @classmethod
   def dataPost(cls, jsonString, currentUser):
     data = json.loads(jsonString)
-    print("dataPost", data)
     if "action" in data:
       if data["action"] == "modifyPwd": return cls.__modifyPwd(data, currentUser)
       elif data["action"] == "modifyUser": return cls.__updateUserInfo(data, currentUser)
