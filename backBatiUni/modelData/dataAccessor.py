@@ -632,6 +632,7 @@ class DataAccessor():
 
   @classmethod
   def blockCompany(cls, companyId, status, currentUser):
+    print("blockCompany", companyId, status)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     blockedCompany = Company.objects.get(id=companyId)
     blockingCompany = userProfile.Company
