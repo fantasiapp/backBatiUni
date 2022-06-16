@@ -632,12 +632,13 @@ class DataAccessor():
 
   @classmethod
   def blockCompany(cls, companyId, status, currentUser):
-    print("blockCompany", companyId, status)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     blockedCompany = Company.objects.get(id=companyId)
     blockingCompany = userProfile.Company
+    print("blockCompany", companyId, status, blockedCompany.id, blockingCompany.id)
     blockData = BlockedCandidate.objects.filter(blocker=blockingCompany, blocked=blockedCompany)
     status = True if status == "true" else False
+    print("blockData", blockData)
     if blockData:
       blockData[0].status = status
       blockData[0].save()
