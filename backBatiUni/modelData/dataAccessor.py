@@ -567,7 +567,7 @@ class DataAccessor():
     if post:
       post = post[0]
       for candidate in Candidate.objects.filter(Post=post):
-        Notification.objects.create(nature="PME", Company=candidate.Company, Role="ST", content=f"L'annonce sur le chantier du {candidate.Post.address} de la société { post.Company.name } a été supprimé.", timestamp=datetime.now().timestamp())
+        Notification.objects.create(nature="PME", Company=candidate.Company, Role="ST", content=f"L'annonce sur le chantier du {cls.removefirstNumber(candidate.Post.address)} de la société { post.Company.name } a été supprimé.", timestamp=datetime.now().timestamp())
         candidate.delete()
       for notification in Notification.objects.filter(Post=post):
         notification.Post = None
@@ -586,7 +586,7 @@ class DataAccessor():
     if candidate.Mission:
       return {"handleCandidateForPost":"Error", "messages":f"The post of id {candidate.Mission.id} is allready a mission"}
     postId = candidate.Post.id
-    addressWithNoNumber = cls.removefirstNumber(list(candidate.Post.address))
+    addressWithNoNumber = cls.removefirstNumber(candidate.Post.address)
     if status == "true": candidate.isChoosen = True
     if status == "false": candidate.isRefused = True
     if candidate.isChoosen:
@@ -624,11 +624,21 @@ class DataAccessor():
     return {"handleCandidateForPost":"OK", post.id:post.computeValues(post.listFields(), currentUser, dictFormat=True)}
 
   @classmethod
-  def removefirstNumber(cls, listChar):
+  def removefirstNumber(cls, address):
+    """ Retire les numéros de rue dans une adresse"""
+    listChar = list(address)
     firstLetter = listChar.pop(0)
     if firstLetter.isdigit() or firstLetter == " ":
       return cls.removefirstNumber(listChar)
     return firstLetter + "".join(listChar)
+
+  @classmethod
+  def formatDate(cls, strDate):
+    """Formate la date de manière convenable pour les notifications"""
+    year = strDate[0:4]
+    month = strDate[5:7]
+    date = strDate[8:10]
+    return date + '/' + month + '/' + year
 
   @classmethod
   def blockCompany(cls, companyId, status, currentUser):
@@ -747,7 +757,7 @@ class DataAccessor():
             return {"modifyMissionDate":"Error", "messages":"DatePost contains detailedPost"}
           if Supervision.objects.filter(DatePost=datePost):
             return {"modifyMissionDate":"Error", "messages":"DatePost contains Supervision"}
-          Notification.createAndSend(Mission=mission, nature="alert", title="Modification de la mission", Company=subContractor, Role="ST", content=f"Votre journée de travail du {strDate} pour le chantier du {mission.address} est proposée à la suppression, à vous de valider la modification.", timestamp=datetime.now().timestamp())
+          Notification.createAndSend(Mission=mission, nature="alert", title="Modification de la mission", Company=subContractor, Role="ST", content=f"Votre journée de travail du {cls.formatDate(strDate)} pour le chantier du {mission.address} est proposée à la suppression, à vous de valider la modification.", timestamp=datetime.now().timestamp())
           datePost.deleted = True
           datePost.validated = False
           datePost.save()
@@ -758,7 +768,7 @@ class DataAccessor():
       date = datetime.strptime(strDate, "%Y-%m-%d")
       datePost = DatePost.objects.create(Mission=mission, date=date, validated=False)
       datePostList[datePost.id] = datePost
-      Notification.createAndSend(Mission=mission, nature="alert", title="Modification de la mission", Company=subContractor, Role="ST", content=f"Une journée de travail pour le chantier du {mission.address} vous est proposée {strDate}, à vous de valider la proposition.", timestamp=datetime.now().timestamp())
+      Notification.createAndSend(Mission=mission, nature="alert", title="Modification de la mission", Company=subContractor, Role="ST", content=f"Une journée de travail pour le chantier du {mission.address} vous est proposée pour le {cls.formatDate(strDate)}, à vous de valider la proposition.", timestamp=datetime.now().timestamp())
     return {"modifyMissionDate":"OK", "mission":{mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)} , "datePost":{id:datePost.computeValues(datePost.listFields(), currentUser, dictFormat=True) for id, datePost in datePostList.items()}}
 
   @classmethod
@@ -818,17 +828,17 @@ class DataAccessor():
             return {"validateMissionDate":"Error", "messages":"DatePost contains Supervision"}
           stillExist = False
           datePost.delete()
-          Notification.createAndSend(Mission=mission, nature="alert", Company=mission.Company, title="Modification de la mission", Role="PME", content=f"La journée de travail du {data['date']} pour le chantier du {mission.address} a été refusée.", timestamp=datetime.now().timestamp())
+          Notification.createAndSend(Mission=mission, nature="alert", Company=mission.Company, title="Modification de la mission", Role="PME", content=f"La journée de travail du {cls.formatDate(data['date'])} pour le chantier du {mission.address} a été refusée.", timestamp=datetime.now().timestamp())
         else:
-          Notification.createAndSend(Mission=mission, nature="alert", Company=mission.Company, title="Modification de la mission", Role="PME", content=f"La journée de travail du {data['date']} pour le chantier du {mission.address} est maintenant validée.", timestamp=datetime.now().timestamp())
+          Notification.createAndSend(Mission=mission, nature="alert", Company=mission.Company, title="Modification de la mission", Role="PME", content=f"La journée de travail du {cls.formatDate(data['date'])} pour le chantier du {mission.address} est maintenant validée.", timestamp=datetime.now().timestamp())
       else:
         if datePost.deleted:
           datePost.deleted = False
-          Notification.createAndSend(Mission=mission, nature="alert", Company=mission.Company, title="Modification de la mission", Role="PME", content=f"Le retrait de la journée de travail du {data['date']} pour le chantier du {mission.address} a été refusé.", timestamp=datetime.now().timestamp())
+          Notification.createAndSend(Mission=mission, nature="alert", Company=mission.Company, title="Modification de la mission", Role="PME", content=f"Le retrait de la journée de travail du {cls.formatDate(data['date'])} pour le chantier du {mission.address} a été refusé.", timestamp=datetime.now().timestamp())
         else:
           stillExist = False
           datePost.delete()
-          Notification.createAndSend(Mission=mission, nature="alert", Company=mission.Company, title="Modification de la mission", Role="PME", content=f"La journée supplémentaire de travail du {data['date']} pour le chantier du {mission.address} a été refusé.", timestamp=datetime.now().timestamp())
+          Notification.createAndSend(Mission=mission, nature="alert", Company=mission.Company, title="Modification de la mission", Role="PME", content=f"La journée supplémentaire de travail du {cls.formatDate(data['date'])} pour le chantier du {mission.address} a été refusé.", timestamp=datetime.now().timestamp())
       if stillExist:
         datePost.validated = True
         datePost.save()
