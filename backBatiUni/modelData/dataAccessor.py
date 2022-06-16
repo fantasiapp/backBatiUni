@@ -829,6 +829,7 @@ class DataAccessor():
 
   @classmethod
   def __closeMission(cls, data, currentUser):
+    userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     print("closeMission", data)
     mission = Mission.objects.get(id=data["missionId"])
     if mission.isClosed:
@@ -842,8 +843,7 @@ class DataAccessor():
     mission.organisationComment = data["organisationComment"]
     mission.isClosed = True
     mission.save()
-    message = cls.__newStars(mission, "pme")
-    if message: return message
+    cls.__newStars(mission, "pme")
     return {"closeMission":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
 
   @classmethod
@@ -860,9 +860,7 @@ class DataAccessor():
     mission.organisationCommentST = data["organisationSTComment"]
     mission.save()
     cls.__newStars(mission, "st")
-    userProfile = UserProfile.objects.get(userNameInternal=currentUser)
-    subContractor = userProfile.Company
-    Notification.createAndSend(Mission=mission, subContractor=subContractor, title="Modification de la mission", nature="ST", Company=mission.Company, Role="PME", content=f"La mission du {mission.address} a été clôturée.", timestamp=datetime.now().timestamp())
+    
     return {"closeMissionST":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
 
   @classmethod
@@ -908,7 +906,7 @@ class DataAccessor():
       subContractor.save()
       print("new evaluation st", company.id, subContractor.id)
     else:
-      Notification.createAndSend(Company=subContractor, subContractor=company, title="Modification de la mission", nature="ST", Role="PME", content=f"La société {subContractor.name} vient de vous évaluer.", timestamp=datetime.now().timestamp())
+      Notification.createAndSend(Company=subContractor, subContractor=company, title="Modification de la mission", nature="ST", Role="PME", content=f"La société {subContractor.name} a clôtuvient de vous évaluer.", timestamp=datetime.now().timestamp())
       listMission = [(mission.vibeST + mission.securityST + mission.organisationST) / 3 for mission in Mission.objects.filter(Company=company, isClosed=True)]
       company.starsPME = round(sum(listMission)/len(listMission)) if len(listMission) else 0
       print("new evaluation pme", company.id, subContractor.id)
@@ -1084,7 +1082,7 @@ class DataAccessor():
   def __updateUserInfo(cls, data, user):
     print("__updateUserInfo", user, data)
     valuesSaved = {"JobForCompany":{}, "LabelForCompany":{}}
-    message, userProfile = {}, UserProfile.objects.get(userNameInternal=user)
+    message, userProfile = None, UserProfile.objects.get(userNameInternal=user)
     if "UserProfile" in data and data["UserProfile"]:
       valuesSaved = cls.__setValuesForUser(data["UserProfile"], user, message, userProfile, valuesSaved)
       if message:
@@ -1102,13 +1100,15 @@ class DataAccessor():
   def __setValuesForUser(cls, dictValue, user, message, objectInstance, valuesSaved):
     for fieldName, value in dictValue.items():
       valueToSave = value
-      if fieldName != "id" and fieldName != 'userName':
+      if fieldName != "id": 
         fieldObject = None
         try:
           fieldObject = objectInstance._meta.get_field(fieldName)
         except:
           message = f"{fieldName} is not a field"
-        if fieldObject and isinstance(fieldObject, models.ForeignKey):
+        if fieldName == 'userName':
+          message = cls.__changeUserProfileName(user, objectInstance, value)
+        elif fieldObject and isinstance(fieldObject, models.ForeignKey):
           cls.__setValuesForUser(value, user, message, getattr(objectInstance, fieldName), valuesSaved)
         elif fieldName in objectInstance.manyToManyObject:
           valuesSaved[fieldName] = cls.__setValuesLabelJob(fieldName, value, user)
@@ -1123,6 +1123,20 @@ class DataAccessor():
             objectInstance.setAttr(fieldName, valueToSave)
             objectInstance.save()
     return valuesSaved
+
+  @classmethod
+  def __changeUserProfileName(cls, user, userProfile, newUserName):
+    print("__changeUserProfileName", userProfile, newUserName)
+    sameLogin = UserProfile.objects.filter(userNameInternal=user)
+    if len(sameLogin) == 1:
+      if sameLogin[0].id == userProfile.id: return None
+      return f"Cet email est déjà utilisé."
+    user.userName = newUserName
+    user.save()
+    userProfile.email = newUserName
+    userProfile.save()
+    print("__changeUserProfileName OK")
+    return None
 
   @classmethod
   def __setValuesLabelJob(cls, modelName, dictValue, user):
