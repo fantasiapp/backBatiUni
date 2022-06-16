@@ -192,6 +192,7 @@ class DataAccessor():
       elif data["action"] == "closeMission": return cls.__closeMission(data, currentUser)
       elif data["action"] == "closeMissionST": return cls.__closeMissionST(data, currentUser)
       elif data["action"] == "notificationViewed": return cls.__notificationViewed(data, currentUser)
+      elif data["action"] == "notificationPostViewed": return cls.__notificationPostViewed(data, currentUser)
       elif data["action"] == "boostPost": return cls.__boostPost(data, currentUser)
       return {"dataPost":"Error", "messages":f"unknown action in post {data['action']}"}
     return {"dataPost":"Error", "messages":"no action in post"}
@@ -325,6 +326,7 @@ class DataAccessor():
 
   @classmethod
   def applyPost(cls, postId, amount, unitOfTime, currentUser):
+    print("applyPost", postId)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     subContractor = userProfile.Company
     contact = userProfile.firstName + " " + userProfile.lastName
@@ -368,7 +370,6 @@ class DataAccessor():
       return {"candidateViewed":"OK", post.id:post.computeValues(post.listFields(), currentUser, True)}
     else:
       return {"candidateViewed":"Error", "messages":f"Candidate of id {candidate.id} has no post."}
-
 
 
   @classmethod
@@ -872,6 +873,17 @@ class DataAccessor():
     response["notificationViewed"] = "OK"
     return response
 
+  @classmethod
+  def __notificationPostViewed(cls, data, currentUser):
+    print("__notificationViewed", data)
+    post = Post.objects.get(id=data["postId"])
+    notifications = Notification.objects.filter(Post=post, Role=data["role"]) + Notification.objects.filter(Mission=post, Role=data["role"])
+    for notification in notifications:
+      notification.hasBeenViewed = True
+      notification.saved()
+    response = {"Notifications":{notification.id:notification.computeValues(notification.listFields(), currentUser, dictFormat=True) for notification in notifications}}
+    response["notificationViewed"] = "OK"
+    return response
 
   @classmethod
   def __newStars(cls, mission, companyRole):

@@ -38,7 +38,10 @@ def queryForToken(userName, password):
   data = json.dumps({"username": userName, "password": password})
   response = requests.post(tokenUrl, headers=headers, data=data)
   dictResponse = json.loads(response.text)
-  return dictResponse['token']
+  if "token" in dictResponse:
+    return dictResponse['token']
+  else:
+    return False
 
 def getDocStr(index = 0):
   file = ["./files/documents/Qualibat.jpeg", "./files/documents/Kbis.png", "./files/documents/Plan.png", "./files/documents/IMG_2465.HEIC", "./files/documents/etex.svg", "./files/documents/batiUni.png", "./files/documents/Fantasiapp.png", "./files/documents/logoFantasiapp.png"]
@@ -106,18 +109,19 @@ def executeQuery():
 
     for companyId, mail in emailList.items():
       token = queryForToken(mail, "pwd")
-      headers = {'Authorization': f'Token {token}'}
-      capital = str(math.floor(10000 + random.random() * 100000))
-      revenue = str(math.floor(100000 + random.random() * 1000000))
-      amount = math.floor(8 + random.random() * 70)
-      webSite = "https://monWebSite.fr"
-      JobForCompany = [[math.floor(1 + random.random() * 40), math.floor(1 + random.random() * 4)], [math.floor(41 + random.random() * 40), math.floor(1 + random.random() * 4)], [math.floor(81 + random.random() * 40), math.floor(1 + random.random() * 4)]]
-      LabelForCompany = [[math.floor(1 + random.random() * 9), dateForLabel], [math.floor(10 + random.random() * 9), dateForLabel], [math.floor(20 + random.random() * 7), dateForLabel]]
-      post = {'action': 'modifyUser', 'UserProfile': {'id': companyId, 'cellPhone': '0629350418', 'Company': {'capital': capital, 'revenue': revenue, "webSite": webSite, "amount":amount, 'companyPhone': '0892976415', "allQualifications":True, 'JobForCompany':JobForCompany, 'LabelForCompany':LabelForCompany}}}
-      response = requests.post(f'{address}/data/', headers=headers, json=post)
-      if companyId in emailList:
-        data = json.loads(response.text)
-        labelList[companyId] = json.loads(response.text)["LabelForCompany"]
+      if token:
+        headers = {'Authorization': f'Token {token}'}
+        capital = str(math.floor(10000 + random.random() * 100000))
+        revenue = str(math.floor(100000 + random.random() * 1000000))
+        amount = math.floor(8 + random.random() * 70)
+        webSite = "https://monWebSite.fr"
+        JobForCompany = [[math.floor(1 + random.random() * 40), math.floor(1 + random.random() * 4)], [math.floor(41 + random.random() * 40), math.floor(1 + random.random() * 4)], [math.floor(81 + random.random() * 40), math.floor(1 + random.random() * 4)]]
+        LabelForCompany = [[math.floor(1 + random.random() * 9), dateForLabel], [math.floor(10 + random.random() * 9), dateForLabel], [math.floor(20 + random.random() * 7), dateForLabel]]
+        post = {'action': 'modifyUser', 'UserProfile': {'id': companyId, 'cellPhone': '0629350418', 'Company': {'capital': capital, 'revenue': revenue, "webSite": webSite, "amount":amount, 'companyPhone': '0892976415', "allQualifications":True, 'JobForCompany':JobForCompany, 'LabelForCompany':LabelForCompany}}}
+        response = requests.post(f'{address}/data/', headers=headers, json=post)
+        if companyId in emailList:
+          data = json.loads(response.text)
+          labelList[companyId] = json.loads(response.text)["LabelForCompany"]
 
 
     generalData = requests.get(url, headers=headersStart, params={"action":"getGeneralData"})
