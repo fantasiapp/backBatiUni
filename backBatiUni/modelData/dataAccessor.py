@@ -878,7 +878,7 @@ class DataAccessor():
     print("__notificationViewed", data)
     company = UserProfile.objects.get(userNameInternal=currentUser).Company
     post = Post.objects.get(id=data["postId"])
-    notifications = list(chain(Notification.objects.filter(Post=post, Role=data["role"]), Notification.objects.filter(Mission=post, Role=data["role"])))
+    notifications = Notification.objects.filter(Post=post, Role=data["role"]) | Notification.objects.filter(Mission=post, Role=data["role"])
     for notification in notifications:
       notification.hasBeenViewed = True
       notification.saved()
