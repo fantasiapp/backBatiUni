@@ -641,9 +641,11 @@ class DataAccessor():
       blockData[0].status = status
       blockData[0].save()
       blockedCandidate = blockData[0]
+      print("unblock",  blockedCandidate.status, blockedCandidate.blockingCompany.id, blockedCandidate.blockedCompany.id)
     else:
       blockedCandidate = BlockedCandidate.objects.create(blocker=blockingCompany, blocked=blockedCompany, status=status, date=timezone.now())
-    cls.cleanMissionBlocked(blockedCompany, blockingCompany)
+    if status:
+      cls.cleanMissionBlocked(blockedCompany, blockingCompany)
     return {"blockCompany":"OK", blockedCandidate.id:blockedCandidate.computeValues(blockedCandidate.listFields(), currentUser, dictFormat=True)}
 
   @classmethod
