@@ -469,10 +469,14 @@ class DataAccessor():
       detailedPost = DetailedPost.objects.get(id=data["detailedPostId"])
       kwargs["DetailedPost"] = detailedPost
       mission = detailedPost.Mission if detailedPost.Mission else detailedPost.DatePost.Mission
+      if detailedPost.DatePost and not detailedPost.DatePost.validated:
+        return {"createSupervision":"Error", "messages":"datePost not validated."}
     if "datePostId" in data and data["datePostId"]:
       datePost = DatePost.objects.get(id=data["datePostId"])
       kwargs["DatePost"] = datePost
       mission = datePost.Mission
+      if not datePost.validated:
+        return {"createSupervision":"Error", "messages":"datePost not validated."}
     if "comment" in data:
       kwargs["comment"] = data["comment"]
     if "date" in data and data["date"]:
