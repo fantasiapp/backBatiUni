@@ -420,6 +420,7 @@ class DataAccessor():
       if detailedPost.validated or detailedPost.refused :
         print("Cette tâche est évaluée")
         return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche est évaluée"}
+      print("Traceur", detailedPost.id, detailedPost.DatePost)
       detailPostId = detailedPost.id
       datePostId = detailedPost.DatePost.id
       detailedPost.delete()
