@@ -418,7 +418,7 @@ class DataAccessor():
       if detailedPost.DatePost:
         toBeDeleted = detailedPost
       else:
-        toBeDeleted = DetailedPost.objects.get(Mission=detailedPost.Mission, DatePost=datePost) #if detailedPost.Mission else  DetailedPost.objects.get(Post=detailedPost.Post, DatePost=datePost)
+        toBeDeleted = DetailedPost.objects.get(content=detailedPost.content, DatePost=datePost) #if detailedPost.Mission else  DetailedPost.objects.get(Post=detailedPost.Post, DatePost=datePost)
       detailedPostId = toBeDeleted.id
       if Supervision.objects.filter(DetailedPost=toBeDeleted):
         print("Cette tâche est commentée")
