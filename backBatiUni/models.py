@@ -34,9 +34,7 @@ class RamData():
   @classmethod
   def fillUpRamStructure(cls):
     if not cls.isUsed or datetime.datetime.now().timestamp() - cls.isUsed > 30:
-      print("compute fillUpRamStructure", RamData.isUsed)
       cls.isUsed = datetime.datetime.now().timestamp()
-      print("fillUpRamStructure", cls.isUsed)
       cls.allPost = {int(post.id):[] for post in Post.objects.all() if post.subContractorName == None}
       cls.allMission = {mission.id:[] for mission in Mission.objects.all() if mission.subContractorName}
       cls.allCompany = {company.id:[] for company in Company.objects.all()}
@@ -44,15 +42,10 @@ class RamData():
       cls.allDetailedPost = {detailPost.id:[] for detailPost in DetailedPost.objects.all()}
       cls.ramStructure = {"Company":{}, "Post":{}, "Mission":{}, "DetailedPost":{}, "DatePost":{}}
       for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
-        if cls.ramStructureComplete:
-          print("generateRamStructure", classObject, cls.isUsed)
         classObject.generateRamStructure()
       cls.ramStructureComplete = deepcopy(cls.ramStructure)
       cls.timestamp = cls.isUsed
       cls.isUsed = False
-      print("deepCopy", cls.isUsed)
-    else:
-      print("isBlocked", datetime.datetime.now().timestamp() - cls.isUsed if cls.isUsed else cls.isUsed)
 
 
 class CommonModel(models.Model):

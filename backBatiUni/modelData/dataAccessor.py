@@ -461,7 +461,6 @@ class DataAccessor():
 
   @classmethod
   def __createSupervision(cls, data, currentUser):
-    print("createSupervision", data, currentUser.id)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     author = f'{userProfile.firstName} {userProfile.lastName}'
     datePost, detailedPost, mission = None, None, None
@@ -643,15 +642,12 @@ class DataAccessor():
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     blockedCompany = Company.objects.get(id=companyId)
     blockingCompany = userProfile.Company
-    print("blockCompany", companyId, status, blockedCompany.id, blockingCompany.id)
     blockData = BlockedCandidate.objects.filter(blocker=blockingCompany, blocked=blockedCompany)
     status = True if status == "true" else False
-    print("blockData", blockData)
     if blockData:
       blockData[0].status = status
       blockData[0].save()
       blockedCandidate = blockData[0]
-      print("unblock",  blockedCandidate.status, blockedCandidate.blocker.id, blockedCandidate.blocked.id)
     else:
       blockedCandidate = BlockedCandidate.objects.create(blocker=blockingCompany, blocked=blockedCompany, status=status, date=timezone.now())
     if status:
@@ -661,12 +657,8 @@ class DataAccessor():
   @classmethod
   def cleanMissionBlocked(cls, blockedCompany, blockingCompany):
     for candidate in Candidate.objects.filter(Company=blockedCompany):
-      print("candidate", candidate.id)
       if candidate.Post and candidate.Post.Company.id == blockingCompany.id and not candidate.Post.subContractorName:
-        print("candidate deleted"), candidate.id
         candidate.delete()
-        
-
 
   @classmethod
   def __updateDatePost(cls, mission):
