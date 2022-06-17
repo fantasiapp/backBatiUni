@@ -391,26 +391,26 @@ def executeQuery():
       post = {"action":"deleteDetailedPost", "detailedPostId":14}
       response = requests.post(url, headers=headers, json=post)
 
-    elif query == "modifyMissionDate":
-      post1 = {"action":"modifyMissionDate", "missionId": 3, "hourlyStart":"06:02", "hourlyEnd":"19:02"}
-      post2 = {"action":"modifyMissionDate", "missionId": 3, "calendar":['2022-06-15', '2022-06-16', '2022-06-17', '2022-06-18', '2022-06-19']}
-      for post in [post1, post2]:
-        response = requests.post(url, headers=headers, json=post)
+    # elif query == "modifyMissionDate":
+    #   post1 = {"action":"modifyMissionDate", "missionId": 3, "hourlyStart":"06:02", "hourlyEnd":"19:02"}
+    #   post2 = {"action":"modifyMissionDate", "missionId": 3, "calendar":['2022-06-15', '2022-06-16', '2022-06-17', '2022-06-18', '2022-06-19']}
+    #   for post in [post1, post2]:
+    #     response = requests.post(url, headers=headers, json=post)
 
-    elif query == "modifyMissionDateTest":
-      # post = {"action":"modifyMissionDate", "missionId": 19, "calendar":['2022-06-19', '2022-06-20', '2022-06-21']}
-      # post = {'action':"validateMissionDate", "missionId": 19, "field":"date", "state":False, "date":"2022-06-18"}
-      post = {"action":"createDetailedPost", "postId":19, "content":"Réparer le lavabo une nouvelle fois", "dateId":68}
-      response = requests.post(url, headers=headers, json=post)
+    # elif query == "modifyMissionDateTest":
+    #   # post = {"action":"modifyMissionDate", "missionId": 19, "calendar":['2022-06-19', '2022-06-20', '2022-06-21']}
+    #   # post = {'action':"validateMissionDate", "missionId": 19, "field":"date", "state":False, "date":"2022-06-18"}
+    #   post = {"action":"createDetailedPost", "postId":19, "content":"Réparer le lavabo une nouvelle fois", "dateId":68}
+    #   response = requests.post(url, headers=headers, json=post)
 
-    elif query == "validateMissionDate":
-      post1 = {'action':"validateMissionDate", "missionId": 3, "field":"hourlyStart", "state":True}
-      post2 = {'action':"validateMissionDate", "missionId": 3, "field":"hourlyEnd", "state":False}
-      post3 = {'action':"validateMissionDate", "missionId": 3, "field":"date", "state":False, "date":"2022-06-16"}
-      post4 = {'action':"validateMissionDate", "missionId": 3, "field":"date", "state":True, "date":"2022-06-19"}
-      for post in [post1, post2, post3, post4]:
-        response = requests.post(url, headers=headers, json=post)
-      print(json.loads(response.text))
+    # elif query == "validateMissionDate":
+    #   post1 = {'action':"validateMissionDate", "missionId": 3, "field":"hourlyStart", "state":True}
+    #   post2 = {'action':"validateMissionDate", "missionId": 3, "field":"hourlyEnd", "state":False}
+    #   post3 = {'action':"validateMissionDate", "missionId": 3, "field":"date", "state":False, "date":"2022-06-16"}
+    #   post4 = {'action':"validateMissionDate", "missionId": 3, "field":"date", "state":True, "date":"2022-06-19"}
+    #   for post in [post1, post2, post3, post4]:
+    #     response = requests.post(url, headers=headers, json=post)
+    #   print(json.loads(response.text))
     elif query == "closeMission":
       post = {"action":"closeMission", "missionId": 4, "qualityStars":4, "qualityComment":"très bon travail", "securityStars":4, "securityComment":"Un vrai sous-traitant qualibat", "organisationStars":5, "organisationComment":"Une organisation parfaite"}
       response = requests.post(url, headers=headers, json=post)
