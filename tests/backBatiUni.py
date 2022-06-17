@@ -150,7 +150,7 @@ def executeQuery():
     response = requests.get(url, headers=headersStart, params={"action":"forgetPassword", "email":"walter.jeanluc@gmail.com"})
   else:
     
-    if query in ["uploadPost", "deletePost", "modifyPost", "getPost", "switchDraft", "handleCandidateForPost", "modifyMissionDate", "getUserData", "closeMission", "notificationViewed", "boostDuration", "isViewed", "blockCompany"]:
+    if query in ["uploadPost", "deletePost", "modifyPost", "getPost", "switchDraft", "handleCandidateForPost", "modifyMissionDate", "getUserData", "closeMission", "notificationViewed", "boostDuration", "isViewed", "blockCompany", "duplicatePost"]:
       print("user pme")
       token = queryForToken("pme", "pwd")
     else:
@@ -444,6 +444,7 @@ def executeQuery():
     elif query == "giveNotificationToken":
       response = requests.get(url, headers=headers, params={"action":"giveNotificationToken", "token":"La valeur du token qui devrait être enregistée"})
     elif query == "duplicatePost":
+      print("duplicatePost")
       response = requests.get(url, headers=headers, params={"action":"duplicatePost", "id":22})
         # response = requests.get(url, headers=headers, params={"action":"blockCompany", "companyId":1, "status":"true"})
   if response and query != "downloadFile":
