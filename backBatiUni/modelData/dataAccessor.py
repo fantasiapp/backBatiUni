@@ -414,22 +414,14 @@ class DataAccessor():
       return cls.__detailedPostComputeAnswer(detailedPost, currentUser)
     else:
       """retrait d'une detailed post"""
-      print("mission", detailedPost.Mission, detailedPost.DatePost, datePost.id)
-      if detailedPost.DatePost:
-        toBeDeleted = detailedPost
-      else:
-        toBeDeleted = DetailedPost.objects.get(content=detailedPost.content, DatePost=datePost) #if detailedPost.Mission else  DetailedPost.objects.get(Post=detailedPost.Post, DatePost=datePost)
+      toBeDeleted = detailedPost if detailedPost.DatePost and datePost.id == detailedPost.DatePost.id else DetailedPost.objects.get(content=detailedPost.content, DatePost=datePost)
       detailedPostId = toBeDeleted.id
       if Supervision.objects.filter(DetailedPost=toBeDeleted):
-        print("Cette tâche est commentée")
-        return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche est commentée"}
+        return {"modifyDetailedPost":"Warning", "messages":"Cette tâche est commentée."}
       if toBeDeleted.validated or toBeDeleted.refused :
-        print("Cette tâche est évaluée")
-        return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche est évaluée"}
-      print("Traceur", toBeDeleted.id, toBeDeleted.DatePost)
+        return {"modifyDetailedPost":"Warning", "messages":"Cette tâche est évaluée."}
       toBeDeleted.delete()
       datePostDump = {datePost.id:datePost.computeValues(datePost.listFields(), currentUser, True)}
-      print({"modifyDetailedPost":"OK", "deleted":"yes", "detailedPostId":detailedPostId, "datePost":datePostDump})
       return {"modifyDetailedPost":"OK", "deleted":"yes", "detailedPostId":detailedPostId, "datePost":datePostDump}
 
   @classmethod
