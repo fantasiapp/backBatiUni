@@ -19,7 +19,6 @@ from time import sleep, time
 from copy import deepcopy
 import json
 import shutil
-from itertools import chain
 
 
 
@@ -46,7 +45,7 @@ class RamData():
       for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
         print("generateRamStructure", classObject, len(cls.ramStructureComplete), len(cls.ramStructure))
         classObject.generateRamStructure()
-      cls.ramStructureComplete = cls.ramStructure
+      cls.ramStructureComplete = deepcopy(cls.ramStructure)
       cls.timestamp = cls.isUsed
     else:
       print("isBlocked", datetime.datetime.now().timestamp() - cls.isUsed if cls.isUsed else cls.isUsed)
