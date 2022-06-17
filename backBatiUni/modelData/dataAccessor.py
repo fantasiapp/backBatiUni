@@ -774,7 +774,7 @@ class DataAccessor():
     response = {"modifyMissionDate":"OK", "mission":{mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}}
     if datePostDump:
       response["DatePost"] = datePostDump
-      return response
+    return response
 
   @classmethod
   def __modifyMissionTimeTable(cls, data):
