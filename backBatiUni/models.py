@@ -43,7 +43,7 @@ class RamData():
       cls.allDetailedPost = {detailPost.id:[] for detailPost in DetailedPost.objects.all()}
       cls.ramStructure = {"Company":{}, "Post":{}, "Mission":{}, "DetailedPost":{}, "DatePost":{}, "DetailedPost":{}}
       for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
-        print("generateRamStructure", classObject, len(cls.ramStructureComplete), len(cls.ramStructure))
+        print("generateRamStructure", classObject, len(cls.ramStructureComplete["Supervision"]), len(cls.ramStructureComplete["DatePost"]), len(cls.ramStructureComplete["DetailedPost"]), len(cls.ramStructureComplete["File"]), len(cls.ramStructureComplete["JobForCompany"]), len(cls.ramStructureComplete["LabelForCompany"]), len(cls.ramStructureComplete["Disponibility"]))
         classObject.generateRamStructure()
       cls.ramStructureComplete = deepcopy(cls.ramStructure)
       cls.timestamp = cls.isUsed
