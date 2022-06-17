@@ -414,15 +414,15 @@ class DataAccessor():
       return cls.__detailedPostComputeAnswer(detailedPost, currentUser)
     else:
       """retrait d'une detailed post"""
-      if Supervision.objects.filter(DetailedPost=detailedPost):
-        print("Cette tâche est commentée")
-        return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche est commentée"}
-      if detailedPost.validated or detailedPost.refused :
-        print("Cette tâche est évaluée")
-        return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche est évaluée"}
-      print("Traceur", detailedPost.id, detailedPost.DatePost)
       toBeDeleted = DetailedPost.objects.get(Mission=detailedPost.Mission, DatePost=datePost) if detailedPost.Mission else  DetailedPost.objects.get(Post=detailedPost.Post, DatePost=datePost)
       detailedPostId = toBeDeleted.id
+      if Supervision.objects.filter(DetailedPost=toBeDeleted):
+        print("Cette tâche est commentée")
+        return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche est commentée"}
+      if toBeDeleted.validated or toBeDeleted.refused :
+        print("Cette tâche est évaluée")
+        return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche est évaluée"}
+      print("Traceur", toBeDeleted.id, toBeDeleted.DatePost)
       toBeDeleted.delete()
       datePostDump = {datePost.id:datePost.computeValues(datePost.listFields(), currentUser, True)}
       print({"modifyDetailedPost":"OK", "deleted":"yes", "detailedPostId":detailedPostId, "datePost":datePostDump})
