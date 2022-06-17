@@ -51,7 +51,6 @@ class DataAccessor():
     dictAnswer["timestamp"] = RamData.lastTimeStamp
     with open(f"./backBatiUni/modelData/{profile}Data.json", 'w') as jsonFile:
       json.dump(dictAnswer, jsonFile, indent = 3)
-    RamData.isUsed = False
     return dictAnswer
 
   @classmethod
