@@ -824,9 +824,9 @@ class DataAccessor():
             return {"validateMissionDate":"Error", "messages":"DatePost contains Supervision"}
           stillExist = False
           datePost.delete()
-          Notification.createAndSend(Mission=mission, nature="alert", Company=mission.Company, title="Modification de la mission", Role="PME", content=f"La journée de travail du {cls.formatDate(data['date'])} pour le chantier du {mission.address} a été refusée.", timestamp=datetime.now().timestamp())
+          Notification.createAndSend(Mission=mission, nature="alert", Company=mission.Company, title="Modification de la mission", Role="PME", content=f"La suppression de la journée de travail du {cls.formatDate(data['date'])} pour le chantier du {mission.address} a été refusée.", timestamp=datetime.now().timestamp())
         else:
-          Notification.createAndSend(Mission=mission, nature="alert", Company=mission.Company, title="Modification de la mission", Role="PME", content=f"La journée de travail du {cls.formatDate(data['date'])} pour le chantier du {mission.address} est maintenant validée.", timestamp=datetime.now().timestamp())
+          Notification.createAndSend(Mission=mission, nature="alert", Company=mission.Company, title="Modification de la mission", Role="PME", content=f"La suppression de la journée de travail du {cls.formatDate(data['date'])} pour le chantier du {mission.address} est maintenant validée.", timestamp=datetime.now().timestamp())
       else:
         if datePost.deleted:
           datePost.deleted = False
