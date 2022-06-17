@@ -742,7 +742,7 @@ class DataAccessor():
 
   @classmethod
   def __modifyMissionDateAction(cls, data, currentUser, mission, subContractor):
-    datePostDump ,datePostList = None, {}
+    datePostDump ,datePostList, datePost = None, {}, None
     if "calendar" in data:
       data["calendar"] = list(set(data["calendar"]))
       data["calendar"] = [date for date in data["calendar"] if date] if "calendar" in data else []
