@@ -773,7 +773,7 @@ class DataAccessor():
         Notification.createAndSend(Mission=mission, nature="alert", title="Modification de la mission", Company=subContractor, Role="ST", content=f"Une journée de travail pour le chantier du {mission.address} vous est proposée pour le {cls.formatDate(strDate)}, à vous de valider la proposition.", timestamp=datetime.now().timestamp())
     response = {"modifyMissionDate":"OK", "mission":{mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}}
     if datePostDump:
-      response["DatePost"] = {id:datePost.computeValues(datePost.listFields(), currentUser, dictFormat=True) for id, datePost in datePostList.items()}
+      response["DatePost"] = datePostDump
       return response
 
   @classmethod
