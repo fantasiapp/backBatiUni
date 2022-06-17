@@ -43,6 +43,7 @@ class RamData():
       cls.allDatePost = {datePost.id:[] for datePost in DatePost.objects.all()}
       cls.allDetailedPost = {detailPost.id:[] for detailPost in DetailedPost.objects.all()}
       cls.ramStructure = {"Company":{}, "Post":{}, "Mission":{}, "DetailedPost":{}, "DatePost":{}}
+      print("ramStructure", cls.ramStructure)
       for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
         if cls.ramStructureComplete:
           print("generateRamStructure", classObject, cls.isUsed)
