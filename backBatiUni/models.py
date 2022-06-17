@@ -44,12 +44,12 @@ class RamData():
       cls.ramStructure = {"Company":{}, "Post":{}, "Mission":{}, "DetailedPost":{}, "DatePost":{}}
       for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
         if cls.ramStructureComplete:
-          print("generateRamStructure", classObject, len(cls.ramStructureComplete["Company"]), len(cls.ramStructureComplete["Post"]), len(cls.ramStructureComplete["Mission"]), len(cls.ramStructureComplete["DetailedPost"]), len(cls.ramStructureComplete["DatePost"]))
+          print("generateRamStructure", classObject, cls.isUsed)
         classObject.generateRamStructure()
-      print("deepCopy")
       cls.ramStructureComplete = deepcopy(cls.ramStructure)
       cls.timestamp = cls.isUsed
       cls.isUsed = False
+      print("deepCopy", cls.isUsed)
     else:
       print("isBlocked", datetime.datetime.now().timestamp() - cls.isUsed if cls.isUsed else cls.isUsed)
 
