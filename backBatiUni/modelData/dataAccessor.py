@@ -737,12 +737,11 @@ class DataAccessor():
 
   @classmethod
   def __modifyMissionDateAction(cls, data, currentUser, mission, subContractor):
-    datePostDump = None
+    datePostDump ,datePostList = None, {}
     if "calendar" in data:
       data["calendar"] = list(set(data["calendar"]))
       data["calendar"] = [date for date in data["calendar"] if date] if "calendar" in data else []
       existingDateMission = DatePost.objects.filter(Mission=mission)
-      datePostList = {}
       for task in existingDateMission:
         if task.date:
           strDate = task.date.strftime("%Y-%m-%d")
@@ -764,10 +763,10 @@ class DataAccessor():
         date = datetime.strptime(strDate, "%Y-%m-%d")
         datePost = DatePost.objects.create(Mission=mission, date=date, validated=False)
         datePostList[datePost.id] = datePost
-        datePostDump = {id:datePost.computeValues(datePost.listFields(), currentUser, dictFormat=True) for id, datePost in datePostList.items()}
         Notification.createAndSend(Mission=mission, nature="alert", title="Modification de la mission", Company=subContractor, Role="ST", content=f"Une journée de travail pour le chantier du {mission.address} vous est proposée pour le {cls.formatDate(strDate)}, à vous de valider la proposition.", timestamp=datetime.now().timestamp())
     response = {"modifyMissionDate":"OK", "mission":{mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}}
-    if datePostDump:
+    if datePost:
+      datePostDump = {id:datePost.computeValues(datePost.listFields(), currentUser, dictFormat=True) for id, datePost in datePostList.items()}
       response["DatePost"] = datePostDump
     return response
 
