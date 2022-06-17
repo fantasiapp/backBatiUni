@@ -397,10 +397,10 @@ def executeQuery():
     #   for post in [post1, post2]:
     #     response = requests.post(url, headers=headers, json=post)
 
-    elif query == "modifyMissionDateTest":
+    elif query == "test":
       # post = {"action":"modifyMissionDate", "missionId": 19, "calendar":['2022-06-19', '2022-06-20', '2022-06-21']}
       # post = {'action':"validateMissionDate", "missionId": 19, "field":"date", "state":False, "date":"2022-06-18"}
-      post = {"action":"createSupervision", "postId":11, "content":"Réparer le lavabo une nouvelle fois", "dateId":36}
+      post = {"action":"createSupervision", "detailedPostId":10, "content":"Réparer le lavabo une nouvelle fois"}
       response = requests.post(url, headers=headers, json=post)
 
     # elif query == "validateMissionDate":

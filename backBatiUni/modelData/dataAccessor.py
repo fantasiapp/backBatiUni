@@ -461,6 +461,7 @@ class DataAccessor():
 
   @classmethod
   def __createSupervision(cls, data, currentUser):
+    print("createSupervision", data)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     author = f'{userProfile.firstName} {userProfile.lastName}'
     datePost, detailedPost, mission = None, None, None
@@ -469,6 +470,7 @@ class DataAccessor():
       detailedPost = DetailedPost.objects.get(id=data["detailedPostId"])
       kwargs["DetailedPost"] = detailedPost
       mission = detailedPost.Mission if detailedPost.Mission else detailedPost.DatePost.Mission
+      print("createSupervision", mission)
       if detailedPost.DatePost and not detailedPost.DatePost.validated:
         return {"createSupervision":"Error", "messages":"datePost not validated."}
     if "datePostId" in data and data["datePostId"]:
