@@ -374,6 +374,9 @@ class DataAccessor():
   def __createDetailedPost(cls, data, currentUser):
     print("createDetailedPost", data)
     kwargs, post, mission, detailedPost2 = {"Post":None, "Mission":None, "content":None}, None, None, None
+    datePost = DatePost.objects.get(id=data["dateId"])
+    if not datePost.validated:
+      return {"createDetailedPost":"Error", "messages":"datePost not validated."}
     if "postId" in data:
       post = Post.objects.get(id=data["postId"])
       kwargs["Post"] = post
@@ -383,7 +386,7 @@ class DataAccessor():
     if "content" in data:
       kwargs["content"] = data["content"]
     detailedPost2 = DetailedPost.objects.create(**kwargs)
-    kwargs["DatePost"] = DatePost.objects.get(id=data["dateId"])
+    kwargs["DatePost"] = datePost
     del kwargs["Mission"]
     detailedPost = DetailedPost.objects.create(**kwargs)
     return cls.__detailedPostComputeAnswer(detailedPost, currentUser, "createDetailedPost", detailedPost2)
