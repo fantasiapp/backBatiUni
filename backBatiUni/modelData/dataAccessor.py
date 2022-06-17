@@ -489,10 +489,8 @@ class DataAccessor():
 
   @classmethod
   def __isDatePostNotValidated(cls, datePost, detailedPost):
-    print("", datePost, detailedPost)
     if detailedPost: datePost = detailedPost.DatePost
-    print("__datePostIsNotValidate", datePost.id, datePost.validated)
-    return not datePost.validated
+    return not datePost.validated if datePost else False
 
   @classmethod
   def __addNewNotificationForMessage(cls, userProfile, mission, message):
