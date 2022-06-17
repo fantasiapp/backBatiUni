@@ -421,7 +421,7 @@ class DataAccessor():
         print("Cette tâche est évaluée")
         return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche est évaluée"}
       print("Traceur", detailedPost.id, detailedPost.DatePost)
-      toBeDeleted = DetailedPost.objects.filter(Mission=detailedPost.Mission, date=datePost) if detailedPost.Mission else  DetailedPost.objects.filter(Post=detailedPost.Post)
+      toBeDeleted = DetailedPost.objects.get(Mission=detailedPost.Mission, date=datePost) if detailedPost.Mission else  DetailedPost.objects.get(Post=detailedPost.Post, date=datePost)
       detailedPostId = toBeDeleted.id
       toBeDeleted.delete()
       datePostDump = {datePost.id:datePost.computeValues(datePost.listFields(), currentUser, True)}
