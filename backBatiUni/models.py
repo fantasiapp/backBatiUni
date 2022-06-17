@@ -282,8 +282,7 @@ class Disponibility(CommonModel):
     RamData.ramStructure["Company"]["Mission"] = deepcopy(RamData.allCompany)
     for disponibility in Disponibility.objects.all():
       if not "Disponibility" in RamData.ramStructure["Company"]:
-        print("bug 259", RamData.ramStructure["Company"])
-        print("deepCopy", deepcopy(RamData.allCompany))
+        print("bug 285", RamData.ramStructure["Company"])
       RamData.ramStructure["Company"]["Disponibility"][disponibility.Company.id].append(disponibility.id)
     for notification in Notification.objects.all():
       RamData.ramStructure["Company"]["Notification"][notification.Company.id].append(notification.id)
