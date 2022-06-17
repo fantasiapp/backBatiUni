@@ -742,32 +742,33 @@ class DataAccessor():
 
   @classmethod
   def __modifyMissionDateAction(cls, data, currentUser, mission, subContractor):
-    data["calendar"] = list(set(data["calendar"]))
-    data["calendar"] = [date for date in data["calendar"] if date] if "calendar" in data else []
-    existingDateMission = DatePost.objects.filter(Mission=mission)
-    datePostList = {}
-    for task in existingDateMission:
-      if task.date:
-        strDate = task.date.strftime("%Y-%m-%d")
-        if not strDate in data["calendar"]:
-          date = datetime.strptime(strDate, "%Y-%m-%d")
-          datePost = DatePost.objects.get(Mission=mission, date=date)
-          if DetailedPost.objects.filter(DatePost=datePost):
-            return {"modifyMissionDate":"Error", "messages":"DatePost contains detailedPost"}
-          if Supervision.objects.filter(DatePost=datePost):
-            return {"modifyMissionDate":"Error", "messages":"DatePost contains Supervision"}
-          Notification.createAndSend(Mission=mission, nature="alert", title="Modification de la mission", Company=subContractor, Role="ST", content=f"Votre journée de travail du {cls.formatDate(strDate)} pour le chantier du {mission.address} est proposée à la suppression, à vous de valider la modification.", timestamp=datetime.now().timestamp())
-          datePost.deleted = True
-          datePost.validated = False
-          datePost.save()
-          datePostList[datePost.id] = datePost
-        else:
-          data["calendar"].remove(strDate)
-    for strDate in data["calendar"]:
-      date = datetime.strptime(strDate, "%Y-%m-%d")
-      datePost = DatePost.objects.create(Mission=mission, date=date, validated=False)
-      datePostList[datePost.id] = datePost
-      Notification.createAndSend(Mission=mission, nature="alert", title="Modification de la mission", Company=subContractor, Role="ST", content=f"Une journée de travail pour le chantier du {mission.address} vous est proposée pour le {cls.formatDate(strDate)}, à vous de valider la proposition.", timestamp=datetime.now().timestamp())
+    if "calendar" in data:
+      data["calendar"] = list(set(data["calendar"]))
+      data["calendar"] = [date for date in data["calendar"] if date] if "calendar" in data else []
+      existingDateMission = DatePost.objects.filter(Mission=mission)
+      datePostList = {}
+      for task in existingDateMission:
+        if task.date:
+          strDate = task.date.strftime("%Y-%m-%d")
+          if not strDate in data["calendar"]:
+            date = datetime.strptime(strDate, "%Y-%m-%d")
+            datePost = DatePost.objects.get(Mission=mission, date=date)
+            if DetailedPost.objects.filter(DatePost=datePost):
+              return {"modifyMissionDate":"Error", "messages":"DatePost contains detailedPost"}
+            if Supervision.objects.filter(DatePost=datePost):
+              return {"modifyMissionDate":"Error", "messages":"DatePost contains Supervision"}
+            Notification.createAndSend(Mission=mission, nature="alert", title="Modification de la mission", Company=subContractor, Role="ST", content=f"Votre journée de travail du {cls.formatDate(strDate)} pour le chantier du {mission.address} est proposée à la suppression, à vous de valider la modification.", timestamp=datetime.now().timestamp())
+            datePost.deleted = True
+            datePost.validated = False
+            datePost.save()
+            datePostList[datePost.id] = datePost
+          else:
+            data["calendar"].remove(strDate)
+      for strDate in data["calendar"]:
+        date = datetime.strptime(strDate, "%Y-%m-%d")
+        datePost = DatePost.objects.create(Mission=mission, date=date, validated=False)
+        datePostList[datePost.id] = datePost
+        Notification.createAndSend(Mission=mission, nature="alert", title="Modification de la mission", Company=subContractor, Role="ST", content=f"Une journée de travail pour le chantier du {mission.address} vous est proposée pour le {cls.formatDate(strDate)}, à vous de valider la proposition.", timestamp=datetime.now().timestamp())
     return {"modifyMissionDate":"OK", "mission":{mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)} , "datePost":{id:datePost.computeValues(datePost.listFields(), currentUser, dictFormat=True) for id, datePost in datePostList.items()}}
 
   @classmethod
