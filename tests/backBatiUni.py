@@ -16,7 +16,7 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 50
+numberCompanies = 5
 emailList, missionList, emailListPME, emailListST, detailedPost, candidateToUnapply, labelList = {}, {}, [], [], {}, None, {}
 
 arguments = sys.argv
@@ -294,8 +294,8 @@ def executeQuery():
       requests.get(url, headers=headers, params={"action":"switchDraft", "id":5})
       response = requests.get(url, headers=headers, params={"action":"switchDraft", "id":3})
 
-    elif query == "duplicatePost":
-      response = requests.get(url, headers=headers, params={"action":"duplicatePost", "id":2})
+    # elif query == "duplicatePost":
+    #   response = requests.get(url, headers=headers, params={"action":"duplicatePost", "id":2})
 
     elif query == "getPost":
       response = requests.get(url, headers=headers, params={"action":"getPost"})
@@ -443,6 +443,9 @@ def executeQuery():
         response = requests.post(f'{address}/initialize/', headers=headers, json=post)
     elif query == "giveNotificationToken":
       response = requests.get(url, headers=headers, params={"action":"giveNotificationToken", "token":"La valeur du token qui devrait être enregistée"})
+    elif query == "duplicatePost":
+      print(missionList)
+        # response = requests.get(url, headers=headers, params={"action":"blockCompany", "companyId":1, "status":"true"})
   if response and query != "downloadFile":
     data = json.loads(response.text)
     print("data", data)

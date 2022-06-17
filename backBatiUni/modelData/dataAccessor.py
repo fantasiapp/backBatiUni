@@ -948,13 +948,13 @@ class DataAccessor():
         kwargs["draft"] = True
         kwargs["boostTimestamp"] = 0
         duplicate = Post.objects.create(**kwargs)
-        for datePost in DatePost.objects.filter(Post=post):
+        for datePost in DatePost.objects.filter(Post=post) | DatePost.objects.filter(Mission=post):
           datePost = DetailedPost.objects.create(Post=duplicate, date=datePost.date)
           datePostList.append({datePost.id:datePost.computeValues(datePost.listFields(), currentUser, dictFormat=True)})
-        for detailPost in DetailedPost.objects.filter(Post=post):
+        for detailPost in DetailedPost.objects.filter(Post=post) | DetailedPost.objects.filter(Mission=post):
           detailedPost = DetailedPost.objects.create(Post=duplicate, content=detailPost.content)
           detailedPostList.append({detailedPost.id:detailedPost.computeValues(detailedPost.listFields(), currentUser, dictFormat=True)})
-        for file in File.objects.filter(Post=post):
+        for file in File.objects.filter(Post=post) | File.objects.filter(Mission=post):
           kwargs =  {field.name:getattr(file, field.name) for field in File._meta.fields[1:]}
           newName = File.dictPath["post"] + kwargs["name"] + '_' + str(duplicate.id) + '.' + kwargs["ext"]
           shutil.copy(kwargs["path"], newName)
@@ -967,7 +967,6 @@ class DataAccessor():
         if detailedPostList: response["DetailedPost"] = detailedPostList
         if fileList: response["File"] = fileList
         if datePostList: response["DatePost"] = datePostList
-        
         return response
       return {"duplicatePost":"Error", "messages":f"{currentUser.username} does not belongs to {company.name}"}
     return {"duplicatePost":"Error", "messages":f"{id} does not exist"}
