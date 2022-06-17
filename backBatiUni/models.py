@@ -41,9 +41,9 @@ class RamData():
       cls.allCompany = {company.id:[] for company in Company.objects.all()}
       cls.allDatePost = {datePost.id:[] for datePost in DatePost.objects.all()}
       cls.allDetailedPost = {detailPost.id:[] for detailPost in DetailedPost.objects.all()}
-      cls.ramStructure = {"Company":{}, "Post":{}, "Mission":{}, "DetailedPost":{}, "DatePost":{}, "DetailedPost":{}}
+      cls.ramStructure = {"Company":{}, "Post":{}, "Mission":{}, "DetailedPost":{}, "DatePost":{}}
       for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
-        print("generateRamStructure", classObject, len(cls.ramStructureComplete["Supervision"]), len(cls.ramStructureComplete["DatePost"]), len(cls.ramStructureComplete["DetailedPost"]), len(cls.ramStructureComplete["File"]), len(cls.ramStructureComplete["JobForCompany"]), len(cls.ramStructureComplete["LabelForCompany"]), len(cls.ramStructureComplete["Disponibility"]))
+        print("generateRamStructure", classObject, len(cls.ramStructureComplete["Company"]), len(cls.ramStructureComplete["Post"]), len(cls.ramStructureComplete["Mission"]), len(cls.ramStructureComplete["DetailedPost"]), len(cls.ramStructureComplete["DatePost"]))
         classObject.generateRamStructure()
       cls.ramStructureComplete = deepcopy(cls.ramStructure)
       cls.timestamp = cls.isUsed
