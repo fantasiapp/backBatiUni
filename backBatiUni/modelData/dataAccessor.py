@@ -414,7 +414,8 @@ class DataAccessor():
       return cls.__detailedPostComputeAnswer(detailedPost, currentUser)
     else:
       """retrait d'une detailed post"""
-      toBeDeleted = DetailedPost.objects.get(Mission=detailedPost.Mission, DatePost=datePost) if detailedPost.Mission else  DetailedPost.objects.get(Post=detailedPost.Post, DatePost=datePost)
+      print("mission", detailedPost.Mission, datePost.id)
+      toBeDeleted = DetailedPost.objects.get(Mission=detailedPost.Mission, DatePost=datePost) #if detailedPost.Mission else  DetailedPost.objects.get(Post=detailedPost.Post, DatePost=datePost)
       detailedPostId = toBeDeleted.id
       if Supervision.objects.filter(DetailedPost=toBeDeleted):
         print("Cette tâche est commentée")
