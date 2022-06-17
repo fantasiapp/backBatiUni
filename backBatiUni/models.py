@@ -49,6 +49,7 @@ class RamData():
       print("deepCopy")
       cls.ramStructureComplete = deepcopy(cls.ramStructure)
       cls.timestamp = cls.isUsed
+      cls.isUsed = False
     else:
       print("isBlocked", datetime.datetime.now().timestamp() - cls.isUsed if cls.isUsed else cls.isUsed)
 
