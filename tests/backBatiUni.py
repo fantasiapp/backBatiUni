@@ -16,7 +16,7 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 5
+numberCompanies = 50
 emailList, missionList, emailListPME, emailListST, detailedPost, candidateToUnapply, labelList = {}, {}, [], [], {}, None, {}
 
 arguments = sys.argv
@@ -444,7 +444,7 @@ def executeQuery():
     elif query == "giveNotificationToken":
       response = requests.get(url, headers=headers, params={"action":"giveNotificationToken", "token":"La valeur du token qui devrait être enregistée"})
     elif query == "duplicatePost":
-      print(missionList)
+      response = requests.get(url, headers=headers, params={"action":"duplicatePost", "id":22})
         # response = requests.get(url, headers=headers, params={"action":"blockCompany", "companyId":1, "status":"true"})
   if response and query != "downloadFile":
     data = json.loads(response.text)

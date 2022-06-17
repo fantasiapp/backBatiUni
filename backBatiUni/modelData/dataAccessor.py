@@ -949,7 +949,7 @@ class DataAccessor():
         kwargs["boostTimestamp"] = 0
         duplicate = Post.objects.create(**kwargs)
         for datePost in DatePost.objects.filter(Post=post) | DatePost.objects.filter(Mission=post):
-          datePostNew = DetailedPost.objects.create(Post=duplicate, date=datePost.date)
+          datePostNew = DatePost.objects.create(Post=duplicate, date=datePost.date)
           datePostList.append({datePostNew.id:datePostNew.computeValues(datePostNew.listFields(), currentUser, dictFormat=True)})
         for detailPost in DetailedPost.objects.filter(Post=post) | DetailedPost.objects.filter(Mission=post):
           detailedPostNew = DetailedPost.objects.create(Post=duplicate, content=detailPost.content)
