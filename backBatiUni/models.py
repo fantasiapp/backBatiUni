@@ -46,6 +46,7 @@ class RamData():
         if cls.ramStructureComplete:
           print("generateRamStructure", classObject, len(cls.ramStructureComplete["Company"]), len(cls.ramStructureComplete["Post"]), len(cls.ramStructureComplete["Mission"]), len(cls.ramStructureComplete["DetailedPost"]), len(cls.ramStructureComplete["DatePost"]))
         classObject.generateRamStructure()
+      print("deepCopy")
       cls.ramStructureComplete = deepcopy(cls.ramStructure)
       cls.timestamp = cls.isUsed
     else:

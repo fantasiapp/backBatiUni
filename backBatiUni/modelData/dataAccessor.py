@@ -901,7 +901,7 @@ class DataAccessor():
       notification.hasBeenViewed = True
       notification.save()
     response = {"Notification":[{notification.id:notification.computeValues(notification.listFields(), currentUser, dictFormat=True)} for notification in notifications]}
-    response["notificationViewed"] = "OK"
+    print("response", response)
     return response
 
   @classmethod
