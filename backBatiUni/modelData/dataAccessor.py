@@ -421,13 +421,12 @@ class DataAccessor():
         print("Cette tâche est évaluée")
         return {"modifyDetailedPost":"Warning", "messages":f"Cette tâche est évaluée"}
       print("Traceur", detailedPost.id, detailedPost.DatePost)
-      detailPostId = detailedPost.id
-      datePostId = detailedPost.DatePost.id
-      detailedPost.delete()
-      datePost = DatePost.objects.get(id=datePostId)
+      toBeDeleted = DetailedPost.objects.filter(Mission=detailedPost.Mission, date=datePost) if detailedPost.Mission else  DetailedPost.objects.filter(Post=detailedPost.Post)
+      detailedPostId = toBeDeleted.id
+      toBeDeleted.delete()
       datePostDump = {datePost.id:datePost.computeValues(datePost.listFields(), currentUser, True)}
-      print({"modifyDetailedPost":"OK", "deleted":"yes", "detailedPostId":detailPostId, "datePost":datePostDump})
-      return {"modifyDetailedPost":"OK", "deleted":"yes", "detailedPostId":detailPostId, "datePost":datePostDump}
+      print({"modifyDetailedPost":"OK", "deleted":"yes", "detailedPostId":detailedPostId, "datePost":datePostDump})
+      return {"modifyDetailedPost":"OK", "deleted":"yes", "detailedPostId":detailedPostId, "datePost":datePostDump}
 
   @classmethod
   def __detailedPostComputeAnswer(cls, detailedPost, currentUser, functionName="modifyDetailedPost", detailedPost2=None):
