@@ -668,7 +668,6 @@ class DatePost(CommonModel):
     for datePost in DatePost.objects.all():
       if datePost.Post:
         print("datePost", datePost.id, datePost.Post, datePost.Post.id)
-        print("datePost", deepcopy(RamData.allPost))
         RamData.ramStructure["Post"]["DatePost"][datePost.Post.id].append(datePost.id)
         if not "DatePost" in RamData.ramStructure["Post"]:
           print("bug ramStructure 634", RamData.ramStructure["Post"], datePost.Mission.id, datePost.id)
