@@ -667,10 +667,9 @@ class DatePost(CommonModel):
     if not "DatePost" in RamData.ramStructure["Mission"]: print("warning bug 820", RamData.ramStructure["Mission"])
     for datePost in DatePost.objects.all():
       if datePost.Post:
-        print("datePost", datePost.id, datePost.Post, datePost.Post.id)
+        # if not "DatePost" in RamData.ramStructure["Post"]:
+        #   print("bug ramStructure 634", RamData.ramStructure["Post"], datePost.Post.id, datePost.id)
         RamData.ramStructure["Post"]["DatePost"][datePost.Post.id].append(datePost.id)
-        if not "DatePost" in RamData.ramStructure["Post"]:
-          print("bug ramStructure 634", RamData.ramStructure["Post"], datePost.Mission.id, datePost.id)
       elif datePost.Mission:
         if not "DatePost" in RamData.ramStructure["Mission"]:
           print("bug ramStructure 636", RamData.ramStructure["Mission"], datePost.Mission.id, datePost.id)
