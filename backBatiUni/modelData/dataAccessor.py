@@ -940,12 +940,12 @@ class DataAccessor():
     if post:
       post = post[0]
       if company == post.Company:
-        exceptionField = ['signedByCompany', 'signedBySubContractor', 'subContractorContact', 'subContractorName', 'quality', 'qualityComment', 'security', 'securityComment', 'organisation', 'organisationComment', 'vibeST',  'vibeCommentST',  'securityST',  'securityCommentST',  'signedByCompany',  'organisationST',  'organisationCommentST',  'isClosed', 'contract']
-        kwargs = {field.name:getattr(post, field.name) for field in Post._meta.fields[1:] if not field in exceptionField}
+        exceptionField = ['signedByCompany', 'signedBySubContractor', 'subContractorContact', 'subContractorName', 'quality', 'qualityComment', 'security', 'securityComment', 'organisation', 'organisationComment', 'vibeST',  'vibeCommentST',  'securityST',  'securityCommentST',  'signedByCompany',  'organisationST',  'organisationCommentST',  'isClosed', 'contract', 'boostTimestamp']
+        kwargs = {field.name:getattr(post, field.name) for field in Post._meta.fields[1:] if not field.name in exceptionField}
         kwargs["draft"] = True
         kwargs["boostTimestamp"] = 0
         duplicate = Post.objects.create(**kwargs)
-        print("duplicatePost", duplicate.subContractorName)
+        print("duplicatePost", kwargs)
         for datePost in DatePost.objects.filter(Post=post) | DatePost.objects.filter(Mission=post):
           datePostNew = DatePost.objects.create(Post=duplicate, date=datePost.date)
           datePostList.append({datePostNew.id:datePostNew.computeValues(datePostNew.listFields(), currentUser, dictFormat=True)})
