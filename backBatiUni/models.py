@@ -644,7 +644,7 @@ class DatePost(CommonModel):
   Mission = models.ForeignKey(Mission, verbose_name='Mission associée', related_name='MissionDate', on_delete=models.CASCADE, null=True, default=None)
   date = models.DateField(verbose_name="Date du chantier", null=False, default=timezone.now)
   deleted = models.BooleanField("A été effacé", null=False, default=False)
-  validated = models.BooleanField("A été effacé", null=False, default=True)
+  validated = models.BooleanField("A été validé", null=False, default=True)
   manyToManyObject = ["Supervision", "DetailedPost"]
 
   class Meta:
@@ -667,6 +667,7 @@ class DatePost(CommonModel):
     if not "DatePost" in RamData.ramStructure["Mission"]: print("warning bug 820", RamData.ramStructure["Mission"])
     for datePost in DatePost.objects.all():
       if datePost.Post:
+        print("datePost", datePost.id, datePost.Post, datePost.Post.id)
         RamData.ramStructure["Post"]["DatePost"][datePost.Post.id].append(datePost.id)
         if not "DatePost" in RamData.ramStructure["Post"]:
           print("bug ramStructure 634", RamData.ramStructure["Post"], datePost.Mission.id, datePost.id)

@@ -16,7 +16,7 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 50
+numberCompanies = 20
 emailList, missionList, emailListPME, emailListST, detailedPost, candidateToUnapply, labelList = {}, {}, [], [], {}, None, {}
 
 arguments = sys.argv
@@ -402,7 +402,10 @@ def executeQuery():
       # post = {'action':"validateMissionDate", "missionId": 19, "field":"date", "state":False, "date":"2022-06-18"}
       post = {"action":"createSupervision", "datePostId":10, "content":"Réparer le lavabo une nouvelle fois"}
       post = {"action":"createDetailedPost", "postId":3, "content":"Réparer le lavabo une nouvelle fois", "dateId":10}
-      response = requests.post(url, headers=headers, json=post)
+      url = f'{address}/api-token-auth/'
+      post = {}
+      print()
+      response = requests.post(url, headers={}, json={"username":"pme", "password":"pwd"})
 
     elif query == "validateMissionDate":
       post1 = {'action':"validateMissionDate", "missionId": 3, "field":"hourlyStart", "state":True}
