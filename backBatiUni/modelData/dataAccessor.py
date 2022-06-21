@@ -414,13 +414,13 @@ class DataAccessor():
       return cls.__detailedPostComputeAnswer(detailedPost, currentUser)
     else:
       """retrait d'une detailed post"""
-      toBeDeleted = detailedPost if detailedPost.DatePost and datePost.id == detailedPost.DatePost.id else DetailedPost.objects.get(content=detailedPost.content, DatePost=datePost)
-      detailedPostId = toBeDeleted.id
-      if Supervision.objects.filter(DetailedPost=toBeDeleted):
+      detailedPost = DetailedPost.objects.get(content=detailedPost.content, DatePost=datePost)
+      detailedPostId = detailedPost.id
+      if Supervision.objects.filter(DetailedPost=detailedPost):
         return {"modifyDetailedPost":"Warning", "messages":"Cette tâche est commentée."}
-      if toBeDeleted.validated or toBeDeleted.refused :
+      if detailedPost.validated or detailedPost.refused :
         return {"modifyDetailedPost":"Warning", "messages":"Cette tâche est évaluée."}
-      toBeDeleted.delete()
+      detailedPost.delete()
       datePostDump = {datePost.id:datePost.computeValues(datePost.listFields(), currentUser, True)}
       return {"modifyDetailedPost":"OK", "deleted":"yes", "detailedPostId":detailedPostId, "datePost":datePostDump}
 
@@ -945,6 +945,7 @@ class DataAccessor():
         kwargs["draft"] = True
         kwargs["boostTimestamp"] = 0
         duplicate = Post.objects.create(**kwargs)
+        print("duplicatePost", duplicate.subContractorName)
         for datePost in DatePost.objects.filter(Post=post) | DatePost.objects.filter(Mission=post):
           datePostNew = DatePost.objects.create(Post=duplicate, date=datePost.date)
           datePostList.append({datePostNew.id:datePostNew.computeValues(datePostNew.listFields(), currentUser, dictFormat=True)})
