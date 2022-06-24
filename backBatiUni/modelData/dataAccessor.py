@@ -933,6 +933,18 @@ class DataAccessor():
     return False
 
   @classmethod
+  def __newStarsReco(cls, company, companyRole):
+    if companyRole == "st":
+      listRecommandation = [(recommandation.qualityStars + recommandation.securityStars + recommandation.organisationStars) / 3 for recommandation in Recommandation.objects.filter(companyRecommanded = company)]
+      company.starsRecoST = round(sum(listRecommandation)/len(listRecommandation)) if len(listRecommandation) else 0
+      company.save()
+    else:
+      listRecommandation = [(recommandation.qualityStars + recommandation.securityStars + recommandation.organisationStars) / 3 for recommandation in Recommandation.objects.filter(companyRecommanded = company)]
+      company.starsRecoPME = round(sum(listRecommandation)/len(listRecommandation)) if len(listRecommandation) else 0
+      company.save()
+    return False
+
+  @classmethod
   def duplicatePost(cls, id, currentUser):
     company = UserProfile.objects.get(userNameInternal=currentUser).Company
     post = Post.objects.filter(id=id)
@@ -1323,6 +1335,7 @@ class DataAccessor():
       else:
         kwargs[key] = value
     Recommandation.objects.create(**kwargs)
+    cls.__newStarsReco(company, 'st')
     return {"giveRecommandation":"OK", "messages":"Recommandation recorded"}
 
   @classmethod
