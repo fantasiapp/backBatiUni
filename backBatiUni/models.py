@@ -990,10 +990,14 @@ class File(CommonModel):
 
 
   def encodedStringListForPdf(self):
+    print("le self.path est :", self.path)
     path = self.path.replace(".pdf", "/")
+    print("la path est :", path)
     split = self.path.split("/")
+    print("le split est :", split)
     nameFile = split[-1]
     localPath = f"./{split[1]}/{split[2]}/"
+    print("le localpath est :", localPath)
     if not os.path.isdir(path):
       os.mkdir(path)
       os.chdir(localPath)
