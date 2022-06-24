@@ -997,12 +997,13 @@ class File(CommonModel):
     print("le split est :", split)
     nameFile = split[-1]
     localPath = f"./{split[1]}/{split[2]}/"
-    print("le localpath est :", localPath)
+    print("le localpath est :", localPath, "le current path est ", os.getcwd(), "le if de os.path.isdir(path)", os.path.isdir(path))
     if not os.path.isdir(path):
       os.mkdir(path)
       os.chdir(localPath)
       images = convert_from_path(f"{nameFile}")
       os.chdir('../../.')
+      print("le finalpath est ", os.getcwd())
       for index in range(len(images)):
         images[index].save(f'{path}page_{str(index)}.jpg', 'JPEG')
     listFiles, listEncode  = [os.path.join(path, file) for file in os.listdir(path)], []
