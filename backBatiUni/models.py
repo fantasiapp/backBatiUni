@@ -997,7 +997,7 @@ class File(CommonModel):
     print("le split est :", split)
     nameFile = split[-1]
     localPath = f"./{split[1]}/{split[2]}/"
-    print("le localpath est :", localPath, "le current path est ", os.getcwd(), "le if de os.path.isdir(path)", os.path.isdir("./files/admin/URSSAF_4/"), "le test d'égalité", path == "./files/admin/URSSAF_4/")
+    print("le localpath est :", localPath, "le current path est ", os.getcwd(), "le if de os.path.isdir(path)", os.path.isdir(path), os.path.isdir("./files/admin/URSSAF_3/"), "le test d'égalité", path == "./files/admin/URSSAF_4/")
     print("le split est :", split)
     if not os.path.isdir(path):
       os.mkdir(path)
