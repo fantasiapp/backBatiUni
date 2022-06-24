@@ -990,6 +990,7 @@ class File(CommonModel):
 
 
   def encodedStringListForPdf(self):
+    referencepath = os.getcwd()
     print("le self.path est :", self.path)
     path = self.path.replace(".pdf", "/")
     print("la path est :", path)
@@ -1005,11 +1006,12 @@ class File(CommonModel):
       try:
         images = convert_from_path(f"{nameFile}")
         print("le finalpath est ", os.getcwd())
+        os.chdir(referencepath)
         for index in range(len(images)):
           images[index].save(f'{path}page_{str(index)}.jpg', 'JPEG')
       except:
         print("error : no PDF to convert")
-      os.chdir('../../.')
+      os.chdir(referencepath)
     listFiles, listEncode  = [os.path.join(path, file) for file in os.listdir(path)], []
     for file in listFiles:
       with open(file, "rb") as fileData:
