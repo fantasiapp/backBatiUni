@@ -1000,16 +1000,16 @@ class File(CommonModel):
     print("le localpath est :", localPath, "le current path est ", os.getcwd(), "le if de os.path.isdir(path)", os.path.isdir(path), os.path.isdir("./files/admin/URSSAF_3/"), "le test d'égalité", path == "./files/admin/URSSAF_3/")
     print("le split est :", split)
     if not os.path.isdir(path):
-      try :
-        os.mkdir(path)
-        os.chdir(localPath)
+      os.mkdir(path)
+      os.chdir(localPath)
+      try:
         images = convert_from_path(f"{nameFile}")
-        os.chdir('../../.')
         print("le finalpath est ", os.getcwd())
         for index in range(len(images)):
           images[index].save(f'{path}page_{str(index)}.jpg', 'JPEG')
       except:
         print("error : no PDF to convert")
+      os.chdir('../../.')
     listFiles, listEncode  = [os.path.join(path, file) for file in os.listdir(path)], []
     for file in listFiles:
       with open(file, "rb") as fileData:
