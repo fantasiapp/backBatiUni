@@ -933,18 +933,6 @@ class DataAccessor():
     return False
 
   @classmethod
-  def __newStarsReco(cls, company, companyRole):
-    if companyRole == "st":
-      listRecommandation = [(recommandation.qualityStars + recommandation.securityStars + recommandation.organisationStars) / 3 for recommandation in Recommandation.objects.filter(companyRecommanded = company)]
-      company.starsRecoST = round(sum(listRecommandation)/len(listRecommandation)) if len(listRecommandation) else 0
-      company.save()
-    else:
-      listRecommandation = [(recommandation.qualityStars + recommandation.securityStars + recommandation.organisationStars) / 3 for recommandation in Recommandation.objects.filter(companyRecommanded = company)]
-      company.starsRecoPME = round(sum(listRecommandation)/len(listRecommandation)) if len(listRecommandation) else 0
-      company.save()
-    return False
-
-  @classmethod
   def duplicatePost(cls, id, currentUser):
     company = UserProfile.objects.get(userNameInternal=currentUser).Company
     post = Post.objects.filter(id=id)
@@ -1057,7 +1045,6 @@ class DataAccessor():
     name = data["name"] if "name" in data else objectFile.name
     ext = data["ext"] if "ext" in data and data["ext"] != "???" else objectFile.ext
     suppress = "fileBase64" in data and len(data["fileBase64"]) != 0
-    print("le suppress", suppress, "le filebas64", data["fileBase64"], "et enfin le test ", len(data["fileBase64"]) != 0)
     objectFile = File.createFile(nature, name, ext, currentUser, expirationDate=expirationDate, post=post, mission=mission, detailedPost=None, suppress=suppress)
     if "fileBase64" in data and data["fileBase64"]:
       try:
@@ -1336,7 +1323,6 @@ class DataAccessor():
       else:
         kwargs[key] = value
     Recommandation.objects.create(**kwargs)
-    cls.__newStarsReco(company, 'st')
     return {"giveRecommandation":"OK", "messages":"Recommandation recorded"}
 
   # @classmethod
