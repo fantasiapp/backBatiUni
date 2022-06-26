@@ -30,6 +30,8 @@ class Migration(migrations.Migration):
                 ('webSite', models.CharField(default=None, max_length=256, null=True, verbose_name='Url du site Web')),
                 ('starsST', models.IntegerField(default=0.0, verbose_name="Notation sous forme d'étoile")),
                 ('starsPME', models.IntegerField(default=0.0, verbose_name="Notation sous forme d'étoile")),
+                ('starsRecoST', models.IntegerField("Notation des recommandations sous forme d'étoile", null=False, default=0.0)),
+                ('starsRecoPME', models.IntegerField("Notation des recommandations sous forme d'étoile", null=False, default=0.0)),
                 ('companyPhone', models.CharField(default=None, max_length=128, null=True, verbose_name='Téléphone du standard')),
                 ('amount', models.FloatField(default=None, null=True, verbose_name='Montant sous-traitant')),
                 ('unity', models.CharField(default=None, max_length=64, null=True, verbose_name='Unité du montant')),

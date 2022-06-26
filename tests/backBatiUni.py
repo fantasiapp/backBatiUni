@@ -16,7 +16,7 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 20
+numberCompanies = 0
 emailList, missionList, emailListPME, emailListST, detailedPost, candidateToUnapply, labelList = {}, {}, [], [], {}, None, {}
 
 arguments = sys.argv
@@ -176,9 +176,9 @@ def executeQuery():
       response = requests.post(url, headers=headers, json=post)
 
     elif query == "modifyUser":
-      now = "2022-01-12"
-      post1 = {'action': 'modifyUser', 'UserProfile': {'id': 3, 'cellPhone': '0629350418', 'Company': {'capital': '307130', 'companyPhone': '0892976415', "amount":'28', "allQualifications":True, 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]]}}}
-      post2 = {'action': 'modifyUser', 'UserProfile': {'id': 6, 'cellPhone': '0628340317', 'Company': {'capital': '207130', 'companyPhone': '0891966314', "amount":'52', "allQualifications":True, 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]]}}}
+      now = "2022-06-12"
+      post1 = {'action': 'modifyUser', 'UserProfile': {'id': 3, 'cellPhone': '0629350418', 'Company': {'capital': '307130', 'companyPhone': '0892976415', "amount":'28', 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]]}}}
+      post2 = {'action': 'modifyUser', 'UserProfile': {'id': 6, 'cellPhone': '0628340317', 'Company': {'capital': '207130', 'companyPhone': '0891966314', "amount":'52', 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]]}}}
       requests.post(url, headers=headers, json=post1)
       response = requests.post(url, headers=headers, json=post2)
 
@@ -276,6 +276,7 @@ def executeQuery():
       file2 = {'action':"uploadFile", "ext":"png", "name":"Kbis", "fileBase64":getDocStr(1), "nature":"admin", "expirationDate":"2022-02-12"}
       file4 = {'action':"uploadFile", "ext":"svg", "name":"Document technique", "fileBase64":getDocStr(4), "nature":"post", "Post":2}
       file5 = {'action':"uploadFile", "ext":"jpg", "name":"Plan", "fileBase64":getDocStr(2), "nature":"post", "Post":2}
+      requests.post(url, headers=headersPme, json=file2)
       for file in [file1, file2, file4, file5]:
         response = requests.post(url, headers=headers, json=file)
         data = json.loads(response.text)

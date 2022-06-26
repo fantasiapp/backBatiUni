@@ -212,8 +212,8 @@ class Company(CommonModel):
   webSite = models.CharField("Url du site Web", max_length=256, null=True, default=None)
   starsST = models.IntegerField("Notation sous forme d'étoile", null=False, default=0.0)
   starsPME = models.IntegerField("Notation sous forme d'étoile", null=False, default=0.0)
-  starsRecoST = models.IntegerField("Notation sous forme d'étoile avec les recommandations", null=False, default=0.0)
-  starsRecoPME = models.IntegerField("Notation sous forme d'étoile avec les recommandations", null=False, default=0.0)
+  starsRecoST = models.IntegerField("Notation des recommandations sous forme d'étoile", null=False, default=0.0)
+  starsRecoPME = models.IntegerField("Notation des recommandations sous forme d'étoile", null=False, default=0.0)
   companyPhone = models.CharField("Téléphone du standard", max_length=128, blank=False, null=True, default=None)
   companyMail = models.CharField("mail de la company", max_length=256, null=True, default=None)
   amount = models.FloatField("Montant sous-traitant", null=True, default=None)
@@ -249,7 +249,9 @@ class Company(CommonModel):
       elif field == "logo": values.append(self.logo if self.logo else "")
       elif field == "webSite": values.append(self.webSite if self.webSite else "")
       elif field == "starsST": values.append(self.starsST if self.starsST else "")
-      elif field == "starsPME": values.append(self.starsPME if self.starsPME else "")
+      elif field == "starsPME": values.append(self.starsPME if self.starsPME else "")      
+      elif field == "starsRecoST": values.append(self.starsRecoST if self.starsRecoST else "")
+      elif field == "starsRecoPME": values.append(self.starsRecoPME if self.starsRecoPME else "")
       elif field == "companyPhone": values.append(self.companyPhone if self.companyPhone else "")
       elif field == "amount": values.append(self.amount if self.amount else "")
       elif field == "unity": values.append(self.unity if self.unity else "")
@@ -988,17 +990,28 @@ class File(CommonModel):
 
 
   def encodedStringListForPdf(self):
+    referencepath = os.getcwd()
+    print("le self.path est :", self.path)
     path = self.path.replace(".pdf", "/")
+    print("la path est :", path)
     split = self.path.split("/")
+    print("le split est :", split)
     nameFile = split[-1]
     localPath = f"./{split[1]}/{split[2]}/"
+    print("le localpath est :", localPath, "le current path est ", os.getcwd(), "le if de os.path.isdir(path)", os.path.isdir(path), os.path.isdir("./files/admin/URSSAF_3/"), "le test d'égalité", path == "./files/admin/URSSAF_3/")
+    print("le split est :", split)
     if not os.path.isdir(path):
       os.mkdir(path)
       os.chdir(localPath)
-      images = convert_from_path(f"{nameFile}")
-      os.chdir('../../.')
-      for index in range(len(images)):
-        images[index].save(f'{path}page_{str(index)}.jpg', 'JPEG')
+      try:
+        images = convert_from_path(f"{nameFile}")
+        print("le finalpath est ", os.getcwd())
+        os.chdir(referencepath)
+        for index in range(len(images)):
+          images[index].save(f'{path}page_{str(index)}.jpg', 'JPEG')
+      except:
+        print("error : no PDF to convert")
+      os.chdir(referencepath)
     listFiles, listEncode  = [os.path.join(path, file) for file in os.listdir(path)], []
     for file in listFiles:
       with open(file, "rb") as fileData:
