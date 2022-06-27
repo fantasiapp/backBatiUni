@@ -989,6 +989,8 @@ class DataAccessor():
       if not Path(file.path).is_file():
         return {"deleteFile":"Error", "messages":f"No file with path {file.path}"}
       os.remove(file.path)
+      if (file.path.split(".")[-1] == "pdf" and Path(file.path[:-4]).is_dir):
+        os.remove(file.path[:-4])
       file.delete()
       response = {"deleteFile":"OK", "id":id}
       if isCompany:
