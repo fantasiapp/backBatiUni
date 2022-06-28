@@ -24,5 +24,5 @@ urlpatterns = [
     path('data/', views.Data.as_view(), name='data'),
     path('createBase/', views.CreateBase.as_view(), name='createBase'),
     path('initialize/',  views.Initialize.as_view(), name='initialize'),
-    path('payment/', views.Payment.as_view(), name='payment')
+    path('create-payment-instent/', views.Payment.as_view(), name='payment')
 ]
