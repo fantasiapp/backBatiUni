@@ -494,6 +494,7 @@ class Post(CommonModel):
   organisationST = models.IntegerField("Organisation", blank=False, null=False, default=0)
   organisationCommentST = models.TextField("Organisation Commentaire", blank=False, null=False, default="")
 
+  paymentCondition = models.CharField("Description du mode de paiement", max_length=4096, null=True, default=None)
   isClosed = models.BooleanField("Fin de la mission", null=False, default=False)
 
   contract = models.IntegerField("Image du contrat", blank=False, null=True, default=None)
@@ -567,6 +568,7 @@ class Post(CommonModel):
       elif field == "hourlyStartChange": values.append(self.hourlyStartChange if self.hourlyStartChange else "")
       elif field == "hourlyEndChange": values.append(self.hourlyEndChange if self.hourlyEndChange else "")
       elif field == "description": values.append(self.description if self.description else "")
+      elif field == "paymentCondition": values.append(self.paymentCondition if self.paymentCondition else "")
       elif field == "subContractorContact": values.append(self.subContractorContact if self.subContractorContact else "")
       elif field == "subContractorName": values.append(self.subContractorName if self.subContractorName else "")
       elif field == "contract": values.append(self.contract if self.contract else "")
@@ -1109,6 +1111,7 @@ class Recommandation(CommonModel):
   securityComment = models.CharField('company name of recommander', max_length=3000, null=False, default="", blank=True)
   organisationStars = models.IntegerField("Notation sous forme d'étoile", null=False, default=0.0)
   organisationComment = models.CharField('company name of recommander', max_length=3000, null=False, default="", blank=True)
+  LastWorksiteDate = models.DateField(verbose_name="Date du dernier chantier", null=True, default=None, blank=True)
   date = models.DateField(verbose_name="Date de l'inscription", null=True, default=None)
 
   class Meta:
