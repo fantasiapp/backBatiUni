@@ -494,6 +494,7 @@ class Post(CommonModel):
   organisationST = models.IntegerField("Organisation", blank=False, null=False, default=0)
   organisationCommentST = models.TextField("Organisation Commentaire", blank=False, null=False, default="")
 
+  paymentCondition = models.CharField("Description du mode de paiement", max_length=4096, null=True, default=None)
   isClosed = models.BooleanField("Fin de la mission", null=False, default=False)
 
   contract = models.IntegerField("Image du contrat", blank=False, null=True, default=None)
@@ -567,6 +568,7 @@ class Post(CommonModel):
       elif field == "hourlyStartChange": values.append(self.hourlyStartChange if self.hourlyStartChange else "")
       elif field == "hourlyEndChange": values.append(self.hourlyEndChange if self.hourlyEndChange else "")
       elif field == "description": values.append(self.description if self.description else "")
+      elif field == "paymentCondition": values.append(self.paymentCondition if self.paymentCondition else "")
       elif field == "subContractorContact": values.append(self.subContractorContact if self.subContractorContact else "")
       elif field == "subContractorName": values.append(self.subContractorName if self.subContractorName else "")
       elif field == "contract": values.append(self.contract if self.contract else "")
