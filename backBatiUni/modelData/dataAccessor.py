@@ -1340,24 +1340,6 @@ class DataAccessor():
     cls.__newStarsReco(company, 'st')
     return {"giveRecommandation":"OK", "messages":"Recommandation recorded"}
 
-  # @classmethod
-  # def __newStarsReco(cls, Company, companyRole):
-  #   candidate = Candidate.objects.get(isChoosen=True, Mission=mission)
-  #   subContractor = candidate.Company
-  #   company = mission.Company
-  #   if companyRole == "st":
-  #     listMission = [(candidate.Mission.quality + candidate.Mission.security + candidate.Mission.organisation) / 3 for candidate in Candidate.objects.filter(Company = subContractor, isChoosen = True) if candidate.Mission.isClosed]
-  #     subContractor.starsST = round(sum(listMission)/len(listMission)) if len(listMission) else 0
-  #     Notification.createAndSend(Company=subContractor, subContractor=company, title="Modification de la mission", nature="PME", Role="ST", content=f"La société {company.name} vient de vous évaluer pour le chantier du {mission.address}.", timestamp=datetime.now().timestamp())
-  #     subContractor.save()
-  #   else:
-  #     Notification.createAndSend(Company=company, subContractor=subContractor, title="Modification de la mission", nature="ST", Role="PME", content=f"La société {subContractor.name} vient de vous évaluer pour le chantier du {mission.address}.", timestamp=datetime.now().timestamp())
-  #     listMission = [(mission.vibeST + mission.securityST + mission.organisationST) / 3 for mission in Mission.objects.filter(Company=company, isClosed=True)]
-  #     print("listMission", listMission)
-  #     company.starsPME = round(sum(listMission)/len(listMission)) if len(listMission) else 0
-  #     company.save()
-  #   return False
-
   @classmethod
   def giveNotificationToken(cls, token, currentUser):
     print("giveNotificationToken", token, currentUser.id)
