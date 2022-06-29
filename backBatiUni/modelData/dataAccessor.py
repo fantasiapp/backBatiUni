@@ -1046,7 +1046,7 @@ class DataAccessor():
       else:
         post = post[0]
     if data['name'] == "Kbis":
-      hasQRCode, message = cls.detect_QR_code()
+      hasQRCode, message = cls.detect_QR_code(data)
       if not (hasQRCode):
           return {"uploadFile":"Error", "messages":f"{message}"}
     objectFile = File.createFile(data["nature"], data["name"], data['ext'], currentUser, expirationDate=expirationDate, post=post)
@@ -1061,9 +1061,9 @@ class DataAccessor():
       return {"uploadFile":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
 
   @classmethod
-  def detect_QR_code(file) :
-    file_extension = '.' + file.ext
-    file_path = file.path
+  def detect_QR_code(data) :
+    file_extension = '.' + data['ext']
+    file_path = data['path']
     pathSplit = file_path.split('.')
     pathSplit.pop(-1)
     new_img = '.'.join(pathSplit) +'.jpg'
