@@ -2,6 +2,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+
+from backBatiUni.payment import Payment
 from .models import *
 from .modelData.buildDataBase import CreateNewDataBase
 from .modelData.dataAccessor import DataAccessor
@@ -91,3 +93,13 @@ class CreateBase(DefaultView):
       if action == "emptyDB":
         return Response(CreateNewDataBase().emptyDataBase())
     return Response({"CreateBase GET":"Error"})
+
+class CreatePaymentIntent(DefaultView):
+  def get(self, request):
+    return Response({"Error": f"Not implemented yet"})
+
+  def post(self, request):
+    if self.confirmToken(request.user):
+      return Response(Payment.createPaymentIntent(request))
+    return Response({"Error": f})
+    
