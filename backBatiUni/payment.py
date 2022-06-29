@@ -2,6 +2,8 @@ import json
 from requests import Response
 import stripe
 
+stripe.api_key = 'sk_test_51LDlcoAdZaSfQS2Y5oVOhfGwVMRtAs70kWfaqJOUcSqaQPrbkbtPLnHizh3mdZfxKoVYcxYALiisIDXP6uxsC4sK00wVLBWBXH'
+
 class Payment():
     @classmethod
     def createPaymentIntent(cls, request):
