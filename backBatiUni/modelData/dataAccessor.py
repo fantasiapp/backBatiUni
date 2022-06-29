@@ -1121,6 +1121,7 @@ class DataAccessor():
         return (False, "Votre KBis n'est pas valide")
     elif 'Ce code de vérification a déjà été utilisé, vous ne pouvez plus consulter le document.'in text:
       return (True, "")
+    return (True, "")
 
   @classmethod
   def __modifyFile(cls, data, currentUser):
