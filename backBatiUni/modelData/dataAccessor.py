@@ -1061,7 +1061,7 @@ class DataAccessor():
       return {"uploadFile":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
 
   @classmethod
-  def detect_QR_code(file) :
+  def detect_QR_code(cls, file) :
     file_extension = '.' + file.ext
     file_path = file.path
     pathSplit = file_path.split('.')
