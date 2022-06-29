@@ -1045,11 +1045,11 @@ class DataAccessor():
         return {"uploadFile":"Error", "messages":f"no post with id {data['Post']} for Post"}
       else:
         post = post[0]
+    objectFile = File.createFile(data["nature"], data["name"], data['ext'], currentUser, expirationDate=expirationDate, post=post)
     if data['name'] == "Kbis":
-      hasQRCode, message = cls.detect_QR_code(data)
+      hasQRCode, message = cls.detect_QR_code(objectFile)
       if not (hasQRCode):
           return {"uploadFile":"Error", "messages":f"{message}"}
-    objectFile = File.createFile(data["nature"], data["name"], data['ext'], currentUser, expirationDate=expirationDate, post=post)
     file = None
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if data['ext'] != "txt" else fileStr
@@ -1061,9 +1061,9 @@ class DataAccessor():
       return {"uploadFile":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
 
   @classmethod
-  def detect_QR_code(cls, data) :
-    file_extension = '.' + data['ext']
-    file_path = data['path']
+  def detect_QR_code(file) :
+    file_extension = '.' + file.ext
+    file_path = file.path
     pathSplit = file_path.split('.')
     pathSplit.pop(-1)
     new_img = '.'.join(pathSplit) +'.jpg'
@@ -1119,8 +1119,8 @@ class DataAccessor():
     elif 'Aucun document trouvé pour ce code de vérification' in text :
         print('Aucun document trouvé pour ce code de vérification')
         return (False, "Votre KBis n'est pas valide")
-    else:
-      return True
+    elif 'Ce code de vérification a déjà été utilisé, vous ne pouvez plus consulter le document.'in text:
+      return (True, "")
 
   @classmethod
   def __modifyFile(cls, data, currentUser):
