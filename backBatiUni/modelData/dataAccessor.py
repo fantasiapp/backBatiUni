@@ -1073,6 +1073,7 @@ class DataAccessor():
         image = pdf2image.convert_from_path(file_path, 500)
         image[0].save(new_img, 'jpg')
         os.remove(file_path)
+        file_path = new_img
     if file_extension.lower() == '.svg':
         image = svg2rlg(file_path)
         renderPM.drawToFile(image, new_img, fmt='jpg')
@@ -1081,9 +1082,12 @@ class DataAccessor():
         image = Image.frombytes(heic_file.mode, heic_file.size, heic_file.data)
         image.save(new_img, format="jpg")
         os.remove(file_path)
+        file_path = new_img
 
     # Detect if the document has a QR Code
+    print("lz file path", file_path)
     img = cv2.imread(file_path)
+    print("l'img", img)
     decoder = cv2.QRCodeDetector()
     data, points, _ = decoder.detectAndDecode(img)
     if data:
