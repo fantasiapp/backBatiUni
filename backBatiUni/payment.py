@@ -1,4 +1,5 @@
 import json
+from django.shortcuts import redirect
 from requests import Response
 import stripe
 
@@ -18,6 +19,28 @@ class Payment():
                 'enabled': True,
                 },
             )
-            return {"Payment":"OK", "clientSecret": intent["client_secret"]}
+            return {"CreatePaylentIntent":"OK", "clientSecret": intent["client_secret"]}
         except Exception as e:
             return {"Error": str(e)}
+    
+    @classmethod
+    def createPaymentCheckout(cls, request):
+        try:
+            print("checkout")
+
+            checkout_session = stripe.checkout.Session.create(
+                line_items = [
+                    {
+                        'price': "price_1LDlpRAdZaSfQS2YNV1as9tx",
+                        'quantity': 1,
+                    },
+                ],
+                mode='payment',
+                success_url= "https://localhost:4200/home",
+                cancel_url = "https://localhost:4200/profile"
+            )
+
+        except Exception as e:
+            return {"Error": str(e)}
+        
+        return redirect(checkout_session.url, code=303)

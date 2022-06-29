@@ -101,5 +101,15 @@ class CreatePaymentIntent(DefaultView):
   def post(self, request):
     if self.confirmToken(request.user):
       return Response(Payment.createPaymentIntent(request))
-    return Response({"Error": f})
+    return Response({"Error": f"Token invalide"})
+
+class CreatePaymentCheckout(DefaultView):
+  def get(self, request):
+    return Response({"Error": f"Not implemented yet"})
+
+  def post(self, request):
+    if self.confirmToken(request.user):
+      return Response(Payment.createPaymentCheckout(request))
+    return Response({"Error": f"Token invalide"})
+
     
