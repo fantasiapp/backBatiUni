@@ -5,11 +5,9 @@ import stripe
 class Payment():
     @classmethod
     def createPaymentIntent(cls, request):
-        print(cls)
         try:
             print("payment data", request.data)
 
-            data = json.loads(request.data)
             # Create a PaymentIntent with the order amount and currency
             intent = stripe.PaymentIntent.create(
                 amount=1,
