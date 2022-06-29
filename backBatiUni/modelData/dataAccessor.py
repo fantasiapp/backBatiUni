@@ -1141,7 +1141,7 @@ class DataAccessor():
     suppress = "fileBase64" in data and len(data["fileBase64"]) != 0
     objectFile = File.createFile(nature, name, ext, currentUser, expirationDate=expirationDate, post=post, mission=mission, detailedPost=None, suppress=suppress)
     print("Alllooooooooooooooooooooooooooooooo!!!!", name)
-    if data['name'] == "Kbis":
+    if name == "Kbis":
       print("le file path")
       hasQRCode, message = cls.detect_QR_code(objectFile)
       if not (hasQRCode):
