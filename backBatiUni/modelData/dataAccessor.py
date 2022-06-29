@@ -831,7 +831,7 @@ class DataAccessor():
           datePost.delete()
           Notification.createAndSend(Mission=mission, nature="alert", Company=mission.Company, title="Modification de la mission", Role="PME", content=f"La suppression de la journée de travail du {cls.formatDate(data['date'])} pour le chantier du {mission.address} est maintenant validée.", timestamp=datetime.now().timestamp())
         else:
-          Notification.createAndSend(Mission=mission, nature="alert", Company=mission.Company, title="Modification de la mission", Role="PME", content=f"La journée supplémentaire de travail du {cls.formatDate(data['date'])} pour le chantier du {mission.address} est maintenant validée.", timestamp=datetime.now().timestamp())
+          Notification.createAndSend(Mission=mission, nature="alert", Company=mission.Company, title="Modification de la mission", Role="PME", content=f"L'ajout de la journée de travail du {cls.formatDate(data['date'])} pour le chantier du {mission.address} est maintenant validée.", timestamp=datetime.now().timestamp())
       else:
         if datePost.deleted:
           datePost.deleted = False
@@ -933,18 +933,6 @@ class DataAccessor():
     return False
 
   @classmethod
-  def __newStarsReco(cls, company, companyRole):
-    if companyRole == "st":
-      listRecommandation = [(recommandation.qualityStars + recommandation.securityStars + recommandation.organisationStars) / 3 for recommandation in Recommandation.objects.filter(companyRecommanded = company)]
-      company.starsRecoST = round(sum(listRecommandation)/len(listRecommandation)) if len(listRecommandation) else 0
-      company.save()
-    else:
-      listRecommandation = [(recommandation.qualityStars + recommandation.securityStars + recommandation.organisationStars) / 3 for recommandation in Recommandation.objects.filter(companyRecommanded = company)]
-      company.starsRecoPME = round(sum(listRecommandation)/len(listRecommandation)) if len(listRecommandation) else 0
-      company.save()
-    return False
-
-  @classmethod
   def duplicatePost(cls, id, currentUser):
     company = UserProfile.objects.get(userNameInternal=currentUser).Company
     post = Post.objects.filter(id=id)
@@ -1001,8 +989,6 @@ class DataAccessor():
       if not Path(file.path).is_file():
         return {"deleteFile":"Error", "messages":f"No file with path {file.path}"}
       os.remove(file.path)
-      if (file.path.split(".")[-1] == "pdf" and Path(file.path[:-4]).is_dir):
-        os.remove(file.path[:-4])
       file.delete()
       response = {"deleteFile":"OK", "id":id}
       if isCompany:
@@ -1337,8 +1323,25 @@ class DataAccessor():
       else:
         kwargs[key] = value
     Recommandation.objects.create(**kwargs)
-    cls.__newStarsReco(company, 'st')
     return {"giveRecommandation":"OK", "messages":"Recommandation recorded"}
+
+  # @classmethod
+  # def __newStarsReco(cls, Company, companyRole):
+  #   candidate = Candidate.objects.get(isChoosen=True, Mission=mission)
+  #   subContractor = candidate.Company
+  #   company = mission.Company
+  #   if companyRole == "st":
+  #     listMission = [(candidate.Mission.quality + candidate.Mission.security + candidate.Mission.organisation) / 3 for candidate in Candidate.objects.filter(Company = subContractor, isChoosen = True) if candidate.Mission.isClosed]
+  #     subContractor.starsST = round(sum(listMission)/len(listMission)) if len(listMission) else 0
+  #     Notification.createAndSend(Company=subContractor, subContractor=company, title="Modification de la mission", nature="PME", Role="ST", content=f"La société {company.name} vient de vous évaluer pour le chantier du {mission.address}.", timestamp=datetime.now().timestamp())
+  #     subContractor.save()
+  #   else:
+  #     Notification.createAndSend(Company=company, subContractor=subContractor, title="Modification de la mission", nature="ST", Role="PME", content=f"La société {subContractor.name} vient de vous évaluer pour le chantier du {mission.address}.", timestamp=datetime.now().timestamp())
+  #     listMission = [(mission.vibeST + mission.securityST + mission.organisationST) / 3 for mission in Mission.objects.filter(Company=company, isClosed=True)]
+  #     print("listMission", listMission)
+  #     company.starsPME = round(sum(listMission)/len(listMission)) if len(listMission) else 0
+  #     company.save()
+  #   return False
 
   @classmethod
   def giveNotificationToken(cls, token, currentUser):
