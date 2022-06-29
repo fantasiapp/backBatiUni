@@ -2,11 +2,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+
+from backBatiUni.payment import Payment
 from .models import *
 from .modelData.buildDataBase import CreateNewDataBase
 from .modelData.dataAccessor import DataAccessor
 import json
-import stripe
 
 class DefaultView(APIView):
   permission_classes = (IsAuthenticated,)
@@ -93,21 +94,12 @@ class CreateBase(DefaultView):
         return Response(CreateNewDataBase().emptyDataBase())
     return Response({"CreateBase GET":"Error"})
 
-class Payment(DefaultView):
+class CreatePaymentIntent(DefaultView):
   def get(self, request):
     return Response({"Error": f"Not implemented yet"})
 
   def post(self, request):
-    try:
-      data = json.loads(request.data)
-      # Create a PaymentIntent with the order amount and currency
-      intent = stripe.PaymentIntent.create(
-        amount=1,
-        currency='eur',
-        automatic_payment_methods={
-          'enabled': True,
-        },
-      )
-      return Response({"Payment":"OK", "clientSecret": intent["client_secret"]})
-    except Exception as e:
-      return Response({"Error": str(e)})
+    if self.confirmToken(request.user):
+      return Response(Payment.createPaymentIntent(request))
+    return Response({"Error": f})
+    
