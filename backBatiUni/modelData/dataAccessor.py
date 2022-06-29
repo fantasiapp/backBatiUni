@@ -1045,7 +1045,7 @@ class DataAccessor():
         return {"uploadFile":"Error", "messages":f"no post with id {data['Post']} for Post"}
       else:
         post = post[0]
-    if file.name == "Kbis":
+    if data['name'] == "Kbis":
       hasQRCode, message = cls.detect_QR_code()
       if not (hasQRCode):
           return {"uploadFile":"Error", "messages":f"{message}"}
