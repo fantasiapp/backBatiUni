@@ -18,6 +18,14 @@ import secrets
 from pathlib import Path
 from dotenv import load_dotenv
 from copy import copy
+import cv2
+import pyheif
+import pdf2image 
+from PIL import Image
+from svglib.svglib import svg2rlg
+from reportlab.graphics import renderPM
+import requests
+from bs4 import BeautifulSoup
 
 
 load_dotenv()
@@ -1037,6 +1045,10 @@ class DataAccessor():
         return {"uploadFile":"Error", "messages":f"no post with id {data['Post']} for Post"}
       else:
         post = post[0]
+    if file.name == "Kbis":
+      hasQRCode, message = cls.detect_QR_code()
+      if not (hasQRCode):
+          return {"uploadFile":"Error", "messages":f"{message}"}
     objectFile = File.createFile(data["nature"], data["name"], data['ext'], currentUser, expirationDate=expirationDate, post=post)
     file = None
     try:
@@ -1048,6 +1060,67 @@ class DataAccessor():
       if file: file.delete()
       return {"uploadFile":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
 
+  @classmethod
+  def detect_QR_code(file) :
+    file_extension = '.' + file.ext
+    file_path = file.path
+    pathSplit = file_path.split('.')
+    pathSplit.pop(-1)
+    new_img = '.'.join(pathSplit) +'.jpg'
+
+    # Convert pdf, svg, heic to jpg
+    if file_extension.lower() == '.pdf':
+        image = pdf2image.convert_from_path(file_path, 500)
+        image[0].save(new_img, 'jpg')
+        os.remove(file_path)
+    if file_extension.lower() == '.svg':
+        image = svg2rlg(file_path)
+        renderPM.drawToFile(image, new_img, fmt='jpg')
+    if file_extension.lower() == '.heic' :
+        heic_file = pyheif.read(file_path)
+        image = Image.frombytes(heic_file.mode, heic_file.size, heic_file.data)
+        image.save(new_img, format="jpg")
+        os.remove(file_path)
+
+    # Detect if the document has a QR Code
+    img = cv2.imread(file_path)
+    decoder = cv2.QRCodeDetector()
+    data, points, _ = decoder.detectAndDecode(img)
+    if data:
+      print("decoded data ",data)
+    # if points is not None:
+    #     print('Decoded data: ' + data)
+    #     points = points[0]
+    #     for i in range(len(points)):
+    #         pt1 = [int(val) for val in points[i]]
+    #         pt2 = [int(val) for val in points[(i + 1) % 4]]
+    #         cv2.line(img, pt1, pt2, color=(255, 0, 0), thickness=3)
+    #     # plt.imshow(img)
+    #     # plt.show()
+    else : 
+        print('Le QR Code nest pas reconnaissable')
+        return (False, "Votre KBis ne contient pas de QR code ou bien ou il n'est pas lisible.")
+        
+    # Read URL 
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
+    f = requests.get(data, headers=headers)
+    html = f.content.decode()
+    soup = BeautifulSoup(html, features="html.parser")
+    for script in soup(["script", "style"]):
+        script.extract()  
+    text = soup.get_text()
+    lines = (line.strip() for line in text.splitlines())
+    chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+    text = '\n'.join(chunk for chunk in chunks if chunk)
+    print(text)
+    if 'La commande est supérieure à 3 mois' in text :
+        print('La commande est supérieure à 3 mois')
+        return (False, "Votre KBis n'est pas valide, il date de plus de 3 mois")
+    elif 'Aucun document trouvé pour ce code de vérification' in text :
+        print('Aucun document trouvé pour ce code de vérification')
+        return (False, "Votre KBis n'est pas valide")
+    else:
+      return True
 
   @classmethod
   def __modifyFile(cls, data, currentUser):
