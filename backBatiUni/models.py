@@ -34,7 +34,7 @@ class RamData():
   @classmethod
   def fillUpRamStructure(cls):
     if not cls.isUsed or datetime.datetime.now().timestamp() - cls.isUsed > 30:
-      # print("compute fillUpRamStructure", RamData.isUsed)
+      print("compute fillUpRamStructure", RamData.isUsed)
       cls.isUsed = datetime.datetime.now().timestamp()
       # print("fillUpRamStructure", cls.isUsed)
       cls.allPost = {int(post.id):[] for post in Post.objects.all() if post.subContractorName == None}
@@ -52,8 +52,8 @@ class RamData():
       cls.timestamp = cls.isUsed
       cls.isUsed = False
     #   print("deepCopy", cls.isUsed)
-    # else:
-    #   print("isBlocked", datetime.datetime.now().timestamp() - cls.isUsed if cls.isUsed else cls.isUsed)
+    else:
+      print("isBlocked", datetime.datetime.now().timestamp() - cls.isUsed if cls.isUsed else cls.isUsed)
 
 
 class CommonModel(models.Model):
