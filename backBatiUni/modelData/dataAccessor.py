@@ -1133,7 +1133,6 @@ class DataAccessor():
     #   if not (hasQRCode):
     #       return {"modifyFile":"Error", "messages":f"{message}"}
     if "fileBase64" in data and data["fileBase64"]:
-      print("fileBase64", len(data["fileBase64"]))
       error = cls.__registerNewFile(ext, data["fileBase64"], objectFile)
       if error: return error
     return {"modifyFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}

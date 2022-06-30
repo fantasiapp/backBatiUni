@@ -1041,7 +1041,6 @@ class File(CommonModel):
     path, name, mission = cls.getPathAndName(name, nature, userProfile, ext, detailedPost, supervision, mission, post)
     company = userProfile.Company if not post and not supervision else None
     objectFile = File.objects.filter(nature=nature, name=name, Company=company, Post=post, Mission=mission, Supervision=supervision)
-    print("createFile", objectFile, nature, name)
     if objectFile:
       objectFile = objectFile[0]
       cls.removeOldFile(suppress, objectFile)
@@ -1058,18 +1057,15 @@ class File(CommonModel):
   @classmethod
   def removeOldFile(cls, suppress, objectFile):
     oldPath = objectFile.path
-    print("removeOldFile", oldPath, os.path.exists(oldPath), suppress)
     if os.path.exists(oldPath) and suppress:
       os.remove(oldPath)
       if objectFile.ext == "pdf":
         pathToRemove = objectFile.path.replace(".pdf", "/")
-        print("pathToRemove", pathToRemove, os.path.exists(oldPath))
         shutil.rmtree(pathToRemove, ignore_errors=True)
 
   @classmethod
   def getPathAndName(cls, name, nature, userProfile, ext, detailedPost, supervision, mission, post):
     path= None
-    print("getPathAndName", nature, name)
     if nature == "userImage":
       path = cls.dictPath[nature] + userProfile.Company.name + '_' + str(userProfile.Company.id) + '.' + ext
     if nature in ["labels", "admin"]:
@@ -1088,7 +1084,6 @@ class File(CommonModel):
       mission = post
       post = None
       path = cls.dictPath[nature] + name + '_' + str(mission.id) + '.' + ext
-    print("end", path, name, mission)
     return path, name, mission
 
 
