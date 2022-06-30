@@ -79,7 +79,7 @@ class SmtpConnector:
       data = {"inviteFriend":"Error", "messages":"work in progress"}
     return data
 
-  def askRecomandation(self, mail, firstName, lastName, company, companyId):
+  def askRecomandation(self, mail, firstName, lastName, company, companyId, view):
     params = {
       "action": "askRecommandation",
       "mail": mail,
@@ -87,6 +87,7 @@ class SmtpConnector:
       "lastName": lastName,
       "company": company,
       "companyId": companyId,
+      "view": view
     }
     try:
       print("askRecommandation", params, self.url)

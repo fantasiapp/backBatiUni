@@ -45,7 +45,7 @@ class Data(DefaultView):
       elif action == "setFavorite": return DefaultView.myResponse(DataAccessor.setFavorite(request.GET["Post"], request.GET["value"], currentUser))
       elif action == "isViewed": return DefaultView.myResponse(DataAccessor.isViewed(request.GET["Post"], currentUser))
       elif action == "inviteFriend": return DefaultView.myResponse(DataAccessor.inviteFriend(request.GET["mail"], request.GET["register"], currentUser))
-      elif action == "askRecommandation": return DefaultView.myResponse(DataAccessor.askRecommandation(request.GET["email"], currentUser))
+      elif action == "askRecommandation": return DefaultView.myResponse(DataAccessor.askRecommandation(request.GET["email"], currentUser, request.GET["view"]))
       elif action == "giveNotificationToken": return DefaultView.myResponse(DataAccessor.giveNotificationToken(request.GET["token"], currentUser))
       elif action == "unapplyPost": return DefaultView.myResponse(DataAccessor.unapplyPost(request.GET["postId"], request.GET["candidateId"], currentUser))
       return DefaultView.myResponse({"data GET":"Error", "messages":{"action":action}})

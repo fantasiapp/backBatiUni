@@ -1386,9 +1386,9 @@ class DataAccessor():
     return {"newPassword":"Warning", "messages":"work in progress"}
 
   @classmethod
-  def askRecommandation(cls, mail, currentUser):
+  def askRecommandation(cls, mail, currentUser, view):
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
-    response = SmtpConnector(cls.portSmtp).askRecomandation(mail, userProfile.firstName, userProfile.lastName, userProfile.Company.name, userProfile.Company.id)
+    response = SmtpConnector(cls.portSmtp).askRecomandation(mail, userProfile.firstName, userProfile.lastName, userProfile.Company.name, userProfile.Company.id, view)
     print("askRecommandation dataAccessor", response)
 
     if "status" in response and response["status"]:
