@@ -848,7 +848,7 @@ class DetailedPost(CommonModel):
           print(RamData.ramStructure["Post"]["DetailedPost"])
         RamData.ramStructure["Post"]["DetailedPost"][detailed.Post.id].append(detailed.id)
       if detailed.Mission:
-        print("detailedMission", detailed.Mission.id,  RamData.ramStructure["Mission"]["DetailedPost"])
+        print("detailedMission detailed", detailed.id, "mission", detailed.Mission.id, "data", RamData.ramStructure["Mission"]["DetailedPost"])
         RamData.ramStructure["Mission"]["DetailedPost"][detailed.Mission.id].append(detailed.id)
       if detailed.DatePost:
         RamData.ramStructure["DatePost"]["DetailedPost"][detailed.DatePost.id].append(detailed.id)
