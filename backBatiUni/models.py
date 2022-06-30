@@ -847,6 +847,7 @@ class DetailedPost(CommonModel):
           print(RamData.ramStructure["Post"]["DetailedPost"])
         RamData.ramStructure["Post"]["DetailedPost"][detailed.Post.id].append(detailed.id)
       if detailed.Mission:
+        print("detailedMission", detailed.Mission.id,  RamData.ramStructure["Mission"]["DetailedPost"])
         RamData.ramStructure["Mission"]["DetailedPost"][detailed.Mission.id].append(detailed.id)
       if detailed.DatePost:
         RamData.ramStructure["DatePost"]["DetailedPost"][detailed.DatePost.id].append(detailed.id)
@@ -1089,6 +1090,8 @@ class File(CommonModel):
     else:
       objectFile = cls.objects.create(nature=nature, name=name, path=path, ext=ext, Company=company, expirationDate=expirationDate, Post=post, Mission=mission, Supervision=supervision)
     return objectFile
+
+
 
 class BlockedCandidate(CommonModel):
   blocker = models.ForeignKey(Company, verbose_name='Company who is blocking', related_name='blocking', on_delete=models.PROTECT, null=True, default=None)
