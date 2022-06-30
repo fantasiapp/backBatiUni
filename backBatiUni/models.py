@@ -1038,6 +1038,33 @@ class File(CommonModel):
   def createFile(cls, nature, name, ext, user, expirationDate = None, post=None, mission=None, detailedPost=None, supervision=None, suppress = False):
     userProfile = UserProfile.objects.get(userNameInternal=user)
     objectFile, mission = None, None
+    path, name = cls.getPathAndName(nature, userProfile, ext, detailedPost, supervision, mission)
+    company = userProfile.Company if not post and not supervision else None
+    objectFile = File.objects.filter(nature=nature, name=name, Company=company, Post=post, Mission=mission, Supervision=supervision)
+    if objectFile:
+      objectFile = objectFile[0]
+      cls.removeOldFile(suppress, objectFile)
+      objectFile.path = path
+      objectFile.timestamp = datetime.datetime.now().timestamp()
+      objectFile.ext = ext
+      if expirationDate:
+        objectFile.expirationDate = expirationDate
+      objectFile.save()
+    else:
+      objectFile = cls.objects.create(nature=nature, name=name, path=path, ext=ext, Company=company, expirationDate=expirationDate, Post=post, Mission=mission, Supervision=supervision)
+    return objectFile
+
+  @classmethod
+  def getPathAndName(cls, suppress, objectFile):
+    oldPath = objectFile.path
+    if os.path.exists(oldPath) and suppress:
+      os.remove(oldPath)
+      if objectFile.ext == "pdf":
+        pathToRemove = objectFile.path.replace(".pdf", "/")
+        shutil.rmtree(pathToRemove, ignore_errors=True)
+
+  @classmethod
+  def getPathAndName(cls, nature, userProfile, ext, detailedPost, supervision, mission):
     if nature == "userImage":
       path = cls.dictPath[nature] + userProfile.Company.name + '_' + str(userProfile.Company.id) + '.' + ext
     if nature in ["labels", "admin"]:
@@ -1056,25 +1083,8 @@ class File(CommonModel):
       mission = post
       post = None
       path = cls.dictPath[nature] + name + '_' + str(mission.id) + '.' + ext
-    company = userProfile.Company if not post and not supervision else None
-    objectFile = File.objects.filter(nature=nature, name=name, Company=company, Post=post, Mission=mission, Supervision=supervision)
-    if objectFile:
-      objectFile = objectFile[0]
-      oldPath = objectFile.path
-      if os.path.exists(oldPath) and suppress:
-        os.remove(oldPath)
-        if objectFile.ext == "pdf":
-          pathToRemove = objectFile.path.replace(".pdf", "/")
-          shutil.rmtree(pathToRemove, ignore_errors=True)
-      objectFile.path = path
-      objectFile.timestamp = datetime.datetime.now().timestamp()
-      objectFile.ext = ext
-      if expirationDate:
-        objectFile.expirationDate = expirationDate
-      objectFile.save()
-    else:
-      objectFile = cls.objects.create(nature=nature, name=name, path=path, ext=ext, Company=company, expirationDate=expirationDate, Post=post, Mission=mission, Supervision=supervision)
-    return objectFile
+    return path, name, mission
+
 
 
 
