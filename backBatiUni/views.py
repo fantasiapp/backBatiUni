@@ -104,7 +104,7 @@ class Payment(DefaultView):
     data = json.loads(jsonString)
     print(request.user)
     userProfile = UserProfile.objects.filter(userNameInternal=request.user)
-    print("userProfile", userProfile.values)
+    print("userProfile", userProfile[0])
     if "action" in data and self.confirmToken(request.user):
       if data["action"] == "createPaymentIntent":
         return Response(PaymentManager.createPaymentIntent(request))
