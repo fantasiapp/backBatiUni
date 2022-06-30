@@ -1133,12 +1133,14 @@ class DataAccessor():
     #   if not (hasQRCode):
     #       return {"modifyFile":"Error", "messages":f"{message}"}
     if "fileBase64" in data and data["fileBase64"]:
+      print("fileBase64", len(data["fileBase64"]))
       error = cls.__registerNewFile(ext, data["fileBase64"], objectFile)
       if error: return error
     return {"modifyFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
 
   @classmethod   
   def __registerNewFile(cls, ext, content, objectFile):
+    print("__registerNewFile")
     try:
       file = ContentFile(base64.urlsafe_b64decode(content), name=objectFile.path) if ext != "txt" else content
       with open(objectFile.path, "wb") as outfile:
