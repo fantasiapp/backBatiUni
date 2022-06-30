@@ -261,7 +261,6 @@ class Company(CommonModel):
       elif field == "allQualifications": values.append(self.allQualifications if self.allQualifications else "")
   
       elif field in self.manyToManyObject:
-        print("264", RamData.ramStructureComplete)
         if dictFormat or not self.id in RamData.ramStructureComplete["Company"][field]:
           listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Company=self)]
         else:
@@ -288,8 +287,6 @@ class Disponibility(CommonModel):
     RamData.ramStructure["Company"]["Post"] = deepcopy(RamData.allCompany)
     RamData.ramStructure["Company"]["Mission"] = deepcopy(RamData.allCompany)
     for disponibility in Disponibility.objects.all():
-      if not "Disponibility" in RamData.ramStructure["Company"]:
-        print("bug 285", RamData.ramStructure["Company"])
       RamData.ramStructure["Company"]["Disponibility"][disponibility.Company.id].append(disponibility.id)
     for notification in Notification.objects.all():
       RamData.ramStructure["Company"]["Notification"][notification.Company.id].append(notification.id)
@@ -673,13 +670,9 @@ class DatePost(CommonModel):
     if not "DatePost" in RamData.ramStructure["Post"]: print("warning bug 820", RamData.ramStructure["Post"])
     if not "DatePost" in RamData.ramStructure["Mission"]: print("warning bug 820", RamData.ramStructure["Mission"])
     for datePost in DatePost.objects.all():
-      if datePost.Post:
-        # if not "DatePost" in RamData.ramStructure["Post"]:
-        #   print("bug ramStructure 634", RamData.ramStructure["Post"], datePost.Post.id, datePost.id)
+      if datePost.Post and datePost.Post.id in RamData.ramStructure["Post"]["DatePost"]:
         RamData.ramStructure["Post"]["DatePost"][datePost.Post.id].append(datePost.id)
-      elif datePost.Mission:
-        if not "DatePost" in RamData.ramStructure["Mission"]:
-          print("bug ramStructure 636", RamData.ramStructure["Mission"], datePost.Mission.id, datePost.id)
+      elif datePost.Mission and datePost.Mission.id in RamData.ramStructure["Mission"]["DatePost"]:
         RamData.ramStructure["Mission"]["DatePost"][datePost.Mission.id].append(datePost.id)
 
   def computeValues(self, listFields, user, dictFormat=False):
@@ -843,12 +836,9 @@ class DetailedPost(CommonModel):
     RamData.ramStructure["Mission"]["DetailedPost"] = deepcopy(RamData.allMission)
     RamData.ramStructure["DatePost"]["DetailedPost"] = deepcopy(RamData.allDatePost)
     for detailed in DetailedPost.objects.all():
-      if detailed.Post:
-        if not detailed.Post.id in RamData.ramStructure["Post"]["DetailedPost"]:
-          print(RamData.ramStructure["Post"]["DetailedPost"])
+      if detailed.Post and detailed.Post.id in RamData.ramStructure["Post"]["DetailedPost"]:
         RamData.ramStructure["Post"]["DetailedPost"][detailed.Post.id].append(detailed.id)
       if detailed.Mission and detailed.Mission.id in RamData.ramStructure["Mission"]["DetailedPost"]:
-        print("detailedMission detailed", detailed.id, "mission", detailed.Mission.id, "data", RamData.ramStructure["Mission"]["DetailedPost"])
         RamData.ramStructure["Mission"]["DetailedPost"][detailed.Mission.id].append(detailed.id)
       if detailed.DatePost and detailed.DatePost.id in RamData.ramStructure["DatePost"]["DetailedPost"]:
         RamData.ramStructure["DatePost"]["DetailedPost"][detailed.DatePost.id].append(detailed.id)
@@ -953,7 +943,6 @@ class File(CommonModel):
       if file.Post:
         RamData.ramStructure["Post"]["File"][file.Post.id].append(file.id)
       if file.Mission and file.Mission.id in RamData.ramStructure["Mission"]["File"]:
-        print("956 file", file.id, "mission", file.Mission.id, "data", RamData.ramStructure["Mission"]["File"])
         RamData.ramStructure["Mission"]["File"][file.Mission.id].append(file.id)
 
 
@@ -996,21 +985,15 @@ class File(CommonModel):
 
   def encodedStringListForPdf(self):
     referencepath = os.getcwd()
-    print("le self.path est :", self.path)
     path = self.path.replace(".pdf", "/")
-    print("la path est :", path)
     split = self.path.split("/")
-    print("le split est :", split)
     nameFile = split[-1]
     localPath = f"./{split[1]}/{split[2]}/"
-    print("le localpath est :", localPath, "le current path est ", os.getcwd(), "le if de os.path.isdir(path)", os.path.isdir(path), os.path.isdir("./files/admin/URSSAF_3/"), "le test d'égalité", path == "./files/admin/URSSAF_3/")
-    print("le split est :", split)
     if not os.path.isdir(path):
       os.mkdir(path)
       os.chdir(localPath)
       try:
         images = convert_from_path(f"{nameFile}")
-        print("le finalpath est ", os.getcwd())
         os.chdir(referencepath)
         for index in range(len(images)):
           images[index].save(f'{path}page_{str(index)}.jpg', 'JPEG')
