@@ -126,7 +126,6 @@ class DataAccessor():
         message["email"] = "Cet email et déjà utilisé."
     companyData = data['company']
     company = Company.objects.filter(name=companyData['name'])
-    print("__registerCheck", company)
     if company:
       message["company"] = "Le nom de l'entreprise est déjà utilisé."
     return message
@@ -1128,21 +1127,30 @@ class DataAccessor():
     ext = data["ext"] if "ext" in data and data["ext"] != "???" else objectFile.ext
     suppress = "fileBase64" in data and len(data["fileBase64"]) != 0
     objectFile = File.createFile(nature, name, ext, currentUser, expirationDate=expirationDate, post=post, mission=mission, detailedPost=None, suppress=suppress)
-    print("Alllooooooooooooooooooooooooooooooo!!!!", name)
-    if name == "Kbis":
-      print("le file path")
-      hasQRCode, message = cls.detect_QR_code(objectFile)
-      if not (hasQRCode):
-          return {"uploadFile":"Error", "messages":f"{message}"}
+    # if name == "Kbis":
+    #   print("le file path")
+    #   hasQRCode, message = cls.detect_QR_code(objectFile)
+    #   if not (hasQRCode):
+    #       return {"modifyFile":"Error", "messages":f"{message}"}
     if "fileBase64" in data and data["fileBase64"]:
+      error = cls.__registerNewFile(ext, data["fileBase64"], objectFile)
+      if error: return error
+    return {"modifyFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
+
+  @classmethod   
+  def __registerNewFile(cls, ext, content, objectFile):
+    if ext == "pdf":
+      print("modifyFile pdf", ext, len(content))
+      return {"modifyFile":"Error", "messages":"work in progress"}
+    else:
       try:
-        file = ContentFile(base64.urlsafe_b64decode(data["fileBase64"]), name=objectFile.path) if data['ext'] != "txt" else data["fileBase64"]
+        file = ContentFile(base64.urlsafe_b64decode(content), name=objectFile.path) if ext != "txt" else content
         with open(objectFile.path, "wb") as outfile:
           outfile.write(file.file.getbuffer())
       except ValueError:
         return {"modifyFile":"Error", "messages":f"File of id {file.id} has not been saved"}
-    return {"modifyFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
-      
+    return None
+
 
   @classmethod
   def __uploadImageSupervision(cls, data, currentUser):
