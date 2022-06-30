@@ -34,7 +34,7 @@ class RamData():
   @classmethod
   def fillUpRamStructure(cls):
     if not cls.isUsed or datetime.datetime.now().timestamp() - cls.isUsed > 30:
-      print("compute fillUpRamStructure", RamData.isUsed)
+      print("compute fillUpRamStructure is used ?", RamData.isUsed)
       cls.isUsed = datetime.datetime.now().timestamp()
       # print("fillUpRamStructure", cls.isUsed)
       cls.allPost = {int(post.id):[] for post in Post.objects.all() if post.subContractorName == None}
@@ -45,8 +45,8 @@ class RamData():
       cls.ramStructure = {"Company":{}, "Post":{}, "Mission":{}, "DetailedPost":{}, "DatePost":{}}
       # print("ramStructure", cls.ramStructure)
       for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
-        if cls.ramStructureComplete:
-          print("generateRamStructure", classObject, cls.isUsed)
+        # if cls.ramStructureComplete:
+        #   print("generateRamStructure", classObject, cls.isUsed)
         classObject.generateRamStructure()
       cls.ramStructureComplete = deepcopy(cls.ramStructure)
       cls.timestamp = cls.isUsed
