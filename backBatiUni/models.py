@@ -1057,12 +1057,13 @@ class File(CommonModel):
 
   @classmethod
   def removeOldFile(cls, suppress, objectFile):
-    print("removeOldFile", objectFile.path, os.path.exists(oldPath), suppress)
     oldPath = objectFile.path
+    print("removeOldFile", oldPath, os.path.exists(oldPath), suppress)
     if os.path.exists(oldPath) and suppress:
       os.remove(oldPath)
       if objectFile.ext == "pdf":
         pathToRemove = objectFile.path.replace(".pdf", "/")
+        print("pathToRemove", pathToRemove, os.path.exists(oldPath))
         shutil.rmtree(pathToRemove, ignore_errors=True)
 
   @classmethod
