@@ -1041,7 +1041,7 @@ class File(CommonModel):
     path, name, mission = cls.getPathAndName(name, nature, userProfile, ext, detailedPost, supervision, mission, post)
     company = userProfile.Company if not post and not supervision else None
     objectFile = File.objects.filter(nature=nature, name=name, Company=company, Post=post, Mission=mission, Supervision=supervision)
-    print("createFile", objectFile)
+    print("createFile", objectFile, nature, name)
     if objectFile:
       objectFile = objectFile[0]
       cls.removeOldFile(suppress, objectFile)
