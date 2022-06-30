@@ -45,8 +45,8 @@ class RamData():
       cls.ramStructure = {"Company":{}, "Post":{}, "Mission":{}, "DetailedPost":{}, "DatePost":{}}
       # print("ramStructure", cls.ramStructure)
       for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
-        # if cls.ramStructureComplete:
-        #   print("generateRamStructure", classObject, cls.isUsed)
+        if cls.ramStructureComplete:
+          print("generateRamStructure", classObject, cls.isUsed)
         classObject.generateRamStructure()
       cls.ramStructureComplete = deepcopy(cls.ramStructure)
       cls.timestamp = cls.isUsed
@@ -261,6 +261,7 @@ class Company(CommonModel):
       elif field == "allQualifications": values.append(self.allQualifications if self.allQualifications else "")
   
       elif field in self.manyToManyObject:
+        print("264", RamData.ramStructureComplete)
         if dictFormat or not self.id in RamData.ramStructureComplete["Company"][field]:
           listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Company=self)]
         else:
