@@ -1,4 +1,5 @@
 import json
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from requests import Response
 import stripe
@@ -44,4 +45,4 @@ class Payment():
             return {"Error": str(e)}
         
         print("Redirect to", checkout_session.url)
-        return redirect(checkout_session.url)
+        return HttpResponseRedirect(checkout_session.url)

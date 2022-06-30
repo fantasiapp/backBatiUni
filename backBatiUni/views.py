@@ -109,7 +109,7 @@ class CreatePaymentCheckout(DefaultView):
 
   def post(self, request):
     if self.confirmToken(request.user):
-      return Response(Payment.createPaymentCheckout(request))
+      return Payment.createPaymentCheckout(request)
     return Response({"Error": f"Token invalide"})
 
     
