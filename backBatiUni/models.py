@@ -1065,6 +1065,8 @@ class File(CommonModel):
 
   @classmethod
   def getPathAndName(cls, nature, userProfile, ext, detailedPost, supervision, mission):
+    path = None
+    print("getPathAndName", path)
     if nature == "userImage":
       path = cls.dictPath[nature] + userProfile.Company.name + '_' + str(userProfile.Company.id) + '.' + ext
     if nature in ["labels", "admin"]:
