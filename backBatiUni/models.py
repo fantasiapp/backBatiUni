@@ -1038,7 +1038,7 @@ class File(CommonModel):
   def createFile(cls, nature, name, ext, user, expirationDate = None, post=None, mission=None, detailedPost=None, supervision=None, suppress = False):
     userProfile = UserProfile.objects.get(userNameInternal=user)
     objectFile, mission = None, None
-    path, name, mission = cls.getPathAndName(name, nature, userProfile, ext, detailedPost, supervision, mission)
+    path, name, mission = cls.getPathAndName(name, nature, userProfile, ext, detailedPost, supervision, mission, post)
     company = userProfile.Company if not post and not supervision else None
     objectFile = File.objects.filter(nature=nature, name=name, Company=company, Post=post, Mission=mission, Supervision=supervision)
     if objectFile:
@@ -1064,7 +1064,7 @@ class File(CommonModel):
         shutil.rmtree(pathToRemove, ignore_errors=True)
 
   @classmethod
-  def getPathAndName(cls, name, nature, userProfile, ext, detailedPost, supervision, mission):
+  def getPathAndName(cls, name, nature, userProfile, ext, detailedPost, supervision, mission, post):
     path= None
     print("getPathAndName", nature, name)
     if nature == "userImage":
