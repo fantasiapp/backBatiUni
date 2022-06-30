@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from backBatiUni.payment import Payment
+from backBatiUni.payment import PaymentManager
 from .models import *
 from .modelData.buildDataBase import CreateNewDataBase
 from .modelData.dataAccessor import DataAccessor
@@ -105,5 +105,5 @@ class Payment(DefaultView):
     print(request.user)
     if "action" in data and self.confirmToken(request.user):
       if data["action"] == "createPaymentIntent":
-        return Response(Payment.createPaymentIntent(request))
+        return Response(PaymentManager.createPaymentIntent(request))
     return Response({"Error": f"Action unknown"})
