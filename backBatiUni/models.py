@@ -1055,7 +1055,7 @@ class File(CommonModel):
     return objectFile
 
   @classmethod
-  def getPathAndName(cls, suppress, objectFile):
+  def removeOldFile(cls, suppress, objectFile):
     oldPath = objectFile.path
     if os.path.exists(oldPath) and suppress:
       os.remove(oldPath)
