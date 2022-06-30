@@ -940,7 +940,7 @@ class File(CommonModel):
     for file in File.objects.all():
       if file.Company and file.Company.id in RamData.ramStructure["Company"]["File"]:
         RamData.ramStructure["Company"]["File"][file.Company.id].append(file.id)
-      if file.Post:
+      if file.Post and file.Post.id in RamData.ramStructure["Post"]["File"]:
         RamData.ramStructure["Post"]["File"][file.Post.id].append(file.id)
       if file.Mission and file.Mission.id in RamData.ramStructure["Mission"]["File"]:
         RamData.ramStructure["Mission"]["File"][file.Mission.id].append(file.id)
@@ -1038,7 +1038,7 @@ class File(CommonModel):
   def createFile(cls, nature, name, ext, user, expirationDate = None, post=None, mission=None, detailedPost=None, supervision=None, suppress = False):
     userProfile = UserProfile.objects.get(userNameInternal=user)
     objectFile, mission = None, None
-    path, name = cls.getPathAndName(nature, userProfile, ext, detailedPost, supervision, mission)
+    path, name, mission = cls.getPathAndName(name, nature, userProfile, ext, detailedPost, supervision, mission, post)
     company = userProfile.Company if not post and not supervision else None
     objectFile = File.objects.filter(nature=nature, name=name, Company=company, Post=post, Mission=mission, Supervision=supervision)
     if objectFile:
@@ -1055,7 +1055,7 @@ class File(CommonModel):
     return objectFile
 
   @classmethod
-  def getPathAndName(cls, suppress, objectFile):
+  def removeOldFile(cls, suppress, objectFile):
     oldPath = objectFile.path
     if os.path.exists(oldPath) and suppress:
       os.remove(oldPath)
@@ -1064,7 +1064,9 @@ class File(CommonModel):
         shutil.rmtree(pathToRemove, ignore_errors=True)
 
   @classmethod
-  def getPathAndName(cls, nature, userProfile, ext, detailedPost, supervision, mission):
+  def getPathAndName(cls, name, nature, userProfile, ext, detailedPost, supervision, mission, post):
+    path= None
+    print("getPathAndName", nature, name)
     if nature == "userImage":
       path = cls.dictPath[nature] + userProfile.Company.name + '_' + str(userProfile.Company.id) + '.' + ext
     if nature in ["labels", "admin"]:
@@ -1083,6 +1085,7 @@ class File(CommonModel):
       mission = post
       post = None
       path = cls.dictPath[nature] + name + '_' + str(mission.id) + '.' + ext
+    print("end", path, name, mission)
     return path, name, mission
 
 
