@@ -953,6 +953,7 @@ class File(CommonModel):
       if file.Post:
         RamData.ramStructure["Post"]["File"][file.Post.id].append(file.id)
       if file.Mission and file.Mission.id in RamData.ramStructure["Mission"]["File"]:
+        print("956 file", file.id, "mission", file.Mission.id, "data", RamData.ramStructure["Mission"]["File"])
         RamData.ramStructure["Mission"]["File"][file.Mission.id].append(file.id)
 
 
