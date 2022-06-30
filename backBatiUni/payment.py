@@ -9,12 +9,20 @@ stripe.api_key = 'sk_test_51LDlcoAdZaSfQS2Y5oVOhfGwVMRtAs70kWfaqJOUcSqaQPrbkbtPL
 class Payment():
     @classmethod
     def createPaymentIntent(cls, request):
+
+        customer = stripe.Customer.create()
+        
+        def computeTotalAmount(itemList = {}):
+            return 1000
+
         try:
             print("payment data", request.data)
 
             # Create a PaymentIntent with the order amount and currency
             intent = stripe.PaymentIntent.create(
-                amount=1000,
+                customer = customer["id"],
+                setup_future_usage = "off_session",
+                amount=computeTotalAmount(),
                 currency='eur',
                 automatic_payment_methods={
                 'enabled': True,
@@ -26,6 +34,7 @@ class Payment():
     
     @classmethod
     def createPaymentCheckout(cls, request):
+        # Will not be used 
         try:
             print("checkout")
 
@@ -37,8 +46,8 @@ class Payment():
                     },
                 ],
                 mode='payment',
-                success_url= "https://localhost:4200/home",
-                cancel_url = "https://localhost:4200/profile"
+                success_url= "http://localhost:4200/home",
+                cancel_url = "http://localhost:4200/profile"
             )
 
         except Exception as e:

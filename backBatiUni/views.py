@@ -94,22 +94,16 @@ class CreateBase(DefaultView):
         return Response(CreateNewDataBase().emptyDataBase())
     return Response({"CreateBase GET":"Error"})
 
-class CreatePaymentIntent(DefaultView):
+class Payment(DefaultView):
   def get(self, request):
     return Response({"Error": f"Not implemented yet"})
 
   def post(self, request):
-    if self.confirmToken(request.user):
-      return Response(Payment.createPaymentIntent(request))
-    return Response({"Error": f"Token invalide"})
-
-class CreatePaymentCheckout(DefaultView):
-  def get(self, request):
-    return Response({"Error": f"Not implemented yet"})
-
-  def post(self, request):
-    if self.confirmToken(request.user):
-      return Response(Payment.createPaymentCheckout(request))
-    return Response({"Error": f"Token invalide"})
-
-    
+    jsonBin = request.body
+    jsonString = jsonBin.decode("utf8")
+    data = json.loads(jsonString)
+    print(request.user)
+    if "action" in data and self.confirmToken(request.user):
+      if data["action"] == "createPaymentIntent":
+        return Response(Payment.createPaymentIntent(request))
+    return Response({"Error": f"Action unknown"})
