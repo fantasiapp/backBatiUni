@@ -940,7 +940,7 @@ class File(CommonModel):
     for file in File.objects.all():
       if file.Company and file.Company.id in RamData.ramStructure["Company"]["File"]:
         RamData.ramStructure["Company"]["File"][file.Company.id].append(file.id)
-      if file.Post:
+      if file.Post and file.Post.id in RamData.ramStructure["Post"]["File"]:
         RamData.ramStructure["Post"]["File"][file.Post.id].append(file.id)
       if file.Mission and file.Mission.id in RamData.ramStructure["Mission"]["File"]:
         RamData.ramStructure["Mission"]["File"][file.Mission.id].append(file.id)
