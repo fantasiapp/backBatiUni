@@ -45,4 +45,7 @@ class Payment():
             return {"Error": str(e)}
         
         print("Redirect to", checkout_session.url)
-        return HttpResponseRedirect(checkout_session.url)
+        response = HttpResponseRedirect(checkout_session.url)
+        response["Acces-Control-Allow-Origin"]="*"
+
+        return response
