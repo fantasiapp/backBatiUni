@@ -44,4 +44,4 @@ class Payment():
             return {"Error": str(e)}
         
         print("Redirect to", checkout_session.url)
-        return redirect(checkout_session.url, code=303)
+        return redirect(checkout_session.url)
