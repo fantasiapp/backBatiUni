@@ -222,6 +222,8 @@ class Company(CommonModel):
   longitude = models.FloatField("Longitude", null=True, default=None)
   saturdayDisponibility = models.BooleanField("Disponibilité le Samedi", null=False, default=False)
   allQualifications = models.BooleanField("Tous corps d'état", null=False, default=False)
+  stripeCustomerId = models.CharField("Customer ID générée par Stripe", null=False, unique = True)
+  
   manyToManyObject = ["JobForCompany", "LabelForCompany", "File", "Post", "Mission", "Disponibility", "Notification"]
 
   class Meta:
@@ -259,7 +261,8 @@ class Company(CommonModel):
       elif field == "longitude": values.append(self.longitude if self.longitude else "")
       elif field == "saturdayDisponibility": values.append(self.saturdayDisponibility if self.saturdayDisponibility else "")
       elif field == "allQualifications": values.append(self.allQualifications if self.allQualifications else "")
-  
+      elif field == "stripeCustomerId": values.append(self.stripeCustomerId if self.stripeCustomerId else "")
+
       elif field in self.manyToManyObject:
         if dictFormat or not self.id in RamData.ramStructureComplete["Company"][field]:
           listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Company=self)]

@@ -4,7 +4,9 @@ from django.shortcuts import redirect
 from requests import Response
 import stripe
 
-stripe.api_key = 'sk_test_51LDlcoAdZaSfQS2Y5oVOhfGwVMRtAs70kWfaqJOUcSqaQPrbkbtPLnHizh3mdZfxKoVYcxYALiisIDXP6uxsC4sK00wVLBWBXH'
+from backBatiUni.settings import STRIPE_API_KEY
+
+stripe.api_base = STRIPE_API_KEY
 
 class PaymentManager():
     @classmethod

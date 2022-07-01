@@ -2,6 +2,9 @@ from email.headerregistry import ContentTransferEncodingHeader
 from lib2to3.pgen2 import token
 from this import d
 from django.forms import EmailInput
+import stripe
+
+from backBatiUni.settings import STRIPE_API_KEY
 from ..models import *
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -134,7 +137,11 @@ class DataAccessor():
   def __registerAction(cls, data, token):
     print("registerAction", data)
     companyData = data['company']
-    company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'])
+
+    stripe.api_key = STRIPE_API_KEY
+    customer = stripe.Customer.create(name = companyData['name'], email = companyData["email"])
+
+    company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'], stripeCustomerId = customer.id)
     cls.__getGeoCoordinates(company)
     company.Role = Role.objects.get(id=data['Role'])
     company.save()
