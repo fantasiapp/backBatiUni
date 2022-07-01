@@ -1111,12 +1111,13 @@ class Recommandation(CommonModel):
   securityComment = models.CharField('company name of recommander', max_length=3000, null=False, default="", blank=True)
   organisationStars = models.IntegerField("Notation sous forme d'étoile", null=False, default=0.0)
   organisationComment = models.CharField('company name of recommander', max_length=3000, null=False, default="", blank=True)
+  view = models.CharField('is the company ST or PME', max_length=5, null=False, default="PME", blank=True)
   LastWorksiteDate = models.DateField(verbose_name="Date du dernier chantier", null=True, default=None, blank=True)
   date = models.DateField(verbose_name="Date de l'inscription", null=True, default=None)
 
   class Meta:
     verbose_name = "Recommandation"
-    unique_together = ('companyRecommanded', 'companyNameRecommanding')
+    unique_together = ('companyRecommanded', 'companyNameRecommanding', 'view')
 
 
 
