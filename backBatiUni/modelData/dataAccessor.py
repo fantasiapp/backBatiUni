@@ -139,7 +139,10 @@ class DataAccessor():
     companyData = data['company']
 
     stripe.api_key = STRIPE_API_KEY
+    if not "@" in companyData["email"]:
+      companyData["email"] += "@g.com" 
     customer = stripe.Customer.create(name = companyData['name'], email = companyData["email"])
+
 
     company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'], stripeCustomerId = customer.id)
     cls.__getGeoCoordinates(company)
