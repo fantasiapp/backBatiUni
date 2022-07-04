@@ -30,8 +30,6 @@ from reportlab.graphics import renderPM
 import requests
 from bs4 import BeautifulSoup
 
-stripe.api_key = STRIPE_API_KEY
-
 
 load_dotenv()
 if os.getenv('PATH_MIDDLE'):
@@ -137,13 +135,16 @@ class DataAccessor():
 
   @classmethod
   def __registerAction(cls, data, token):
+
+    stripe.api_key = STRIPE_API_KEY
+
     print("registerAction", data)
     companyData = data['company']
 
     if not "@" in data["email"]:
       data["email"] += "@g.com" 
-    print("registerAction", companyData["name"], data["email"])
-    customer = stripe.Customer.create(name = companyData['name'], email = data["email"])
+    print("registerAction stripe", companyData["name"], data["email"])
+    customer = stripe.Customer.create(name = "test django")
 
 
     company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'], stripeCustomerId = customer.id)
