@@ -136,6 +136,8 @@ class DataAccessor():
   @classmethod
   def __registerAction(cls, data, token):
 
+    print("stripe", stripe)
+    print("stripe api key", STRIPE_API_KEY)
     stripe.api_key = STRIPE_API_KEY
 
     print("registerAction", data)
