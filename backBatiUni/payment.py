@@ -7,7 +7,7 @@ from backBatiUni.models import Company, UserProfile
 
 from backBatiUni.settings import STRIPE_API_KEY
 
-stripe.api_base = STRIPE_API_KEY
+stripe.api_key = STRIPE_API_KEY
 
 class PaymentManager():
     @classmethod
