@@ -1418,7 +1418,9 @@ class DataAccessor():
     del data["action"]
     print("giveRecommandation", data)
     company = Company.objects.get(id=data["companyRecommanded"])
-    if Recommandation.objects.filter(companyRecommanded=company, companyNameRecommanding=data['companyNameRecommanding'], view=data['view']):
+    name = "Un sous-traitant à la recherche d'une entreprise" if data['view'] == "ST" else "Une entreprise à la recherche de sous-traitances"
+    view = Role.objects.get(name = name)
+    if Recommandation.objects.filter(companyRecommanded=company, companyNameRecommanding=data['companyNameRecommanding'], view=view):
       return {"giveRecommandation":"Warning", "messages":"La recommandation existe déjà"}
     kwargs = {"date":timezone.now()}
     for key, value in data.items():
