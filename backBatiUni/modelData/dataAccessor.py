@@ -30,6 +30,8 @@ from reportlab.graphics import renderPM
 import requests
 from bs4 import BeautifulSoup
 
+stripe.api_base = STRIPE_API_KEY
+
 
 load_dotenv()
 if os.getenv('PATH_MIDDLE'):
@@ -138,7 +140,6 @@ class DataAccessor():
 
     print("stripe", stripe)
     print("stripe api key", STRIPE_API_KEY)
-    stripe.api_key = STRIPE_API_KEY
 
     print("registerAction", data)
     companyData = data['company']
