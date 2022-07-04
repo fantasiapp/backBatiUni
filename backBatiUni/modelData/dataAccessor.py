@@ -147,7 +147,7 @@ class DataAccessor():
     # if not "@" in data["email"]:
     #   data["email"] += "@g.com" 
     # print("registerAction stripe", companyData["name"], data["email"])
-    customer = stripe.Customer.create(name = "test django", description = "customer de test")
+    # customer = stripe.Customer.create(name = "test django", description = "customer de test")
 
 
     # company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'], stripeCustomerId = customer.id)
