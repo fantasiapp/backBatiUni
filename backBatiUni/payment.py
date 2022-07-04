@@ -7,13 +7,14 @@ from backBatiUni.models import Company, UserProfile
 
 from backBatiUni.settings import STRIPE_API_KEY
 
-stripe.api_base = STRIPE_API_KEY
+stripe.api_key = STRIPE_API_KEY
 
 class PaymentManager():
     @classmethod
     def createPaymentIntent(cls, request):
         userProfile = UserProfile.objects.get(userNameInternal = request.user)
-        company = Company.objects.get(id = userProfile.Company)
+        print("userProfile", userProfile.Company.id, type(userProfile.Company.id))
+        company = Company.objects.get(id = userProfile.Company.id)
         customerId = company.stripeCustomerId
 
         def computeTotalAmount(itemList = {}):
