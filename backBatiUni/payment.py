@@ -3,15 +3,19 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from requests import Response
 import stripe
+from backBatiUni.models import Company, UserProfile
 
-stripe.api_key = 'sk_test_51LDlcoAdZaSfQS2Y5oVOhfGwVMRtAs70kWfaqJOUcSqaQPrbkbtPLnHizh3mdZfxKoVYcxYALiisIDXP6uxsC4sK00wVLBWBXH'
+from backBatiUni.settings import STRIPE_API_KEY
+
+stripe.api_base = STRIPE_API_KEY
 
 class PaymentManager():
     @classmethod
     def createPaymentIntent(cls, request):
+        userProfile = UserProfile.objects.get(userNameInternal = request.user)
+        company = Company.objects.get(id = userProfile.Company)
+        customerId = company.stripeCustomerId
 
-        customer = stripe.Customer.create()
-        
         def computeTotalAmount(itemList = {}):
             return 1000
 
@@ -20,7 +24,7 @@ class PaymentManager():
 
             # Create a PaymentIntent with the order amount and currency
             intent = stripe.PaymentIntent.create(
-                customer = customer["id"],
+                customer = customerId,
                 setup_future_usage = "off_session",
                 amount=computeTotalAmount(),
                 currency='eur',

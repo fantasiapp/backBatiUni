@@ -208,6 +208,7 @@ class Company(CommonModel):
   ntva = models.CharField("Numéro de TVA intra communautaire", unique=True, max_length=32, null=True, default=None)
   capital = models.FloatField("Capital de l'entreprise", null=True, default=None)
   revenue = models.FloatField("Capital de l'entreprise", null=True, default=None)
+  size = models.IntegerField("Effectif de l'entreprise", null=False, default=0.0)
   logo = models.CharField("Path du logo de l'entreprise", max_length=256, null=True, default=None)
   webSite = models.CharField("Url du site Web", max_length=256, null=True, default=None)
   starsST = models.IntegerField("Notation sous forme d'étoile", null=False, default=0.0)
@@ -222,6 +223,8 @@ class Company(CommonModel):
   longitude = models.FloatField("Longitude", null=True, default=None)
   saturdayDisponibility = models.BooleanField("Disponibilité le Samedi", null=False, default=False)
   allQualifications = models.BooleanField("Tous corps d'état", null=False, default=False)
+  stripeCustomerId = models.CharField("Customer ID générée par Stripe", null=False, unique = True)
+  
   manyToManyObject = ["JobForCompany", "LabelForCompany", "File", "Post", "Mission", "Disponibility", "Notification"]
 
   class Meta:
@@ -246,6 +249,7 @@ class Company(CommonModel):
       elif field == "activity": values.append(self.activity if self.activity else "")
       elif field == "capital": values.append(self.capital if self.capital else "")
       elif field == "revenue": values.append(self.revenue if self.revenue else "")
+      elif field == "size": values.append(self.size if self.size else "")
       elif field == "logo": values.append(self.logo if self.logo else "")
       elif field == "webSite": values.append(self.webSite if self.webSite else "")
       elif field == "starsST": values.append(self.starsST if self.starsST else "")
@@ -259,7 +263,8 @@ class Company(CommonModel):
       elif field == "longitude": values.append(self.longitude if self.longitude else "")
       elif field == "saturdayDisponibility": values.append(self.saturdayDisponibility if self.saturdayDisponibility else "")
       elif field == "allQualifications": values.append(self.allQualifications if self.allQualifications else "")
-  
+      elif field == "stripeCustomerId": values.append(self.stripeCustomerId if self.stripeCustomerId else "")
+
       elif field in self.manyToManyObject:
         if dictFormat or not self.id in RamData.ramStructureComplete["Company"][field]:
           listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Company=self)]
@@ -1110,12 +1115,13 @@ class Recommandation(CommonModel):
   securityComment = models.CharField('company name of recommander', max_length=3000, null=False, default="", blank=True)
   organisationStars = models.IntegerField("Notation sous forme d'étoile", null=False, default=0.0)
   organisationComment = models.CharField('company name of recommander', max_length=3000, null=False, default="", blank=True)
+  view = models.CharField('is the company ST or PME', max_length=5, null=False, default="PME", blank=True)
   LastWorksiteDate = models.DateField(verbose_name="Date du dernier chantier", null=True, default=None, blank=True)
   date = models.DateField(verbose_name="Date de l'inscription", null=True, default=None)
 
   class Meta:
     verbose_name = "Recommandation"
-    unique_together = ('companyRecommanded', 'companyNameRecommanding')
+    unique_together = ('companyRecommanded', 'companyNameRecommanding', 'view')
 
 
 
