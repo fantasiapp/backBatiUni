@@ -223,7 +223,7 @@ class Company(CommonModel):
   longitude = models.FloatField("Longitude", null=True, default=None)
   saturdayDisponibility = models.BooleanField("Disponibilité le Samedi", null=False, default=False)
   allQualifications = models.BooleanField("Tous corps d'état", null=False, default=False)
-  stripeCustomerId = models.CharField("Customer ID générée par Stripe", null=False, unique = True)
+  stripeCustomerId = models.CharField("Customer ID générée par Stripe", max_length=128, null=True, unique = True)
   
   manyToManyObject = ["JobForCompany", "LabelForCompany", "File", "Post", "Mission", "Disponibility", "Notification"]
 
