@@ -13,8 +13,8 @@ class PaymentManager():
     @classmethod
     def createPaymentIntent(cls, request):
         userProfile = UserProfile.objects.get(userNameInternal = request.user)
-        print("userProfile", userProfile.Company, type(userProfile.Company))
-        company = Company.objects.get(id = userProfile.Company)
+        print("userProfile", userProfile.Company.id, type(userProfile.Company.id))
+        company = Company.objects.get(id = userProfile.Company.id)
         customerId = company.stripeCustomerId
 
         def computeTotalAmount(itemList = {}):
