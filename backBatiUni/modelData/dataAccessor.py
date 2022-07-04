@@ -30,7 +30,7 @@ from reportlab.graphics import renderPM
 import requests
 from bs4 import BeautifulSoup
 
-stripe.api_base = STRIPE_API_KEY
+stripe.api_key = STRIPE_API_KEY
 
 
 load_dotenv()
@@ -144,14 +144,14 @@ class DataAccessor():
     print("registerAction", data)
     companyData = data['company']
 
-    # if not "@" in data["email"]:
-    #   data["email"] += "@g.com" 
-    # print("registerAction stripe", companyData["name"], data["email"])
-    # customer = stripe.Customer.create(name = "test django", description = "customer de test")
+    if not "@" in data["email"]:
+      data["email"] += "@g.com" 
+    print("registerAction stripe", companyData["name"], data["email"])
+    customer = stripe.Customer.create(name = "test django", description = "customer de test")
 
 
-    # company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'], stripeCustomerId = customer.id)
-    company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'], stripeCustomerId = "")
+    company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'], stripeCustomerId = customer.id)
+    # company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'], stripeCustomerId = "")
     cls.__getGeoCoordinates(company)
     company.Role = Role.objects.get(id=data['Role'])
     company.save()
