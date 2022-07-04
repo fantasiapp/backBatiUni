@@ -135,18 +135,22 @@ class DataAccessor():
 
   @classmethod
   def __registerAction(cls, data, token):
+
+    print("stripe", stripe)
+    print("stripe api key", STRIPE_API_KEY)
+    stripe.api_key = STRIPE_API_KEY
+
     print("registerAction", data)
     companyData = data['company']
 
-    # stripe.api_key = STRIPE_API_KEY
-    # if not "@" in data["email"]:
-    #   data["email"] += "@g.com" 
-    # print("registerAction", companyData, data["email"])
-    # customer = stripe.Customer.create(name = companyData['name'], email = data["email"])
+    if not "@" in data["email"]:
+      data["email"] += "@g.com" 
+    print("registerAction stripe", companyData["name"], data["email"])
+    customer = stripe.Customer.create(name = "test django", description = "customer de test")
 
 
-    # company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'], stripeCustomerId = customer.id)
-    company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'], stripeCustomerId = "")
+    company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'], stripeCustomerId = customer.id)
+    # company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'], stripeCustomerId = "")
     cls.__getGeoCoordinates(company)
     company.Role = Role.objects.get(id=data['Role'])
     company.save()
