@@ -34,7 +34,7 @@ class RamData():
   @classmethod
   def fillUpRamStructure(cls):
     if not cls.isUsed or datetime.datetime.now().timestamp() - cls.isUsed > 30:
-      # print("compute fillUpRamStructure", RamData.isUsed)
+      print("compute fillUpRamStructure is used ?", RamData.isUsed)
       cls.isUsed = datetime.datetime.now().timestamp()
       # print("fillUpRamStructure", cls.isUsed)
       cls.allPost = {int(post.id):[] for post in Post.objects.all() if post.subContractorName == None}
@@ -52,8 +52,8 @@ class RamData():
       cls.timestamp = cls.isUsed
       cls.isUsed = False
     #   print("deepCopy", cls.isUsed)
-    # else:
-    #   print("isBlocked", datetime.datetime.now().timestamp() - cls.isUsed if cls.isUsed else cls.isUsed)
+    else:
+      print("isBlocked", datetime.datetime.now().timestamp() - cls.isUsed if cls.isUsed else cls.isUsed)
 
 
 class CommonModel(models.Model):
@@ -223,6 +223,8 @@ class Company(CommonModel):
   longitude = models.FloatField("Longitude", null=True, default=None)
   saturdayDisponibility = models.BooleanField("Disponibilité le Samedi", null=False, default=False)
   allQualifications = models.BooleanField("Tous corps d'état", null=False, default=False)
+  stripeCustomerId = models.CharField("Customer ID générée par Stripe", null=False, unique = True)
+  
   manyToManyObject = ["JobForCompany", "LabelForCompany", "File", "Post", "Mission", "Disponibility", "Notification"]
 
   class Meta:
@@ -261,7 +263,8 @@ class Company(CommonModel):
       elif field == "longitude": values.append(self.longitude if self.longitude else "")
       elif field == "saturdayDisponibility": values.append(self.saturdayDisponibility if self.saturdayDisponibility else "")
       elif field == "allQualifications": values.append(self.allQualifications if self.allQualifications else "")
-  
+      elif field == "stripeCustomerId": values.append(self.stripeCustomerId if self.stripeCustomerId else "")
+
       elif field in self.manyToManyObject:
         if dictFormat or not self.id in RamData.ramStructureComplete["Company"][field]:
           listModel = [objectModel.id for objectModel in manyToMany[field].objects.filter(Company=self)]
@@ -289,8 +292,6 @@ class Disponibility(CommonModel):
     RamData.ramStructure["Company"]["Post"] = deepcopy(RamData.allCompany)
     RamData.ramStructure["Company"]["Mission"] = deepcopy(RamData.allCompany)
     for disponibility in Disponibility.objects.all():
-      if not "Disponibility" in RamData.ramStructure["Company"]:
-        print("bug 285", RamData.ramStructure["Company"])
       RamData.ramStructure["Company"]["Disponibility"][disponibility.Company.id].append(disponibility.id)
     for notification in Notification.objects.all():
       RamData.ramStructure["Company"]["Notification"][notification.Company.id].append(notification.id)
@@ -674,13 +675,9 @@ class DatePost(CommonModel):
     if not "DatePost" in RamData.ramStructure["Post"]: print("warning bug 820", RamData.ramStructure["Post"])
     if not "DatePost" in RamData.ramStructure["Mission"]: print("warning bug 820", RamData.ramStructure["Mission"])
     for datePost in DatePost.objects.all():
-      if datePost.Post:
-        # if not "DatePost" in RamData.ramStructure["Post"]:
-        #   print("bug ramStructure 634", RamData.ramStructure["Post"], datePost.Post.id, datePost.id)
+      if datePost.Post and datePost.Post.id in RamData.ramStructure["Post"]["DatePost"]:
         RamData.ramStructure["Post"]["DatePost"][datePost.Post.id].append(datePost.id)
-      elif datePost.Mission:
-        if not "DatePost" in RamData.ramStructure["Mission"]:
-          print("bug ramStructure 636", RamData.ramStructure["Mission"], datePost.Mission.id, datePost.id)
+      elif datePost.Mission and datePost.Mission.id in RamData.ramStructure["Mission"]["DatePost"]:
         RamData.ramStructure["Mission"]["DatePost"][datePost.Mission.id].append(datePost.id)
 
   def computeValues(self, listFields, user, dictFormat=False):
@@ -844,13 +841,11 @@ class DetailedPost(CommonModel):
     RamData.ramStructure["Mission"]["DetailedPost"] = deepcopy(RamData.allMission)
     RamData.ramStructure["DatePost"]["DetailedPost"] = deepcopy(RamData.allDatePost)
     for detailed in DetailedPost.objects.all():
-      if detailed.Post:
-        if not detailed.Post.id in RamData.ramStructure["Post"]["DetailedPost"]:
-          print(RamData.ramStructure["Post"]["DetailedPost"])
+      if detailed.Post and detailed.Post.id in RamData.ramStructure["Post"]["DetailedPost"]:
         RamData.ramStructure["Post"]["DetailedPost"][detailed.Post.id].append(detailed.id)
-      if detailed.Mission:
+      if detailed.Mission and detailed.Mission.id in RamData.ramStructure["Mission"]["DetailedPost"]:
         RamData.ramStructure["Mission"]["DetailedPost"][detailed.Mission.id].append(detailed.id)
-      if detailed.DatePost:
+      if detailed.DatePost and detailed.DatePost.id in RamData.ramStructure["DatePost"]["DetailedPost"]:
         RamData.ramStructure["DatePost"]["DetailedPost"][detailed.DatePost.id].append(detailed.id)
 
     
@@ -948,11 +943,11 @@ class File(CommonModel):
     RamData.ramStructure["Mission"]["File"] = deepcopy(RamData.allMission)
     RamData.ramStructure["Company"]["File"] = deepcopy(RamData.allCompany)
     for file in File.objects.all():
-      if file.Company:
+      if file.Company and file.Company.id in RamData.ramStructure["Company"]["File"]:
         RamData.ramStructure["Company"]["File"][file.Company.id].append(file.id)
-      if file.Post:
+      if file.Post and file.Post.id in RamData.ramStructure["Post"]["File"]:
         RamData.ramStructure["Post"]["File"][file.Post.id].append(file.id)
-      if file.Mission:
+      if file.Mission and file.Mission.id in RamData.ramStructure["Mission"]["File"]:
         RamData.ramStructure["Mission"]["File"][file.Mission.id].append(file.id)
 
 
@@ -995,21 +990,15 @@ class File(CommonModel):
 
   def encodedStringListForPdf(self):
     referencepath = os.getcwd()
-    print("le self.path est :", self.path)
     path = self.path.replace(".pdf", "/")
-    print("la path est :", path)
     split = self.path.split("/")
-    print("le split est :", split)
     nameFile = split[-1]
     localPath = f"./{split[1]}/{split[2]}/"
-    print("le localpath est :", localPath, "le current path est ", os.getcwd(), "le if de os.path.isdir(path)", os.path.isdir(path), os.path.isdir("./files/admin/URSSAF_3/"), "le test d'égalité", path == "./files/admin/URSSAF_3/")
-    print("le split est :", split)
     if not os.path.isdir(path):
       os.mkdir(path)
       os.chdir(localPath)
       try:
         images = convert_from_path(f"{nameFile}")
-        print("le finalpath est ", os.getcwd())
         os.chdir(referencepath)
         for index in range(len(images)):
           images[index].save(f'{path}page_{str(index)}.jpg', 'JPEG')
@@ -1054,6 +1043,38 @@ class File(CommonModel):
   def createFile(cls, nature, name, ext, user, expirationDate = None, post=None, mission=None, detailedPost=None, supervision=None, suppress = False):
     userProfile = UserProfile.objects.get(userNameInternal=user)
     objectFile, mission = None, None
+    path, name, mission = cls.getPathAndName(name, nature, userProfile, ext, detailedPost, supervision, mission, post)
+    company = userProfile.Company if not post and not supervision else None
+    objectFile = File.objects.filter(nature=nature, name=name, Company=company, Post=post, Mission=mission, Supervision=supervision)
+    print("createFile", objectFile, nature, name)
+    if objectFile:
+      objectFile = objectFile[0]
+      cls.removeOldFile(suppress, objectFile)
+      objectFile.path = path
+      objectFile.timestamp = datetime.datetime.now().timestamp()
+      objectFile.ext = ext
+      if expirationDate:
+        objectFile.expirationDate = expirationDate
+      objectFile.save()
+    else:
+      objectFile = cls.objects.create(nature=nature, name=name, path=path, ext=ext, Company=company, expirationDate=expirationDate, Post=post, Mission=mission, Supervision=supervision)
+    return objectFile
+
+  @classmethod
+  def removeOldFile(cls, suppress, objectFile):
+    oldPath = objectFile.path
+    print("removeOldFile", oldPath, os.path.exists(oldPath), suppress)
+    if os.path.exists(oldPath) and suppress:
+      os.remove(oldPath)
+      if objectFile.ext == "pdf":
+        pathToRemove = objectFile.path.replace(".pdf", "/")
+        print("pathToRemove", pathToRemove, os.path.exists(oldPath))
+        shutil.rmtree(pathToRemove, ignore_errors=True)
+
+  @classmethod
+  def getPathAndName(cls, name, nature, userProfile, ext, detailedPost, supervision, mission, post):
+    path= None
+    print("getPathAndName", nature, name)
     if nature == "userImage":
       path = cls.dictPath[nature] + userProfile.Company.name + '_' + str(userProfile.Company.id) + '.' + ext
     if nature in ["labels", "admin"]:
@@ -1072,25 +1093,11 @@ class File(CommonModel):
       mission = post
       post = None
       path = cls.dictPath[nature] + name + '_' + str(mission.id) + '.' + ext
-    company = userProfile.Company if not post and not supervision else None
-    objectFile = File.objects.filter(nature=nature, name=name, Company=company, Post=post, Mission=mission, Supervision=supervision)
-    if objectFile:
-      objectFile = objectFile[0]
-      oldPath = objectFile.path
-      if os.path.exists(oldPath) and suppress:
-        os.remove(oldPath)
-        if objectFile.ext == "pdf":
-          pathToRemove = objectFile.path.replace(".pdf", "/")
-          shutil.rmtree(pathToRemove, ignore_errors=True)
-      objectFile.path = path
-      objectFile.timestamp = datetime.datetime.now().timestamp()
-      objectFile.ext = ext
-      if expirationDate:
-        objectFile.expirationDate = expirationDate
-      objectFile.save()
-    else:
-      objectFile = cls.objects.create(nature=nature, name=name, path=path, ext=ext, Company=company, expirationDate=expirationDate, Post=post, Mission=mission, Supervision=supervision)
-    return objectFile
+    print("end", path, name, mission)
+    return path, name, mission
+
+
+
 
 class BlockedCandidate(CommonModel):
   blocker = models.ForeignKey(Company, verbose_name='Company who is blocking', related_name='blocking', on_delete=models.PROTECT, null=True, default=None)

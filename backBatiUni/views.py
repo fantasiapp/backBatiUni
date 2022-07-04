@@ -2,11 +2,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+
+from backBatiUni.payment import PaymentManager
 from .models import *
 from .modelData.buildDataBase import CreateNewDataBase
 from .modelData.dataAccessor import DataAccessor
 import json
-import stripe
 
 class DefaultView(APIView):
   permission_classes = (IsAuthenticated,)
@@ -44,7 +45,7 @@ class Data(DefaultView):
       elif action == "setFavorite": return DefaultView.myResponse(DataAccessor.setFavorite(request.GET["Post"], request.GET["value"], currentUser))
       elif action == "isViewed": return DefaultView.myResponse(DataAccessor.isViewed(request.GET["Post"], currentUser))
       elif action == "inviteFriend": return DefaultView.myResponse(DataAccessor.inviteFriend(request.GET["mail"], request.GET["register"], currentUser))
-      elif action == "askRecommandation": return DefaultView.myResponse(DataAccessor.askRecommandation(request.GET["email"], currentUser))
+      elif action == "askRecommandation": return DefaultView.myResponse(DataAccessor.askRecommandation(request.GET["email"], currentUser, request.GET["view"]))
       elif action == "giveNotificationToken": return DefaultView.myResponse(DataAccessor.giveNotificationToken(request.GET["token"], currentUser))
       elif action == "unapplyPost": return DefaultView.myResponse(DataAccessor.unapplyPost(request.GET["postId"], request.GET["candidateId"], currentUser))
       return DefaultView.myResponse({"data GET":"Error", "messages":{"action":action}})
@@ -98,16 +99,13 @@ class Payment(DefaultView):
     return Response({"Error": f"Not implemented yet"})
 
   def post(self, request):
-    try:
-      data = json.loads(request.data)
-      # Create a PaymentIntent with the order amount and currency
-      intent = stripe.PaymentIntent.create(
-        amount=1,
-        currency='eur',
-        automatic_payment_methods={
-          'enabled': True,
-        },
-      )
-      return Response({"Payment":"OK", "clientSecret": intent["client_secret"]})
-    except Exception as e:
-      return Response({"Error": str(e)})
+    jsonBin = request.body
+    jsonString = jsonBin.decode("utf8")
+    data = json.loads(jsonString)
+    print(request.user)
+    userProfile = UserProfile.objects.get(userNameInternal=request.user)
+    print("userProfile", userProfile)
+    if "action" in data and self.confirmToken(request.user):
+      if data["action"] == "createPaymentIntent":
+        return Response(PaymentManager.createPaymentIntent(request))
+    return Response({"Error": f"Action unknown"})

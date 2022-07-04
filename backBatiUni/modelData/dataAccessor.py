@@ -2,6 +2,9 @@ from email.headerregistry import ContentTransferEncodingHeader
 from lib2to3.pgen2 import token
 from this import d
 from django.forms import EmailInput
+import stripe
+
+from backBatiUni.settings import STRIPE_API_KEY
 from ..models import *
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -134,7 +137,11 @@ class DataAccessor():
   def __registerAction(cls, data, token):
     print("registerAction", data)
     companyData = data['company']
-    company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'])
+
+    stripe.api_key = STRIPE_API_KEY
+    customer = stripe.Customer.create(name = companyData['name'], email = companyData["email"])
+
+    company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'], stripeCustomerId = customer.id)
     cls.__getGeoCoordinates(company)
     company.Role = Role.objects.get(id=data['Role'])
     company.save()
@@ -839,7 +846,7 @@ class DataAccessor():
           datePost.delete()
           Notification.createAndSend(Mission=mission, nature="alert", Company=mission.Company, title="Modification de la mission", Role="PME", content=f"La suppression de la journée de travail du {cls.formatDate(data['date'])} pour le chantier du {mission.address} est maintenant validée.", timestamp=datetime.now().timestamp())
         else:
-          Notification.createAndSend(Mission=mission, nature="alert", Company=mission.Company, title="Modification de la mission", Role="PME", content=f"La journée supplémentaire de travail du {cls.formatDate(data['date'])} pour le chantier du {mission.address} est maintenant validée.", timestamp=datetime.now().timestamp())
+          Notification.createAndSend(Mission=mission, nature="alert", Company=mission.Company, title="Modification de la mission", Role="PME", content=f"L'ajout de la journée de travail du {cls.formatDate(data['date'])} pour le chantier du {mission.address} est maintenant validée.", timestamp=datetime.now().timestamp())
       else:
         if datePost.deleted:
           datePost.deleted = False
@@ -941,18 +948,6 @@ class DataAccessor():
     return False
 
   @classmethod
-  def __newStarsReco(cls, company, companyRole):
-    if companyRole == "st":
-      listRecommandation = [(recommandation.qualityStars + recommandation.securityStars + recommandation.organisationStars) / 3 for recommandation in Recommandation.objects.filter(companyRecommanded = company)]
-      company.starsRecoST = round(sum(listRecommandation)/len(listRecommandation)) if len(listRecommandation) else 0
-      company.save()
-    else:
-      listRecommandation = [(recommandation.qualityStars + recommandation.securityStars + recommandation.organisationStars) / 3 for recommandation in Recommandation.objects.filter(companyRecommanded = company)]
-      company.starsRecoPME = round(sum(listRecommandation)/len(listRecommandation)) if len(listRecommandation) else 0
-      company.save()
-    return False
-
-  @classmethod
   def duplicatePost(cls, id, currentUser):
     company = UserProfile.objects.get(userNameInternal=currentUser).Company
     post = Post.objects.filter(id=id)
@@ -1009,8 +1004,6 @@ class DataAccessor():
       if not Path(file.path).is_file():
         return {"deleteFile":"Error", "messages":f"No file with path {file.path}"}
       os.remove(file.path)
-      if (file.path.split(".")[-1] == "pdf" and Path(file.path[:-4]).is_dir):
-        os.remove(file.path[:-4])
       file.delete()
       response = {"deleteFile":"OK", "id":id}
       if isCompany:
@@ -1045,11 +1038,13 @@ class DataAccessor():
         return {"uploadFile":"Error", "messages":f"no post with id {data['Post']} for Post"}
       else:
         post = post[0]
-    if file.name == "Kbis":
-      hasQRCode, message = cls.detect_QR_code()
-      if not (hasQRCode):
-          return {"uploadFile":"Error", "messages":f"{message}"}
     objectFile = File.createFile(data["nature"], data["name"], data['ext'], currentUser, expirationDate=expirationDate, post=post)
+    # print("Alllooooooooooooooooooooooooooooooo!!!!", data)
+    # if data['name'] == "Kbis":
+    #   print("le file path")
+    #   hasQRCode, message = cls.detect_QR_code(objectFile)
+    #   if not (hasQRCode):
+    #       return {"uploadFile":"Error", "messages":f"{message}"}
     file = None
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if data['ext'] != "txt" else fileStr
@@ -1061,7 +1056,7 @@ class DataAccessor():
       return {"uploadFile":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
 
   @classmethod
-  def detect_QR_code(file) :
+  def detect_QR_code(cls, file) :
     file_extension = '.' + file.ext
     file_path = file.path
     pathSplit = file_path.split('.')
@@ -1073,6 +1068,7 @@ class DataAccessor():
         image = pdf2image.convert_from_path(file_path, 500)
         image[0].save(new_img, 'jpg')
         os.remove(file_path)
+        file_path = new_img
     if file_extension.lower() == '.svg':
         image = svg2rlg(file_path)
         renderPM.drawToFile(image, new_img, fmt='jpg')
@@ -1081,10 +1077,14 @@ class DataAccessor():
         image = Image.frombytes(heic_file.mode, heic_file.size, heic_file.data)
         image.save(new_img, format="jpg")
         os.remove(file_path)
+        file_path = new_img
 
     # Detect if the document has a QR Code
+    print("lz file path", file_path)
     img = cv2.imread(file_path)
+    print("l'img", img)
     decoder = cv2.QRCodeDetector()
+    print(img)
     data, points, _ = decoder.detectAndDecode(img)
     if data:
       print("decoded data ",data)
@@ -1119,8 +1119,9 @@ class DataAccessor():
     elif 'Aucun document trouvé pour ce code de vérification' in text :
         print('Aucun document trouvé pour ce code de vérification')
         return (False, "Votre KBis n'est pas valide")
-    else:
-      return True
+    elif 'Ce code de vérification a déjà été utilisé, vous ne pouvez plus consulter le document.'in text:
+      return (True, "")
+    return (True, "")
 
   @classmethod
   def __modifyFile(cls, data, currentUser):
@@ -1133,15 +1134,28 @@ class DataAccessor():
     ext = data["ext"] if "ext" in data and data["ext"] != "???" else objectFile.ext
     suppress = "fileBase64" in data and len(data["fileBase64"]) != 0
     objectFile = File.createFile(nature, name, ext, currentUser, expirationDate=expirationDate, post=post, mission=mission, detailedPost=None, suppress=suppress)
+    # if name == "Kbis":
+    #   print("le file path")
+    #   hasQRCode, message = cls.detect_QR_code(objectFile)
+    #   if not (hasQRCode):
+    #       return {"modifyFile":"Error", "messages":f"{message}"}
     if "fileBase64" in data and data["fileBase64"]:
-      try:
-        file = ContentFile(base64.urlsafe_b64decode(data["fileBase64"]), name=objectFile.path) if data['ext'] != "txt" else data["fileBase64"]
-        with open(objectFile.path, "wb") as outfile:
-          outfile.write(file.file.getbuffer())
-      except ValueError:
-        return {"modifyFile":"Error", "messages":f"File of id {file.id} has not been saved"}
+      print("fileBase64", len(data["fileBase64"]))
+      error = cls.__registerNewFile(ext, data["fileBase64"], objectFile)
+      if error: return error
     return {"modifyFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
-      
+
+  @classmethod   
+  def __registerNewFile(cls, ext, content, objectFile):
+    print("__registerNewFile")
+    try:
+      file = ContentFile(base64.urlsafe_b64decode(content), name=objectFile.path) if ext != "txt" else content
+      with open(objectFile.path, "wb") as outfile:
+        outfile.write(file.file.getbuffer())
+    except ValueError:
+      return {"modifyFile":"Error", "messages":f"File of id {file.id} has not been saved"}
+    return None
+
 
   @classmethod
   def __uploadImageSupervision(cls, data, currentUser):
@@ -1386,9 +1400,9 @@ class DataAccessor():
     return {"newPassword":"Warning", "messages":"work in progress"}
 
   @classmethod
-  def askRecommandation(cls, mail, currentUser):
+  def askRecommandation(cls, mail, currentUser, view):
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
-    response = SmtpConnector(cls.portSmtp).askRecomandation(mail, userProfile.firstName, userProfile.lastName, userProfile.Company.name, userProfile.Company.id)
+    response = SmtpConnector(cls.portSmtp).askRecomandation(mail, userProfile.firstName, userProfile.lastName, userProfile.Company.name, userProfile.Company.id, view)
     print("askRecommandation dataAccessor", response)
 
     if "status" in response and response["status"]:
@@ -1410,8 +1424,25 @@ class DataAccessor():
       else:
         kwargs[key] = value
     Recommandation.objects.create(**kwargs)
-    cls.__newStarsReco(company, 'st')
     return {"giveRecommandation":"OK", "messages":"Recommandation recorded"}
+
+  # @classmethod
+  # def __newStarsReco(cls, Company, companyRole):
+  #   candidate = Candidate.objects.get(isChoosen=True, Mission=mission)
+  #   subContractor = candidate.Company
+  #   company = mission.Company
+  #   if companyRole == "st":
+  #     listMission = [(candidate.Mission.quality + candidate.Mission.security + candidate.Mission.organisation) / 3 for candidate in Candidate.objects.filter(Company = subContractor, isChoosen = True) if candidate.Mission.isClosed]
+  #     subContractor.starsST = round(sum(listMission)/len(listMission)) if len(listMission) else 0
+  #     Notification.createAndSend(Company=subContractor, subContractor=company, title="Modification de la mission", nature="PME", Role="ST", content=f"La société {company.name} vient de vous évaluer pour le chantier du {mission.address}.", timestamp=datetime.now().timestamp())
+  #     subContractor.save()
+  #   else:
+  #     Notification.createAndSend(Company=company, subContractor=subContractor, title="Modification de la mission", nature="ST", Role="PME", content=f"La société {subContractor.name} vient de vous évaluer pour le chantier du {mission.address}.", timestamp=datetime.now().timestamp())
+  #     listMission = [(mission.vibeST + mission.securityST + mission.organisationST) / 3 for mission in Mission.objects.filter(Company=company, isClosed=True)]
+  #     print("listMission", listMission)
+  #     company.starsPME = round(sum(listMission)/len(listMission)) if len(listMission) else 0
+  #     company.save()
+  #   return False
 
   @classmethod
   def giveNotificationToken(cls, token, currentUser):
