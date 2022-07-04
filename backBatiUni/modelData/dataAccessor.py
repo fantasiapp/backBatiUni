@@ -1420,6 +1420,7 @@ class DataAccessor():
     company = Company.objects.get(id=data["companyRecommanded"])
     name = "Un sous-traitant à la recherche d'une entreprise" if data['view'] == "ST" else "Une entreprise à la recherche de sous-traitances"
     data['view'] = Role.objects.get(name = name)
+    print("data view", data, "view" in data)
     if Recommandation.objects.filter(companyRecommanded=company, companyNameRecommanding=data['companyNameRecommanding'], view=data['view']):
       return {"giveRecommandation":"Warning", "messages":"La recommandation existe déjà"}
     kwargs = {"date":timezone.now()}
