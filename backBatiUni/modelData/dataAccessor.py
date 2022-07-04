@@ -139,8 +139,8 @@ class DataAccessor():
     companyData = data['company']
 
     stripe.api_key = STRIPE_API_KEY
-    if not "@" in companyData["email"]:
-      companyData["email"] += "@g.com" 
+    if not "@" in data["email"]:
+      data["email"] += "@g.com" 
     print("registerAction", companyData, data["email"])
     customer = stripe.Customer.create(name = companyData['name'], email = data["email"])
 
