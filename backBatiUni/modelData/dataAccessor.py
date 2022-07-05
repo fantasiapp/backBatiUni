@@ -1097,15 +1097,6 @@ class DataAccessor():
     data, points, _ = decoder.detectAndDecode(img)
     if data:
       print("decoded data ",data)
-    # if points is not None:
-    #     print('Decoded data: ' + data)
-    #     points = points[0]
-    #     for i in range(len(points)):
-    #         pt1 = [int(val) for val in points[i]]
-    #         pt2 = [int(val) for val in points[(i + 1) % 4]]
-    #         cv2.line(img, pt1, pt2, color=(255, 0, 0), thickness=3)
-    #     # plt.imshow(img)
-    #     # plt.show()
     else : 
         print('Le QR Code nest pas reconnaissable')
         return (False, "Votre KBis ne contient pas de QR code ou bien ou il n'est pas lisible.")
@@ -1143,11 +1134,11 @@ class DataAccessor():
     ext = data["ext"] if "ext" in data and data["ext"] != "???" else objectFile.ext
     suppress = "fileBase64" in data and len(data["fileBase64"]) != 0
     objectFile = File.createFile(nature, name, ext, currentUser, expirationDate=expirationDate, post=post, mission=mission, detailedPost=None, suppress=suppress)
-    # if name == "Kbis":
-    #   print("le file path")
-    #   hasQRCode, message = cls.detect_QR_code(objectFile)
-    #   if not (hasQRCode):
-    #       return {"modifyFile":"Error", "messages":f"{message}"}
+    if name == "Kbis":
+      print("le file path")
+      hasQRCode, message = cls.detect_QR_code(objectFile)
+      if not (hasQRCode):
+          return {"modifyFile":"Error", "messages":f"{message}"}
     if "fileBase64" in data and data["fileBase64"]:
       error = cls.__registerNewFile(ext, data["fileBase64"], objectFile)
       if error: return error
