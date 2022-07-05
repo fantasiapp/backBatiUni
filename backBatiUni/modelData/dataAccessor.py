@@ -1049,17 +1049,18 @@ class DataAccessor():
       else:
         post = post[0]
     objectFile = File.createFile(data["nature"], data["name"], data['ext'], currentUser, expirationDate=expirationDate, post=post)
-    print("Alllooooooooooooooooooooooooooooooo!!!!", data)
-    if data['name'] == "Kbis":
-      print("le file path")
-      hasQRCode, message = cls.detect_QR_code(objectFile)
-      if not (hasQRCode):
-          return {"uploadFile":"Error", "messages":f"{message}"}
+
     file = None
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if data['ext'] != "txt" else fileStr
       with open(objectFile.path, "wb") as outfile:
         outfile.write(file.file.getbuffer())
+      print("Alllooooooooooooooooooooooooooooooo!!!!", data)
+      if data['name'] == "Kbis":
+        print("le file path")
+        hasQRCode, message = cls.detect_QR_code(objectFile)
+        if not (hasQRCode):
+            return {"uploadFile":"Error", "messages":f"{message}"}
       return {"uploadFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
     except:
       if file: file.delete()
