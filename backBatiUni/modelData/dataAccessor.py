@@ -144,21 +144,21 @@ class DataAccessor():
     print("registerAction", data)
     companyData = data['company']
 
-    # if not "@" in data["email"]:
-    #   data["email"] += "@g.com" 
-    # print("registerAction stripe", companyData["name"], data["email"])
-    # customer = stripe.Customer.create(name = companyData["name"], email = data["email"])
+    if not "@" in data["email"]:
+      data["email"] += "@g.com" 
+    print("registerAction stripe", companyData["name"], data["email"])
+    customer = stripe.Customer.create(name = companyData["name"], email = data["email"])
 
 
-    # company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'], stripeCustomerId = customer.id)
-    company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'], stripeCustomerId = "")
+    company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'], stripeCustomerId = customer.id)
+    # company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'], stripeCustomerId = "")
     cls.__getGeoCoordinates(company)
     company.Role = Role.objects.get(id=data['Role'])
     company.save()
     proposer = None
-    # if data['proposer'] and UserProfile.objects.get(tokenFriend=data['proposer']):
-    #   idProposer = UserProfile.objects.get(tokenFriend=data['proposer'])
-    #   proposer = UserProfile.objects.get(id=idProposer)
+    if data['proposer'] and UserProfile.objects.get(tokenFriend=data['proposer']):
+      idProposer = UserProfile.objects.get(tokenFriend=data['proposer'])
+      proposer = UserProfile.objects.get(id=idProposer)
     userProfile = UserProfile.objects.create(Company=company, firstName=data['firstname'], lastName=data['lastname'], proposer=proposer, token=token, email=data["email"], password=data["password"])
     if 'jobs' in data:
       for idJob in data['jobs']:
