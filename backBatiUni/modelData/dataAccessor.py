@@ -1025,7 +1025,6 @@ class DataAccessor():
 
   @classmethod
   def __uploadFile(cls, data, currentUser):
-    print("uploadFile", list(data.keys()))
     if not "ext" in data or not "fileBase64" in data:
       return {"uploadFile":"Warning", "messages":f"Le fichier n'est pas conforme"}
     if not data['ext'] in File.authorizedExtention:
@@ -1055,9 +1054,7 @@ class DataAccessor():
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if data['ext'] != "txt" else fileStr
       with open(objectFile.path, "wb") as outfile:
         outfile.write(file.file.getbuffer())
-      print("Alllooooooooooooooooooooooooooooooo!!!!", data)
       if data['name'] == "Kbis":
-        print("le file path")
         hasQRCode, message = cls.detect_QR_code(objectFile)
         if not (hasQRCode):
             return {"uploadFile":"Error", "messages":f"{message}"}
