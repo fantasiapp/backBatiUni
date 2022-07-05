@@ -17,8 +17,12 @@ class PaymentManager():
         company = Company.objects.get(id = userProfile.Company.id)
         customerId = company.stripeCustomerId
 
-        def computeTotalAmount(itemList = {}):
-            return 1000
+        def fetchAmount(product = ""):
+            if product:
+                stripeProduct = stripe.Product.retrieve(product)
+                price = stripe.Price.retrieve(stripeProduct.default_price)
+                return price.unit_amount
+            return 10000
 
         try:
             print("payment data", request.data)
@@ -27,7 +31,7 @@ class PaymentManager():
             intent = stripe.PaymentIntent.create(
                 customer = customerId,
                 setup_future_usage = "off_session",
-                amount=computeTotalAmount(),
+                amount=fetchAmount(),
                 currency='eur',
                 automatic_payment_methods={
                 'enabled': True,
