@@ -223,7 +223,7 @@ class CreateNewDataBase:
       tableName = table.objects.model._meta.db_table
       self.cursor.execute(f"ALTER TABLE {tableName} AUTO_INCREMENT=1;")
     for user in User.objects.all():
-      if user.username != "jlw":
+      if user.username != "jlw" and UserProfile.objects.filter(userNameInternal = user):
         userProfile = UserProfile.objects.get(userNameInternal = user)
         company = Company.objects.get(id = userProfile.Company.id)
         stripe.Customer.delete(company.stripeCustomerId)
