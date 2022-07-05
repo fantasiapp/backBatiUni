@@ -159,4 +159,4 @@ EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = False
 DEFAULT_FROM_EMAIL = 'Whatever <whatever@example.com>'
 
-STRIPE_API_KEY = 'sk_test_51LDlcoAdZaSfQS2Y5oVOhfGwVMRtAs70kWfaqJOUcSqaQPrbkbtPLnHizh3mdZfxKoVYcxYALiisIDXP6uxsC4sK00wVLBWBXH'
+STRIPE_API_KEY = os.getenv('STRIPE_API_KEY')

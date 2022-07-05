@@ -1,7 +1,12 @@
+import stripe
+
+from backBatiUni.settings import STRIPE_API_KEY
 from ..models import *
 import mysql.connector as db
 import os
 from dotenv import load_dotenv
+
+stripe.api_key = STRIPE_API_KEY
 
 class CreateNewDataBase:
   listTable = {"Recommandation":Recommandation, "BlockedCandidate":BlockedCandidate, "Notification":Notification, "File":File, "Supervision":Supervision, "ViewPost":ViewPost, "FavoritePost":FavoritePost, "InviteFriend":InviteFriend, "UserProfile":UserProfile, "JobForCompany":JobForCompany, "LabelForCompany":LabelForCompany, "Disponibility":Disponibility,"Candidate":Candidate, "DetailedPost":DetailedPost, "DatePost":DatePost, "Supervision":Supervision, "Post":Post,  "Company":Company, "Job":Job, "Role":Role, "Label":Label}
@@ -219,6 +224,8 @@ class CreateNewDataBase:
       self.cursor.execute(f"ALTER TABLE {tableName} AUTO_INCREMENT=1;")
     for user in User.objects.all():
       if user.username != "jlw":
+        company = Company.objects.get(id = user.Company.id)
+        stripe.Customer.delete(company.stripeCustomerId)
         user.delete()
     self.cursor.execute("ALTER TABLE auth_user AUTO_INCREMENT=1;")
     return {"emptyDataBase":"OK"}
