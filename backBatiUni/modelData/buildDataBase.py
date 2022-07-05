@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 
 class CreateNewDataBase:
-  listTable = {"Notification":Notification, "File":File, "Supervision":Supervision, "ViewPost":ViewPost, "FavoritePost":FavoritePost, "UserProfile":UserProfile, "JobForCompany":JobForCompany, "LabelForCompany":LabelForCompany, "Disponibility":Disponibility,"Candidate":Candidate, "DetailedPost":DetailedPost, "DatePost":DatePost, "Supervision":Supervision, "Post":Post,  "Company":Company, "Job":Job, "Role":Role, "Label":Label}
+  listTable = {"Recommandation":Recommandation, "BlockedCandidate":BlockedCandidate, "Notification":Notification, "File":File, "Supervision":Supervision, "ViewPost":ViewPost, "FavoritePost":FavoritePost, "InviteFriend":InviteFriend, "UserProfile":UserProfile, "JobForCompany":JobForCompany, "LabelForCompany":LabelForCompany, "Disponibility":Disponibility,"Candidate":Candidate, "DetailedPost":DetailedPost, "DatePost":DatePost, "Supervision":Supervision, "Post":Post,  "Company":Company, "Job":Job, "Role":Role, "Label":Label}
   dictLabels = {
     "Qualibat":["Cet organisme apporte des réponses précises aux maitres d’œuvre et aux clients sur la capacité professionnelle de l’entreprise en explorant trois domaines précis : la situation administrative, l’envergure financière et les compétences techniques. Il délivre plusieurs certifications.","https://www.qualibat.com/",True],
     "Qualif'elec":["Si vous relevez du génie électrique et énergétique, Qualifelec est la certification qu’il vous faut obtenir absolument. Elle couvre 8 domaines d’activités précis : installations électriques., chauffage, ventilation, climatisation., branchements et réseaux., bâtiment communicant., éclairage public, courant faible., maintenance d’installations électriques., antenne.",	"https://www.qualifelec.fr/", True],
@@ -34,7 +34,7 @@ class CreateNewDataBase:
     "Quali’ENR":["", "", True],		
     "QualiGaz":["", "", True],
   }
-  listJobs = {"TCE (Tout Corps d'Etat)",
+  listJobs = [
     "Autre: .....",
     "Acousticien	Acousticienne",
     "Agenceur de cuisines et de salles de bains",
@@ -171,7 +171,6 @@ class CreateNewDataBase:
     "Tableau Électrique Chantier ( M?)",
     "Tailleur de pierre	Tailleuse de pierre",
     "Tapissier d'ameublement	Tapissière d'ameublement",
-    "Tout corps d'état"
     "Technicien automobile	Technicienne automobile",
     "Technicien de la construction	Technicienne de la construction",
     "Technicien électrotechnicien	Technicienne électrotechnicienne",
@@ -181,8 +180,8 @@ class CreateNewDataBase:
     "Terrassier",
     "Verrier au chalumeau	Verrière au chalumeau",
     "Vitrailliste",
-    "Vitrier	Vitrière",
-  }	
+    "Vitrier Vitrière",
+  ]	
 
   def __init__(self):
     load_dotenv()
@@ -258,6 +257,9 @@ class CreateNewDataBase:
   def fillupViewPost(self, table):return {}
   def fillupDatePost(self, table): return {}
   def fillupNotification(self, table): return {}
+  def fillupInviteFriend(self, table): return {}
+  def fillupBlockedCandidate(self, table): return {}
+  def fillupRecommandation(self, table): return {}
 
   def fillupJob(self, table):
     for job in self.listJobs:
@@ -275,7 +277,3 @@ class CreateNewDataBase:
     for label in self.dictLabels.keys():
       table.objects.create(name=label)
     return {"fillupLabel":"OK"}
-
-
-
-
