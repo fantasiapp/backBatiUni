@@ -16,7 +16,7 @@ userName, password = "st", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 10
+numberCompanies = 50
 emailList, missionList, emailListPME, emailListST, detailedPost, candidateToUnapply, labelList = {}, {}, [], [], {}, None, {}
 
 arguments = sys.argv
@@ -58,11 +58,11 @@ def executeQuery():
       print("user jlw")
       response = requests.get(f'{address}/createBase/', headers= {'Authorization': f'Token {token}'}, params={"action":"reload"})
   elif query == "register":
-    post1 = {"firstname":"Augustin","lastname":"Alleaume","email":"aa","password":"pwd","company":{'id': 2, 'name': 'BATIUNI', 'address': '9 rue Vintimille Paris 75009', 'activity': 'Activité inconnue', 'siret': '40422352100018', 'ntva': 'FR49404223521'},"Role":3,"proposer":"","jobs":[1,2,80], "action":"register"}
-    post2 = {"firstname":"Théophile","lastname":"Traitant","email":"st","password":"pwd","company":{'id': 3, 'name': 'Sous-traitant', 'address': '74 ave des Sous-traitants Paris 75008', 'activity': 'Activité inconnue', 'siret': '40422352100021', 'ntva': 'FR49404223522'},"Role":2,"proposer":"","jobs":[1,2,80], "action":"register"}
-    post3 = {"firstname":"Eric","lastname":"Entreprise","email":"pme","password":"pwd","company":{'id': 4, 'name': 'PME', 'address': '74 ave des PME Paris 75008', 'activity': 'Activité inconnue', "amount":52, 'siret': '40422352100019', 'ntva': 'FR49404223523'},"Role":1,"proposer":"","jobs":[1,2,9], "action":"register"}
-    post4 = {"firstname":"a","lastname":"a","email":"both","password":"pwd","company":{'id': 5, 'name': 'both', 'address': '74 ave des deux Paris 75008', 'activity': 'Activité inconnue', 'siret': '40422352100020', 'ntva': 'FR4940422352'},"Role":3,"proposer":"","jobs":[1,2,80], "action":"register"}
-    post5 = {"firstname":"Tanguy","lastname":"Traitant","email":"st2","password":"pwd","company":{'id': 6, 'name': 'Sous-traitant 2', 'address': '78 rue des Sous-traitants Paris 75008', 'activity': 'Activité inconnue', 'siret': '40422352100048', 'ntva': 'FR49404223553'},"Role":2,"proposer":"","jobs":[1,2,80], "action":"register"}
+    post1 = {"firstname":"Augustin","lastname":"Alleaume","email":"aa@g.com","password":"pwd","company":{'id': 2, 'name': 'BATOUNO', 'address': '11 rue Vintimille Paris 75009', 'activity': 'Activité inconnue', 'siret': '40422352100018', 'ntva': 'FR49404223521'},"Role":3,"proposer":"","jobs":[1,2,80], "action":"register"}
+    post2 = {"firstname":"Théophile","lastname":"Traitant","email":"st@g.com","password":"pwd","company":{'id': 3, 'name': 'Sous-traitant', 'address': '74 ave des Sous-traitants Paris 75008', 'activity': 'Activité inconnue', 'siret': '40422352100021', 'ntva': 'FR49404223522'},"Role":2,"proposer":"","jobs":[1,2,80], "action":"register"}
+    post3 = {"firstname":"Eric","lastname":"Entreprise","email":"pme@g.com","password":"pwd","company":{'id': 4, 'name': 'PME', 'address': '74 ave des PME Paris 75008', 'activity': 'Activité inconnue', "amount":52, 'siret': '40422352100019', 'ntva': 'FR49404223523'},"Role":1,"proposer":"","jobs":[1,2,9], "action":"register"}
+    post4 = {"firstname":"a","lastname":"a","email":"both@g.com","password":"pwd","company":{'id': 5, 'name': 'both', 'address': '74 ave des deux Paris 75008', 'activity': 'Activité inconnue', 'siret': '40422352100020', 'ntva': 'FR4940422352'},"Role":3,"proposer":"","jobs":[1,2,80], "action":"register"}
+    post5 = {"firstname":"Tanguy","lastname":"Traitant","email":"st2@g.com","password":"pwd","company":{'id': 6, 'name': 'Sous-traitant 2', 'address': '78 rue des Sous-traitants Paris 75008', 'activity': 'Activité inconnue', 'siret': '40422352100048', 'ntva': 'FR49404223553'},"Role":2,"proposer":"","jobs":[1,2,80], "action":"register"}
     for post in [post1, post2, post3, post4, post5]:
       response = requests.post(url, headers=headersStart, json=post)
 
@@ -88,7 +88,7 @@ def executeQuery():
       if "EstablishmentsValues" in data and data["EstablishmentsValues"]:
         establishmentValue = data["EstablishmentsValues"]['0']
         firstName = ''.join(random.choice(string.ascii_letters) for x in range(6))
-        mail = establishmentValue[0][:3]
+        mail = establishmentValue[0][:3] + "@g.com"
         role = 1 if random.random() < 0.5 else 2
         lastName = "Traitant" if role == 2 else "Entreprise"
         jobs = [math.floor(1 + random.random() * 40), math.floor(41 + random.random() * 40), math.floor(81 + random.random() * 60)]
