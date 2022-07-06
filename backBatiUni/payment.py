@@ -35,7 +35,8 @@ class PaymentManager():
                 },
                 metadata={
                     'type': 'boostPost',
-                    'post': request.data['post']
+                    'post': request.data['post'],
+                    'duration': request.data['duration']
                 }
             )
             return {

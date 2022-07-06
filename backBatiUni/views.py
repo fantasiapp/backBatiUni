@@ -126,8 +126,13 @@ class Webhook(DefaultView):
         payment_intent = event['data']['object']  # contains a stripe.PaymentIntent
         print(f"Payment for {payment_intent['amount']} succeeded")
         print(payment_intent)
-        # Then define and call a method to handle the successful payment intent.
-        # handle_payment_intent_succeeded(payment_intent)
+        if payment_intent["metadata"]["type"] == "boostPost":
+          boostPostDict = {
+            "action": "boostPost",
+            "postId": payment_intent["metadata"]["post"],
+            "duration": payment_intent["metadata"]["duration"]
+          }
+          DataAccessor.dataPost(json.dumps(boostPostDict), False)
     else:
         # Unexpected event type
         print(f"Unhandled event type {event['type']}")
