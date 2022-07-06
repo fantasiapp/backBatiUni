@@ -33,6 +33,10 @@ class PaymentManager():
                 automatic_payment_methods={
                 'enabled': True,
                 },
+                metadata={
+                    'type': 'boostPost',
+                    'post': request.data['post']
+                }
             )
             return {
                     "createPaymentIntent":"OK", 
