@@ -111,6 +111,7 @@ class Payment(DefaultView):
     return Response({"Error": f"Action unknown"})
 
 class Webhook(DefaultView):
+  permission_classes = (AllowAny,)
   def get(self, request):
     return Response({"Error": f"Not implemented yet"})
 
