@@ -129,8 +129,8 @@ class Webhook(DefaultView):
         if payment_intent["metadata"]["type"] == "boostPost":
           boostPostDict = {
             "action": "boostPost",
-            "postId": payment_intent["metadata"]["post"],
-            "duration": payment_intent["metadata"]["duration"]
+            "postId": int(payment_intent["metadata"]["post"]),
+            "duration": int(payment_intent["metadata"]["duration"])
           }
           DataAccessor.dataPost(json.dumps(boostPostDict), False)
     else:
