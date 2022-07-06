@@ -23,12 +23,12 @@ class PaymentManager():
             stripeProduct = stripe.Product.retrieve(request.data["product"])
             price = stripe.Price.retrieve(stripeProduct.default_price)
 
-            print("amount", price.amount)
+            print("amount", price.unit_amount)
             # Create a PaymentIntent with the order amount and currency
             intent = stripe.PaymentIntent.create(
                 customer = customerId,
                 setup_future_usage = "off_session",
-                amount=price.amount,
+                amount=price.unit_amount,
                 currency='eur',
                 automatic_payment_methods={
                 'enabled': True,
