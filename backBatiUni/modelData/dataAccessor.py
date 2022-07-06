@@ -1301,6 +1301,7 @@ class DataAccessor():
 
   @classmethod
   def removeLabelForCompany(cls, labelId, user):
+    print("removeLabelForCompany", user, labelId)
     company = UserProfile.objects.get(userNameInternal=user).Company
     label = LabelForCompany.objects.get(id=labelId)
     file = File.objects.filter(nature="labels", Company=company, name=label.Label.name)

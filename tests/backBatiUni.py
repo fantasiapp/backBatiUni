@@ -37,6 +37,7 @@ def queryForToken(userName, password):
   headers = {'Content-Type': 'application/json'}
   data = json.dumps({"username": userName, "password": password})
   response = requests.post(tokenUrl, headers=headers, data=data)
+  print("queryForToken response", userName, password, response)
   dictResponse = json.loads(response.text)
   if "token" in dictResponse:
     return dictResponse['token']
@@ -144,6 +145,7 @@ def executeQuery():
       dispoNature = [(dispo, "Disponible" if random.random() > 0.33 else "Disponible Sous Conditions") for dispo in disponibilities]
       post = {"action":"modifyDisponibility", "disponibility":dispoNature}
       response = requests.post(f'{address}/data/', headers=headers, json=post)
+      print("emailList", token, emailList[i], response)
 
 
   elif query == "forgetPassword":
@@ -168,7 +170,9 @@ def executeQuery():
         for dict in value:
           for labelId in dict.keys():
             if random.random() > 0.9:
+              print("removeLabelForCompany", value, headers)
               response = requests.get(url, headers=headers, params={'action':"removeLabelForCompany", "labelId":labelId})
+              print("removeLabelForCompany", response)
 
 
     elif query == "postModifyPwd":
@@ -179,8 +183,13 @@ def executeQuery():
       now = "2022-06-12"
       post1 = {'action': 'modifyUser', 'UserProfile': {'id': 3, 'cellPhone': '0629350418', 'Company': {'capital': '307130', 'companyPhone': '0892976415', "amount":'28', 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]]}}}
       post2 = {'action': 'modifyUser', 'UserProfile': {'id': 6, 'cellPhone': '0628340317', 'Company': {'capital': '207130', 'companyPhone': '0891966314', "amount":'52', 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]]}}}
+      print("headers modifyUser", headers)
       requests.post(url, headers=headers, json=post1)
-      response = requests.post(url, headers=headers, json=post2)
+      response = tokenSt2 = queryForToken("st2@g.com", "pwd")
+      print("response 1", requests)
+      headersSt2 = {'Authorization': f'Token {tokenSt2}'}
+      print("headers modifyUser", headersSt2)
+      response = requests.post(url, headers=headersSt2, json=post2)
 
     elif query == "changeUserImage":
       tokenPme = queryForToken("pme@g.com", "pwd")
