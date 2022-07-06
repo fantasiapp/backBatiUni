@@ -221,10 +221,10 @@ class CreateNewDataBase:
     for user in User.objects.all():
       if user.username != "jlw":
         userProfileList = UserProfile.objects.filter(userNameInternal = user)
-        if userProfileList:
-          userProfile = userProfileList[0]
-          company = Company.objects.get(id = userProfile.Company.id)
-          stripe.Customer.delete(company.stripeCustomerId)
+        # if userProfileList:
+        #   userProfile = userProfileList[0]
+        #   company = Company.objects.get(id = userProfile.Company.id)
+        #   stripe.Customer.delete(company.stripeCustomerId)
     for table in CreateNewDataBase.listTable.values():
       table.objects.all().delete()
       tableName = table.objects.model._meta.db_table
