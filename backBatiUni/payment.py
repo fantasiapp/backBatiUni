@@ -34,7 +34,7 @@ class PaymentManager():
                 },
             )
             return {
-                    "CreatePaylentIntent":"OK", 
+                    "createPaymentIntent":"OK", 
                     "clientSecret": intent["client_secret"], 
                     "price": intent["price"],
                     "productName": stripeProduct.name
