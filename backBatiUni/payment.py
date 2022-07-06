@@ -23,6 +23,7 @@ class PaymentManager():
             stripeProduct = stripe.Product.retrieve(request.data["product"])
             price = stripe.Price.retrieve(stripeProduct.default_price)
 
+            print("amount", price.amount)
             # Create a PaymentIntent with the order amount and currency
             intent = stripe.PaymentIntent.create(
                 customer = customerId,
