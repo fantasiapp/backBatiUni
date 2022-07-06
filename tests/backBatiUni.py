@@ -16,7 +16,7 @@ userName, password = "st@g.com", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 5
+numberCompanies = 50
 emailList, missionList, emailListPME, emailListST, detailedPost, candidateToUnapply, labelList = {}, {}, [], [], {}, None, {}
 
 arguments = sys.argv
@@ -37,7 +37,6 @@ def queryForToken(userName, password):
   headers = {'Content-Type': 'application/json'}
   data = json.dumps({"username": userName, "password": password})
   response = requests.post(tokenUrl, headers=headers, data=data)
-  print("queryForToken response", userName, password, response)
   dictResponse = json.loads(response.text)
   if "token" in dictResponse:
     return dictResponse['token']
@@ -145,7 +144,6 @@ def executeQuery():
       dispoNature = [(dispo, "Disponible" if random.random() > 0.33 else "Disponible Sous Conditions") for dispo in disponibilities]
       post = {"action":"modifyDisponibility", "disponibility":dispoNature}
       response = requests.post(f'{address}/data/', headers=headers, json=post)
-      print("emailList", token, emailList[i], response)
 
 
   elif query == "forgetPassword":
@@ -153,13 +151,12 @@ def executeQuery():
   else:
     
     if query in ["uploadPost", "deletePost", "modifyPost", "getPost", "switchDraft", "handleCandidateForPost", "modifyMissionDate", "getUserData", "closeMission", "notificationViewed", "boostDuration", "isViewed", "blockCompany", "duplicatePost"]:
-      print("user pme@g.com")
       token = queryForToken("pme@g.com", "pwd")
     else:
       token = queryForToken("st@g.com", "pwd")
     url = f'{address}/data/'
     headers = {'Authorization': f'Token {token}'}
-    tokenPme = queryForToken("pmeg.com", "pwd")
+    tokenPme = queryForToken("pme@g.com", "pwd")
     headersPme = {'Authorization': f'Token {tokenPme}'}
 
     if query == "getUserData":
@@ -170,9 +167,7 @@ def executeQuery():
         for dict in value:
           for labelId in dict.keys():
             if random.random() > 0.9:
-              print("removeLabelForCompany", value, headers)
               response = requests.get(url, headers=headers, params={'action':"removeLabelForCompany", "labelId":labelId})
-              print("removeLabelForCompany", response)
 
 
     elif query == "postModifyPwd":
@@ -183,12 +178,9 @@ def executeQuery():
       now = "2022-06-12"
       post1 = {'action': 'modifyUser', 'UserProfile': {'id': 3, 'cellPhone': '0629350418', 'Company': {'capital': '307130', 'companyPhone': '0892976415', "amount":'28', 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]]}}}
       post2 = {'action': 'modifyUser', 'UserProfile': {'id': 6, 'cellPhone': '0628340317', 'Company': {'capital': '207130', 'companyPhone': '0891966314', "amount":'52', 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]]}}}
-      print("headers modifyUser", headers)
       requests.post(url, headers=headers, json=post1)
       response = tokenSt2 = queryForToken("st2@g.com", "pwd")
-      print("response 1", requests)
       headersSt2 = {'Authorization': f'Token {tokenSt2}'}
-      print("headers modifyUser", headersSt2)
       response = requests.post(url, headers=headersSt2, json=post2)
 
     elif query == "changeUserImage":
