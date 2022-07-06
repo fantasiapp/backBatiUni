@@ -20,7 +20,7 @@ class PaymentManager():
         try:
             print("payment data", request.data)
 
-            stripeProduct = stripe.Product.retrieve(request.data.product)
+            stripeProduct = stripe.Product.retrieve(request.data["product"])
             price = stripe.Price.retrieve(stripeProduct.default_price)
 
             # Create a PaymentIntent with the order amount and currency
