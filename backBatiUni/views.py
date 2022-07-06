@@ -109,3 +109,15 @@ class Payment(DefaultView):
       if data["action"] == "createPaymentIntent":
         return Response(PaymentManager.createPaymentIntent(request))
     return Response({"Error": f"Action unknown"})
+
+class Webhook(DefaultView):
+  permission_classes = (AllowAny,)
+  def get(self, request):
+    return Response({"Error": f"Not implemented yet"})
+
+  def post(self, request):
+    jsonBin = request.body
+    jsonString = jsonBin.decode("utf8")
+    data = json.loads(jsonString)
+    print("data", data)
+    return Response({"webhook-payment": "OK"})
