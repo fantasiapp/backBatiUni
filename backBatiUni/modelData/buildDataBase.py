@@ -12,12 +12,12 @@ class CreateNewDataBase:
   listTable = {"Recommandation":Recommandation, "BlockedCandidate":BlockedCandidate, "Notification":Notification, "File":File, "Supervision":Supervision, "ViewPost":ViewPost, "FavoritePost":FavoritePost, "InviteFriend":InviteFriend, "UserProfile":UserProfile, "JobForCompany":JobForCompany, "LabelForCompany":LabelForCompany, "Disponibility":Disponibility,"Candidate":Candidate, "DetailedPost":DetailedPost, "DatePost":DatePost, "Supervision":Supervision, "Post":Post,  "Company":Company, "Job":Job, "Role":Role, "Label":Label}
   dictLabels = {
     "Qualibat":["Cet organisme apporte des réponses précises aux maitres d’œuvre et aux clients sur la capacité professionnelle de l’entreprise en explorant trois domaines précis : la situation administrative, l’envergure financière et les compétences techniques. Il délivre plusieurs certifications.","https://www.qualibat.com/",True],
-    "Qualif'elec":["Si vous relevez du génie électrique et énergétique, Qualifelec est la certification qu’il vous faut obtenir absolument. Elle couvre 8 domaines d’activités précis : installations électriques., chauffage, ventilation, climatisation., branchements et réseaux., bâtiment communicant., éclairage public, courant faible., maintenance d’installations électriques., antenne.",	"https://www.qualifelec.fr/", True],
-    "Quali’eau":["Ce label est destiné aux plombiers chauffagistes. C’est depuis 2003 que la réglementation impose cette certification. En effet, les conditions sanitaires d’installation de l’eau potable doivent être respectées pour éviter la multiplication des microbes comme la légionellose. Aussi, Quali’eau délivre des certifications portant sur trois grands axes : Enjeux et contexte réglementaire, maîtrise des techniques de conception de réseaux, Maîtrise des techniques de maintenance.", "https://www.capeb-paysdelaloire.fr/fich/qualieau.htm#demarche", True],
-    "Quali’Sol":["Label attribué pour la qualité de l’installation des systèmes à énergie renouvelable particulièrement dans le domaine du solaire. Les équipements concernés sont : les Chauffe-eau Solaires Individuels (CESI), les Systèmes Solaires Combinés (SSC)", "https://www.qualit-enr.org/decouvrir-nos-qualifications-rge/", True],
-    "Quali’PV":["Rassurez-vous, ceci n’est pas le sigle de la certification des contractuelles pour les autoriser à mettre des PV, mais bien le label destiné à la qualification des installations d’énergie renouvelable par les systèmes photovoltaïques.",	"https://www.qualit-enr.org/decouvrir-nos-qualifications-rge/", True],
-    "Quali’Forage":["Ce label est attribué au professionnel installant des forages géothermiques sur nappe.",	"https://www.qualit-enr.org/decouvrir-nos-qualifications-rge/", True],
-    "Quali’Bois":["La certification est attribuée aux professionnels habilités à installer des chauffages au bois dans les habitations.",	"https://www.qualit-enr.org/decouvrir-nos-qualifications-rge/", True],
+    "Quali'Elec":["Si vous relevez du génie électrique et énergétique, Qualifelec est la certification qu’il vous faut obtenir absolument. Elle couvre 8 domaines d’activités précis : installations électriques., chauffage, ventilation, climatisation., branchements et réseaux., bâtiment communicant., éclairage public, courant faible., maintenance d’installations électriques., antenne.",	"https://www.qualifelec.fr/", True],
+    "Quali'Eau":["Ce label est destiné aux plombiers chauffagistes. C’est depuis 2003 que la réglementation impose cette certification. En effet, les conditions sanitaires d’installation de l’eau potable doivent être respectées pour éviter la multiplication des microbes comme la légionellose. Aussi, Quali’eau délivre des certifications portant sur trois grands axes : Enjeux et contexte réglementaire, maîtrise des techniques de conception de réseaux, Maîtrise des techniques de maintenance.", "https://www.capeb-paysdelaloire.fr/fich/qualieau.htm#demarche", True],
+    "Quali'Sol":["Label attribué pour la qualité de l’installation des systèmes à énergie renouvelable particulièrement dans le domaine du solaire. Les équipements concernés sont : les Chauffe-eau Solaires Individuels (CESI), les Systèmes Solaires Combinés (SSC)", "https://www.qualit-enr.org/decouvrir-nos-qualifications-rge/", True],
+    "Quali'PV":["Rassurez-vous, ceci n’est pas le sigle de la certification des contractuelles pour les autoriser à mettre des PV, mais bien le label destiné à la qualification des installations d’énergie renouvelable par les systèmes photovoltaïques.",	"https://www.qualit-enr.org/decouvrir-nos-qualifications-rge/", True],
+    "Quali'Forage":["Ce label est attribué au professionnel installant des forages géothermiques sur nappe.",	"https://www.qualit-enr.org/decouvrir-nos-qualifications-rge/", True],
+    "Quali'Bois":["La certification est attribuée aux professionnels habilités à installer des chauffages au bois dans les habitations.",	"https://www.qualit-enr.org/decouvrir-nos-qualifications-rge/", True],
     "Quali'Pac":["pour l’installation de pompes à chaleur",	"https://www.qualit-enr.org/decouvrir-nos-qualifications-rge/é", True],
     "ISO 9001":["Pour obtenir la norme ISO 9001, l’entreprise doit justifier de son système de management et organisationnel. Elle mesure la satisfaction finale des clients ce qui est un gage de reconnaissance important pour votre entreprise. Malheureusement, elle est très difficile à obtenir et demande bien souvent l’aide d’un consultant extérieur.", "https://www.iso.org/fr/iso-9001-quality-management.html", True],
     "QSE":["Qualité Sécurité Environnement. Basée sur la norme ISO 9001, la certification QSE vérifie les mêmes domaines que l’ISO, mais aussi le respect de l’environnement par l’entreprise, la sécurité et la santé sur le lieu de travail. Elle aussi nécessite le recours à un consultant pour l’obtenir.", "", False],
@@ -221,10 +221,10 @@ class CreateNewDataBase:
     for user in User.objects.all():
       if user.username != "jlw":
         userProfileList = UserProfile.objects.filter(userNameInternal = user)
-        if userProfileList:
-          userProfile = userProfileList[0]
-          company = Company.objects.get(id = userProfile.Company.id)
-          stripe.Customer.delete(company.stripeCustomerId)
+        # if userProfileList:
+        #   userProfile = userProfileList[0]
+        #   company = Company.objects.get(id = userProfile.Company.id)
+        #   stripe.Customer.delete(company.stripeCustomerId)
     for table in CreateNewDataBase.listTable.values():
       table.objects.all().delete()
       tableName = table.objects.model._meta.db_table
