@@ -37,7 +37,7 @@ class PaymentManager():
             return {
                     "createPaymentIntent":"OK", 
                     "clientSecret": intent["client_secret"], 
-                    "price": intent["price"],
+                    "price": price.unit_amount,
                     "productName": stripeProduct.name
                     }
         except Exception as e:
