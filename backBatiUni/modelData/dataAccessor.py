@@ -1056,10 +1056,10 @@ class DataAccessor():
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if data['ext'] != "txt" else fileStr
       with open(objectFile.path, "wb") as outfile:
         outfile.write(file.file.getbuffer())
-      if data['name'] == "Kbis":
-        hasQRCode, message = cls.detect_QR_code(objectFile)
-        if not (hasQRCode):
-            return {"uploadFile":"Error", "messages":f"{message}"}
+      # if data['name'] == "Kbis":
+      #   hasQRCode, message = cls.detect_QR_code(objectFile)
+      #   if not (hasQRCode):
+      #       return {"uploadFile":"Error", "messages":f"{message}"}
       return {"uploadFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
     except:
       print("delete file", file)
