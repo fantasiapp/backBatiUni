@@ -1,7 +1,12 @@
+import stripe
+
+from backBatiUni.settings import STRIPE_API_KEY
 from ..models import *
 import mysql.connector as db
 import os
 from dotenv import load_dotenv
+
+stripe.api_key = STRIPE_API_KEY
 
 class CreateNewDataBase:
   listTable = {"Recommandation":Recommandation, "BlockedCandidate":BlockedCandidate, "Notification":Notification, "File":File, "Supervision":Supervision, "ViewPost":ViewPost, "FavoritePost":FavoritePost, "InviteFriend":InviteFriend, "UserProfile":UserProfile, "JobForCompany":JobForCompany, "LabelForCompany":LabelForCompany, "Disponibility":Disponibility,"Candidate":Candidate, "DetailedPost":DetailedPost, "DatePost":DatePost, "Supervision":Supervision, "Post":Post,  "Company":Company, "Job":Job, "Role":Role, "Label":Label}
@@ -213,6 +218,13 @@ class CreateNewDataBase:
           os.rmdir(os.path.join(newPath))
         else:
           os.remove(os.path.join(dir, file))
+    for user in User.objects.all():
+      if user.username != "jlw":
+        userProfileList = UserProfile.objects.filter(userNameInternal = user)
+        if userProfileList:
+          userProfile = userProfileList[0]
+          company = Company.objects.get(id = userProfile.Company.id)
+          stripe.Customer.delete(company.stripeCustomerId)
     for table in CreateNewDataBase.listTable.values():
       print("empty", table)
       table.objects.all().delete()

@@ -146,21 +146,21 @@ class DataAccessor():
     print("registerAction", data)
     companyData = data['company']
 
-    # if not "@" in data["email"]:
-    #   data["email"] += "@g.com" 
-    # print("registerAction stripe", companyData["name"], data["email"])
-    # customer = stripe.Customer.create(name = companyData["name"], email = data["email"])
+    if not "@" in data["email"]:
+      data["email"] += "@g.com" 
+    print("registerAction stripe", companyData["name"], data["email"])
+    customer = stripe.Customer.create(name = companyData["name"], email = data["email"])
 
 
-    # company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'], stripeCustomerId = customer.id)
-    company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'], stripeCustomerId = "")
+    company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'], stripeCustomerId = customer.id)
+    # company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'], stripeCustomerId = "")
     cls.__getGeoCoordinates(company)
     company.Role = Role.objects.get(id=data['Role'])
     company.save()
     proposer = None
-    # if data['proposer'] and UserProfile.objects.get(tokenFriend=data['proposer']):
-    #   idProposer = UserProfile.objects.get(tokenFriend=data['proposer'])
-    #   proposer = UserProfile.objects.get(id=idProposer)
+    if data['proposer'] and UserProfile.objects.get(tokenFriend=data['proposer']):
+      idProposer = UserProfile.objects.get(tokenFriend=data['proposer'])
+      proposer = UserProfile.objects.get(id=idProposer)
     userProfile = UserProfile.objects.create(Company=company, firstName=data['firstname'], lastName=data['lastname'], proposer=proposer, token=token, email=data["email"], password=data["password"])
     if 'jobs' in data:
       for idJob in data['jobs']:
@@ -1027,7 +1027,6 @@ class DataAccessor():
 
   @classmethod
   def __uploadFile(cls, data, currentUser):
-    print("uploadFile", list(data.keys()))
     if not "ext" in data or not "fileBase64" in data:
       return {"uploadFile":"Warning", "messages":f"Le fichier n'est pas conforme"}
     if not data['ext'] in File.authorizedExtention:
@@ -1051,19 +1050,19 @@ class DataAccessor():
       else:
         post = post[0]
     objectFile = File.createFile(data["nature"], data["name"], data['ext'], currentUser, expirationDate=expirationDate, post=post)
-    # print("Alllooooooooooooooooooooooooooooooo!!!!", data)
-    # if data['name'] == "Kbis":
-    #   print("le file path")
-    #   hasQRCode, message = cls.detect_QR_code(objectFile)
-    #   if not (hasQRCode):
-    #       return {"uploadFile":"Error", "messages":f"{message}"}
+
     file = None
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if data['ext'] != "txt" else fileStr
       with open(objectFile.path, "wb") as outfile:
         outfile.write(file.file.getbuffer())
+      if data['name'] == "Kbis":
+        hasQRCode, message = cls.detect_QR_code(objectFile)
+        if not (hasQRCode):
+            return {"uploadFile":"Error", "messages":f"{message}"}
       return {"uploadFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
     except:
+      print("delete file", file)
       if file: file.delete()
       return {"uploadFile":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
 
@@ -1100,15 +1099,6 @@ class DataAccessor():
     data, points, _ = decoder.detectAndDecode(img)
     if data:
       print("decoded data ",data)
-    # if points is not None:
-    #     print('Decoded data: ' + data)
-    #     points = points[0]
-    #     for i in range(len(points)):
-    #         pt1 = [int(val) for val in points[i]]
-    #         pt2 = [int(val) for val in points[(i + 1) % 4]]
-    #         cv2.line(img, pt1, pt2, color=(255, 0, 0), thickness=3)
-    #     # plt.imshow(img)
-    #     # plt.show()
     else : 
         print('Le QR Code nest pas reconnaissable')
         return (False, "Votre KBis ne contient pas de QR code ou bien ou il n'est pas lisible.")
@@ -1146,11 +1136,11 @@ class DataAccessor():
     ext = data["ext"] if "ext" in data and data["ext"] != "???" else objectFile.ext
     suppress = "fileBase64" in data and len(data["fileBase64"]) != 0
     objectFile = File.createFile(nature, name, ext, currentUser, expirationDate=expirationDate, post=post, mission=mission, detailedPost=None, suppress=suppress)
-    # if name == "Kbis":
-    #   print("le file path")
-    #   hasQRCode, message = cls.detect_QR_code(objectFile)
-    #   if not (hasQRCode):
-    #       return {"modifyFile":"Error", "messages":f"{message}"}
+    if name == "Kbis":
+      print("le file path")
+      hasQRCode, message = cls.detect_QR_code(objectFile)
+      if not (hasQRCode):
+          return {"modifyFile":"Error", "messages":f"{message}"}
     if "fileBase64" in data and data["fileBase64"]:
       error = cls.__registerNewFile(ext, data["fileBase64"], objectFile)
       if error: return error
