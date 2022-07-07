@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 stripe.api_key = STRIPE_API_KEY
 
 class CreateNewDataBase:
-  listTable = {"Recommandation":Recommandation, "BlockedCandidate":BlockedCandidate, "Notification":Notification, "File":File, "Supervision":Supervision, "ViewPost":ViewPost, "FavoritePost":FavoritePost, "InviteFriend":InviteFriend, "UserProfile":UserProfile, "JobForCompany":JobForCompany, "LabelForCompany":LabelForCompany, "Disponibility":Disponibility,"Candidate":Candidate, "DetailedPost":DetailedPost, "DatePost":DatePost, "Supervision":Supervision, "Post":Post,  "Company":Company, "Job":Job, "Role":Role, "Label":Label}
+  listTable = {"Recommandation":Recommandation, "BlockedCandidate":BlockedCandidate, "Notification":Notification, "File":File, "Supervision":Supervision, "ViewPost":ViewPost, "FavoritePost":FavoritePost, "InviteFriend":InviteFriend, "UserProfile":UserProfile, "JobForCompany":JobForCompany, "LabelForCompany":LabelForCompany, "Disponibility":Disponibility,"Candidate":Candidate, "DetailedPost":DetailedPost, "DatePost":DatePost, "Supervision":Supervision, "Post":Post,  "Company":Company, "Job":Job, "Role":Role, "Label":Label, "LabelNew":LabelNew}
   dictLabels = {
     "Qualibat":["qualibat", "Cet organisme apporte des réponses précises aux maitres d’œuvre et aux clients sur la capacité professionnelle de l’entreprise en explorant trois domaines précis : la situation administrative, l’envergure financière et les compétences techniques. Il délivre plusieurs certifications.","https://www.qualibat.com/",True],
     "Quali'Elec":["qualiElec", "Si vous relevez du génie électrique et énergétique, Qualifelec est la certification qu’il vous faut obtenir absolument. Elle couvre 8 domaines d’activités précis : installations électriques., chauffage, ventilation, climatisation., branchements et réseaux., bâtiment communicant., éclairage public, courant faible., maintenance d’installations électriques., antenne.",	"https://www.qualifelec.fr/", True],
@@ -286,5 +286,11 @@ class CreateNewDataBase:
   def fillupLabel(self, table):
     # listLabel = ['Qualibat', 'RGE', 'RGE Eco Artisan', 'NF', 'Effinergie', 'Handibat', 'Qualifelec', 'Qualit’EnR', 'Quali’Sol', 'Quali’Bois', 'Quali’PV', 'Quali’Pac', 'Certibat', 'CERQUAL Qualitel Certification', 'Autres...']
     for label, value in self.dictLabels.items():
-      table.objects.create(name=label, fileName=value[0], description=value[1])
+      table.objects.create(name=label, fileName=value[0], description=value[1], site=value[2])
+    return {"fillupLabel":"OK"}
+
+  def fillupLabelNew(self, table):
+    # listLabel = ['Qualibat', 'RGE', 'RGE Eco Artisan', 'NF', 'Effinergie', 'Handibat', 'Qualifelec', 'Qualit’EnR', 'Quali’Sol', 'Quali’Bois', 'Quali’PV', 'Quali’Pac', 'Certibat', 'CERQUAL Qualitel Certification', 'Autres...']
+    for label, value in self.dictLabels.items():
+      table.objects.create(name=label, fileName=value[0], description=value[1], site=value[2])
     return {"fillupLabel":"OK"}
