@@ -121,8 +121,8 @@ def executeQuery():
         response = requests.post(f'{address}/data/', headers=headers, json=post)
         if companyId in emailList:
           data = json.loads(response.text)
-          print("load label", data["LabelForCompany"], data["LabelForCompany"][1])
-          labelList[companyId] = data["LabelForCompany"][1]
+          labelList[companyId] = data["LabelForCompany"]
+          print("labelList", labelList[companyId], data["LabelForCompany"])
 
 
     generalData = requests.get(url, headers=headersStart, params={"action":"getGeneralData"})
@@ -135,6 +135,7 @@ def executeQuery():
       for labelValues in value:
         for tupleLabel in labelValues.values():
           fileName = generalData["LabelValues"][str(tupleLabel[0])]
+          print("labelList name", fileName)
           file = {'action':"uploadFile", "ext":"png", "name":fileName, "fileBase64":getDocStr(0), "nature":"labels", "expirationDate":tupleLabel[1]}
           data = requests.post(url, headers=headersForImage, json=file)
 
