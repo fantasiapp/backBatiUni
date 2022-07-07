@@ -122,7 +122,7 @@ def executeQuery():
         if companyId in emailList:
           data = json.loads(response.text)
           print("load label", data["LabelForCompany"], data["LabelForCompany"][1])
-          labelList[companyId] = data["LabelForCompany", [1]]
+          labelList[companyId] = data["LabelForCompany"][1]
 
 
     generalData = requests.get(url, headers=headersStart, params={"action":"getGeneralData"})
