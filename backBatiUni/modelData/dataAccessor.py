@@ -41,7 +41,7 @@ if os.getenv('PATH_MIDDLE'):
 
 
 class DataAccessor():
-  loadTables = {"user":[UserProfile, Company, JobForCompany, LabelForCompany, File, Post, Candidate, DetailedPost, DatePost, Mission, Disponibility, Supervision, Notification, BlockedCandidate, Recommandation], "general":[Job, Role, Label, LabelNew]}
+  loadTables = {"user":[UserProfile, Company, JobForCompany, LabelForCompany, File, Post, Candidate, DetailedPost, DatePost, Mission, Disponibility, Supervision, Notification, BlockedCandidate, Recommandation], "general":[Job, Role, Label]}
   dictTable = {}
   portSmtp = os.getenv('PORT_SMTP')
 
@@ -61,7 +61,6 @@ class DataAccessor():
       t2 = time()
       # print(f'Function {table} executed in {(t2-t1):.4f}s')
     print(f"total executed in {(t2-t0):.4f}s")
-    print("getData", table)
     dictAnswer["timestamp"] = RamData.lastTimeStamp
     with open(f"./backBatiUni/modelData/{profile}Data.json", 'w') as jsonFile:
       json.dump(dictAnswer, jsonFile, indent = 3)
