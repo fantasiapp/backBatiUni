@@ -490,7 +490,7 @@ class DataAccessor():
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     author = f'{userProfile.firstName} {userProfile.lastName}'
     datePost, detailedPost, mission = None, None, None
-    kwargs = {"DetailedPost":None, "author":author, "companyId":userProfile.Company.id,"comment":""}
+    kwargs = {"DetailedPost":None, "author":author, "companyId":userProfile.Company.id,"comment":"", "timestamp": timezone.now().timestamp()}
     if "detailedPostId" in data and data["detailedPostId"]:
       detailedPost = DetailedPost.objects.get(id=data["detailedPostId"])
       kwargs["DetailedPost"] = detailedPost
