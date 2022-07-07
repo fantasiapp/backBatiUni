@@ -217,14 +217,14 @@ class CreateNewDataBase:
           os.rmdir(os.path.join(newPath))
         else:
           os.remove(os.path.join(dir, file))
-    for user in User.objects.all():
-      if user.username != "jlw":
-        userProfileList = UserProfile.objects.filter(userNameInternal = user)
-        if userProfileList:
-          userProfile = userProfileList[0]
-          company = Company.objects.get(id = userProfile.Company.id)
-          print("delete stipe", userProfile.userNameInternal, company.name, company.stripeCustomerId)
-          stripe.Customer.delete(company.stripeCustomerId)
+    # for user in User.objects.all():
+    #   if user.username != "jlw":
+    #     userProfileList = UserProfile.objects.filter(userNameInternal = user)
+    #     if userProfileList:
+    #       userProfile = userProfileList[0]
+    #       company = Company.objects.get(id = userProfile.Company.id)
+    #       print("delete stipe", userProfile.userNameInternal, company.name, company.stripeCustomerId)
+    #       stripe.Customer.delete(company.stripeCustomerId)
     for table in CreateNewDataBase.listTable.values():
       table.objects.all().delete()
       tableName = table.objects.model._meta.db_table

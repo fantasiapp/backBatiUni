@@ -283,8 +283,6 @@ class DataAccessor():
           objectForeign = foreign.objects.filter(id=value)
           if objectForeign:
             kwargs[fieldName]=objectForeign[0]
-          # else:
-          #   return {"uploadPost":"Error", "messages":{fieldName:"is not documented"}}, False
         if fieldObject and isinstance(fieldObject, models.DateField):
           try:
             date = datetime.strptime(dictData[fieldName], "%Y-%m-%d") if dictData[fieldName] else None
@@ -496,7 +494,6 @@ class DataAccessor():
       detailedPost = DetailedPost.objects.get(id=data["detailedPostId"])
       kwargs["DetailedPost"] = detailedPost
       mission = detailedPost.Mission if detailedPost.Mission else detailedPost.DatePost.Mission
-      print("createSupervision", mission)
       if detailedPost.DatePost and not detailedPost.DatePost.validated:
         return {"createSupervision":"Error", "messages":"datePost not validated."}
     if "datePostId" in data and data["datePostId"]:
@@ -1055,10 +1052,11 @@ class DataAccessor():
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if data['ext'] != "txt" else fileStr
       with open(objectFile.path, "wb") as outfile:
         outfile.write(file.file.getbuffer())
-      # if data['name'] == "Kbis":
-      #   hasQRCode, message = cls.detect_QR_code(objectFile)
-      #   if not (hasQRCode):
-      #       return {"uploadFile":"Error", "messages":f"{message}"}
+      if data['name'] == "Kbis":
+        hasQRCode, message = cls.detect_QR_code(objectFile)
+        if not (hasQRCode):
+          print ("QR code", message, currentUser.name)
+          return {"uploadFile":"Error", "messages":f"{message}"}
       return {"uploadFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
     except:
       print("delete file", file)
