@@ -223,6 +223,7 @@ class CreateNewDataBase:
         if userProfileList:
           userProfile = userProfileList[0]
           company = Company.objects.get(id = userProfile.Company.id)
+          print("delete stipe", userProfile.userNameInternal, company.name, company.stripeCustomerId)
           stripe.Customer.delete(company.stripeCustomerId)
     for table in CreateNewDataBase.listTable.values():
       table.objects.all().delete()
