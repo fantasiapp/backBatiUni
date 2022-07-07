@@ -1084,7 +1084,7 @@ class File(CommonModel):
     if nature == "userImage":
       path = cls.dictPath[nature] + userProfile.Company.name + '_' + str(userProfile.Company.id) + '.' + ext
     if nature in ["labels", "admin"]:
-      print("get path", cls.dictPath[nature], nature, userProfile.Company.id, ext)
+      print("get path", cls.dictPath[nature], name, userProfile.Company.id, ext)
       path = cls.dictPath[nature] + name + '_' + str(userProfile.Company.id) + '.' + ext
     if nature == "post":
       path = cls.dictPath[nature] + name + '_' + str(post.id) + '.' + ext
