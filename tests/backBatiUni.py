@@ -116,7 +116,7 @@ def executeQuery():
         amount = math.floor(8 + random.random() * 70)
         webSite = "https://monWebSite.fr"
         JobForCompany = [[math.floor(1 + random.random() * 40), math.floor(1 + random.random() * 4)], [math.floor(41 + random.random() * 40), math.floor(1 + random.random() * 4)], [math.floor(81 + random.random() * 40), math.floor(1 + random.random() * 4)]]
-        LabelForCompany = [[math.floor(1 + random.random() * 9), dateForLabel], [math.floor(10 + random.random() * 9), dateForLabel], [math.floor(20 + random.random() * 7), dateForLabel]]
+        LabelForCompany = [[math.floor(1 + random.random() * 9), dateForLabel], [math.floor(10 + random.random() * 9), dateForLabel], [math.floor(20 + random.random() * 3), dateForLabel]]
         post = {'action': 'modifyUser', 'UserProfile': {'id': companyId, 'cellPhone': '0629350418', 'Company': {'capital': capital, 'revenue': revenue, "webSite": webSite, "amount":amount, 'companyPhone': '0892976415', "allQualifications":True, 'JobForCompany':JobForCompany, 'LabelForCompany':LabelForCompany}}}
         response = requests.post(f'{address}/data/', headers=headers, json=post)
         if companyId in emailList:

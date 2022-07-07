@@ -181,11 +181,20 @@ class CommonModel(models.Model):
 
 class Label(CommonModel):
   name = models.CharField('Nom du label', unique=True, max_length=128, null=False, default=False, blank=False)
-  # description = models.CharField('Description du métier', unique=False, null=True, max_length=2048, default=None)
-  # site = models.CharField('Site internet', unique=False, null=True, max_length=256, default=None)
+  fileName = models.CharField('Nom du fichier Associé', max_length=128, unique=True, default="Unkown")
+  description = models.CharField('Description du métier', max_length=2048, unique=False, null=True, default="")
+  site = models.CharField('Site internet', unique=False, null=True, max_length=256, default="")
+
+  def listFields(cls):
+    superList = super().listFields()
+    for key in ["fileName", "description", "site"]:
+      superList.remove(key)
+    return superList
 
   class Meta:
     verbose_name = "Label"
+
+  
 
 class Role(CommonModel):
   name = models.CharField('Profil du compte', unique=True, max_length=128)
