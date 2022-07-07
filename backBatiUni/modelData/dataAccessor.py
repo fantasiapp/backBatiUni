@@ -251,6 +251,7 @@ class DataAccessor():
     postDump = {objectPost.id:objectPost.computeValues(objectPost.listFields(), currentUser, True)}
     datePostDump = [{date.id:date.computeValues(date.listFields(), currentUser, True) for date in DatePost.objects.filter(Post = objectPost)}]
     detailedPostDump = [{detailedPost.id:detailedPost.computeValues(detailedPost.listFields(), currentUser, True) for detailedPost in DetailedPost.objects.filter(Post = objectPost)}]
+    print("uploadPost", datePostDump)
     return {"uploadPost":"OK", "Post":postDump, "DatePost":datePostDump, "DetailedPost":detailedPostDump}
 
   @classmethod
