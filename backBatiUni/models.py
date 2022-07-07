@@ -185,6 +185,7 @@ class Label(CommonModel):
   description = models.CharField('Description du métier', max_length=2048, unique=False, null=True, default="")
   site = models.CharField('Site internet', unique=False, null=True, max_length=256, default="")
 
+  @classmethod
   def listFields(cls):
     superList = super().listFields()
     for key in ["fileName", "description", "site"]:
