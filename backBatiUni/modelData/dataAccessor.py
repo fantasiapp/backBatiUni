@@ -269,7 +269,7 @@ class DataAccessor():
   @classmethod
   def __createPostKwargs(cls, dictData, currentUser):
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
-    kwargs, listFields, listObject = {"Company":userProfile.Company, "startDate":None, "endDate":None, "subContractorName":None}, Post.listFields(), []
+    kwargs, listFields, listObject = {"Company":userProfile.Company, "startDate":None, "endDate":None, "subContractorName":None, "creationDate":datetime.now()}, Post.listFields(), []
     for fieldName, value in dictData.items():
       fieldObject = None
       try:
