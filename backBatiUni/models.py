@@ -209,7 +209,7 @@ class LabelNew(CommonModel):
     return superList
 
   class Meta:
-    verbose_name = "Label"
+    verbose_name = "LabelNew"
   
 
 class Role(CommonModel):
