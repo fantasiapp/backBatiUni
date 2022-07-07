@@ -1334,7 +1334,7 @@ class DataAccessor():
     return answer
 
   @classmethod
-  def __boostPost(cls, dictValue, user):
+  def __boostPost(cls, dictValue, user=False):
     print("boostPost")
     post = Post.objects.filter(id=dictValue["postId"])
     if post:
@@ -1348,7 +1348,10 @@ class DataAccessor():
         date = datetime.strptime(strEndDate, "%m/%d/%Y" "%H:%M:%S")
       post.boostTimestamp = date.timestamp()
       post.save()
-      return {"boostPost":"OK","UserProfile":{post.id:post.computeValues(post.listFields(), user, True)}}
+      if user:
+        return {"boostPost":"OK","UserProfile":{post.id:post.computeValues(post.listFields(), user, True)}}
+      else:
+        return {"boostPost":"OK"}
     return {"boostPost":"Error", "messages":f"No post with id {'postId'}"}
     
 

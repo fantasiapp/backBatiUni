@@ -118,6 +118,23 @@ class Webhook(DefaultView):
   def post(self, request):
     jsonBin = request.body
     jsonString = jsonBin.decode("utf8")
-    data = json.loads(jsonString)
-    print("data", data)
+    event = json.loads(jsonString)
+    print("event", event)
+
+    # Handle the event
+    if event and event['type'] == 'payment_intent.succeeded':
+        payment_intent = event['data']['object']  # contains a stripe.PaymentIntent
+        print(f"Payment for {payment_intent['amount']} succeeded")
+        print(payment_intent)
+        if payment_intent["metadata"]["type"] == "boostPost":
+          boostPostDict = {
+            "action": "boostPost",
+            "postId": int(payment_intent["metadata"]["post"]),
+            "duration": int(payment_intent["metadata"]["duration"])
+          }
+          DataAccessor.dataPost(json.dumps(boostPostDict), False)
+    else:
+        # Unexpected event type
+        print(f"Unhandled event type {event['type']}")
+
     return Response({"webhook-payment": "OK"})
