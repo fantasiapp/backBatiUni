@@ -237,6 +237,7 @@ class CreateNewDataBase:
 
   def fillupDataBase (self, response={}):
     for function in reversed(CreateNewDataBase.listTable):
+      print("fillupDataBase", function)
       table = CreateNewDataBase.listTable[function]
       for key, value in getattr(self, "fillup" + function)(table).items():
         response[key] = value

@@ -56,7 +56,7 @@ def executeQuery():
   if query in ["emptyDB", "buildDB"]:
       token = queryForToken("jlw", "pwd")
       print("user jlw")
-      response = requests.get(f'{address}/createBase/', headers= {'Authorization': f'Token {token}'}, params={"action":"reload"})
+      response = requests.get(f'{address}/createBase/', headers= {'Authorization': f'Token {token}'}, params={"action":"reload" if query == "buildDB" else "emptyDB"})
   elif query == "register":
     post1 = {"firstname":"Augustin","lastname":"Alleaume","email":"aa@g.com","password":"pwd","company":{'id': 2, 'name': 'BATOUNO', 'address': '11 rue Vintimille Paris 75009', 'activity': 'Activité inconnue', 'siret': '40422352100018', 'ntva': 'FR49404223521'},"Role":3,"proposer":"","jobs":[1,2,80], "action":"register"}
     post2 = {"firstname":"Théophile","lastname":"Traitant","email":"st@g.com","password":"pwd","company":{'id': 3, 'name': 'Sous-traitant', 'address': '74 ave des Sous-traitants Paris 75008', 'activity': 'Activité inconnue', 'siret': '40422352100021', 'ntva': 'FR49404223522'},"Role":2,"proposer":"","jobs":[1,2,80], "action":"register"}
