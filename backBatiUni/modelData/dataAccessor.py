@@ -1345,8 +1345,8 @@ class DataAccessor():
       else:
         date = None
         endDate = post.endDate
-        strEndDate = post.endDate.strftime("%m/%d/%Y" "%H:%M:%S")
-        date = datetime.strptime(strEndDate, "%m/%d/%Y" "%H:%M:%S")
+        strEndDate = post.endDate.strftime("%m/%d/%Y, %H:%M:%S")
+        date = datetime.strptime(strEndDate, "%m/%d/%Y, %H:%M:%S")
       post.boostTimestamp = date.timestamp()
       post.save()
       if user:

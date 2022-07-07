@@ -584,7 +584,7 @@ class Post(CommonModel):
       elif field == "subContractorName": values.append(self.subContractorName if self.subContractorName else "")
       elif field == "contract": values.append(self.contract if self.contract else "")
       
-      elif field == "creationDate": values.append(self.creationDate.strftime("%Y-%m-%d"  "%H:%M:%S") if self.creationDate else "")
+      elif field == "creationDate": values.append(self.creationDate.strftime("%Y-%m-%d"  " %H:%M:%S") if self.creationDate else "")
       elif field == "dueDate": values.append(self.dueDate.strftime("%Y-%m-%d") if self.dueDate else "")
       elif field == "startDate": values.append(self.startDate.strftime("%Y-%m-%d") if self.startDate else "")
       elif field == "endDate": values.append(self.endDate.strftime("%Y-%m-%d") if self.endDate else "")
