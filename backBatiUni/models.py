@@ -188,7 +188,7 @@ class Label(CommonModel):
   @classmethod
   def listFields(cls):
     superList = super().listFields()
-    for key in ["fileName", "description", "site"]:
+    for key in ["description", "site"]:
       superList.remove(key)
     return superList
 
