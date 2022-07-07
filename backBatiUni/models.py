@@ -473,7 +473,7 @@ class Post(CommonModel):
   contactName = models.CharField("Nom du contact responsable de la mission", max_length=256, null=True, default=None)
   draft = models.BooleanField("Brouillon ou validé", null=False, default=True)
   manPower = models.BooleanField("Main d'oeuvre ou fourniture et pose", null=False, default=True)
-  creationDate = models.DateField(verbose_name="Date de creation de l'annonce", null=False, default=timezone.now)
+  creationDate = models.DateField(verbose_name="Date de creation de l'annonce", null=False, default=timezone.now())
   dueDate = models.DateField(verbose_name="Date de d'échéance de l'annonce", null=True, default=None)
   startDate = models.DateField(verbose_name="Date de début de chantier", null=True, default=None)
   endDate = models.DateField(verbose_name="Date de fin de chantier", null=True, default=None)
@@ -584,7 +584,7 @@ class Post(CommonModel):
       elif field == "subContractorName": values.append(self.subContractorName if self.subContractorName else "")
       elif field == "contract": values.append(self.contract if self.contract else "")
       
-      elif field == "creationDate": values.append(self.dueDate.strftime("%Y-%m-%d") if self.dueDate else "")
+      elif field == "creationDate": values.append(self.creationDate.strftime("%Y-%m-%d") if self.creationDate else "")
       elif field == "dueDate": values.append(self.dueDate.strftime("%Y-%m-%d") if self.dueDate else "")
       elif field == "startDate": values.append(self.startDate.strftime("%Y-%m-%d") if self.startDate else "")
       elif field == "endDate": values.append(self.endDate.strftime("%Y-%m-%d") if self.endDate else "")
