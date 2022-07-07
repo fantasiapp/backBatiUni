@@ -121,7 +121,8 @@ def executeQuery():
         response = requests.post(f'{address}/data/', headers=headers, json=post)
         if companyId in emailList:
           data = json.loads(response.text)
-          labelList[companyId] = json.loads(response.text)["LabelForCompany"][1]
+          print("load label", data["LabelForCompany"], data["LabelForCompany"][1])
+          labelList[companyId] = data["LabelForCompany", [1]]
 
 
     generalData = requests.get(url, headers=headersStart, params={"action":"getGeneralData"})
