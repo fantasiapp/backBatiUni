@@ -1338,6 +1338,7 @@ class DataAccessor():
     post = Post.objects.filter(id=dictValue["postId"])
     if post:
       post = post[0]
+      print("duration", dictValue["duration"])
       if dictValue["duration"]:
         date = datetime.now() + timedelta(days=dictValue["duration"], hours=0)
       else:
