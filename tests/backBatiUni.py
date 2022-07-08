@@ -19,7 +19,7 @@ userName, password = "st@g.com", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 50
+numberCompanies = 5
 emailList, missionList, emailListPME, emailListST, detailedPost, candidateToUnapply, labelList = {}, {}, [], [], {}, None, {}
 
 arguments = sys.argv
@@ -140,8 +140,11 @@ def executeQuery():
       for labelValues in value:
         for tupleLabel in labelValues.values():
           fileName = generalData["LabelValues"][str(tupleLabel[0])]
-          fileName = fileName[0] if isinstance(fileName, list) else fileName
-          file = {'action':"uploadFile", "ext":"png", "name":fileName[1], "fileBase64":getDocStr(0), "nature":"labels", "expirationDate":tupleLabel[1]}
+          print("Label", fileName)
+          fileName = fileName[1] if isinstance(fileName, list) else fileName
+          print("Label", fileName)
+          print()
+          file = {'action':"uploadFile", "ext":"png", "name":fileName, "fileBase64":getDocStr(0), "nature":"labels", "expirationDate":tupleLabel[1]}
           data = requests.post(url, headers=headersForImage, json=file)
 
     for i in emailListST:

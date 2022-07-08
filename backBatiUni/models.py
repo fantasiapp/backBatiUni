@@ -1050,9 +1050,11 @@ class File(CommonModel):
 
   @classmethod
   def createFile(cls, nature, name, ext, user, expirationDate = None, post=None, mission=None, detailedPost=None, supervision=None, suppress = False):
+    print("start createFile", name)
     userProfile = UserProfile.objects.get(userNameInternal=user)
     objectFile, mission = None, None
     path, name, mission = cls.getPathAndName(name, nature, userProfile, ext, detailedPost, supervision, mission, post)
+    print("middle createFile", name)
     company = userProfile.Company if not post and not supervision else None
     objectFile = File.objects.filter(nature=nature, name=name, Company=company, Post=post, Mission=mission, Supervision=supervision)
     if objectFile:
@@ -1065,6 +1067,7 @@ class File(CommonModel):
         objectFile.expirationDate = expirationDate
       objectFile.save()
     else:
+      print("createFile", name)
       objectFile = cls.objects.create(nature=nature, name=name, path=path, ext=ext, Company=company, expirationDate=expirationDate, Post=post, Mission=mission, Supervision=supervision)
     return objectFile
 
