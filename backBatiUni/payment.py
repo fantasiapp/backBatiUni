@@ -47,28 +47,3 @@ class PaymentManager():
                     }
         except Exception as e:
             return {"Error": str(e)}
-    
-    @classmethod
-    def createPaymentCheckout(cls, request):
-        # Will not be used 
-        try:
-            print("checkout")
-
-            checkout_session = stripe.checkout.Session.create(
-                line_items = [
-                    {
-                        'price': "price_1LDlpRAdZaSfQS2YNV1as9tx",
-                        'quantity': 1,
-                    },
-                ],
-                mode='payment',
-                success_url= "http://localhost:4200/home",
-                cancel_url = "http://localhost:4200/profile"
-            )
-
-        except Exception as e:
-            return {"Error": str(e)}
-        
-        print("Redirect to", checkout_session.url)
-
-        return {"checkoutUrl": checkout_session.url}
