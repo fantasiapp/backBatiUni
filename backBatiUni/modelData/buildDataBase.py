@@ -217,14 +217,6 @@ class CreateNewDataBase:
           os.rmdir(os.path.join(newPath))
         else:
           os.remove(os.path.join(dir, file))
-    # for user in User.objects.all():
-    #   if user.username != "jlw":
-    #     userProfileList = UserProfile.objects.filter(userNameInternal = user)
-    #     if userProfileList:
-    #       userProfile = userProfileList[0]
-    #       company = Company.objects.get(id = userProfile.Company.id)
-    #       print("delete stipe", userProfile.userNameInternal, company.name, company.stripeCustomerId)
-    #       stripe.Customer.delete(company.stripeCustomerId)
     for table in CreateNewDataBase.listTable.values():
       table.objects.all().delete()
       tableName = table.objects.model._meta.db_table
@@ -289,5 +281,6 @@ class CreateNewDataBase:
   def fillupLabel(self, table):
     # listLabel = ['Qualibat', 'RGE', 'RGE Eco Artisan', 'NF', 'Effinergie', 'Handibat', 'Qualifelec', 'Qualit’EnR', 'Quali’Sol', 'Quali’Bois', 'Quali’PV', 'Quali’Pac', 'Certibat', 'CERQUAL Qualitel Certification', 'Autres...']
     for label, value in self.dictLabels.items():
+      print("fillupLabel", value)
       table.objects.create(name=label, fileName=value[0], description=value[1], site=value[2])
     return {"fillupLabel":"OK"}

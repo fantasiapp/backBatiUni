@@ -10,13 +10,16 @@ import random
 import string
 import math
 from datetime import datetime, timedelta
+import stripe
+
+stripe.api_key = 'sk_test_51LI7b7GPflszP2pB2F62OC6fyGjgMOTVhQDI19vVqDYEONZmLdDi9KXlQ3bkdgl23t5HsH0FABc7rMHmINenlwV100GfMpz5ec'
 
 userName, password = "st@g.com", "pwd"
 # userName, password = "jlw", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 10
+numberCompanies = 50
 emailList, missionList, emailListPME, emailListST, detailedPost, candidateToUnapply, labelList = {}, {}, [], [], {}, None, {}
 
 arguments = sys.argv
@@ -56,6 +59,9 @@ def executeQuery():
   if query in ["emptyDB", "buildDB"]:
       token = queryForToken("jlw", "pwd")
       print("user jlw")
+      while customers := stripe.Customer.list(limit=100):
+        for customer in customers.data:
+            stripe.Customer.delete(customer.id)
       response = requests.get(f'{address}/createBase/', headers= {'Authorization': f'Token {token}'}, params={"action":"reload" if query == "buildDB" else "emptyDB"})
   elif query == "register":
     post1 = {"firstname":"Augustin","lastname":"Alleaume","email":"aa@g.com","password":"pwd","company":{'id': 2, 'name': 'BATOUNO', 'address': '11 rue Vintimille Paris 75009', 'activity': 'Activité inconnue', 'siret': '40422352100018', 'ntva': 'FR49404223521'},"Role":3,"proposer":"","jobs":[1,2,80], "action":"register"}
