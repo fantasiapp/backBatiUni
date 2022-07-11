@@ -1083,6 +1083,7 @@ class File(CommonModel):
       #   if not (hasQRCode):
       #     print ("QR code", message, currentUser.name)
       #     return {"uploadFile":"Error", "messages":f"{message}"}
+      print("__createFileWidthb64", objectFile.path)
       return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
     except:
       print("delete file", file)
