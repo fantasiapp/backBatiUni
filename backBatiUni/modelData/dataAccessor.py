@@ -1018,7 +1018,7 @@ class DataAccessor():
     fileStr, testMessage = cls.__testUploadFile(data)
     if testMessage:
       return testMessage
-    objectFile = File.createFile(data["nature"], data["name"], data['ext'], currentUser, expirationDate=expirationDate, post=post)
+    objectFile = cls.__createObjectFile(data, currentUser)
     file = None
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if data['ext'] != "txt" else fileStr
@@ -1034,6 +1034,18 @@ class DataAccessor():
       print("delete file", file)
       if file: file.delete()
       return {"uploadFile":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
+
+  @classmethod
+  def __createObjectFile(cls, data, currentUser):
+    expirationDate = datetime.strptime(data["expirationDate"], "%Y-%m-%d") if "expirationDate" in data and data["expirationDate"] else None
+    post = None
+    if "Post" in data:
+      post = Post.objects.filter(id=data["Post"])
+      if not post:
+        return {"uploadFile":"Error", "messages":f"no post with id {data['Post']} for Post"}
+      else:
+        post = post[0]
+    return File.createFile(data["nature"], data["name"], data['ext'], currentUser, expirationDate=expirationDate, post=post)
 
   @classmethod
   def __testUploadFile(cls, data):
