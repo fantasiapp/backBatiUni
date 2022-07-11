@@ -1048,6 +1048,7 @@ class DataAccessor():
         return {queryName:"Error", "messages":f"no supervision with id {data['Supervision']}"}
       else:
         supervision = supervision[0]
+    print("__createObjectFile", len(data["fileBase64"]))
     return File.createFile(data["nature"], data["name"], data['ext'], currentUser, data["fileBase64"], queryName, expirationDate=expirationDate, post=post, mission=mission, supervision=supervision)
 
   @classmethod
