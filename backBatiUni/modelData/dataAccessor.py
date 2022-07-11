@@ -223,11 +223,11 @@ class DataAccessor():
     fileStr = dictData["imageBase64"]
     if not dictData["name"]:
       return {"changeUserImage":"Error", "messages":"field name is empty"}
-    objectFile = File.createFile("userImage", dictData["name"], dictData['ext'], currentUser)
-    file = ContentFile(base64.b64decode(fileStr), name=objectFile.path + dictData['ext'])
-    with open(objectFile.path, "wb") as outfile:
-        outfile.write(file.file.getbuffer())
-    return {"changeUserImage":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
+    return File.createFile("userImage", dictData["name"], dictData['ext'], currentUser, "changeUserImage")
+    # file = ContentFile(base64.b64decode(fileStr), name=objectFile.path + dictData['ext'])
+    # with open(objectFile.path, "wb") as outfile:
+    #     outfile.write(file.file.getbuffer())
+    # return {"changeUserImage":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
 
   @classmethod
   def __uploadPost(cls, dictData, currentUser):
