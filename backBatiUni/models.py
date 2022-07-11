@@ -35,27 +35,18 @@ class RamData():
   @classmethod
   def fillUpRamStructure(cls):
     if not cls.isUsed or datetime.datetime.now().timestamp() - cls.isUsed > 30:
-      print("compute fillUpRamStructure is used ?", RamData.isUsed)
       cls.isUsed = datetime.datetime.now().timestamp()
-      # print("fillUpRamStructure", cls.isUsed)
       cls.allPost = {int(post.id):[] for post in Post.objects.all() if post.subContractorName == None}
       cls.allMission = {mission.id:[] for mission in Mission.objects.all() if mission.subContractorName}
       cls.allCompany = {company.id:[] for company in Company.objects.all()}
       cls.allDatePost = {datePost.id:[] for datePost in DatePost.objects.all()}
       cls.allDetailedPost = {detailPost.id:[] for detailPost in DetailedPost.objects.all()}
       cls.ramStructure = {"Company":{}, "Post":{}, "Mission":{}, "DetailedPost":{}, "DatePost":{}}
-      # print("ramStructure", cls.ramStructure)
       for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
-        # if cls.ramStructureComplete:
-        #   print("generateRamStructure", classObject, cls.isUsed)
         classObject.generateRamStructure()
       cls.ramStructureComplete = deepcopy(cls.ramStructure)
       cls.timestamp = cls.isUsed
       cls.isUsed = False
-    #   print("deepCopy", cls.isUsed)
-    else:
-      print("isBlocked", datetime.datetime.now().timestamp() - cls.isUsed if cls.isUsed else cls.isUsed)
-
 
 class CommonModel(models.Model):
   manyToManyObject = []
@@ -681,8 +672,6 @@ class DatePost(CommonModel):
   def generateRamStructure(cls):
     RamData.ramStructure["Post"]["DatePost"] = deepcopy(RamData.allPost)
     RamData.ramStructure["Mission"]["DatePost"] = deepcopy(RamData.allMission)
-    if not "DatePost" in RamData.ramStructure["Post"]: print("warning bug 820", RamData.ramStructure["Post"])
-    if not "DatePost" in RamData.ramStructure["Mission"]: print("warning bug 820", RamData.ramStructure["Mission"])
     for datePost in DatePost.objects.all():
       if datePost.Post and datePost.Post.id in RamData.ramStructure["Post"]["DatePost"]:
         RamData.ramStructure["Post"]["DatePost"][datePost.Post.id].append(datePost.id)
@@ -1051,7 +1040,6 @@ class File(CommonModel):
 
   @classmethod
   def createFile(cls, nature, name, ext, user, queryName, fileStr, expirationDate = None, post=None, mission=None, supervision=None, suppress = False):
-    print("createFile", len(fileStr) if fileStr else None, post, mission)
     userProfile = UserProfile.objects.get(userNameInternal=user)
     objectFile = None
     path, name, mission = cls.getPathAndName(name, nature, userProfile, ext, post, mission, supervision)
@@ -1068,15 +1056,12 @@ class File(CommonModel):
       objectFile.save()
     else:
       objectFile = cls.objects.create(nature=nature, name=name, path=path, ext=ext, Company=company, expirationDate=expirationDate, Post=post, Mission=mission, Supervision=supervision)
-      print("file created", nature, post, mission, objectFile.id)
     if fileStr:
-      print("action")
       return cls.__createFileWidthb64(objectFile, fileStr, user, queryName)
     return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), user, True)}
 
   @classmethod
   def __createFileWidthb64(cls, objectFile, fileStr, currentUser, queryName):
-    print("__createFileWidthb64")
     file = None
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if objectFile.ext != "txt" else fileStr
@@ -1087,10 +1072,8 @@ class File(CommonModel):
       #   if not (hasQRCode):
       #     print ("QR code", message, currentUser.name)
       #     return {"uploadFile":"Error", "messages":f"{message}"}
-      print("__createFileWidthb64", objectFile.path)
       return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
     except:
-      print("delete file", file)
       if file: file.delete()
       return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
 
@@ -1106,12 +1089,10 @@ class File(CommonModel):
 
   @classmethod
   def getPathAndName(cls, name, nature, userProfile, ext, post, mission, supervision):
-    print("getPathAndName", name, nature, ext, post, mission, supervision)
     path= None
     if nature == "userImage":
       path = cls.dictPath[nature] + userProfile.Company.name + '_' + str(userProfile.Company.id) + '.' + ext
     if nature in ["labels", "admin"]:
-      print("get path", cls.dictPath[nature], name, userProfile.Company.id, ext)
       path = cls.dictPath[nature] + name + '_' + str(userProfile.Company.id) + '.' + ext
     if nature == "post":
       path = cls.dictPath[nature] + name + '_' + str(post.id) + '.' + ext
@@ -1123,7 +1104,6 @@ class File(CommonModel):
       name +=  endName
       path = cls.dictPath[nature] + name + '.' + ext
     if nature == "contract":
-      print("contract", cls.dictPath[nature], name, mission, ext)
       path = cls.dictPath[nature] + name + '_' + str(mission.id) + '.' + ext
     return path, name, mission
 

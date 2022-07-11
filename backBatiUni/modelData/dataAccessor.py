@@ -1165,29 +1165,24 @@ class DataAccessor():
 
   @classmethod
   def __uploadImageSupervision(cls, data, currentUser):
-    print("uploadImageSupervision")
-    if not data['ext'] in File.authorizedExtention:
-      return {"uploadImageSupervision":"Warning", "messages":f"L'extention {data['ext']} n'est pas traitée"}
-    else:
-      data['ext'] = File.authorizedExtention[data['ext']]
-    fileStr = data["imageBase64"]
-    if not fileStr:
-      return {"uploadImageSupervision":"Error", "messages":"field fileBase64 is empty"}
+    testMessage = cls.__testUploadFile(data)
+    if testMessage:
+      return testMessage
     supervision = Supervision.objects.get(id=data["supervisionId"])
-    objectFile = File.createFile("supervision", "supervision", data['ext'], currentUser, "uploadImageSupervision", fileStr, supervision=supervision)
+    message = File.createFile("supervision", "supervision", data['ext'], currentUser, "uploadImageSupervision", data["imageBase64"], supervision=supervision)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
-    print("add Notification")
     objectFather = supervision.DetailedPost if supervision.DetailedPost else supervision.DatePost
     cls.__addNewNotificationForMessage(userProfile, objectFather.Mission, f"Une nouvelle image pour le chantier du {objectFather.Mission.address} vous attend.")
-    file = None
-    try:
-      file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path + data['ext']) if data['ext'] != "txt" else fileStr
-      with open(objectFile.path, "wb") as outfile:
-          outfile.write(file.file.getbuffer())
-      return {"uploadImageSupervision":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True), "supervisionId":supervision.id}
-    except:
-      if file: file.delete()
-      return {"uploadImageSupervision":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
+    return message
+    # file = None
+    # try:
+    #   file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path + data['ext']) if data['ext'] != "txt" else fileStr
+    #   with open(objectFile.path, "wb") as outfile:
+    #       outfile.write(file.file.getbuffer())
+    #   return {"uploadImageSupervision":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True), "supervisionId":supervision.id}
+    # except:
+    #   if file: file.delete()
+    #   return {"uploadImageSupervision":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
 
   @classmethod
   def getEnterpriseDataFrom(cls, request):
