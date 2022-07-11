@@ -1079,7 +1079,7 @@ class File(CommonModel):
           return {"uploadFile":"Error", "messages":f"{message}"}
       return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
     except:
-      if file: file.delete()
+      if objectFile: objectFile.delete()
       return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
 
   @classmethod
