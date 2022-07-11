@@ -1125,10 +1125,11 @@ class File(CommonModel):
     img = cv2.imread(file_path)
     print("l'mg", img)
     decoder = cv2.QRCodeDetector()
+    print("on a passé decoder")
     if img :
       print("y'a une image")
     data, points, _ = decoder.detectAndDecode(img)
-    print(data)
+    print("le data ", data)
     if data:
       print("decoded data ",data)
     else : 
