@@ -36,7 +36,7 @@ class CreateNewDataBase:
     # "Maison de confiance FFCMI":["Née de la Fédération Française des Constructeurs de Maisons Individuelles, la FFC, cette marque témoigne des engagements du constructeur et des services proposés aux clients maîtres d’ouvrage. La FFC se veut être le seul syndicat professionnel indépendant dédié aux constructeurs. Ses missions sont la promotion de la profession et la protection du consommateur via notamment le Contrat de Construction de Maison Individuelle (CCMI). Dans ce sens, la FFC a créé la charte « Maison de confiance » pour identifier les constructeurs adhérents dans une démarche de valorisation de leurs prestations. Comme l’agrément « Maisons de qualité », « Maison de confiance » est une marque à ne pas interpréter comme un label certifié.","https://www.ffcmi.com/syndicat-constructeur-maison", False],
     "ECO Artisan":["ecoArtisan", "", "", True],
     "PG (Professionnel du Gaz)":["professionnelGaz", "", "", True],
-    "Quali'ENR":["qualiEnr", "", "", True],		
+    # "Quali'ENR":["qualiEnr", "", "", True],		
     # "Quali'Gaz":["", "", "", True],
   }
   listJobs = [
@@ -242,7 +242,6 @@ class CreateNewDataBase:
   def fillupCompany(self, table):
     role = Role.objects.get(id=2)
     Company.objects.create(name="CARREFOUR", siret="123456789", capital=123456, revenue=654321.22, webSite="https://stackoverflow.com", Role=role)
-    print(Company.objects.all)
     return {"create company":"OK"}
   
   def fillupLabelForCompany(self, table): return {}
@@ -281,6 +280,5 @@ class CreateNewDataBase:
   def fillupLabel(self, table):
     # listLabel = ['Qualibat', 'RGE', 'RGE Eco Artisan', 'NF', 'Effinergie', 'Handibat', 'Qualifelec', 'Qualit’EnR', 'Quali’Sol', 'Quali’Bois', 'Quali’PV', 'Quali’Pac', 'Certibat', 'CERQUAL Qualitel Certification', 'Autres...']
     for label, value in self.dictLabels.items():
-      print("fillupLabel", value)
       table.objects.create(name=label, fileName=value[0], description=value[1], site=value[2])
     return {"fillupLabel":"OK"}
