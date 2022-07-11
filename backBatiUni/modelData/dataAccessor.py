@@ -39,7 +39,6 @@ if os.getenv('PATH_MIDDLE'):
   from profileScraping import getEnterpriseDataFrom
   from geocoding import getCoordinatesFrom # argument str address
 
-
 class DataAccessor():
   loadTables = {"user":[UserProfile, Company, JobForCompany, LabelForCompany, File, Post, Candidate, DetailedPost, DatePost, Mission, Disponibility, Supervision, Notification, BlockedCandidate, Recommandation], "general":[Job, Role, Label]}
   dictTable = {}
@@ -82,7 +81,6 @@ class DataAccessor():
     cls.__registerAction(data, "empty token")
     return {"register":"Error", "messages":"token not received"}
 
-
   @classmethod
   def registerAgain(cls, data):
     userProfile = UserProfile.objects.filter(email=data["email"])
@@ -95,7 +93,6 @@ class DataAccessor():
         return {"register":"OK"}
     cls.__registerAction(data, "empty token")
     return {"register":"Error", "messages":"token not received"}
-
 
   @classmethod
   def __checkIfHaveBeenInvited(cls, userProfile, tokenReceived, emailReceived):
@@ -137,19 +134,14 @@ class DataAccessor():
 
   @classmethod
   def __registerAction(cls, data, token):
-
     print("stripe", stripe)
     print("stripe api key", STRIPE_API_KEY)
-
     print("registerAction", data)
     companyData = data['company']
-
     if not "@" in data["email"]:
       data["email"] += "@g.com" 
     print("registerAction stripe", companyData["name"], data["email"])
     customer = stripe.Customer.create(name = companyData["name"], email = data["email"])
-
-
     company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'], stripeCustomerId = customer.id)
     # company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'], stripeCustomerId = "")
     cls.__getGeoCoordinates(company)
@@ -1023,30 +1015,10 @@ class DataAccessor():
 
   @classmethod
   def __uploadFile(cls, data, currentUser):
-    if not "ext" in data or not "fileBase64" in data:
-      return {"uploadFile":"Warning", "messages":f"Le fichier n'est pas conforme"}
-    if not data['ext'] in File.authorizedExtention:
-      return {"changeUserImage":"Warning", "messages":f"L'extention {data['ext']} n'est pas traitée"}
-    else:
-      data['ext'] = File.authorizedExtention[data['ext']]
-    fileStr, message = data["fileBase64"], {}
-    for field in ["name", "ext", "nature"]:
-      if not data[field]:
-        message[field] = f"field {field} is empty"
-    if not fileStr:
-      message["fileBase64"] = "field fileBase64 is empty"
-    if message:
-      return {"uploadFile":"Error", "messages":message}
-    expirationDate = datetime.strptime(data["expirationDate"], "%Y-%m-%d") if "expirationDate" in data and data["expirationDate"] else None
-    post = None
-    if "Post" in data:
-      post = Post.objects.filter(id=data["Post"])
-      if not post:
-        return {"uploadFile":"Error", "messages":f"no post with id {data['Post']} for Post"}
-      else:
-        post = post[0]
+    fileStr, testMessage = cls.__testUploadFile(data)
+    if testMessage:
+      return testMessage
     objectFile = File.createFile(data["nature"], data["name"], data['ext'], currentUser, expirationDate=expirationDate, post=post)
-
     file = None
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if data['ext'] != "txt" else fileStr
@@ -1062,6 +1034,73 @@ class DataAccessor():
       print("delete file", file)
       if file: file.delete()
       return {"uploadFile":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
+
+  @classmethod
+  def __testUploadFile(data):
+    if not "ext" in data or not "fileBase64" in data:
+      return {"uploadFile":"Warning", "messages":f"Le fichier n'est pas conforme"}
+    if not data['ext'] in File.authorizedExtention:
+      return {"changeUserImage":"Warning", "messages":f"L'extention {data['ext']} n'est pas traitée"}
+    else:
+      data['ext'] = File.authorizedExtention[data['ext']]
+    fileStr, message = data["fileBase64"], {}
+    for field in ["name", "ext", "nature"]:
+      if not data[field]:
+        message[field] = f"field {field} is empty"
+    if not fileStr:
+      message["fileBase64"] = "field fileBase64 is empty"
+    if message:
+      return {"uploadFile":"Error", "messages":message}
+    return fileStr, False
+
+  # @classmethod
+  # def __uploadFile(cls, data, currentUser):
+  #   testMessage = cls.__testUploadFile(data)
+    
+  #   expirationDate = datetime.strptime(data["expirationDate"], "%Y-%m-%d") if "expirationDate" in data and data["expirationDate"] else None
+  #   post = None
+  #   if "Post" in data:
+  #     post = Post.objects.filter(id=data["Post"])
+  #     if not post:
+  #       return {"uploadFile":"Error", "messages":f"no post with id {data['Post']} for Post"}
+  #     else:
+  #       post = post[0]
+  #   objectFile = File.createFile(data["nature"], data["name"], data['ext'], currentUser, expirationDate=expirationDate, post=post)
+
+  #   file = None
+  #   try:
+  #     file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if data['ext'] != "txt" else fileStr
+  #     with open(objectFile.path, "wb") as outfile:
+  #       outfile.write(file.file.getbuffer())
+  #     if data['name'] == "Kbis":
+  #       hasQRCode, message = cls.detect_QR_code(objectFile)
+  #       if not (hasQRCode):
+  #         print ("QR code", message, currentUser.name)
+  #         return {"uploadFile":"Error", "messages":f"{message}"}
+  #     return {"uploadFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
+  #   except:
+  #     print("delete file", file)
+  #     if file: file.delete()
+  #     return {"uploadFile":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
+
+  # @classmethod
+  # def __testUploadFile(data):
+  #   if not "ext" in data or not "fileBase64" in data:
+  #     return {"uploadFile":"Warning", "messages":f"Le fichier n'est pas conforme"}
+  #   if not data['ext'] in File.authorizedExtention:
+  #     return {"changeUserImage":"Warning", "messages":f"L'extention {data['ext']} n'est pas traitée"}
+  #   else:
+  #     data['ext'] = File.authorizedExtention[data['ext']]
+  #   fileStr, message = data["fileBase64"], {}
+  #   for field in ["name", "ext", "nature"]:
+  #     if not data[field]:
+  #       message[field] = f"field {field} is empty"
+  #   if not fileStr:
+  #     message["fileBase64"] = "field fileBase64 is empty"
+  #   if message:
+  #     return {"uploadFile":"Error", "messages":message}
+  #   return
+
 
   @classmethod
   def detect_QR_code(cls, file) :
