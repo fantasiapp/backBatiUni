@@ -228,7 +228,7 @@ class Company(CommonModel):
   saturdayDisponibility = models.BooleanField("Disponibilité le Samedi", null=False, default=False)
   allQualifications = models.BooleanField("Tous corps d'état", null=False, default=False)
   stripeCustomerId = models.CharField("Customer ID générée par Stripe", max_length=128, null=True, unique=False)
-  stripeSubscriptionId = models.CharField("Subscription ID générée par Stripe", max_legth=128, null=True, unique=False)
+  stripeSubscriptionId = models.CharField("Subscription ID générée par Stripe", max_length=128, null=True, unique=False)
   stripeSubscriptionStatus = models.CharField("Statut de l'abonnement géré par Stripe", max_length=128, null=True, unique=False)
 
   manyToManyObject = ["JobForCompany", "LabelForCompany", "File", "Post", "Mission", "Disponibility", "Notification"]
