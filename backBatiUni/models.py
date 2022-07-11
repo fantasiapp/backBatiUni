@@ -1072,6 +1072,7 @@ class File(CommonModel):
 
   @classmethod
   def __createFileWidthb64(cls, objectFile, fileStr, currentUser, queryName):
+    file = None
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if objectFile.ext != "txt" else fileStr
       with open(objectFile.path, "wb") as outfile:
