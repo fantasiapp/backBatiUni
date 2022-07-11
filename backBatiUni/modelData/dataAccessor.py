@@ -1029,20 +1029,32 @@ class DataAccessor():
   @classmethod
   def __createObjectFile(cls, data, currentUser, queryName):
     expirationDate = datetime.strptime(data["expirationDate"], "%Y-%m-%d") if "expirationDate" in data and data["expirationDate"] else None
-    post = None
+    post, mission, detailedPost, supervision = None, None, None, None
     if "Post" in data:
       post = Post.objects.filter(id=data["Post"])
       if not post:
-        return {queryName:"Error", "messages":f"no post with id {data['Post']} for Post"}
+        return {queryName:"Error", "messages":f"no post with id {data['Post']}"}
       else:
         post = post[0]
     if "Mission" in data:
       mission = Mission.objects.filter(id=data["Mission"])
       if not mission:
-        return {queryName:"Error", "messages":f"no post with id {data['Post']} for Post"}
+        return {queryName:"Error", "messages":f"no mission with id {data['Mission']}"}
       else:
-        post = post[0]
-    return File.createFile(data["nature"], data["name"], data['ext'], currentUser, data["fileBase64"], queryName, expirationDate=expirationDate, post=post, mission=mission)
+        mission = mission[0]
+    if "DetailedPost" in data:
+      detailedPost = DetailedPost.objects.filter(id=data["DetailedPost"])
+      if not detailedPost:
+        return {queryName:"Error", "messages":f"no detailedPost with id {data['DetailedPost']}"}
+      else:
+        detailedPost = detailedPost[0]
+    if "Supervision" in data:
+      supervision = Supervision.objects.filter(id=data["Supervision"])
+      if not supervision:
+        return {queryName:"Error", "messages":f"no supervision with id {data['Supervision']}"}
+      else:
+        supervision = supervision[0]
+    return File.createFile(data["nature"], data["name"], data['ext'], currentUser, data["fileBase64"], queryName, expirationDate=expirationDate, post=post, mission=mission, detailedPost=detailedPost, supervision=supervision)
 
   @classmethod
   def __testUploadFile(cls, data):
