@@ -1100,7 +1100,7 @@ class File(CommonModel):
         shutil.rmtree(pathToRemove, ignore_errors=True)
 
   @classmethod
-  def getPathAndName(cls, name, nature, userProfile, ext, supervision, mission, post):
+  def getPathAndName(cls, name, nature, userProfile, ext, post, mission, supervision):
     path= None
     if nature == "userImage":
       path = cls.dictPath[nature] + userProfile.Company.name + '_' + str(userProfile.Company.id) + '.' + ext
@@ -1108,7 +1108,7 @@ class File(CommonModel):
       print("get path", cls.dictPath[nature], name, userProfile.Company.id, ext)
       path = cls.dictPath[nature] + name + '_' + str(userProfile.Company.id) + '.' + ext
     if nature == "post":
-      path = cls.dictPath[nature] + name + '_' + str(post.id) + '.' + ext
+      path = cls.dictPath[nature] + name + '_' + str(post.id if post else mission.id) + '.' + ext
     if nature == "supervision":
       endName = '_' + str(mission.id) if mission else '_N'
       endName += '_' + str(supervision.id) if supervision else '_N'
