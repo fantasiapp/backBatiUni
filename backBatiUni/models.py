@@ -1050,10 +1050,10 @@ class File(CommonModel):
     return {}
 
   @classmethod
-  def createFile(cls, nature, name, ext, user, queryName, fileStr, expirationDate = None, post=None, mission=None, detailedPost=None, supervision=None, suppress = False):
+  def createFile(cls, nature, name, ext, user, queryName, fileStr, expirationDate = None, post=None, mission=None, supervision=None, suppress = False):
     userProfile = UserProfile.objects.get(userNameInternal=user)
     objectFile, mission = None, None
-    path, name, mission = cls.getPathAndName(name, nature, userProfile, ext, detailedPost, supervision, mission, post)
+    path, name, mission = cls.getPathAndName(name, nature, userProfile, ext, post, mission, supervision)
     company = userProfile.Company if not post and not supervision else None
     objectFile = File.objects.filter(nature=nature, name=name, Company=company, Post=post, Mission=mission, Supervision=supervision)
     if objectFile:
@@ -1100,7 +1100,7 @@ class File(CommonModel):
         shutil.rmtree(pathToRemove, ignore_errors=True)
 
   @classmethod
-  def getPathAndName(cls, name, nature, userProfile, ext, detailedPost, supervision, mission, post):
+  def getPathAndName(cls, name, nature, userProfile, ext, supervision, mission, post):
     path= None
     if nature == "userImage":
       path = cls.dictPath[nature] + userProfile.Company.name + '_' + str(userProfile.Company.id) + '.' + ext
@@ -1111,7 +1111,6 @@ class File(CommonModel):
       path = cls.dictPath[nature] + name + '_' + str(post.id) + '.' + ext
     if nature == "supervision":
       endName = '_' + str(mission.id) if mission else '_N'
-      endName += '_' + str(detailedPost.id) if detailedPost else '_N'
       endName += '_' + str(supervision.id) if supervision else '_N'
       objectFiles = File.objects.filter(nature=nature, Supervision=supervision)
       endName += "_" + str(len(objectFiles))

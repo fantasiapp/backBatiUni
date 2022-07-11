@@ -1042,19 +1042,13 @@ class DataAccessor():
         return {queryName:"Error", "messages":f"no mission with id {data['Mission']}"}
       else:
         mission = mission[0]
-    if "DetailedPost" in data:
-      detailedPost = DetailedPost.objects.filter(id=data["DetailedPost"])
-      if not detailedPost:
-        return {queryName:"Error", "messages":f"no detailedPost with id {data['DetailedPost']}"}
-      else:
-        detailedPost = detailedPost[0]
     if "Supervision" in data:
       supervision = Supervision.objects.filter(id=data["Supervision"])
       if not supervision:
         return {queryName:"Error", "messages":f"no supervision with id {data['Supervision']}"}
       else:
         supervision = supervision[0]
-    return File.createFile(data["nature"], data["name"], data['ext'], currentUser, data["fileBase64"], queryName, expirationDate=expirationDate, post=post, mission=mission, detailedPost=detailedPost, supervision=supervision)
+    return File.createFile(data["nature"], data["name"], data['ext'], currentUser, data["fileBase64"], queryName, expirationDate=expirationDate, post=post, mission=mission, supervision=supervision)
 
   @classmethod
   def __testUploadFile(cls, data):
@@ -1138,13 +1132,13 @@ class DataAccessor():
     print("modifyFile", list(data.keys()))
     objectFile = File.objects.get(id=data["fileId"])
     expirationDate = datetime.strptime(data["expirationDate"], "%Y-%m-%d") if "expirationDate" in data and data["expirationDate"] else None
-    post, mission, detailedPost, supervision= objectFile.Post, objectFile.Mission, objectFile.DetailedPost, objectFile.superVision
+    post, mission, supervision= objectFile.Post, objectFile.Mission, objectFile.superVision
     nature = data["nature"] if "nature" in data else objectFile.nature
     name = data["name"] if "name" in data else objectFile.name
     ext = data["ext"] if "ext" in data and data["ext"] != "???" else objectFile.ext
     suppress = "fileBase64" in data and len(data["fileBase64"]) != 0
     fileStr = data["fileBase64"] if suppress else None
-    return File.createFile(nature, name, ext, currentUser, "modifyFile", fileStr, expirationDate=expirationDate, post=post, mission=mission, detailedPost=detailedPost, supervision=supervision, suppress=suppress)
+    return File.createFile(nature, name, ext, currentUser, "modifyFile", fileStr, expirationDate=expirationDate, post=post, mission=mission, supervision=supervision, suppress=suppress)
     if name == "Kbis":
       print("le file path")
       hasQRCode, message = cls.detect_QR_code(objectFile)
