@@ -228,7 +228,7 @@ class Company(CommonModel):
   saturdayDisponibility = models.BooleanField("Disponibilité le Samedi", null=False, default=False)
   allQualifications = models.BooleanField("Tous corps d'état", null=False, default=False)
   stripeCustomerId = models.CharField("Customer ID générée par Stripe", max_length=128, null=True, unique=False)
-  stripeSubscriptionid = models.CharField("Subscription ID générée par Stripe", max_legth=128, null=True, unique=False)
+  stripeSubscriptionId = models.CharField("Subscription ID générée par Stripe", max_legth=128, null=True, unique=False)
   stripeSubscriptionStatus = models.CharField("Statut de l'abonnement géré par Stripe", max_length=128, null=True, unique=False)
 
   manyToManyObject = ["JobForCompany", "LabelForCompany", "File", "Post", "Mission", "Disponibility", "Notification"]
@@ -270,6 +270,8 @@ class Company(CommonModel):
       elif field == "saturdayDisponibility": values.append(self.saturdayDisponibility if self.saturdayDisponibility else "")
       elif field == "allQualifications": values.append(self.allQualifications if self.allQualifications else "")
       elif field == "stripeCustomerId": values.append(self.stripeCustomerId if self.stripeCustomerId else "")
+      elif field == "stripeSubscriptionId": values.append(self.stripeSubscriptionId if self.stripeSubscriptionId else "")
+      elif field == "stripeSubscriptionStatus": values.append(self.stripeSubscriptionStatus if self.stripeSubscriptionStatus else "")
 
       elif field in self.manyToManyObject:
         if dictFormat or not self.id in RamData.ramStructureComplete["Company"][field]:
