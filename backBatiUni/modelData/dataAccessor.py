@@ -1046,7 +1046,7 @@ class DataAccessor():
         return {"uploadFile":"Error", "messages":f"no post with id {data['Post']} for Post"}
       else:
         post = post[0]
-    return File.createFile(data["nature"], data["name"], data['ext'], currentUser, expirationDate=expirationDate, post=post)
+    return File.createFile(data["nature"], data["name"], data['ext'], currentUser, "uploadFile", expirationDate=expirationDate, post=post)
 
   @classmethod
   def __testUploadFile(cls, data):
