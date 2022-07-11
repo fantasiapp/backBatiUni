@@ -220,10 +220,9 @@ class DataAccessor():
       return {"changeUserImage":"Warning", "messages":f"L'extention {dictData['ext']} n'est pas traitée"}
     else:
       dictData['ext'] = File.authorizedExtention[dictData['ext']]
-    fileStr = dictData["imageBase64"]
     if not dictData["name"]:
       return {"changeUserImage":"Error", "messages":"field name is empty"}
-    return File.createFile("userImage", dictData["name"], dictData['ext'], currentUser, "changeUserImage")
+    return File.createFile("userImage", dictData["name"], dictData['ext'], currentUser, "changeUserImage", dictData["imageBase64"])
     # file = ContentFile(base64.b64decode(fileStr), name=objectFile.path + dictData['ext'])
     # with open(objectFile.path, "wb") as outfile:
     #     outfile.write(file.file.getbuffer())
