@@ -14,7 +14,6 @@ class DefaultView(APIView):
 
   @classmethod
   def myResponse (cls, json):
-    print("json", json) 
     json["timestamp"] = datetime.datetime.now().timestamp()
     return Response(json)
 
