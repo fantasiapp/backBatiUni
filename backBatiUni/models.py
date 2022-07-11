@@ -1,6 +1,8 @@
 from ast import DictComp
 from fileinput import isstdin
 from this import d
+from bs4 import BeautifulSoup
+import cv2
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -11,7 +13,6 @@ from django.apps import apps
 from pdf2image import convert_from_path
 import requests
 from django.core.files.base import ContentFile
-
 import whatimage
 import pyheif
 from PIL import Image
@@ -19,6 +20,9 @@ from cairosvg import svg2png
 from time import sleep, time
 from copy import deepcopy
 import json
+from svglib.svglib import svg2rlg
+from reportlab.graphics import renderPM
+import pdf2image 
 import shutil
 
 
@@ -223,8 +227,10 @@ class Company(CommonModel):
   longitude = models.FloatField("Longitude", null=True, default=None)
   saturdayDisponibility = models.BooleanField("Disponibilité le Samedi", null=False, default=False)
   allQualifications = models.BooleanField("Tous corps d'état", null=False, default=False)
-  stripeCustomerId = models.CharField("Customer ID générée par Stripe", max_length=128, null=True, unique = False)
-  
+  stripeCustomerId = models.CharField("Customer ID générée par Stripe", max_length=128, null=True, unique=False)
+  stripeSubscriptionId = models.CharField("Subscription ID générée par Stripe", max_length=128, null=True, unique=False)
+  stripeSubscriptionStatus = models.CharField("Statut de l'abonnement géré par Stripe", max_length=128, null=True, unique=False)
+
   manyToManyObject = ["JobForCompany", "LabelForCompany", "File", "Post", "Mission", "Disponibility", "Notification"]
 
   class Meta:
@@ -264,6 +270,8 @@ class Company(CommonModel):
       elif field == "saturdayDisponibility": values.append(self.saturdayDisponibility if self.saturdayDisponibility else "")
       elif field == "allQualifications": values.append(self.allQualifications if self.allQualifications else "")
       elif field == "stripeCustomerId": values.append(self.stripeCustomerId if self.stripeCustomerId else "")
+      elif field == "stripeSubscriptionId": values.append(self.stripeSubscriptionId if self.stripeSubscriptionId else "")
+      elif field == "stripeSubscriptionStatus": values.append(self.stripeSubscriptionStatus if self.stripeSubscriptionStatus else "")
 
       elif field in self.manyToManyObject:
         if dictFormat or not self.id in RamData.ramStructureComplete["Company"][field]:
@@ -1067,7 +1075,11 @@ class File(CommonModel):
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if objectFile.ext != "txt" else fileStr
       with open(objectFile.path, "wb") as outfile:
         outfile.write(file.file.getbuffer())
-      print(objectFile.name)
+    except:
+      if objectFile: objectFile.delete()
+      return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
+    try:
+      print("le nom a testé (censé être Kbis) : ", objectFile.name)
       if objectFile.name == "Kbis":
         hasQRCode, message = cls.detect_QR_code(objectFile)
         if not (hasQRCode):
@@ -1075,9 +1087,76 @@ class File(CommonModel):
           return {"uploadFile":"Error", "messages":f"{message}"}
       return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
     except:
-      if file: file.delete()
+      if objectFile: objectFile.delete()
       return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
+      # return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
 
+  @classmethod
+  def detect_QR_code(cls, file) :
+      
+    file_extension = '.' + file.ext
+    file_path = file.path
+    pathSplit = file_path.split('.')
+    pathSplit.pop(-1)
+    new_img = '.'.join(pathSplit) +'.jpg'
+
+    if file.ext.lower() == 'pdf':
+      cls.encodedStringListForPdf()
+      print(os.listdir('.'.join(pathSplit)))
+
+    # Convert pdf, svg, heic to jpg
+    if file_extension.lower() == '.pdf':
+        image = pdf2image.convert_from_path(file_path, 500)
+        image[0].save(new_img, 'jpg')
+        os.remove(file_path)
+        file_path = new_img
+    if file_extension.lower() == '.svg':
+        image = svg2rlg(file_path)
+        renderPM.drawToFile(image, new_img, fmt='jpg')
+    if file_extension.lower() == '.heic' :
+        heic_file = pyheif.read(file_path)
+        image = Image.frombytes(heic_file.mode, heic_file.size, heic_file.data)
+        image.save(new_img, format="jpg")
+        os.remove(file_path)
+        file_path = new_img
+
+    # Detect if the document has a QR Code
+    print("lz file path", file_path)
+    img = cv2.imread(file_path)
+    print("l'mg", img)
+    decoder = cv2.QRCodeDetector()
+    print("on a passé decoder")
+    if img :
+      print("y'a une image")
+    data, points, _ = decoder.detectAndDecode(img)
+    print("le data ", data)
+    if data:
+      print("decoded data ",data)
+    else : 
+        print('Le QR Code nest pas reconnaissable')
+        return (False, "Votre KBis ne contient pas de QR code ou bien ou il n'est pas lisible.")
+        
+    # Read URL 
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
+    f = requests.get(data, headers=headers)
+    html = f.content.decode()
+    soup = BeautifulSoup(html, features="html.parser")
+    for script in soup(["script", "style"]):
+        script.extract()  
+    text = soup.get_text()
+    lines = (line.strip() for line in text.splitlines())
+    chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+    text = '\n'.join(chunk for chunk in chunks if chunk)
+    print(text)
+    if 'La commande est supérieure à 3 mois' in text :
+        print('La commande est supérieure à 3 mois')
+        return (False, "Votre KBis n'est pas valide, il date de plus de 3 mois")
+    elif 'Aucun document trouvé pour ce code de vérification' in text :
+        print('Aucun document trouvé pour ce code de vérification')
+        return (False, "Votre KBis n'est pas valide")
+    elif 'Ce code de vérification a déjà été utilisé, vous ne pouvez plus consulter le document.'in text:
+      return (True, "")
+    return (True, "")
 
   @classmethod
   def removeOldFile(cls, suppress, objectFile):
