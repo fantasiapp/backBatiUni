@@ -1083,19 +1083,20 @@ class File(CommonModel):
           return {"uploadFile":"Error", "messages":f"{message}"}
       return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
     except:
-      if objectFile: objectFile.delete()
-      return {queryName:"Warning", "messages":"Le Kbis n'est pas correct"}
+      # if objectFile: objectFile.delete()
+      return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
 
   @classmethod
   def detect_QR_code(cls, file) :
-    if file.ext.lower() == 'pdf':
-      pass
       
     file_extension = '.' + file.ext
     file_path = file.path
     pathSplit = file_path.split('.')
     pathSplit.pop(-1)
     new_img = '.'.join(pathSplit) +'.jpg'
+
+    if file.ext.lower() == 'pdf':
+      print(os.listdir('.'.join(pathSplit)))
 
     # Convert pdf, svg, heic to jpg
     if file_extension.lower() == '.pdf':
