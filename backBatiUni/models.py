@@ -1050,7 +1050,7 @@ class File(CommonModel):
     return {}
 
   @classmethod
-  def createFile(cls, nature, name, ext, user, expirationDate = None, post=None, mission=None, detailedPost=None, supervision=None, suppress = False):
+  def createFile(cls, nature, name, ext, user, queryName, fileStr, expirationDate = None, post=None, mission=None, detailedPost=None, supervision=None, suppress = False):
     userProfile = UserProfile.objects.get(userNameInternal=user)
     objectFile, mission = None, None
     path, name, mission = cls.getPathAndName(name, nature, userProfile, ext, detailedPost, supervision, mission, post)
@@ -1067,24 +1067,25 @@ class File(CommonModel):
       objectFile.save()
     else:
       objectFile = cls.objects.create(nature=nature, name=name, path=path, ext=ext, Company=company, expirationDate=expirationDate, Post=post, Mission=mission, Supervision=supervision)
+      cls.__createFileWidthb64(objectFile, fileStr, user, queryName)
     return objectFile
 
   @classmethod
-  def createFileWidthb64(cls, objectFile, fileStr, currentUser):
+  def __createFileWidthb64(cls, objectFile, fileStr, currentUser, queryName):
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if objectFile.ext != "txt" else fileStr
       with open(objectFile.path, "wb") as outfile:
         outfile.write(file.file.getbuffer())
-      if data['name'] == "Kbis":
-        hasQRCode, message = cls.detect_QR_code(objectFile)
-        if not (hasQRCode):
-          print ("QR code", message, currentUser.name)
-          return {"uploadFile":"Error", "messages":f"{message}"}
-      return {"uploadFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
+      # if objectFile.name == "Kbis":
+      #   hasQRCode, message = cls.detect_QR_code(objectFile)
+      #   if not (hasQRCode):
+      #     print ("QR code", message, currentUser.name)
+      #     return {"uploadFile":"Error", "messages":f"{message}"}
+      return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
     except:
       print("delete file", file)
       if file: file.delete()
-      return {"uploadFile":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
+      return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
 
 
   @classmethod
