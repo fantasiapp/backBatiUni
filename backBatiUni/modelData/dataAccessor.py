@@ -1167,6 +1167,7 @@ class DataAccessor():
   @classmethod
   def __uploadImageSupervision(cls, data, currentUser):
     data["name"] = "name"
+    data["nature"] = "supervision"
     testMessage = cls.__testUploadFile(data)
     if testMessage:
       return testMessage
