@@ -638,7 +638,6 @@ class DataAccessor():
   def createContract(cls, mission, user):
     File.createFile("contract", "contract", "png", user, "createContract", None, mission=mission)
     contractImage = File.objects.get(nature="contract", Mission=mission)
-    print("createContract", contractImage.id)
     source = "./files/documents/contractUnsigned.png"
     dest = contractImage.path
     shutil.copy2(source, dest)
@@ -1144,27 +1143,6 @@ class DataAccessor():
     suppress = "fileBase64" in data and len(data["fileBase64"]) != 0
     fileStr = data["fileBase64"] if suppress else None
     return File.createFile(nature, name, ext, currentUser, "modifyFile", fileStr, expirationDate=expirationDate, post=post, mission=mission, supervision=supervision, suppress=suppress)
-    if name == "Kbis":
-      print("le file path")
-      hasQRCode, message = cls.detect_QR_code(objectFile)
-      if not (hasQRCode):
-          return {"modifyFile":"Error", "messages":f"{message}"}
-    if "fileBase64" in data and data["fileBase64"]:
-      error = cls.__registerNewFile(ext, data["fileBase64"], objectFile)
-      if error: return error
-    return {"modifyFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
-
-  # @classmethod   
-  # def __registerNewFile(cls, ext, content, objectFile):
-  #   print("__registerNewFile")
-  #   try:
-  #     file = ContentFile(base64.urlsafe_b64decode(content), name=objectFile.path) if ext != "txt" else content
-  #     with open(objectFile.path, "wb") as outfile:
-  #       outfile.write(file.file.getbuffer())
-  #   except ValueError:
-  #     return {"modifyFile":"Error", "messages":f"File of id {file.id} has not been saved"}
-  #   return None
-
 
   @classmethod
   def __uploadImageSupervision(cls, data, currentUser):
@@ -1177,8 +1155,14 @@ class DataAccessor():
     message = File.createFile("supervision", "supervision", data['ext'], currentUser, "uploadImageSupervision", data["fileBase64"], supervision=supervision)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     objectFather = supervision.DetailedPost.DatePost if supervision.DetailedPost else supervision.DatePost
-    print("uploadImageSupervision", objectFather, supervision.DetailedPost, supervision.DatePost)
-    cls.__addNewNotificationForMessage(userProfile, objectFather.Mission, f"Une nouvelle image pour le chantier du {objectFather.Mission.address} vous attend.")
+    mission = objectFather.mission
+    if mission.Company.id == userProfile.Company.id:
+      candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
+      subContractor = candidate.Company
+      profile = UserProfile.objects.filter(Company=subContractor)
+    else:
+      profile = UserProfile.objects.filter(Company=mission.Company)
+    cls.__addNewNotificationForMessage(profile, objectFather.Mission, f"Une nouvelle image pour le chantier du {objectFather.Mission.address} vous attend.")
     return message
 
   @classmethod
