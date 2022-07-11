@@ -1113,7 +1113,7 @@ class File(CommonModel):
       print("get path", cls.dictPath[nature], name, userProfile.Company.id, ext)
       path = cls.dictPath[nature] + name + '_' + str(userProfile.Company.id) + '.' + ext
     if nature == "post":
-      path = cls.dictPath[nature] + name + '_' + str(post.id if post else mission.id) + '.' + ext
+      path = cls.dictPath[nature] + name + '_' + str(post.id) + '.' + ext
     if nature == "supervision":
       endName = '_' + str(mission.id) if mission else '_N'
       endName += '_' + str(supervision.id) if supervision else '_N'
@@ -1122,8 +1122,7 @@ class File(CommonModel):
       name +=  endName
       path = cls.dictPath[nature] + name + '.' + ext
     if nature == "contract":
-      mission = post
-      post = None
+      print("contract", cls.dictPath[nature], name, mission, ext)
       path = cls.dictPath[nature] + name + '_' + str(mission.id) + '.' + ext
     return path, name, mission
 
