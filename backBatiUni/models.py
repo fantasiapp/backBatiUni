@@ -1076,11 +1076,11 @@ class File(CommonModel):
       return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
     try:
       print(objectFile.name)
-      if objectFile.name == "Kbis":
-        hasQRCode, message = cls.detect_QR_code(objectFile)
-        if not (hasQRCode):
-          print ("QR code", message, currentUser.name)
-          return {"uploadFile":"Error", "messages":f"{message}"}
+      # if objectFile.name == "Kbis":
+      #   hasQRCode, message = cls.detect_QR_code(objectFile)
+      #   if not (hasQRCode):
+      #     print ("QR code", message, currentUser.name)
+      #     return {"uploadFile":"Error", "messages":f"{message}"}
       return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
     except:
       if objectFile: objectFile.delete()
