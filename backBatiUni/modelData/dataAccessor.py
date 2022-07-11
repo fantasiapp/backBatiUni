@@ -1015,7 +1015,7 @@ class DataAccessor():
 
   @classmethod
   def __uploadFile(cls, data, currentUser):
-    fileStr, testMessage = cls.__testUploadFile(data)
+    testMessage = cls.__testUploadFile(data)
     if testMessage:
       return testMessage
     return  cls.__createObjectFile(data, currentUser)
@@ -1046,7 +1046,7 @@ class DataAccessor():
         return {"uploadFile":"Error", "messages":f"no post with id {data['Post']} for Post"}
       else:
         post = post[0]
-    return File.createFile(data["nature"], data["name"], data['ext'], currentUser, "uploadFile", expirationDate=expirationDate, post=post)
+    return File.createFile(data["nature"], data["name"], data['ext'], currentUser, data["fileBase64"], "uploadFile", expirationDate=expirationDate, post=post)
 
   @classmethod
   def __testUploadFile(cls, data):
@@ -1064,7 +1064,7 @@ class DataAccessor():
       message["fileBase64"] = "field fileBase64 is empty"
     if message:
       return {"uploadFile":"Error", "messages":message}
-    return fileStr, False
+    return False
 
   @classmethod
   def detect_QR_code(cls, file) :
