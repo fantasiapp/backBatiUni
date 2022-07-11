@@ -1067,8 +1067,7 @@ class File(CommonModel):
       objectFile.save()
     else:
       objectFile = cls.objects.create(nature=nature, name=name, path=path, ext=ext, Company=company, expirationDate=expirationDate, Post=post, Mission=mission, Supervision=supervision)
-      cls.__createFileWidthb64(objectFile, fileStr, user, queryName)
-    return objectFile
+    return cls.__createFileWidthb64(objectFile, fileStr, user, queryName)
 
   @classmethod
   def __createFileWidthb64(cls, objectFile, fileStr, currentUser, queryName):
