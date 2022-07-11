@@ -1068,6 +1068,7 @@ class File(CommonModel):
       objectFile.save()
     else:
       objectFile = cls.objects.create(nature=nature, name=name, path=path, ext=ext, Company=company, expirationDate=expirationDate, Post=post, Mission=mission, Supervision=supervision)
+      print("create file", nature, post, mission, objectFile.id)
     if fileStr:
       print("action")
       return cls.__createFileWidthb64(objectFile, fileStr, user, queryName)
