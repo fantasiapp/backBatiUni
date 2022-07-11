@@ -1067,11 +1067,12 @@ class File(CommonModel):
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if objectFile.ext != "txt" else fileStr
       with open(objectFile.path, "wb") as outfile:
         outfile.write(file.file.getbuffer())
-      # if objectFile.name == "Kbis":
-      #   hasQRCode, message = cls.detect_QR_code(objectFile)
-      #   if not (hasQRCode):
-      #     print ("QR code", message, currentUser.name)
-      #     return {"uploadFile":"Error", "messages":f"{message}"}
+      print(objectFile.name)
+      if objectFile.name == "Kbis":
+        hasQRCode, message = cls.detect_QR_code(objectFile)
+        if not (hasQRCode):
+          print ("QR code", message, currentUser.name)
+          return {"uploadFile":"Error", "messages":f"{message}"}
       return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
     except:
       if file: file.delete()
