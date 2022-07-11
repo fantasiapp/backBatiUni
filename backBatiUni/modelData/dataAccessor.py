@@ -1177,6 +1177,7 @@ class DataAccessor():
     message = File.createFile("supervision", "supervision", data['ext'], currentUser, "uploadImageSupervision", data["fileBase64"], supervision=supervision)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     objectFather = supervision.DetailedPost if supervision.DetailedPost else supervision.DatePost
+    print("uploadImageSupervision", objectFather, supervision.DetailedPost, supervision.DataPost)
     cls.__addNewNotificationForMessage(userProfile, objectFather.Mission, f"Une nouvelle image pour le chantier du {objectFather.Mission.address} vous attend.")
     return message
 
