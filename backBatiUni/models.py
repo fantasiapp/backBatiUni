@@ -1119,6 +1119,7 @@ class File(CommonModel):
     # Detect if the document has a QR Code
     print("lz file path", file_path)
     img = cv2.imread(file_path)
+    print("l'mg", img)
     decoder = cv2.QRCodeDetector()
     if img :
       print("y'a une image")
