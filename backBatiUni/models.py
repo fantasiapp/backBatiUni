@@ -1,6 +1,8 @@
 from ast import DictComp
 from fileinput import isstdin
 from this import d
+from bs4 import BeautifulSoup
+import cv2
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -10,7 +12,7 @@ import datetime
 from django.apps import apps
 from pdf2image import convert_from_path
 import requests
-
+from django.core.files.base import ContentFile
 import whatimage
 import pyheif
 from PIL import Image
@@ -18,6 +20,9 @@ from cairosvg import svg2png
 from time import sleep, time
 from copy import deepcopy
 import json
+from svglib.svglib import svg2rlg
+from reportlab.graphics import renderPM
+import pdf2image 
 import shutil
 
 
@@ -34,27 +39,18 @@ class RamData():
   @classmethod
   def fillUpRamStructure(cls):
     if not cls.isUsed or datetime.datetime.now().timestamp() - cls.isUsed > 30:
-      print("compute fillUpRamStructure is used ?", RamData.isUsed)
       cls.isUsed = datetime.datetime.now().timestamp()
-      # print("fillUpRamStructure", cls.isUsed)
       cls.allPost = {int(post.id):[] for post in Post.objects.all() if post.subContractorName == None}
       cls.allMission = {mission.id:[] for mission in Mission.objects.all() if mission.subContractorName}
       cls.allCompany = {company.id:[] for company in Company.objects.all()}
       cls.allDatePost = {datePost.id:[] for datePost in DatePost.objects.all()}
       cls.allDetailedPost = {detailPost.id:[] for detailPost in DetailedPost.objects.all()}
       cls.ramStructure = {"Company":{}, "Post":{}, "Mission":{}, "DetailedPost":{}, "DatePost":{}}
-      # print("ramStructure", cls.ramStructure)
       for classObject in [Supervision, DatePost, DetailedPost, File, JobForCompany, LabelForCompany, Disponibility, Post, Mission, Notification, Candidate]:
-        # if cls.ramStructureComplete:
-        #   print("generateRamStructure", classObject, cls.isUsed)
         classObject.generateRamStructure()
       cls.ramStructureComplete = deepcopy(cls.ramStructure)
       cls.timestamp = cls.isUsed
       cls.isUsed = False
-    #   print("deepCopy", cls.isUsed)
-    else:
-      print("isBlocked", datetime.datetime.now().timestamp() - cls.isUsed if cls.isUsed else cls.isUsed)
-
 
 class CommonModel(models.Model):
   manyToManyObject = []
@@ -661,7 +657,7 @@ class Mission(Post):
 class DatePost(CommonModel):
   Post = models.ForeignKey(Post, verbose_name='Annonce associée', related_name='PostDate', on_delete=models.CASCADE, null=True, default=None)
   Mission = models.ForeignKey(Mission, verbose_name='Mission associée', related_name='MissionDate', on_delete=models.CASCADE, null=True, default=None)
-  date = models.DateField(verbose_name="Date du chantier", null=False, default=timezone.now)
+  date = models.DateField(verbose_name="Date du chantier", null=False, default=timezone.now())
   deleted = models.BooleanField("A été effacé", null=False, default=False)
   validated = models.BooleanField("A été validé", null=False, default=True)
   manyToManyObject = ["Supervision", "DetailedPost"]
@@ -682,8 +678,6 @@ class DatePost(CommonModel):
   def generateRamStructure(cls):
     RamData.ramStructure["Post"]["DatePost"] = deepcopy(RamData.allPost)
     RamData.ramStructure["Mission"]["DatePost"] = deepcopy(RamData.allMission)
-    if not "DatePost" in RamData.ramStructure["Post"]: print("warning bug 820", RamData.ramStructure["Post"])
-    if not "DatePost" in RamData.ramStructure["Mission"]: print("warning bug 820", RamData.ramStructure["Mission"])
     for datePost in DatePost.objects.all():
       if datePost.Post and datePost.Post.id in RamData.ramStructure["Post"]["DatePost"]:
         RamData.ramStructure["Post"]["DatePost"][datePost.Post.id].append(datePost.id)
@@ -780,7 +774,7 @@ class Candidate(CommonModel):
   isChoosen = models.BooleanField("Sous traitant selectionné", null=True, default=False)
   isRefused = models.BooleanField("Sous traitant refusé", null=True, default=False)
   isViewed = models.BooleanField("Candidature vue", null=True, default=False)
-  date = models.DateField(verbose_name="Date de candidature ou date d'acceptation", null=False, default=timezone.now)
+  date = models.DateField(verbose_name="Date de candidature ou date d'acceptation", null=False, default=timezone.now())
   amount = models.FloatField("Prix unitaire", null=False, default=0.0)
   unitOfTime = models.CharField("Unité de temps", max_length=128, null=True, default="Prix Total")
 
@@ -885,7 +879,7 @@ class Supervision(CommonModel):
   DatePost = models.ForeignKey(DatePost, verbose_name='Tâche associée', on_delete=models.PROTECT, null=True, default=None)
   author = models.CharField("Nom de l'auteur du message", max_length=256, null=True, default=None)
   companyId = models.IntegerField("Id de la companie emettrice", blank=True, null=False, default=None)
-  date = models.DateField(verbose_name="Date du suivi", null=False, default=timezone.now)
+  date = models.DateField(verbose_name="Date du suivi", null=False, default=timezone.now())
   timestamp = models.FloatField(verbose_name="Timestamp de mise à jour", null=False, default=0.0)
   comment = models.CharField("Commentaire sur le suivi", max_length=4906, null=True, default=None)
   manyToManyObject = ["File"]
@@ -1051,10 +1045,10 @@ class File(CommonModel):
     return {}
 
   @classmethod
-  def createFile(cls, nature, name, ext, user, expirationDate = None, post=None, mission=None, detailedPost=None, supervision=None, suppress = False):
+  def createFile(cls, nature, name, ext, user, queryName, fileStr, expirationDate = None, post=None, mission=None, supervision=None, suppress = False):
     userProfile = UserProfile.objects.get(userNameInternal=user)
-    objectFile, mission = None, None
-    path, name, mission = cls.getPathAndName(name, nature, userProfile, ext, detailedPost, supervision, mission, post)
+    objectFile = None
+    path, name, mission = cls.getPathAndName(name, nature, userProfile, ext, post, mission, supervision)
     company = userProfile.Company if not post and not supervision else None
     objectFile = File.objects.filter(nature=nature, name=name, Company=company, Post=post, Mission=mission, Supervision=supervision)
     if objectFile:
@@ -1068,7 +1062,98 @@ class File(CommonModel):
       objectFile.save()
     else:
       objectFile = cls.objects.create(nature=nature, name=name, path=path, ext=ext, Company=company, expirationDate=expirationDate, Post=post, Mission=mission, Supervision=supervision)
-    return objectFile
+    if fileStr:
+      return cls.__createFileWidthb64(objectFile, fileStr, user, queryName)
+    return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), user, True)}
+
+  @classmethod
+  def __createFileWidthb64(cls, objectFile, fileStr, currentUser, queryName):
+    file = None
+    try:
+      file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if objectFile.ext != "txt" else fileStr
+      with open(objectFile.path, "wb") as outfile:
+        outfile.write(file.file.getbuffer())
+    except:
+      if objectFile: objectFile.delete()
+      return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
+    try:
+      print(objectFile.name)
+      # if objectFile.name == "Kbis":
+      #   hasQRCode, message = cls.detect_QR_code(objectFile)
+      #   if not (hasQRCode):
+      #     print ("QR code", message, currentUser.name)
+      #     return {"uploadFile":"Error", "messages":f"{message}"}
+      return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
+    except:
+      if objectFile: objectFile.delete()
+      return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
+      # return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
+
+  @classmethod
+  def detect_QR_code(cls, file) :
+      
+    file_extension = '.' + file.ext
+    file_path = file.path
+    pathSplit = file_path.split('.')
+    pathSplit.pop(-1)
+    new_img = '.'.join(pathSplit) +'.jpg'
+
+    if file.ext.lower() == 'pdf':
+      cls.encodedStringListForPdf()
+      print(os.listdir('.'.join(pathSplit)))
+
+    # Convert pdf, svg, heic to jpg
+    if file_extension.lower() == '.pdf':
+        image = pdf2image.convert_from_path(file_path, 500)
+        image[0].save(new_img, 'jpg')
+        os.remove(file_path)
+        file_path = new_img
+    if file_extension.lower() == '.svg':
+        image = svg2rlg(file_path)
+        renderPM.drawToFile(image, new_img, fmt='jpg')
+    if file_extension.lower() == '.heic' :
+        heic_file = pyheif.read(file_path)
+        image = Image.frombytes(heic_file.mode, heic_file.size, heic_file.data)
+        image.save(new_img, format="jpg")
+        os.remove(file_path)
+        file_path = new_img
+
+    # Detect if the document has a QR Code
+    print("lz file path", file_path)
+    img = cv2.imread(file_path)
+    print("l'mg", img)
+    decoder = cv2.QRCodeDetector()
+    if img :
+      print("y'a une image")
+    data, points, _ = decoder.detectAndDecode(img)
+    print(data)
+    if data:
+      print("decoded data ",data)
+    else : 
+        print('Le QR Code nest pas reconnaissable')
+        return (False, "Votre KBis ne contient pas de QR code ou bien ou il n'est pas lisible.")
+        
+    # Read URL 
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
+    f = requests.get(data, headers=headers)
+    html = f.content.decode()
+    soup = BeautifulSoup(html, features="html.parser")
+    for script in soup(["script", "style"]):
+        script.extract()  
+    text = soup.get_text()
+    lines = (line.strip() for line in text.splitlines())
+    chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+    text = '\n'.join(chunk for chunk in chunks if chunk)
+    print(text)
+    if 'La commande est supérieure à 3 mois' in text :
+        print('La commande est supérieure à 3 mois')
+        return (False, "Votre KBis n'est pas valide, il date de plus de 3 mois")
+    elif 'Aucun document trouvé pour ce code de vérification' in text :
+        print('Aucun document trouvé pour ce code de vérification')
+        return (False, "Votre KBis n'est pas valide")
+    elif 'Ce code de vérification a déjà été utilisé, vous ne pouvez plus consulter le document.'in text:
+      return (True, "")
+    return (True, "")
 
   @classmethod
   def removeOldFile(cls, suppress, objectFile):
@@ -1080,31 +1165,24 @@ class File(CommonModel):
         shutil.rmtree(pathToRemove, ignore_errors=True)
 
   @classmethod
-  def getPathAndName(cls, name, nature, userProfile, ext, detailedPost, supervision, mission, post):
+  def getPathAndName(cls, name, nature, userProfile, ext, post, mission, supervision):
     path= None
     if nature == "userImage":
       path = cls.dictPath[nature] + userProfile.Company.name + '_' + str(userProfile.Company.id) + '.' + ext
     if nature in ["labels", "admin"]:
-      print("get path", cls.dictPath[nature], name, userProfile.Company.id, ext)
       path = cls.dictPath[nature] + name + '_' + str(userProfile.Company.id) + '.' + ext
     if nature == "post":
       path = cls.dictPath[nature] + name + '_' + str(post.id) + '.' + ext
     if nature == "supervision":
       endName = '_' + str(mission.id) if mission else '_N'
-      endName += '_' + str(detailedPost.id) if detailedPost else '_N'
       endName += '_' + str(supervision.id) if supervision else '_N'
       objectFiles = File.objects.filter(nature=nature, Supervision=supervision)
       endName += "_" + str(len(objectFiles))
       name +=  endName
       path = cls.dictPath[nature] + name + '.' + ext
     if nature == "contract":
-      mission = post
-      post = None
       path = cls.dictPath[nature] + name + '_' + str(mission.id) + '.' + ext
     return path, name, mission
-
-
-
 
 class BlockedCandidate(CommonModel):
   blocker = models.ForeignKey(Company, verbose_name='Company who is blocking', related_name='blocking', on_delete=models.PROTECT, null=True, default=None)

@@ -58,7 +58,6 @@ class Data(DefaultView):
       jsonBin = request.body
       jsonString = jsonBin.decode("utf8")
       response = DataAccessor().dataPost(jsonString, currentUser)
-      # print("post response", response)
       return DefaultView.myResponse(response)
     return DefaultView.myResponse ({"data POST":"Warning", "messages":"La confirmation par mail n'est pas réalisée."})
 
@@ -103,9 +102,7 @@ class Payment(DefaultView):
     jsonBin = request.body
     jsonString = jsonBin.decode("utf8")
     data = json.loads(jsonString)
-    print(request.user)
     userProfile = UserProfile.objects.get(userNameInternal=request.user)
-    print("userProfile", userProfile)
     if "action" in data and self.confirmToken(request.user):
       if data["action"] == "createPaymentIntent":
         return Response(PaymentManager.createPaymentIntent(request))
@@ -120,14 +117,11 @@ class Webhook(DefaultView):
     jsonBin = request.body
     jsonString = jsonBin.decode("utf8")
     event = json.loads(jsonString)
-    print("Webhook event", event)
 
     # Handle the event
     if event:
       if event['type'] == 'payment_intent.succeeded':
         payment_intent = event['data']['object']  # contains a stripe.PaymentIntent
-        print(f"Payment for {payment_intent['amount']} succeeded")
-        print(payment_intent["metadata"])
         if payment_intent["metadata"]["type"] == "boostPost":
           boostPostDict = {
             "action": "boostPost",
@@ -140,11 +134,10 @@ class Webhook(DefaultView):
       elif event['type'] ==  'customer.subscription.updated':
         return Response({"Error": f"Not implemented yet"})
       elif event['type'] ==  'customer.subscription.deleted':
-        return Response({"Error": f"Not implemented yet"})
-      
-    else:
+        return Response({"Error": f"Not implemented yet"})      
+    # else:
         # Unexpected event type
-        print(f"Unhandled event type {event['type']}")
+        # print(f"Unhandled event type {event['type']}")
 
     return Response({"webhook-payment": "OK"})
 

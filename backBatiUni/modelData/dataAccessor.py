@@ -188,6 +188,7 @@ class DataAccessor():
   def dataPost(cls, jsonString, currentUser):
     data = json.loads(jsonString)
     if "action" in data:
+      print("dataPost action", data["action"])
       if data["action"] == "modifyPwd": return cls.__modifyPwd(data, currentUser)
       elif data["action"] == "modifyUser": return cls.__updateUserInfo(data, currentUser)
       elif data["action"] == "changeUserImage": return cls.__changeUserImage(data, currentUser)
@@ -215,18 +216,9 @@ class DataAccessor():
 
   @classmethod
   def __changeUserImage(cls, dictData, currentUser):
-    if not dictData['ext'] in File.authorizedExtention:
-      return {"changeUserImage":"Warning", "messages":f"L'extention {dictData['ext']} n'est pas traitée"}
-    else:
-      dictData['ext'] = File.authorizedExtention[dictData['ext']]
-    fileStr = dictData["imageBase64"]
-    if not dictData["name"]:
-      return {"changeUserImage":"Error", "messages":"field name is empty"}
-    objectFile = File.createFile("userImage", dictData["name"], dictData['ext'], currentUser)
-    file = ContentFile(base64.b64decode(fileStr), name=objectFile.path + dictData['ext'])
-    with open(objectFile.path, "wb") as outfile:
-        outfile.write(file.file.getbuffer())
-    return {"changeUserImage":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
+    dictData["name"] = "image"
+    dictData["nature"] = "userImage"
+    return cls.__uploadFile(dictData, currentUser, queryName="changeUserImage")
 
   @classmethod
   def __uploadPost(cls, dictData, currentUser):
@@ -641,6 +633,16 @@ class DataAccessor():
     post = candidate.Post
     return {"handleCandidateForPost":"OK", post.id:post.computeValues(post.listFields(), currentUser, dictFormat=True)}
 
+
+  @classmethod
+  def createContract(cls, mission, user):
+    File.createFile("contract", "contract", "png", user, "createContract", None, mission=mission)
+    contractImage = File.objects.get(nature="contract", Mission=mission)
+    source = "./files/documents/contractUnsigned.png"
+    dest = contractImage.path
+    shutil.copy2(source, dest)
+    return contractImage
+
   @classmethod
   def removefirstNumber(cls, address):
     """ Retire les numéros de rue dans une adresse"""
@@ -688,16 +690,6 @@ class DataAccessor():
       datePost.Post = None
       datePost.Mission = mission
       datePost.save()
-
-
-
-  @classmethod
-  def createContract(cls, mission, user):
-    contractImage = File.createFile("contract", "contract", "png", user, post=mission)
-    source = "./files/documents/contractUnsigned.png"
-    dest = contractImage.path
-    shutil.copy2(source, dest)
-    return contractImage
 
   @classmethod
   def signContract(cls, missionId, view, currentUser):
@@ -1014,38 +1006,52 @@ class DataAccessor():
     return {"deleteFile":"Error", "messages":f"No file width id {id}"}
 
   @classmethod
-  def __uploadFile(cls, data, currentUser):
-    fileStr, testMessage = cls.__testUploadFile(data)
+  def __uploadFile(cls, data, currentUser, queryName="uploadFile"):
+    testMessage = cls.__testUploadFile(data)
     if testMessage:
       return testMessage
-    objectFile = cls.__createObjectFile(data, currentUser)
-    file = None
-    try:
-      file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if data['ext'] != "txt" else fileStr
-      with open(objectFile.path, "wb") as outfile:
-        outfile.write(file.file.getbuffer())
-      if data['name'] == "Kbis":
-        hasQRCode, message = cls.detect_QR_code(objectFile)
-        if not (hasQRCode):
-          print ("QR code", message, currentUser.name)
-          return {"uploadFile":"Error", "messages":f"{message}"}
-      return {"uploadFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
-    except:
-      print("delete file", file)
-      if file: file.delete()
-      return {"uploadFile":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
+    return  cls.__createObjectFile(data, currentUser, queryName)
+    # file = None
+    
+    # try:
+    #   file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if data['ext'] != "txt" else fileStr
+    #   with open(objectFile.path, "wb") as outfile:
+    #     outfile.write(file.file.getbuffer())
+    #   if data['name'] == "Kbis":
+    #     hasQRCode, message = cls.detect_QR_code(objectFile)
+    #     if not (hasQRCode):
+    #       print ("QR code", message, currentUser.name)
+    #       return {"uploadFile":"Error", "messages":f"{message}"}
+    #   return {"uploadFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
+    # except:
+    #   print("delete file", file)
+    #   if file: file.delete()
+    #   return {"uploadFile":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
 
   @classmethod
-  def __createObjectFile(cls, data, currentUser):
+  def __createObjectFile(cls, data, currentUser, queryName):
     expirationDate = datetime.strptime(data["expirationDate"], "%Y-%m-%d") if "expirationDate" in data and data["expirationDate"] else None
-    post = None
+    post, mission, supervision = None, None, None
     if "Post" in data:
       post = Post.objects.filter(id=data["Post"])
       if not post:
-        return {"uploadFile":"Error", "messages":f"no post with id {data['Post']} for Post"}
+        return {queryName:"Error", "messages":f"no post with id {data['Post']}"}
       else:
         post = post[0]
-    return File.createFile(data["nature"], data["name"], data['ext'], currentUser, expirationDate=expirationDate, post=post)
+    if "Mission" in data:
+      mission = Mission.objects.filter(id=data["Mission"])
+      if not mission:
+        return {queryName:"Error", "messages":f"no mission with id {data['Mission']}"}
+      else:
+        mission = mission[0]
+    if "Supervision" in data:
+      supervision = Supervision.objects.filter(id=data["Supervision"])
+      if not supervision:
+        return {queryName:"Error", "messages":f"no supervision with id {data['Supervision']}"}
+      else:
+        supervision = supervision[0]
+    print("__createObjectFile", len(data["fileBase64"]) if "fileBase" in data else None)
+    return File.createFile(data["nature"], data["name"], data['ext'], currentUser, queryName, data["fileBase64"], expirationDate=expirationDate, post=post, mission=mission, supervision=supervision)
 
   @classmethod
   def __testUploadFile(cls, data):
@@ -1063,174 +1069,43 @@ class DataAccessor():
       message["fileBase64"] = "field fileBase64 is empty"
     if message:
       return {"uploadFile":"Error", "messages":message}
-    return fileStr, False
+    return False
 
-  # @classmethod
-  # def __uploadFile(cls, data, currentUser):
-  #   testMessage = cls.__testUploadFile(data)
-    
-  #   expirationDate = datetime.strptime(data["expirationDate"], "%Y-%m-%d") if "expirationDate" in data and data["expirationDate"] else None
-  #   post = None
-  #   if "Post" in data:
-  #     post = Post.objects.filter(id=data["Post"])
-  #     if not post:
-  #       return {"uploadFile":"Error", "messages":f"no post with id {data['Post']} for Post"}
-  #     else:
-  #       post = post[0]
-  #   objectFile = File.createFile(data["nature"], data["name"], data['ext'], currentUser, expirationDate=expirationDate, post=post)
-
-  #   file = None
-  #   try:
-  #     file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if data['ext'] != "txt" else fileStr
-  #     with open(objectFile.path, "wb") as outfile:
-  #       outfile.write(file.file.getbuffer())
-  #     if data['name'] == "Kbis":
-  #       hasQRCode, message = cls.detect_QR_code(objectFile)
-  #       if not (hasQRCode):
-  #         print ("QR code", message, currentUser.name)
-  #         return {"uploadFile":"Error", "messages":f"{message}"}
-  #     return {"uploadFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
-  #   except:
-  #     print("delete file", file)
-  #     if file: file.delete()
-  #     return {"uploadFile":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
-
-  # @classmethod
-  # def __testUploadFile(data):
-  #   if not "ext" in data or not "fileBase64" in data:
-  #     return {"uploadFile":"Warning", "messages":f"Le fichier n'est pas conforme"}
-  #   if not data['ext'] in File.authorizedExtention:
-  #     return {"changeUserImage":"Warning", "messages":f"L'extention {data['ext']} n'est pas traitée"}
-  #   else:
-  #     data['ext'] = File.authorizedExtention[data['ext']]
-  #   fileStr, message = data["fileBase64"], {}
-  #   for field in ["name", "ext", "nature"]:
-  #     if not data[field]:
-  #       message[field] = f"field {field} is empty"
-  #   if not fileStr:
-  #     message["fileBase64"] = "field fileBase64 is empty"
-  #   if message:
-  #     return {"uploadFile":"Error", "messages":message}
-  #   return
-
-
-  @classmethod
-  def detect_QR_code(cls, file) :
-    file_extension = '.' + file.ext
-    file_path = file.path
-    pathSplit = file_path.split('.')
-    pathSplit.pop(-1)
-    new_img = '.'.join(pathSplit) +'.jpg'
-
-    # Convert pdf, svg, heic to jpg
-    if file_extension.lower() == '.pdf':
-        image = pdf2image.convert_from_path(file_path, 500)
-        image[0].save(new_img, 'jpg')
-        os.remove(file_path)
-        file_path = new_img
-    if file_extension.lower() == '.svg':
-        image = svg2rlg(file_path)
-        renderPM.drawToFile(image, new_img, fmt='jpg')
-    if file_extension.lower() == '.heic' :
-        heic_file = pyheif.read(file_path)
-        image = Image.frombytes(heic_file.mode, heic_file.size, heic_file.data)
-        image.save(new_img, format="jpg")
-        os.remove(file_path)
-        file_path = new_img
-
-    # Detect if the document has a QR Code
-    print("lz file path", file_path)
-    img = cv2.imread(file_path)
-    print("l'img", img)
-    decoder = cv2.QRCodeDetector()
-    print(img)
-    data, points, _ = decoder.detectAndDecode(img)
-    if data:
-      print("decoded data ",data)
-    else : 
-        print('Le QR Code nest pas reconnaissable')
-        return (False, "Votre KBis ne contient pas de QR code ou bien ou il n'est pas lisible.")
-        
-    # Read URL 
-    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
-    f = requests.get(data, headers=headers)
-    html = f.content.decode()
-    soup = BeautifulSoup(html, features="html.parser")
-    for script in soup(["script", "style"]):
-        script.extract()  
-    text = soup.get_text()
-    lines = (line.strip() for line in text.splitlines())
-    chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
-    text = '\n'.join(chunk for chunk in chunks if chunk)
-    print(text)
-    if 'La commande est supérieure à 3 mois' in text :
-        print('La commande est supérieure à 3 mois')
-        return (False, "Votre KBis n'est pas valide, il date de plus de 3 mois")
-    elif 'Aucun document trouvé pour ce code de vérification' in text :
-        print('Aucun document trouvé pour ce code de vérification')
-        return (False, "Votre KBis n'est pas valide")
-    elif 'Ce code de vérification a déjà été utilisé, vous ne pouvez plus consulter le document.'in text:
-      return (True, "")
-    return (True, "")
 
   @classmethod
   def __modifyFile(cls, data, currentUser):
     print("modifyFile", list(data.keys()))
     objectFile = File.objects.get(id=data["fileId"])
     expirationDate = datetime.strptime(data["expirationDate"], "%Y-%m-%d") if "expirationDate" in data and data["expirationDate"] else None
-    post, mission = objectFile.Post, objectFile.Mission
+    post, mission, supervision= objectFile.Post, objectFile.Mission, objectFile.Supervision
     nature = data["nature"] if "nature" in data else objectFile.nature
     name = data["name"] if "name" in data else objectFile.name
     ext = data["ext"] if "ext" in data and data["ext"] != "???" else objectFile.ext
     suppress = "fileBase64" in data and len(data["fileBase64"]) != 0
-    objectFile = File.createFile(nature, name, ext, currentUser, expirationDate=expirationDate, post=post, mission=mission, detailedPost=None, suppress=suppress)
-    if name == "Kbis":
-      print("le file path")
-      hasQRCode, message = cls.detect_QR_code(objectFile)
-      if not (hasQRCode):
-          return {"modifyFile":"Error", "messages":f"{message}"}
-    if "fileBase64" in data and data["fileBase64"]:
-      error = cls.__registerNewFile(ext, data["fileBase64"], objectFile)
-      if error: return error
-    return {"modifyFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
-
-  @classmethod   
-  def __registerNewFile(cls, ext, content, objectFile):
-    print("__registerNewFile")
-    try:
-      file = ContentFile(base64.urlsafe_b64decode(content), name=objectFile.path) if ext != "txt" else content
-      with open(objectFile.path, "wb") as outfile:
-        outfile.write(file.file.getbuffer())
-    except ValueError:
-      return {"modifyFile":"Error", "messages":f"File of id {file.id} has not been saved"}
-    return None
-
+    fileStr = data["fileBase64"] if suppress else None
+    return File.createFile(nature, name, ext, currentUser, "modifyFile", fileStr, expirationDate=expirationDate, post=post, mission=mission, supervision=supervision, suppress=suppress)
 
   @classmethod
   def __uploadImageSupervision(cls, data, currentUser):
-    print("uploadImageSupervision")
-    if not data['ext'] in File.authorizedExtention:
-      return {"uploadImageSupervision":"Warning", "messages":f"L'extention {data['ext']} n'est pas traitée"}
-    else:
-      data['ext'] = File.authorizedExtention[data['ext']]
-    fileStr = data["imageBase64"]
-    if not fileStr:
-      return {"uploadImageSupervision":"Error", "messages":"field fileBase64 is empty"}
+    data["name"] = "name"
+    data["nature"] = "supervision"
+    testMessage = cls.__testUploadFile(data)
+    if testMessage:
+      return testMessage
     supervision = Supervision.objects.get(id=data["supervisionId"])
-    objectFile = File.createFile("supervision", "supervision", data['ext'], currentUser, supervision=supervision)
+    message = File.createFile("supervision", "supervision", data['ext'], currentUser, "uploadImageSupervision", data["fileBase64"], supervision=supervision)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
-    print("add Notification")
-    objectFather = supervision.DetailedPost if supervision.DetailedPost else supervision.DatePost
-    cls.__addNewNotificationForMessage(userProfile, objectFather.Mission, f"Une nouvelle image pour le chantier du {objectFather.Mission.address} vous attend.")
-    file = None
-    try:
-      file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path + data['ext']) if data['ext'] != "txt" else fileStr
-      with open(objectFile.path, "wb") as outfile:
-          outfile.write(file.file.getbuffer())
-      return {"uploadImageSupervision":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True), "supervisionId":supervision.id}
-    except:
-      if file: file.delete()
-      return {"uploadImageSupervision":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
+    objectFather = supervision.DetailedPost.DatePost if supervision.DetailedPost else supervision.DatePost
+    print("objectFather", objectFather)
+    mission = objectFather.mission
+    if mission.Company.id == userProfile.Company.id:
+      candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
+      subContractor = candidate.Company
+      profile = UserProfile.objects.filter(Company=subContractor)
+    else:
+      profile = UserProfile.objects.filter(Company=mission.Company)
+    cls.__addNewNotificationForMessage(profile, objectFather.Mission, f"Une nouvelle image pour le chantier du {objectFather.Mission.address} vous attend.")
+    return message
 
   @classmethod
   def getEnterpriseDataFrom(cls, request):
