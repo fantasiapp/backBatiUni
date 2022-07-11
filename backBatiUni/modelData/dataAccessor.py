@@ -216,6 +216,7 @@ class DataAccessor():
 
   @classmethod
   def __changeUserImage(cls, dictData, currentUser):
+    return cls.__createObjectFile(dictData, currentUser)
     if not dictData['ext'] in File.authorizedExtention:
       return {"changeUserImage":"Warning", "messages":f"L'extention {dictData['ext']} n'est pas traitée"}
     else:
@@ -223,10 +224,6 @@ class DataAccessor():
     if not dictData["name"]:
       return {"changeUserImage":"Error", "messages":"field name is empty"}
     return File.createFile("userImage", dictData["name"], dictData['ext'], currentUser, "changeUserImage", dictData["imageBase64"])
-    # file = ContentFile(base64.b64decode(fileStr), name=objectFile.path + dictData['ext'])
-    # with open(objectFile.path, "wb") as outfile:
-    #     outfile.write(file.file.getbuffer())
-    # return {"changeUserImage":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
 
   @classmethod
   def __uploadPost(cls, dictData, currentUser):
