@@ -683,7 +683,8 @@ class DataAccessor():
 
   @classmethod
   def createContract(cls, mission, user):
-    contractImage = File.createFile("contract", "contract", "png", user, "createContract", None, post=mission)
+    File.createFile("contract", "contract", "png", user, "createContract", None, post=mission)
+    contractImage = File.objects.get(nature="contract", post=mission)
     source = "./files/documents/contractUnsigned.png"
     dest = contractImage.path
     shutil.copy2(source, dest)
@@ -1048,7 +1049,7 @@ class DataAccessor():
         return {queryName:"Error", "messages":f"no supervision with id {data['Supervision']}"}
       else:
         supervision = supervision[0]
-    print("__createObjectFile", len(data["fileBase64"]))
+    print("__createObjectFile", len(data["fileBase64"]) if "fileBase" in data, else None)
     return File.createFile(data["nature"], data["name"], data['ext'], currentUser, queryName, data["fileBase64"], expirationDate=expirationDate, post=post, mission=mission, supervision=supervision)
 
   @classmethod
