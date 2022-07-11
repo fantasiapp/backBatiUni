@@ -1053,7 +1053,7 @@ class File(CommonModel):
   def createFile(cls, nature, name, ext, user, queryName, fileStr, expirationDate = None, post=None, mission=None, supervision=None, suppress = False):
     print("createFile", len(fileStr) if fileStr else None, post, mission)
     userProfile = UserProfile.objects.get(userNameInternal=user)
-    objectFile, mission = None, None
+    objectFile = None
     path, name, mission = cls.getPathAndName(name, nature, userProfile, ext, post, mission, supervision)
     company = userProfile.Company if not post and not supervision else None
     objectFile = File.objects.filter(nature=nature, name=name, Company=company, Post=post, Mission=mission, Supervision=supervision)
