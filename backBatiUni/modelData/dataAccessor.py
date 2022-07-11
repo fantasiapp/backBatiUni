@@ -1143,16 +1143,16 @@ class DataAccessor():
       if error: return error
     return {"modifyFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
 
-  @classmethod   
-  def __registerNewFile(cls, ext, content, objectFile):
-    print("__registerNewFile")
-    try:
-      file = ContentFile(base64.urlsafe_b64decode(content), name=objectFile.path) if ext != "txt" else content
-      with open(objectFile.path, "wb") as outfile:
-        outfile.write(file.file.getbuffer())
-    except ValueError:
-      return {"modifyFile":"Error", "messages":f"File of id {file.id} has not been saved"}
-    return None
+  # @classmethod   
+  # def __registerNewFile(cls, ext, content, objectFile):
+  #   print("__registerNewFile")
+  #   try:
+  #     file = ContentFile(base64.urlsafe_b64decode(content), name=objectFile.path) if ext != "txt" else content
+  #     with open(objectFile.path, "wb") as outfile:
+  #       outfile.write(file.file.getbuffer())
+  #   except ValueError:
+  #     return {"modifyFile":"Error", "messages":f"File of id {file.id} has not been saved"}
+  #   return None
 
 
   @classmethod
