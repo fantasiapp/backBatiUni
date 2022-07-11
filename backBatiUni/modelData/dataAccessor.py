@@ -1049,7 +1049,7 @@ class DataAccessor():
       else:
         supervision = supervision[0]
     print("__createObjectFile", len(data["fileBase64"]))
-    return File.createFile(data["nature"], data["name"], data['ext'], currentUser, data["fileBase64"], queryName, expirationDate=expirationDate, post=post, mission=mission, supervision=supervision)
+    return File.createFile(data["nature"], data["name"], data['ext'], currentUser, queryName, data["fileBase64"], expirationDate=expirationDate, post=post, mission=mission, supervision=supervision)
 
   @classmethod
   def __testUploadFile(cls, data):
@@ -1173,7 +1173,7 @@ class DataAccessor():
     if not fileStr:
       return {"uploadImageSupervision":"Error", "messages":"field fileBase64 is empty"}
     supervision = Supervision.objects.get(id=data["supervisionId"])
-    objectFile = File.createFile("supervision", "supervision", data['ext'], currentUser, supervision=supervision)
+    objectFile = File.createFile("supervision", "supervision", data['ext'], currentUser, "uploadImageSupervision", fileStr, supervision=supervision)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     print("add Notification")
     objectFather = supervision.DetailedPost if supervision.DetailedPost else supervision.DatePost
