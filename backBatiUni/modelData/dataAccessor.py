@@ -683,7 +683,7 @@ class DataAccessor():
 
   @classmethod
   def createContract(cls, mission, user):
-    contractImage = File.createFile("contract", "contract", "png", user, post=mission)
+    contractImage = File.createFile("contract", "contract", "png", user, "createContract", None, post=mission)
     source = "./files/documents/contractUnsigned.png"
     dest = contractImage.path
     shutil.copy2(source, dest)
