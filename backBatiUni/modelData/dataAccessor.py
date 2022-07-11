@@ -1055,7 +1055,6 @@ class DataAccessor():
 
   @classmethod
   def __testUploadFile(cls, data):
-    print("__testUploadFile", data['ext'] if 'ext' in data else None, len(data["fileBase64"]) if "fileBase64" in data else None)
     if not "ext" in data or not "fileBase64" in data:
       return {"uploadFile":"Warning", "messages":f"Le fichier n'est pas conforme"}
     if not data['ext'] in File.authorizedExtention:
@@ -1155,6 +1154,7 @@ class DataAccessor():
     message = File.createFile("supervision", "supervision", data['ext'], currentUser, "uploadImageSupervision", data["fileBase64"], supervision=supervision)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     objectFather = supervision.DetailedPost.DatePost if supervision.DetailedPost else supervision.DatePost
+    print("objectFather", objectFather)
     mission = objectFather.mission
     if mission.Company.id == userProfile.Company.id:
       candidate = Candidate.objects.get(Mission=mission, isChoosen=True)

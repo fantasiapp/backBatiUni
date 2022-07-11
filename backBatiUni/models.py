@@ -651,7 +651,7 @@ class Mission(Post):
 class DatePost(CommonModel):
   Post = models.ForeignKey(Post, verbose_name='Annonce associée', related_name='PostDate', on_delete=models.CASCADE, null=True, default=None)
   Mission = models.ForeignKey(Mission, verbose_name='Mission associée', related_name='MissionDate', on_delete=models.CASCADE, null=True, default=None)
-  date = models.DateField(verbose_name="Date du chantier", null=False, default=timezone.now)
+  date = models.DateField(verbose_name="Date du chantier", null=False, default=timezone.now())
   deleted = models.BooleanField("A été effacé", null=False, default=False)
   validated = models.BooleanField("A été validé", null=False, default=True)
   manyToManyObject = ["Supervision", "DetailedPost"]
@@ -768,7 +768,7 @@ class Candidate(CommonModel):
   isChoosen = models.BooleanField("Sous traitant selectionné", null=True, default=False)
   isRefused = models.BooleanField("Sous traitant refusé", null=True, default=False)
   isViewed = models.BooleanField("Candidature vue", null=True, default=False)
-  date = models.DateField(verbose_name="Date de candidature ou date d'acceptation", null=False, default=timezone.now)
+  date = models.DateField(verbose_name="Date de candidature ou date d'acceptation", null=False, default=timezone.now())
   amount = models.FloatField("Prix unitaire", null=False, default=0.0)
   unitOfTime = models.CharField("Unité de temps", max_length=128, null=True, default="Prix Total")
 
@@ -873,7 +873,7 @@ class Supervision(CommonModel):
   DatePost = models.ForeignKey(DatePost, verbose_name='Tâche associée', on_delete=models.PROTECT, null=True, default=None)
   author = models.CharField("Nom de l'auteur du message", max_length=256, null=True, default=None)
   companyId = models.IntegerField("Id de la companie emettrice", blank=True, null=False, default=None)
-  date = models.DateField(verbose_name="Date du suivi", null=False, default=timezone.now)
+  date = models.DateField(verbose_name="Date du suivi", null=False, default=timezone.now())
   timestamp = models.FloatField(verbose_name="Timestamp de mise à jour", null=False, default=0.0)
   comment = models.CharField("Commentaire sur le suivi", max_length=4906, null=True, default=None)
   manyToManyObject = ["File"]
