@@ -10,6 +10,7 @@ import datetime
 from django.apps import apps
 from pdf2image import convert_from_path
 import requests
+from django.core.files.base import ContentFile
 
 import whatimage
 import pyheif
@@ -1069,6 +1070,24 @@ class File(CommonModel):
     return objectFile
 
   @classmethod
+  def createFileWidthb64(cls, objectFile, fileStr, currentUser):
+    try:
+      file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if objectFile.ext != "txt" else fileStr
+      with open(objectFile.path, "wb") as outfile:
+        outfile.write(file.file.getbuffer())
+      if data['name'] == "Kbis":
+        hasQRCode, message = cls.detect_QR_code(objectFile)
+        if not (hasQRCode):
+          print ("QR code", message, currentUser.name)
+          return {"uploadFile":"Error", "messages":f"{message}"}
+      return {"uploadFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
+    except:
+      print("delete file", file)
+      if file: file.delete()
+      return {"uploadFile":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
+
+
+  @classmethod
   def removeOldFile(cls, suppress, objectFile):
     oldPath = objectFile.path
     if os.path.exists(oldPath) and suppress:
@@ -1100,9 +1119,6 @@ class File(CommonModel):
       post = None
       path = cls.dictPath[nature] + name + '_' + str(mission.id) + '.' + ext
     return path, name, mission
-
-
-
 
 class BlockedCandidate(CommonModel):
   blocker = models.ForeignKey(Company, verbose_name='Company who is blocking', related_name='blocking', on_delete=models.PROTECT, null=True, default=None)

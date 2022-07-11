@@ -1018,22 +1018,23 @@ class DataAccessor():
     fileStr, testMessage = cls.__testUploadFile(data)
     if testMessage:
       return testMessage
-    objectFile = cls.__createObjectFile(data, currentUser)
-    file = None
-    try:
-      file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if data['ext'] != "txt" else fileStr
-      with open(objectFile.path, "wb") as outfile:
-        outfile.write(file.file.getbuffer())
-      if data['name'] == "Kbis":
-        hasQRCode, message = cls.detect_QR_code(objectFile)
-        if not (hasQRCode):
-          print ("QR code", message, currentUser.name)
-          return {"uploadFile":"Error", "messages":f"{message}"}
-      return {"uploadFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
-    except:
-      print("delete file", file)
-      if file: file.delete()
-      return {"uploadFile":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
+    return  cls.__createObjectFile(data, currentUser)
+    # file = None
+    
+    # try:
+    #   file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if data['ext'] != "txt" else fileStr
+    #   with open(objectFile.path, "wb") as outfile:
+    #     outfile.write(file.file.getbuffer())
+    #   if data['name'] == "Kbis":
+    #     hasQRCode, message = cls.detect_QR_code(objectFile)
+    #     if not (hasQRCode):
+    #       print ("QR code", message, currentUser.name)
+    #       return {"uploadFile":"Error", "messages":f"{message}"}
+    #   return {"uploadFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
+    # except:
+    #   print("delete file", file)
+    #   if file: file.delete()
+    #   return {"uploadFile":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
 
   @classmethod
   def __createObjectFile(cls, data, currentUser):
@@ -1064,55 +1065,6 @@ class DataAccessor():
     if message:
       return {"uploadFile":"Error", "messages":message}
     return fileStr, False
-
-  # @classmethod
-  # def __uploadFile(cls, data, currentUser):
-  #   testMessage = cls.__testUploadFile(data)
-    
-  #   expirationDate = datetime.strptime(data["expirationDate"], "%Y-%m-%d") if "expirationDate" in data and data["expirationDate"] else None
-  #   post = None
-  #   if "Post" in data:
-  #     post = Post.objects.filter(id=data["Post"])
-  #     if not post:
-  #       return {"uploadFile":"Error", "messages":f"no post with id {data['Post']} for Post"}
-  #     else:
-  #       post = post[0]
-  #   objectFile = File.createFile(data["nature"], data["name"], data['ext'], currentUser, expirationDate=expirationDate, post=post)
-
-  #   file = None
-  #   try:
-  #     file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if data['ext'] != "txt" else fileStr
-  #     with open(objectFile.path, "wb") as outfile:
-  #       outfile.write(file.file.getbuffer())
-  #     if data['name'] == "Kbis":
-  #       hasQRCode, message = cls.detect_QR_code(objectFile)
-  #       if not (hasQRCode):
-  #         print ("QR code", message, currentUser.name)
-  #         return {"uploadFile":"Error", "messages":f"{message}"}
-  #     return {"uploadFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
-  #   except:
-  #     print("delete file", file)
-  #     if file: file.delete()
-  #     return {"uploadFile":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
-
-  # @classmethod
-  # def __testUploadFile(data):
-  #   if not "ext" in data or not "fileBase64" in data:
-  #     return {"uploadFile":"Warning", "messages":f"Le fichier n'est pas conforme"}
-  #   if not data['ext'] in File.authorizedExtention:
-  #     return {"changeUserImage":"Warning", "messages":f"L'extention {data['ext']} n'est pas traitée"}
-  #   else:
-  #     data['ext'] = File.authorizedExtention[data['ext']]
-  #   fileStr, message = data["fileBase64"], {}
-  #   for field in ["name", "ext", "nature"]:
-  #     if not data[field]:
-  #       message[field] = f"field {field} is empty"
-  #   if not fileStr:
-  #     message["fileBase64"] = "field fileBase64 is empty"
-  #   if message:
-  #     return {"uploadFile":"Error", "messages":message}
-  #   return
-
 
   @classmethod
   def detect_QR_code(cls, file) :
