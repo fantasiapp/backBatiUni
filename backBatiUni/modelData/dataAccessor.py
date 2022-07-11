@@ -216,6 +216,8 @@ class DataAccessor():
 
   @classmethod
   def __changeUserImage(cls, dictData, currentUser):
+    dictData["name"] = "image"
+    dictData["nature"] = "userImage"
     return cls.__uploadFile(dictData, currentUser, queryName="changeUserImage")
 
   @classmethod
@@ -1172,7 +1174,7 @@ class DataAccessor():
     if testMessage:
       return testMessage
     supervision = Supervision.objects.get(id=data["supervisionId"])
-    message = File.createFile("supervision", "supervision", data['ext'], currentUser, "uploadImageSupervision", data["imageBase64"], supervision=supervision)
+    message = File.createFile("supervision", "supervision", data['ext'], currentUser, "uploadImageSupervision", data["fileBase64"], supervision=supervision)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     objectFather = supervision.DetailedPost if supervision.DetailedPost else supervision.DatePost
     cls.__addNewNotificationForMessage(userProfile, objectFather.Mission, f"Une nouvelle image pour le chantier du {objectFather.Mission.address} vous attend.")
