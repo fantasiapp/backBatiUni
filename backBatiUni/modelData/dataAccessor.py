@@ -216,7 +216,7 @@ class DataAccessor():
 
   @classmethod
   def __changeUserImage(cls, dictData, currentUser):
-    return cls.__uploadFile(dictData, currentUser)
+    return cls.__uploadFile(dictData, currentUser, queryName="changeUserImage")
 
   @classmethod
   def __uploadPost(cls, dictData, currentUser):
@@ -1004,11 +1004,11 @@ class DataAccessor():
     return {"deleteFile":"Error", "messages":f"No file width id {id}"}
 
   @classmethod
-  def __uploadFile(cls, data, currentUser):
+  def __uploadFile(cls, data, currentUser, queryName="uploadFile"):
     testMessage = cls.__testUploadFile(data)
     if testMessage:
       return testMessage
-    return  cls.__createObjectFile(data, currentUser)
+    return  cls.__createObjectFile(data, currentUser, queryName)
     # file = None
     
     # try:
@@ -1027,16 +1027,22 @@ class DataAccessor():
     #   return {"uploadFile":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
 
   @classmethod
-  def __createObjectFile(cls, data, currentUser):
+  def __createObjectFile(cls, data, currentUser, queryName):
     expirationDate = datetime.strptime(data["expirationDate"], "%Y-%m-%d") if "expirationDate" in data and data["expirationDate"] else None
     post = None
     if "Post" in data:
       post = Post.objects.filter(id=data["Post"])
       if not post:
-        return {"uploadFile":"Error", "messages":f"no post with id {data['Post']} for Post"}
+        return {queryName:"Error", "messages":f"no post with id {data['Post']} for Post"}
       else:
         post = post[0]
-    return File.createFile(data["nature"], data["name"], data['ext'], currentUser, data["fileBase64"], "uploadFile", expirationDate=expirationDate, post=post)
+    if "Mission" in data:
+      mission = Mission.objects.filter(id=data["Mission"])
+      if not mission:
+        return {queryName:"Error", "messages":f"no post with id {data['Post']} for Post"}
+      else:
+        post = post[0]
+    return File.createFile(data["nature"], data["name"], data['ext'], currentUser, data["fileBase64"], queryName, expirationDate=expirationDate, post=post, mission=mission)
 
   @classmethod
   def __testUploadFile(cls, data):
@@ -1120,12 +1126,13 @@ class DataAccessor():
     print("modifyFile", list(data.keys()))
     objectFile = File.objects.get(id=data["fileId"])
     expirationDate = datetime.strptime(data["expirationDate"], "%Y-%m-%d") if "expirationDate" in data and data["expirationDate"] else None
-    post, mission = objectFile.Post, objectFile.Mission
+    post, mission, detailedPost, supervision= objectFile.Post, objectFile.Mission, objectFile.DetailedPost, objectFile.superVision
     nature = data["nature"] if "nature" in data else objectFile.nature
     name = data["name"] if "name" in data else objectFile.name
     ext = data["ext"] if "ext" in data and data["ext"] != "???" else objectFile.ext
     suppress = "fileBase64" in data and len(data["fileBase64"]) != 0
-    objectFile = File.createFile(nature, name, ext, currentUser, expirationDate=expirationDate, post=post, mission=mission, detailedPost=None, suppress=suppress)
+    fileStr = data["fileBase64"] if suppress else None
+    return File.createFile(nature, name, ext, currentUser, "modifyFile", fileStr, expirationDate=expirationDate, post=post, mission=mission, detailedPost=detailedPost, supervision=supervision, suppress=suppress)
     if name == "Kbis":
       print("le file path")
       hasQRCode, message = cls.detect_QR_code(objectFile)
