@@ -1029,7 +1029,7 @@ class DataAccessor():
   @classmethod
   def __createObjectFile(cls, data, currentUser, queryName):
     expirationDate = datetime.strptime(data["expirationDate"], "%Y-%m-%d") if "expirationDate" in data and data["expirationDate"] else None
-    post, mission, detailedPost, supervision = None, None, None, None
+    post, mission, supervision = None, None, None
     if "Post" in data:
       post = Post.objects.filter(id=data["Post"])
       if not post:

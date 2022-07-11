@@ -57,7 +57,6 @@ class Data(DefaultView):
       jsonBin = request.body
       jsonString = jsonBin.decode("utf8")
       response = DataAccessor().dataPost(jsonString, currentUser)
-      # print("post response", response)
       return DefaultView.myResponse(response)
     return DefaultView.myResponse ({"data POST":"Warning", "messages":"La confirmation par mail n'est pas réalisée."})
 
@@ -102,9 +101,7 @@ class Payment(DefaultView):
     jsonBin = request.body
     jsonString = jsonBin.decode("utf8")
     data = json.loads(jsonString)
-    print(request.user)
     userProfile = UserProfile.objects.get(userNameInternal=request.user)
-    print("userProfile", userProfile)
     if "action" in data and self.confirmToken(request.user):
       if data["action"] == "createPaymentIntent":
         return Response(PaymentManager.createPaymentIntent(request))
@@ -119,13 +116,10 @@ class Webhook(DefaultView):
     jsonBin = request.body
     jsonString = jsonBin.decode("utf8")
     event = json.loads(jsonString)
-    print("event", event)
 
     # Handle the event
     if event and event['type'] == 'payment_intent.succeeded':
         payment_intent = event['data']['object']  # contains a stripe.PaymentIntent
-        print(f"Payment for {payment_intent['amount']} succeeded")
-        print(payment_intent)
         if payment_intent["metadata"]["type"] == "boostPost":
           boostPostDict = {
             "action": "boostPost",
@@ -133,8 +127,8 @@ class Webhook(DefaultView):
             "duration": int(payment_intent["metadata"]["duration"])
           }
           DataAccessor.dataPost(json.dumps(boostPostDict), False)
-    else:
+    # else:
         # Unexpected event type
-        print(f"Unhandled event type {event['type']}")
+        # print(f"Unhandled event type {event['type']}")
 
     return Response({"webhook-payment": "OK"})
