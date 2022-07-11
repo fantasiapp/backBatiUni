@@ -1071,6 +1071,10 @@ class File(CommonModel):
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if objectFile.ext != "txt" else fileStr
       with open(objectFile.path, "wb") as outfile:
         outfile.write(file.file.getbuffer())
+    except:
+      if objectFile: objectFile.delete()
+      return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
+    try:
       print(objectFile.name)
       if objectFile.name == "Kbis":
         hasQRCode, message = cls.detect_QR_code(objectFile)
@@ -1080,10 +1084,13 @@ class File(CommonModel):
       return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
     except:
       if objectFile: objectFile.delete()
-      return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
+      return {queryName:"Warning", "messages":"Le Kbis n'est pas correct"}
 
   @classmethod
   def detect_QR_code(cls, file) :
+    if file.ext.lower() == 'pdf':
+      pass
+      
     file_extension = '.' + file.ext
     file_path = file.path
     pathSplit = file_path.split('.')
@@ -1109,10 +1116,11 @@ class File(CommonModel):
     # Detect if the document has a QR Code
     print("lz file path", file_path)
     img = cv2.imread(file_path)
-    print("l'img", img)
     decoder = cv2.QRCodeDetector()
-    print(img)
+    if img :
+      print("y'a une image")
     data, points, _ = decoder.detectAndDecode(img)
+    print(data)
     if data:
       print("decoded data ",data)
     else : 
