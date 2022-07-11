@@ -1054,6 +1054,7 @@ class DataAccessor():
 
   @classmethod
   def __testUploadFile(cls, data):
+    print("__testUploadFile", data['ext'] if 'ext' in data else None, len(data["fileBase64"]) if "fileBase64" in data else None)
     if not "ext" in data or not "fileBase64" in data:
       return {"uploadFile":"Warning", "messages":f"Le fichier n'est pas conforme"}
     if not data['ext'] in File.authorizedExtention:
@@ -1174,15 +1175,6 @@ class DataAccessor():
     objectFather = supervision.DetailedPost if supervision.DetailedPost else supervision.DatePost
     cls.__addNewNotificationForMessage(userProfile, objectFather.Mission, f"Une nouvelle image pour le chantier du {objectFather.Mission.address} vous attend.")
     return message
-    # file = None
-    # try:
-    #   file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path + data['ext']) if data['ext'] != "txt" else fileStr
-    #   with open(objectFile.path, "wb") as outfile:
-    #       outfile.write(file.file.getbuffer())
-    #   return {"uploadImageSupervision":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True), "supervisionId":supervision.id}
-    # except:
-    #   if file: file.delete()
-    #   return {"uploadImageSupervision":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
 
   @classmethod
   def getEnterpriseDataFrom(cls, request):
