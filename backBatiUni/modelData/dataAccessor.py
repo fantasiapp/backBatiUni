@@ -631,6 +631,17 @@ class DataAccessor():
     post = candidate.Post
     return {"handleCandidateForPost":"OK", post.id:post.computeValues(post.listFields(), currentUser, dictFormat=True)}
 
+
+  @classmethod
+  def createContract(cls, mission, user):
+    File.createFile("contract", "contract", "png", user, "createContract", mission=mission)
+    contractImage = File.objects.get(nature="contract", Mission=mission)
+    print("createContract", contractImage.id)
+    source = "./files/documents/contractUnsigned.png"
+    dest = contractImage.path
+    shutil.copy2(source, dest)
+    return contractImage
+
   @classmethod
   def removefirstNumber(cls, address):
     """ Retire les numéros de rue dans une adresse"""
@@ -678,18 +689,6 @@ class DataAccessor():
       datePost.Post = None
       datePost.Mission = mission
       datePost.save()
-
-
-
-  @classmethod
-  def createContract(cls, mission, user):
-    File.createFile("contract", "contract", "png", user, "createContract", None, mission=mission)
-    contractImage = File.objects.get(nature="contract", Mission=mission)
-    print("createContract", contractImage.id)
-    source = "./files/documents/contractUnsigned.png"
-    dest = contractImage.path
-    shutil.copy2(source, dest)
-    return contractImage
 
   @classmethod
   def signContract(cls, missionId, view, currentUser):
