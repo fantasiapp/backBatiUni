@@ -1093,70 +1093,64 @@ class File(CommonModel):
 
   @classmethod
   def detect_QR_code(cls, file) :
-      
+    
+    list_pages = []
     file_extension = '.' + file.ext
     file_path = file.path
     pathSplit = file_path.split('.')
     pathSplit.pop(-1)
     new_img = '.'.join(pathSplit) +'.jpg'
 
-    if file.ext.lower() == 'pdf':
+    if file.ext == "pdf":
       cls.encodedStringListForPdf()
-      print(os.listdir('.'.join(pathSplit)))
+      path = '.'.join(pathSplit)+'/'
+      listDir = os.listdir('.'.join(pathSplit)+'/')
+      for pages in listDir:
+        list_pages.append(path + pages)
+    else :
+      list_pages = [file_path]
 
-    # Convert pdf, svg, heic to jpg
-    if file_extension.lower() == '.pdf':
-        image = pdf2image.convert_from_path(file_path, 500)
-        image[0].save(new_img, 'jpg')
-        os.remove(file_path)
-        file_path = new_img
-    if file_extension.lower() == '.svg':
-        image = svg2rlg(file_path)
-        renderPM.drawToFile(image, new_img, fmt='jpg')
-    if file_extension.lower() == '.heic' :
-        heic_file = pyheif.read(file_path)
-        image = Image.frombytes(heic_file.mode, heic_file.size, heic_file.data)
-        image.save(new_img, format="jpg")
-        os.remove(file_path)
-        file_path = new_img
-
-    # Detect if the document has a QR Code
-    print("lz file path", file_path)
-    img = cv2.imread(file_path)
-    print("l'mg", img)
-    decoder = cv2.QRCodeDetector()
-    print("on a passé decoder")
-    if img :
-      print("y'a une image")
-    data, points, _ = decoder.detectAndDecode(img)
-    print("le data ", data)
-    if data:
-      print("decoded data ",data)
-    else : 
-        print('Le QR Code nest pas reconnaissable')
-        return (False, "Votre KBis ne contient pas de QR code ou bien ou il n'est pas lisible.")
-        
-    # Read URL 
-    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
-    f = requests.get(data, headers=headers)
-    html = f.content.decode()
-    soup = BeautifulSoup(html, features="html.parser")
-    for script in soup(["script", "style"]):
-        script.extract()  
-    text = soup.get_text()
-    lines = (line.strip() for line in text.splitlines())
-    chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
-    text = '\n'.join(chunk for chunk in chunks if chunk)
-    print(text)
-    if 'La commande est supérieure à 3 mois' in text :
-        print('La commande est supérieure à 3 mois')
-        return (False, "Votre KBis n'est pas valide, il date de plus de 3 mois")
-    elif 'Aucun document trouvé pour ce code de vérification' in text :
-        print('Aucun document trouvé pour ce code de vérification')
-        return (False, "Votre KBis n'est pas valide")
-    elif 'Ce code de vérification a déjà été utilisé, vous ne pouvez plus consulter le document.'in text:
-      return (True, "")
-    return (True, "")
+    for i in range(len(list_pages)):
+      # Detect if the document has a QR Code
+      print("le file path", list_pages[i])
+      img = cv2.imread(list_pages[i])
+      print("l'mg", img)
+      decoder = cv2.QRCodeDetector()
+      print("on a passé decoder")
+      if img :
+        print("y'a une image")
+      data, points, _ = decoder.detectAndDecode(img)
+      print("le data ", data)
+      if data:
+        print("decoded data ",data)
+      elif i < len(list_pages):
+        continue
+      else:
+          print('Le QR Code nest pas reconnaissable')
+          return (False, "Votre KBis ne contient pas de QR code ou bien ou il n'est pas lisible.")
+          
+      # Read URL 
+      headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
+      f = requests.get(data, headers=headers)
+      html = f.content.decode()
+      soup = BeautifulSoup(html, features="html.parser")
+      for script in soup(["script", "style"]):
+          script.extract()  
+      text = soup.get_text()
+      lines = (line.strip() for line in text.splitlines())
+      chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+      text = '\n'.join(chunk for chunk in chunks if chunk)
+      print(text)
+      if 'La commande est supérieure à 3 mois' in text :
+          print('La commande est supérieure à 3 mois')
+          return (False, "Votre KBis n'est pas valide, il date de plus de 3 mois")
+      elif 'Aucun document trouvé pour ce code de vérification' in text :
+          print('Aucun document trouvé pour ce code de vérification')
+          return (False, "Votre KBis n'est pas valide")
+      elif 'Ce code de vérification a déjà été utilisé, vous ne pouvez plus consulter le document.'in text:
+        return (True, "")
+      return True
+    return (False, "Votre KBis n'est pas valide")
 
   @classmethod
   def removeOldFile(cls, suppress, objectFile):
