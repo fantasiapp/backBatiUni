@@ -19,7 +19,7 @@ userName, password = "st@g.com", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 5
+numberCompanies = 50
 emailList, missionList, emailListPME, emailListST, detailedPost, candidateToUnapply, labelList = {}, {}, [], [], {}, None, {}
 
 arguments = sys.argv
@@ -283,7 +283,7 @@ def executeQuery():
       post = {'action':"modifyDisponibility", "disponibility":[["2022-06-13", "Disponible"], ["2022-06-14", "Disponible Sous Conditions"], ["2022-06-15", "Non Disponible"]]}
       response = requests.post(url, headers=headers, json=post)
     elif query == "uploadFile":
-      file1 = {'action':"uploadFile", "ext":"png", "name":"Qualibat", "fileBase64":getDocStr(0), "nature":"labels", "expirationDate":"2022-02-12"}
+      file1 = {'action':"uploadFile", "ext":"png", "name":"qualibat", "fileBase64":getDocStr(0), "nature":"labels", "expirationDate":"2022-02-12"}
       file2 = {'action':"uploadFile", "ext":"png", "name":"Kbis", "fileBase64":getDocStr(1), "nature":"admin", "expirationDate":"2022-02-12"}
       file4 = {'action':"uploadFile", "ext":"svg", "name":"Document technique", "fileBase64":getDocStr(4), "nature":"post", "Post":2}
       file5 = {'action':"uploadFile", "ext":"jpg", "name":"Plan", "fileBase64":getDocStr(2), "nature":"post", "Post":2}
