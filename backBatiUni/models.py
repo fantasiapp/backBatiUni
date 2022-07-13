@@ -1084,6 +1084,7 @@ class File(CommonModel):
         print("je lance detectQRcode")
         hasQRCode, message = cls.detect_QR_code(objectFile)
         if not (hasQRCode):
+          if objectFile: objectFile.delete()
           return {"uploadFile":"Error", "messages":f"{message}"}
       return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
     except:
