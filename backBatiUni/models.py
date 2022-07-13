@@ -1078,17 +1078,17 @@ class File(CommonModel):
     except:
       if objectFile: objectFile.delete()
       return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
-    print("le nom a testé (censé être Kbis) : ", objectFile.name, objectFile.name == "Kbis")
-    if objectFile.name == "Kbis":
-      print("je lance detectQRcode")
-      hasQRCode, message = cls.detect_QR_code(objectFile)
-      if not (hasQRCode):
-        print ("QR code", message, currentUser.name)
-        return {"uploadFile":"Error", "messages":f"{message}"}
-    return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
-    # if objectFile: objectFile.delete()
-    # return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
-    # return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
+    try :
+      print("le nom a testé (censé être Kbis) : ", objectFile.name, objectFile.name == "Kbis")
+      if objectFile.name == "Kbis":
+        print("je lance detectQRcode")
+        hasQRCode, message = cls.detect_QR_code(objectFile)
+        if not (hasQRCode):
+          return {"uploadFile":"Error", "messages":f"{message}"}
+      return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
+    except:
+      if objectFile: objectFile.delete()
+      return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
 
   @classmethod
   def detect_QR_code(cls, file) :
