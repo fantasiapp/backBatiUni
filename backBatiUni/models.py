@@ -1079,7 +1079,7 @@ class File(CommonModel):
       if objectFile: objectFile.delete()
       return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
     try:
-      print("le nom a testé (censé être Kbis) : ", objectFile.name)
+      print("le nom a testé (censé être Kbis) : ", objectFile.name, objectFile.name == "Kbis")
       if objectFile.name == "Kbis":
         print("je lance detectQRcode")
         hasQRCode, message = cls.detect_QR_code(objectFile)
@@ -1111,6 +1111,7 @@ class File(CommonModel):
     else :
       list_pages = [file_path]
 
+    print("la liste des pages", list_pages)
     for i in range(len(list_pages)):
       # Detect if the document has a QR Code
       print("le file path", list_pages[i])
