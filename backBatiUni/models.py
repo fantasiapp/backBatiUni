@@ -1078,19 +1078,17 @@ class File(CommonModel):
     except:
       if objectFile: objectFile.delete()
       return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
-    try:
-      print("le nom a testé (censé être Kbis) : ", objectFile.name, objectFile.name == "Kbis")
-      if objectFile.name == "Kbis":
-        print("je lance detectQRcode")
-        hasQRCode, message = cls.detect_QR_code(objectFile)
-        if not (hasQRCode):
-          print ("QR code", message, currentUser.name)
-          return {"uploadFile":"Error", "messages":f"{message}"}
-      return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
-    except:
-      if objectFile: objectFile.delete()
-      return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
-      # return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
+    print("le nom a testé (censé être Kbis) : ", objectFile.name, objectFile.name == "Kbis")
+    if objectFile.name == "Kbis":
+      print("je lance detectQRcode")
+      hasQRCode, message = cls.detect_QR_code(objectFile)
+      if not (hasQRCode):
+        print ("QR code", message, currentUser.name)
+        return {"uploadFile":"Error", "messages":f"{message}"}
+    return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
+    # if objectFile: objectFile.delete()
+    # return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
+    # return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
 
   @classmethod
   def detect_QR_code(cls, file) :
@@ -1116,10 +1114,10 @@ class File(CommonModel):
       # Detect if the document has a QR Code
       print("le file path", list_pages[i])
       img = cv2.imread(list_pages[i])
-      print("l'mg", img)
+      print("l'img", img)
       decoder = cv2.QRCodeDetector()
-      print("on a passé decoder")
-      if img :
+      print("on a passé decoder", decoder)
+      if img:
         print("y'a une image")
       data, points, _ = decoder.detectAndDecode(img)
       print("le data ", data)
