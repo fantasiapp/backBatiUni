@@ -1117,8 +1117,6 @@ class File(CommonModel):
       print("l'img", img)
       decoder = cv2.QRCodeDetector()
       print("on a passé decoder", decoder)
-      if img:
-        print("y'a une image")
       data, points, _ = decoder.detectAndDecode(img)
       print("le data ", data)
       if data:
