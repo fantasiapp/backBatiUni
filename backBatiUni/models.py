@@ -1081,6 +1081,7 @@ class File(CommonModel):
     try:
       print("le nom a testé (censé être Kbis) : ", objectFile.name)
       if objectFile.name == "Kbis":
+        print("je lance detectQRcode")
         hasQRCode, message = cls.detect_QR_code(objectFile)
         if not (hasQRCode):
           print ("QR code", message, currentUser.name)
