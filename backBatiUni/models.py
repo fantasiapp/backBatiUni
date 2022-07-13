@@ -1101,7 +1101,7 @@ class File(CommonModel):
     new_img = '.'.join(pathSplit) +'.jpg'
 
     if file.ext == "pdf":
-      cls.encodedStringListForPdf()
+      file.encodedStringListForPdf()
       path = '.'.join(pathSplit)+'/'
       listDir = os.listdir('.'.join(pathSplit)+'/')
       for pages in listDir:
