@@ -193,7 +193,7 @@ class CreateNewDataBase:
     self.connection = db.connect(
       user = os.getenv('DB_USERNAME'),
       password = os.getenv('DB_PASSWORD'),
-      host = os.getenv('DB_HOST'),
+      host = os.getenv('DB_HOST'),d
       database = os.getenv('DB_NAME'),
     )
     self.cursor = self.connection.cursor()
