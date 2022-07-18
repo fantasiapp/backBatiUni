@@ -1060,7 +1060,7 @@ class DataAccessor():
 
   @classmethod
   def __modifyFile(cls, data, currentUser):
-    print("modifyFile", list(data.keys()))
+    print("modifyFile", list(data.keys()), "fileId", data["fileId"])
     objectFile = File.objects.get(id=data["fileId"])
     expirationDate = datetime.strptime(data["expirationDate"], "%Y-%m-%d") if "expirationDate" in data and data["expirationDate"] else None
     post, mission, supervision= objectFile.Post, objectFile.Mission, objectFile.Supervision
