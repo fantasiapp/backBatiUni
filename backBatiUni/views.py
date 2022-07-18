@@ -106,6 +106,8 @@ class Payment(DefaultView):
     if "action" in data and self.confirmToken(request.user):
       if data["action"] == "createPaymentIntent":
         return Response(PaymentManager.createPaymentIntent(request))
+      if data["action"] == "fetchPrice":
+        return Response(PaymentManager.fetchPrice(request))
     return Response({"Error": f"Action unknown"})
 
 class Webhook(DefaultView):
