@@ -16,7 +16,7 @@ class DetectQrCode:
     filePath = self.file.path
     pathSplit = filePath.split('.')
     pathSplit.pop(-1)
-
+    print("before")
     if self.ext == "pdf":
       print("pdf loop")
       self.file.encodedStringListForPdf()
@@ -27,5 +27,6 @@ class DetectQrCode:
         listPage.append(path + pages)
       print("finished")
     else :
+      print("second linge")
       listPage = [filePath]
     return listPage
