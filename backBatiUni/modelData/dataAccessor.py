@@ -72,6 +72,7 @@ class DataAccessor():
       return cls.registerAgain(data)
     message = cls.__registerCheck(data, {})
     if message:
+      print("register", message)
       return {"register":"Warning", "messages":message}
     token = SmtpConnector(cls.portSmtp).register(data["firstname"], data["lastname"], data["email"])
     print("register", token)
