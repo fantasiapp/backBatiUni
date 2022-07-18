@@ -1138,7 +1138,7 @@ class File(CommonModel):
       text = soup.get_text()
       lines = (line.strip() for line in text.splitlines())
       chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
-      text = '\n'.join(chunk for chunk in chunks if chunk)
+      text = [chunk for chunk in chunks if chunk]
       print(text)
       if 'La commande est supérieure à 3 mois' in text :
           print('La commande est supérieure à 3 mois')
@@ -1147,6 +1147,14 @@ class File(CommonModel):
           print('Aucun document trouvé pour ce code de vérification')
           return (False, "Votre KBis n'est pas valide")
       elif 'Ce code de vérification a déjà été utilisé, vous ne pouvez plus consulter le document.'in text:
+        if 'N° d’immatriculation :' in text:
+            immaIndex = text.index('N° d’immatriculation :')
+            siret = text[immaIndex+1].split()[0]
+            print('SIRET',  siret)
+        if 'Dénomination :' in text:
+            nameIndex = text.index('Dénomination :')
+            name = text[nameIndex+1]
+            print('companyName',  name)
         return (True, "")
       return True
     return (False, "Votre KBis n'est pas valide")
