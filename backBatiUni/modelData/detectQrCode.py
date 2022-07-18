@@ -1,5 +1,5 @@
 import requests
-from ..models import File
+# from ..models import File
 import os
 
 class DetectQrCode:
