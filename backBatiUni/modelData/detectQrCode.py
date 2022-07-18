@@ -6,7 +6,6 @@ class DetectQrCode:
   file = None
 
   def __init__(self, file):
-    print("create detectQrCode")
     self.file = file
 
   @property
@@ -17,7 +16,7 @@ class DetectQrCode:
     pathSplit = filePath.split('.')
     pathSplit.pop(-1)
     print("before")
-    if self.ext == "pdf":
+    if self.file.ext == "pdf":
       print("pdf loop")
       self.file.encodedStringListForPdf()
       print("encode done")
