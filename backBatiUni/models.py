@@ -205,7 +205,7 @@ class Job(CommonModel):
 
 class Company(CommonModel):
   name = models.CharField('Nom de la société', unique=True, max_length=128, null=False, blank=False)
-  Role = models.ForeignKey(Role, on_delete=models.PROTECT, blank=False, null=False, default=3)
+  Role = models.ForeignKey(Role, on_delete=models.PROTECT, blank=False, null=False, default=1)
   siret = models.CharField('Numéro de Siret', unique=True, max_length=32, null=True, default=None)
   address = models.CharField("Adresse de l'entreprise", unique=False, max_length=256, null=True, default=None)
   activity = models.CharField("Activite principale de l'entreprise", unique=False, max_length=256, null=False, default="")
