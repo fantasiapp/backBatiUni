@@ -1049,6 +1049,7 @@ class File(CommonModel):
 
   @classmethod
   def createFile(cls, nature, name, ext, user, queryName, fileStr, expirationDate = None, post=None, mission=None, supervision=None, suppress = False):
+    print("createFile")
     userProfile = UserProfile.objects.get(userNameInternal=user)
     objectFile = None
     path, name, mission = cls.getPathAndName(name, nature, userProfile, ext, post, mission, supervision)
@@ -1065,6 +1066,7 @@ class File(CommonModel):
       objectFile.save()
     else:
       objectFile = cls.objects.create(nature=nature, name=name, path=path, ext=ext, Company=company, expirationDate=expirationDate, Post=post, Mission=mission, Supervision=supervision)
+    print("createFile, fileStr", fileStr)
     if fileStr:
       return cls.__createFileWidthb64(objectFile, fileStr, user, queryName)
     return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), user, True)}
@@ -1112,18 +1114,19 @@ class File(CommonModel):
     else :
       list_pages = [file_path]
 
-    print("la liste des pages", list_pages)
+    # print("la liste des pages", list_pages)
     for i in range(len(list_pages)):
       # Detect if the document has a QR Code
-      print("le file path", list_pages[i])
+      # print("le file path", list_pages[i])
       img = cv2.imread(list_pages[i])
-      print("l'img", img)
+      # print("l'img", img)
       decoder = cv2.QRCodeDetector()
-      print("on a passé decoder", decoder)
+      # print("on a passé decoder", decoder)
       data, points, _ = decoder.detectAndDecode(img)
-      print("le data ", data)
+      # print("le data ", data)
       if data:
-        print("decoded data ",data)
+        # print("decoded data ",data)
+        pass
       elif i < len(list_pages):
         continue
       else:
@@ -1141,12 +1144,12 @@ class File(CommonModel):
       lines = (line.strip() for line in text.splitlines())
       chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
       text = '\n'.join(chunk for chunk in chunks if chunk)
-      print(text)
+      # print(text)
       if 'La commande est supérieure à 3 mois' in text :
-          print('La commande est supérieure à 3 mois')
+          # print('La commande est supérieure à 3 mois')
           return (False, "Votre KBis est obsolette, il date de plus de 3 mois")
       elif 'Aucun document trouvé pour ce code de vérification' in text :
-          print('Aucun document trouvé pour ce code de vérification')
+          # print('Aucun document trouvé pour ce code de vérification')
           return (False, "Votre KBis n'est pas reconnu")
       elif 'Ce code de vérification a déjà été utilisé, vous ne pouvez plus consulter le document.'in text:
         return (True, "")
