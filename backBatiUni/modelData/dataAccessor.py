@@ -1061,6 +1061,7 @@ class DataAccessor():
   @classmethod
   def __modifyFile(cls, data, currentUser):
     print("modifyFile", list(data.keys()), "fileId", data["fileId"])
+    print("modifyFile")
     objectFile = File.objects.get(id=data["fileId"])
     expirationDate = datetime.strptime(data["expirationDate"], "%Y-%m-%d") if "expirationDate" in data and data["expirationDate"] else None
     post, mission, supervision= objectFile.Post, objectFile.Mission, objectFile.Supervision
@@ -1082,7 +1083,6 @@ class DataAccessor():
     message = File.createFile("supervision", "supervision", data['ext'], currentUser, "uploadImageSupervision", data["fileBase64"], supervision=supervision)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     objectFather = supervision.DetailedPost.DatePost if supervision.DetailedPost else supervision.DatePost
-    print("objectFather", objectFather)
     mission = objectFather.mission
     if mission.Company.id == userProfile.Company.id:
       candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
