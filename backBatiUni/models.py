@@ -106,9 +106,9 @@ class CommonModel(models.Model):
   def dictValues(cls, user):
     listFields, dictResult = cls.listFields(), {}
     for instance in cls.filter(user):
-        dictResult[instance.id] = instance.computeValues(listFields, user)
-        if len(listFields) == 1:
-          dictResult[instance.id] = dictResult[instance.id][0]
+      dictResult[instance.id] = instance.computeValues(listFields, user)
+      if len(listFields) == 1:
+        dictResult[instance.id] = dictResult[instance.id][0]
     return dictResult
 
   def computeValues(self, listFields, user, dictFormat=False):
