@@ -1008,26 +1008,11 @@ class DataAccessor():
 
   @classmethod
   def __uploadFile(cls, data, currentUser, queryName="uploadFile"):
+    print("uploadFile", data)
     testMessage = cls.__testUploadFile(data)
     if testMessage:
       return testMessage
     return  cls.__createObjectFile(data, currentUser, queryName)
-    # file = None
-    
-    # try:
-    #   file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if data['ext'] != "txt" else fileStr
-    #   with open(objectFile.path, "wb") as outfile:
-    #     outfile.write(file.file.getbuffer())
-    #   if data['name'] == "Kbis":
-    #     hasQRCode, message = cls.detect_QR_code(objectFile)
-    #     if not (hasQRCode):
-    #       print ("QR code", message, currentUser.name)
-    #       return {"uploadFile":"Error", "messages":f"{message}"}
-    #   return {"uploadFile":"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
-    # except:
-    #   print("delete file", file)
-    #   if file: file.delete()
-    #   return {"uploadFile":"Warning", "messages":"Le fichier ne peut être sauvegardé"}
 
   @classmethod
   def __createObjectFile(cls, data, currentUser, queryName):
