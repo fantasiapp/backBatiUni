@@ -49,7 +49,7 @@ class PaymentManager():
             return {"Error": str(e)}
 
     @classmethod
-    def fetcbPrices(cls, request):
+    def fetcbPrice(cls, request):
         print(request)
         try:
             prices = stripe.Price.list(
