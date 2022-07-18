@@ -1066,7 +1066,7 @@ class File(CommonModel):
       objectFile.save()
     else:
       objectFile = cls.objects.create(nature=nature, name=name, path=path, ext=ext, Company=company, expirationDate=expirationDate, Post=post, Mission=mission, Supervision=supervision)
-    print("createFile, fileStr", fileStr)
+    print("createFile, fileStr", len(fileStr))
     if fileStr:
       return cls.__createFileWidthb64(objectFile, fileStr, user, queryName)
     return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), user, True)}
@@ -1084,10 +1084,9 @@ class File(CommonModel):
     try :
       print("le nom a testé (censé être Kbis) : ", objectFile.name, objectFile.name == "Kbis")
       if objectFile.name == "Kbis":
-        print("je lance detectQRcode")
-        hasQRCode, message = cls.__detectQrCode(objectFile)
         detectObject = DetectQrCode(objectFile)
-        print("detect", len(detectObject.getPages))
+        print("je lance detectQRcode", len(detectObject.getPages))
+        hasQRCode, message = cls.__detectQrCode(objectFile)
         if not (hasQRCode):
           if objectFile: objectFile.delete()
           return {"uploadFile":"Error", "messages":f"{message}"}
