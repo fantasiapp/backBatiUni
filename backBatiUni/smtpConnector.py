@@ -19,7 +19,7 @@ class SmtpConnector:
       return "A secret code to check 9243672519"
     params = {"action":"mailConfirmation", "firstName":firstName, "lastName":lastName, "mail":email}
     try:
-      print("SmtpConnector", SmtpConnector.port, SmtpConnector.dir, SmtpConnector.url, self.headers, param)
+      print("SmtpConnector", SmtpConnector.port, SmtpConnector.dir, SmtpConnector.url, self.headers, params)
       response = requests.get(url=self.url, headers=self.headers, params=params)
       data = json.loads(response.text)
       if "token" in data:
