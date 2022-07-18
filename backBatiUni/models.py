@@ -206,10 +206,10 @@ class Job(CommonModel):
 class Company(CommonModel):
   name = models.CharField('Nom de la société', unique=True, max_length=128, null=False, blank=False)
   Role = models.ForeignKey(Role, on_delete=models.PROTECT, blank=False, null=False, default=1)
-  siret = models.CharField('Numéro de Siret', unique=True, max_length=32, null=True, default=None)
+  siret = models.CharField('Numéro de Siret', unique=False, max_length=32, null=True, default=None) #, unique=True
   address = models.CharField("Adresse de l'entreprise", unique=False, max_length=256, null=True, default=None)
   activity = models.CharField("Activite principale de l'entreprise", unique=False, max_length=256, null=False, default="")
-  ntva = models.CharField("Numéro de TVA intra communautaire", unique=True, max_length=32, null=True, default=None)
+  ntva = models.CharField("Numéro de TVA intra communautaire", max_length=32, null=True, default=None) # , unique=True
   capital = models.FloatField("Capital de l'entreprise", null=True, default=None)
   revenue = models.FloatField("Capital de l'entreprise", null=True, default=None)
   size = models.IntegerField("Effectif de l'entreprise", null=False, default=0.0)
