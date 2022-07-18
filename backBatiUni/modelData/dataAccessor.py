@@ -1008,7 +1008,7 @@ class DataAccessor():
 
   @classmethod
   def __uploadFile(cls, data, currentUser, queryName="uploadFile"):
-    print("uploadFile", data)
+    print("uploadFile")
     testMessage = cls.__testUploadFile(data)
     if testMessage:
       return testMessage
