@@ -1087,7 +1087,7 @@ class File(CommonModel):
         print("je lance detectQRcode")
         hasQRCode, message = cls.__detectQrCode(objectFile)
         detectObject = DetectQrCode(objectFile)
-        print("detect", detectObject.getPages)
+        print("detect", len(detectObject.getPages))
         if not (hasQRCode):
           if objectFile: objectFile.delete()
           return {"uploadFile":"Error", "messages":f"{message}"}
