@@ -117,7 +117,7 @@ class Webhook(DefaultView):
     jsonBin = request.body
     jsonString = jsonBin.decode("utf8")
     event = json.loads(jsonString)
-
+    print("Webhook", event['type'])
     # Handle the event
     if event:
       if event['type'] == 'payment_intent.succeeded':

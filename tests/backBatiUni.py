@@ -14,8 +14,8 @@ import stripe
 
 stripe.api_key = 'sk_test_51LI7b7GPflszP2pB2F62OC6fyGjgMOTVhQDI19vVqDYEONZmLdDi9KXlQ3bkdgl23t5HsH0FABc7rMHmINenlwV100GfMpz5ec'
 
-userName, password = "st@g.com", "pwd"
-# userName, password = "jlw", "pwd"
+# userName, password = "st@g.com", "pwd"
+userName, password = "jlw", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
@@ -47,7 +47,7 @@ def queryForToken(userName, password):
     return False
 
 def getDocStr(index = 0):
-  file = ["./files/documents/Qualibat.jpeg", "./files/documents/Kbis.png", "./files/documents/Plan.png", "./files/documents/IMG_2465.HEIC", "./files/documents/etex.svg", "./files/documents/batiUni.png", "./files/documents/Fantasiapp.png", "./files/documents/logoFantasiapp.png"]
+  file = ["./files/documents/Qualibat.jpeg", "./files/documents/Kbis.png", "./files/documents/Plan.png", "./files/documents/IMG_2465.HEIC", "./files/documents/Etex.svg", "./files/documents/batiUni.png", "./files/documents/Fantasiapp.png", "./files/documents/logoFantasiapp.png"]
   with open(file[index], "rb") as fileData:
     encoded_string = base64.b64encode(fileData.read())
   return encoded_string.decode("utf-8")
