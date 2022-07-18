@@ -11,17 +11,21 @@ class DetectQrCode:
 
   @property
   def getPages(self):
+    print("getPages")
     listPage = []
     filePath = self.file.path
     pathSplit = filePath.split('.')
     pathSplit.pop(-1)
 
     if self.ext == "pdf":
+      print("pdf loop")
       self.file.encodedStringListForPdf()
+      print("encode done")
       path = '.'.join(pathSplit)+'/'
       listDir = os.listdir('.'.join(pathSplit)+'/')
       for pages in listDir:
         listPage.append(path + pages)
+      print("finished")
     else :
       listPage = [filePath]
     return listPage
