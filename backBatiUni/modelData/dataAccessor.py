@@ -127,8 +127,7 @@ class DataAccessor():
         userProfile.delete()
       else:
         message["email"] = "Cet email et déjà utilisé."
-    companyData = data['company']
-    company = Company.objects.filter(name=companyData['name'])
+    company = Company.objects.filter(name=data['company'])
     if company:
       message["company"] = "Le nom de l'entreprise est déjà utilisé."
     return message
@@ -138,14 +137,13 @@ class DataAccessor():
     print("stripe", stripe)
     print("stripe api key", STRIPE_API_KEY)
     print("registerAction", data)
-    companyData = data['company']
     if not "@" in data["email"]:
       data["email"] += "@g.com" 
-    print("registerAction stripe", companyData["name"], data["email"])
-    customer = stripe.Customer.create(name = companyData["name"], email = data["email"])
-    company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'], stripeCustomerId = customer.id)
+    print("registerAction stripe", data["company"], data["email"])
+    customer = stripe.Customer.create(name = data["company"], email = data["email"])
+    company = Company.objects.create(name=data["company"], siret=data['siret'], siret=data['company'], stripeCustomerId = customer.id)
     # company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'], stripeCustomerId = "")
-    cls.__getGeoCoordinates(company)
+    # cls.__getGeoCoordinates(company)
     company.Role = Role.objects.get(id=data['Role'])
     company.save()
     proposer = None
