@@ -24,3 +24,4 @@ class DetectQrCode:
         listPage.append(path + pages)
     else :
       listPage = [filePath]
+    return listPage
