@@ -152,34 +152,209 @@
       "2": "Un sous-traitant \u00e0 la recherche d'une entreprise",
       "1": "Une entreprise \u00e0 la recherche de sous-traitances"
    },
+   "LabelFields": [
+      "name",
+      "fileName"
+   ],
    "LabelValues": {
-      "13": "Artisant d'art",
-      "19": "Chauffage+",
-      "24": "ECO Artisan",
-      "17": "Entreprise du Patrimoine Vivant",
-      "12": "FEE Bat",
-      "18": "Handibat",
-      "9": "ISO 9001",
-      "23": "Maison de confiance FFCMI",
-      "22": "Maison de qualit\u00e9",
-      "14": "Maitre artisan et maitre artisan en m\u00e9tier d\u2019art",
-      "16": "Maitres d\u2019art",
-      "15": "Meilleur ouvrier de France",
-      "25": "PG (Professionnel du Gaz)",
-      "10": "QSE",
-      "8": "Quali'Pac",
-      "1": "Qualibat",
-      "2": "Qualif'elec",
-      "27": "QualiGaz",
-      "7": "Quali\u2019Bois",
-      "3": "Quali\u2019eau",
-      "26": "Quali\u2019ENR",
-      "6": "Quali\u2019Forage",
-      "5": "Quali\u2019PV",
-      "4": "Quali\u2019Sol",
-      "21": "Recharge Elec+",
-      "11": "RGE",
-      "20": "Ventilation+"
+      "1": [
+         "Qualibat",
+         "qualibat"
+      ],
+      "2": [
+         "Quali'Elec",
+         "qualiElec"
+      ],
+      "3": [
+         "Quali'Eau",
+         "qualiEau"
+      ],
+      "4": [
+         "Quali'Sol",
+         "qualiSol"
+      ],
+      "5": [
+         "Quali'PV",
+         "qualiPV"
+      ],
+      "6": [
+         "Quali'Forage",
+         "qualiForage"
+      ],
+      "7": [
+         "Quali'Bois",
+         "qualiBois"
+      ],
+      "8": [
+         "Quali'Pac",
+         "qualiPac"
+      ],
+      "9": [
+         "ISO 9001",
+         "iso9001"
+      ],
+      "10": [
+         "RGE",
+         "rge"
+      ],
+      "11": [
+         "FEE Bat",
+         "feeBat"
+      ],
+      "12": [
+         "Artisan d'art",
+         "artisanArt"
+      ],
+      "13": [
+         "Maitre artisan et maitre artisan en metier d'art",
+         "artisanMaitre"
+      ],
+      "14": [
+         "Meilleur ouvrier de France",
+         "Meilleur"
+      ],
+      "15": [
+         "Maitre d'art",
+         "maitreArt"
+      ],
+      "16": [
+         "Entreprise du Patrimoine Vivant",
+         "patrimoineVivant"
+      ],
+      "17": [
+         "Handibat",
+         "handibat"
+      ],
+      "18": [
+         "Chauffage+",
+         "chauffage"
+      ],
+      "19": [
+         "Ventilation+",
+         "ventilation"
+      ],
+      "20": [
+         "Recharge Elec+",
+         "rechargeElec"
+      ],
+      "21": [
+         "Maison de qualite",
+         "maisonQualit\u00e9"
+      ],
+      "22": [
+         "ECO Artisan",
+         "ecoArtisan"
+      ],
+      "23": [
+         "PG (Professionnel du Gaz)",
+         "professionnelGaz"
+      ],
+      "24": [
+         "Quali'ENR",
+         "qualiEnr"
+      ]
+   },
+   "LabelNewFields": [
+      "name",
+      "fileName"
+   ],
+   "LabelNewValues": {
+      "1": [
+         "Qualibat",
+         "qualibat"
+      ],
+      "2": [
+         "Quali'Elec",
+         "qualiElec"
+      ],
+      "3": [
+         "Quali'Eau",
+         "qualiEau"
+      ],
+      "4": [
+         "Quali'Sol",
+         "qualiSol"
+      ],
+      "5": [
+         "Quali'PV",
+         "qualiPV"
+      ],
+      "6": [
+         "Quali'Forage",
+         "qualiForage"
+      ],
+      "7": [
+         "Quali'Bois",
+         "qualiBois"
+      ],
+      "8": [
+         "Quali'Pac",
+         "qualiPac"
+      ],
+      "9": [
+         "ISO 9001",
+         "iso9001"
+      ],
+      "10": [
+         "RGE",
+         "rge"
+      ],
+      "11": [
+         "FEE Bat",
+         "feeBat"
+      ],
+      "12": [
+         "Artisan d'art",
+         "artisanArt"
+      ],
+      "13": [
+         "Maitre artisan et maitre artisan en metier d'art",
+         "artisanMaitre"
+      ],
+      "14": [
+         "Meilleur ouvrier de France",
+         "Meilleur"
+      ],
+      "15": [
+         "Maitre d'art",
+         "maitreArt"
+      ],
+      "16": [
+         "Entreprise du Patrimoine Vivant",
+         "patrimoineVivant"
+      ],
+      "17": [
+         "Handibat",
+         "handibat"
+      ],
+      "18": [
+         "Chauffage+",
+         "chauffage"
+      ],
+      "19": [
+         "Ventilation+",
+         "ventilation"
+      ],
+      "20": [
+         "Recharge Elec+",
+         "rechargeElec"
+      ],
+      "21": [
+         "Maison de qualite",
+         "maisonQualit\u00e9"
+      ],
+      "22": [
+         "ECO Artisan",
+         "ecoArtisan"
+      ],
+      "23": [
+         "PG (Professionnel du Gaz)",
+         "professionnelGaz"
+      ],
+      "24": [
+         "Quali'ENR",
+         "qualiEnr"
+      ]
    },
    "timestamp": 0
 }

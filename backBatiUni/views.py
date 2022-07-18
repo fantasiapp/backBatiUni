@@ -4,6 +4,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from backBatiUni.payment import PaymentManager
+from backBatiUni.subscription import SubscriptionManager
 from .models import *
 from .modelData.buildDataBase import CreateNewDataBase
 from .modelData.dataAccessor import DataAccessor
@@ -58,7 +59,6 @@ class Data(DefaultView):
       jsonBin = request.body
       jsonString = jsonBin.decode("utf8")
       response = DataAccessor().dataPost(jsonString, currentUser)
-      # print("post response", response)
       return DefaultView.myResponse(response)
     return DefaultView.myResponse ({"data POST":"Warning", "messages":"La confirmation par mail n'est pas réalisée."})
 
@@ -103,10 +103,57 @@ class Payment(DefaultView):
     jsonBin = request.body
     jsonString = jsonBin.decode("utf8")
     data = json.loads(jsonString)
-    print(request.user)
     userProfile = UserProfile.objects.get(userNameInternal=request.user)
-    print("userProfile", userProfile)
     if "action" in data and self.confirmToken(request.user):
       if data["action"] == "createPaymentIntent":
         return Response(PaymentManager.createPaymentIntent(request))
     return Response({"Error": f"Action unknown"})
+
+class Webhook(DefaultView):
+  permission_classes = (AllowAny,)
+  def get(self, request):
+    return Response({"Error": f"Not implemented yet"})
+
+  def post(self, request):
+    jsonBin = request.body
+    jsonString = jsonBin.decode("utf8")
+    event = json.loads(jsonString)
+    print("Webhook", event['type'])
+    # Handle the event
+    if event:
+      if event['type'] == 'payment_intent.succeeded':
+        payment_intent = event['data']['object']  # contains a stripe.PaymentIntent
+        if payment_intent["metadata"]["type"] == "boostPost":
+          boostPostDict = {
+            "action": "boostPost",
+            "postId": int(payment_intent["metadata"]["post"]),
+            "duration": int(payment_intent["metadata"]["duration"])
+          }
+          DataAccessor.dataPost(json.dumps(boostPostDict), False)
+      elif event['type'] ==  'customer.subscription.created':
+        return Response({"Error": f"Not implemented yet"})
+      elif event['type'] ==  'customer.subscription.updated':
+        return Response({"Error": f"Not implemented yet"})
+      elif event['type'] ==  'customer.subscription.deleted':
+        return Response({"Error": f"Not implemented yet"})      
+    # else:
+        # Unexpected event type
+        # print(f"Unhandled event type {event['type']}")
+
+    return Response({"webhook-payment": "OK"})
+
+class Subscription(DefaultView):
+  def get(self, request):
+    return Response({"Error": f"Not implemented yet"})
+
+  def post(self, request):
+    jsonBin = request.body
+    jsonString = jsonBin.decode("utf8")
+    data = json.loads(jsonString)
+
+    if "action" in data and self.confirmToken(request.user):
+      if data["action"] == "createSubscription":
+        return Response(SubscriptionManager.createSubscription(request))
+      if data["action"] == "cancelSubscription":
+        return Response(SubscriptionManager.cancelSubscription(request))
+    return Response({"Error": f"Not implemented yet"})

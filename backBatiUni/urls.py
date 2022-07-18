@@ -24,5 +24,7 @@ urlpatterns = [
     path('data/', views.Data.as_view(), name='data'),
     path('createBase/', views.CreateBase.as_view(), name='createBase'),
     path('initialize/',  views.Initialize.as_view(), name='initialize'),
-    path('payment/', views.Payment.as_view(), name='payment')
+    path('payment/', views.Payment.as_view(), name='payment'),
+    path('webhook/', views.Webhook.as_view(), name='webhook'),
+    path('subscription/', views.Subscription.as_view(), name='subscription')
 ]

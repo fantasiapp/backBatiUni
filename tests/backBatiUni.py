@@ -10,9 +10,12 @@ import random
 import string
 import math
 from datetime import datetime, timedelta
+import stripe
 
-userName, password = "st@g.com", "pwd"
-# userName, password = "jlw", "pwd"
+stripe.api_key = 'sk_test_51LI7b7GPflszP2pB2F62OC6fyGjgMOTVhQDI19vVqDYEONZmLdDi9KXlQ3bkdgl23t5HsH0FABc7rMHmINenlwV100GfMpz5ec'
+
+# userName, password = "st@g.com", "pwd"
+userName, password = "jlw", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
@@ -44,7 +47,7 @@ def queryForToken(userName, password):
     return False
 
 def getDocStr(index = 0):
-  file = ["./files/documents/Qualibat.jpeg", "./files/documents/Kbis.png", "./files/documents/Plan.png", "./files/documents/IMG_2465.HEIC", "./files/documents/etex.svg", "./files/documents/batiUni.png", "./files/documents/Fantasiapp.png", "./files/documents/logoFantasiapp.png"]
+  file = ["./files/documents/Qualibat.jpeg", "./files/documents/Kbis.png", "./files/documents/Plan.png", "./files/documents/IMG_2465.HEIC", "./files/documents/Etex.svg", "./files/documents/batiUni.png", "./files/documents/Fantasiapp.png", "./files/documents/logoFantasiapp.png"]
   with open(file[index], "rb") as fileData:
     encoded_string = base64.b64encode(fileData.read())
   return encoded_string.decode("utf-8")
@@ -56,7 +59,10 @@ def executeQuery():
   if query in ["emptyDB", "buildDB"]:
       token = queryForToken("jlw", "pwd")
       print("user jlw")
-      response = requests.get(f'{address}/createBase/', headers= {'Authorization': f'Token {token}'}, params={"action":"reload"})
+      while customers := stripe.Customer.list(limit=100):
+        for customer in customers.data:
+            stripe.Customer.delete(customer.id)
+      response = requests.get(f'{address}/createBase/', headers= {'Authorization': f'Token {token}'}, params={"action":"reload" if query == "buildDB" else "emptyDB"})
   elif query == "register":
     post1 = {"firstname":"Augustin","lastname":"Alleaume","email":"aa@g.com","password":"pwd","company":{'id': 2, 'name': 'BATOUNO', 'address': '11 rue Vintimille Paris 75009', 'activity': 'Activité inconnue', 'siret': '40422352100018', 'ntva': 'FR49404223521'},"Role":3,"proposer":"","jobs":[1,2,80], "action":"register"}
     post2 = {"firstname":"Théophile","lastname":"Traitant","email":"st@g.com","password":"pwd","company":{'id': 3, 'name': 'Sous-traitant', 'address': '74 ave des Sous-traitants Paris 75008', 'activity': 'Activité inconnue', 'siret': '40422352100021', 'ntva': 'FR49404223522'},"Role":2,"proposer":"","jobs":[1,2,80], "action":"register"}
@@ -116,12 +122,12 @@ def executeQuery():
         amount = math.floor(8 + random.random() * 70)
         webSite = "https://monWebSite.fr"
         JobForCompany = [[math.floor(1 + random.random() * 40), math.floor(1 + random.random() * 4)], [math.floor(41 + random.random() * 40), math.floor(1 + random.random() * 4)], [math.floor(81 + random.random() * 40), math.floor(1 + random.random() * 4)]]
-        LabelForCompany = [[math.floor(1 + random.random() * 9), dateForLabel], [math.floor(10 + random.random() * 9), dateForLabel], [math.floor(20 + random.random() * 7), dateForLabel]]
+        LabelForCompany = [[math.floor(1 + random.random() * 9), dateForLabel], [math.floor(10 + random.random() * 9), dateForLabel], [math.floor(20 + random.random() * 3), dateForLabel]]
         post = {'action': 'modifyUser', 'UserProfile': {'id': companyId, 'cellPhone': '0629350418', 'Company': {'capital': capital, 'revenue': revenue, "webSite": webSite, "amount":amount, 'companyPhone': '0892976415', "allQualifications":True, 'JobForCompany':JobForCompany, 'LabelForCompany':LabelForCompany}}}
         response = requests.post(f'{address}/data/', headers=headers, json=post)
         if companyId in emailList:
           data = json.loads(response.text)
-          labelList[companyId] = json.loads(response.text)["LabelForCompany"]
+          labelList[companyId] = data["LabelForCompany"]
 
 
     generalData = requests.get(url, headers=headersStart, params={"action":"getGeneralData"})
@@ -134,6 +140,10 @@ def executeQuery():
       for labelValues in value:
         for tupleLabel in labelValues.values():
           fileName = generalData["LabelValues"][str(tupleLabel[0])]
+          print("Label", fileName)
+          fileName = fileName[1] if isinstance(fileName, list) else fileName
+          print("Label", fileName)
+          print()
           file = {'action':"uploadFile", "ext":"png", "name":fileName, "fileBase64":getDocStr(0), "nature":"labels", "expirationDate":tupleLabel[1]}
           data = requests.post(url, headers=headersForImage, json=file)
 
@@ -273,7 +283,7 @@ def executeQuery():
       post = {'action':"modifyDisponibility", "disponibility":[["2022-06-13", "Disponible"], ["2022-06-14", "Disponible Sous Conditions"], ["2022-06-15", "Non Disponible"]]}
       response = requests.post(url, headers=headers, json=post)
     elif query == "uploadFile":
-      file1 = {'action':"uploadFile", "ext":"png", "name":"Qualibat", "fileBase64":getDocStr(0), "nature":"labels", "expirationDate":"2022-02-12"}
+      file1 = {'action':"uploadFile", "ext":"png", "name":"qualibat", "fileBase64":getDocStr(0), "nature":"labels", "expirationDate":"2022-02-12"}
       file2 = {'action':"uploadFile", "ext":"png", "name":"Kbis", "fileBase64":getDocStr(1), "nature":"admin", "expirationDate":"2022-02-12"}
       file4 = {'action':"uploadFile", "ext":"svg", "name":"Document technique", "fileBase64":getDocStr(4), "nature":"post", "Post":2}
       file5 = {'action':"uploadFile", "ext":"jpg", "name":"Plan", "fileBase64":getDocStr(2), "nature":"post", "Post":2}
