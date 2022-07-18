@@ -49,12 +49,12 @@ class PaymentManager():
             return {"Error": str(e)}
 
     @classmethod
-    def fetcbPrice(cls, request):
+    def fetchPrice(cls, request):
         print(request)
         try:
             prices = stripe.Price.list(
                 active = True,
-                product = request.product
+                product = request.data["product"]
             )
             return {
                 "fetchPrices": "OK",
