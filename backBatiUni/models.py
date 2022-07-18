@@ -24,6 +24,7 @@ from svglib.svglib import svg2rlg
 from reportlab.graphics import renderPM
 import pdf2image 
 import shutil
+from .modelData.detectQrCode import DetectQrCode
 
 
 
@@ -1082,7 +1083,9 @@ class File(CommonModel):
       print("le nom a testé (censé être Kbis) : ", objectFile.name, objectFile.name == "Kbis")
       if objectFile.name == "Kbis":
         print("je lance detectQRcode")
-        hasQRCode, message = cls.detect_QR_code(objectFile)
+        hasQRCode, message = cls.__detectQrCode(objectFile)
+        detectObject = DetectQrCode(objectFile)
+        print("detect", detectObject.getPages)
         if not (hasQRCode):
           if objectFile: objectFile.delete()
           return {"uploadFile":"Error", "messages":f"{message}"}
@@ -1092,14 +1095,13 @@ class File(CommonModel):
       return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
 
   @classmethod
-  def detect_QR_code(cls, file) :
+  def __detectQrCode(cls, file) :
+
     
     list_pages = []
-    file_extension = '.' + file.ext
     file_path = file.path
     pathSplit = file_path.split('.')
     pathSplit.pop(-1)
-    new_img = '.'.join(pathSplit) +'.jpg'
 
     if file.ext == "pdf":
       file.encodedStringListForPdf()
@@ -1142,14 +1144,14 @@ class File(CommonModel):
       print(text)
       if 'La commande est supérieure à 3 mois' in text :
           print('La commande est supérieure à 3 mois')
-          return (False, "Votre KBis n'est pas valide, il date de plus de 3 mois")
+          return (False, "Votre KBis est obsolette, il date de plus de 3 mois")
       elif 'Aucun document trouvé pour ce code de vérification' in text :
           print('Aucun document trouvé pour ce code de vérification')
-          return (False, "Votre KBis n'est pas valide")
+          return (False, "Votre KBis n'est pas reconnu")
       elif 'Ce code de vérification a déjà été utilisé, vous ne pouvez plus consulter le document.'in text:
         return (True, "")
       return True
-    return (False, "Votre KBis n'est pas valide")
+    return (False, "Votre KBis n'est pas reconnu")
 
   @classmethod
   def removeOldFile(cls, suppress, objectFile):
