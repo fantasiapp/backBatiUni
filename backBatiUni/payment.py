@@ -54,7 +54,7 @@ class PaymentManager():
         try:
             prices = stripe.Price.list(
                 active = True,
-                product = request.product
+                product = request.data["product"]
             )
             return {
                 "fetchPrices": "OK",
