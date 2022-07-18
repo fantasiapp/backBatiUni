@@ -1,10 +1,12 @@
 import requests
-# from .modelData.models import File
+from ..models import File
+import os
 
 class DetectQrCode:
   file = None
 
   def __init__(self, file):
+    print("create detectQrCode")
     self.file = file
 
   @property
