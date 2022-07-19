@@ -1,6 +1,7 @@
 import requests
 # from ..models import File
 import os
+import cv2
 
 class DetectQrCode:
   file = None
@@ -10,22 +11,30 @@ class DetectQrCode:
 
   @property
   def getPages(self):
-    print("getPages")
     listPage = []
     filePath = self.file.path
     pathSplit = filePath.split('.')
     pathSplit.pop(-1)
-    print("before")
     if self.file.ext == "pdf":
-      print("pdf loop")
       self.file.encodedStringListForPdf()
-      print("encode done")
       path = '.'.join(pathSplit)+'/'
       listDir = os.listdir('.'.join(pathSplit)+'/')
       for pages in listDir:
         listPage.append(path + pages)
-      print("finished")
     else :
-      print("second linge")
       listPage = [filePath]
     return listPage
+
+  def readQrCode (self):
+    print("readQrCodeStart")
+    for page in self.getPages:
+      print("readQrCodeStart", self.getPages)
+      image = cv2.imread(page)
+      print("image")
+      decoder = cv2.QRCodeDetector()
+      print("decoder")
+      data, _, _ = decoder.detectAndDecode(image)
+      print("data")
+      if data: return data
+      print()
+    return False

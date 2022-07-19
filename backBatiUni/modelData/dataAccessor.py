@@ -507,7 +507,6 @@ class DataAccessor():
   @classmethod
   def __addNewNotificationForMessage(cls, userProfile, mission, message):
     candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
-    print("__addNewNotificationForMessage", candidate, userProfile)
     if userProfile.Company.id == candidate.Company.id:
       company = mission.Company
       subContractor = candidate.Company
