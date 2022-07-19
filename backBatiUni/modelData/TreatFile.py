@@ -59,23 +59,25 @@ class TreatFile:
           linkKbis = "https://www.infogreffe.fr" + link
 
       textInHtml = soup.get_text()
-      lines = (line.strip() for line in textInHtml.splitlines())
-      chunks = (phrase.strip() for line in lines for phrase in line.split("  ") if line.strip())
-      finalText = '\n'.join(chunk for chunk in chunks if chunk)
+      lines = [line.strip() for line in textInHtml.splitlines() if line.strip()]
+      finalText = "\n".join(lines)
+      # lines = (line.strip() for line in textInHtml.splitlines())
+      # chunks = (phrase.strip() for line in lines for phrase in line.split("  ") if line.strip())
+      # finalText = '\n'.join(chunk for chunk in chunks if chunk)
 
       if 'La commande est supérieure à 3 mois' in finalText :
         return (False, "Le KBis est obsolette, il date de plus de 3 mois")
       if 'Aucun document trouvé pour ce code de vérification' in finalText :
         return (False, "Le KBis n'est pas reconnu")
-      result = self.__computeResultFromQrCode(linkKbis, textInHtml.splitlines())
+      result = self.__computeResultFromQrCode(linkKbis, lines)
       return (True, result)
     return (False, "Votre KBis n'est pas reconnu")
 
 
-  def __computeResultFromQrCode(self, link, lines):
+  def __computeResultFromQrCode(self, link, linesStrip):
     print("__computeResultFromQrCode", link)
     response = self.__computeResultFromKbisWithLink(link)
-    linesStrip = [line.strip() for line in lines if line.strip()]
+    # linesStrip = [line.strip() for line in lines if line.strip()]
     beforeDate, beforeName, beforeRcs = False, False, False
     for line in linesStrip:
       if beforeDate:
@@ -109,7 +111,7 @@ class TreatFile:
       html = request.content.decode()
       soup = BeautifulSoup(html, features="html.parser")
       textInHtml = soup.get_text()
-      lines = [line.strip() for line in textInHtml.splitlines() if line.strip]
+      lines = [line.strip() for line in textInHtml.splitlines() if line.strip()]
       chunks = "\n".join(lines)
       for line in lines:
         print(line)
