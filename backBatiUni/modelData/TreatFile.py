@@ -5,6 +5,7 @@ import cv2
 from bs4 import BeautifulSoup
 from django.core.files.base import ContentFile
 import base64
+from shutil import rmtree
 
 class TreatFile:
   file = None
@@ -37,6 +38,13 @@ class TreatFile:
       listPage = [filePath]
     return listPage
 
+  def removeOldFile(self, suppress):
+    oldPath = self.file.path
+    if os.path.exists(oldPath) and suppress:
+      os.remove(oldPath)
+      if self.file.ext == "pdf":
+        pathToRemove = self.file.path.replace(".pdf", "/")
+        rmtree(pathToRemove, ignore_errors=True)
 
   @classmethod
   def createFileWidthb64(cls, objectFile, fileStr, currentUser, queryName):

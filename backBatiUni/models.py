@@ -1060,7 +1060,9 @@ class File(CommonModel):
     objectFile = File.objects.filter(nature=nature, name=name, Company=company, Post=post, Mission=mission, Supervision=supervision)
     if objectFile:
       objectFile = objectFile[0]
-      cls.removeOldFile(suppress, objectFile)
+      treatFile = TreatFile(objectFile)
+      treatFile.removeOldFile(suppress)
+      # cls.removeOldFile(suppress, objectFile)
       objectFile.path = path
       objectFile.timestamp = datetime.datetime.now().timestamp()
       objectFile.ext = ext
@@ -1073,31 +1075,6 @@ class File(CommonModel):
     if fileStr:
       return TreatFile.createFileWidthb64(objectFile, fileStr, user, queryName)
     return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), user, True)}
-
-  # @classmethod
-  # def __createFileWidthb64(cls, objectFile, fileStr, currentUser, queryName):
-  #   file = None
-  #   try:
-  #     file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if objectFile.ext != "txt" else fileStr
-  #     with open(objectFile.path, "wb") as outfile:
-  #       outfile.write(file.file.getbuffer())
-  #   except:
-  #     if objectFile: objectFile.delete()
-  #     return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
-  #   try :
-  #     print("le nom a testé (censé être Kbis) : ", objectFile.name, objectFile.name == "Kbis")
-  #     if objectFile.name == "Kbis":
-  #       detectObject = TreatFile(objectFile)
-  #       status, value = detectObject.readFromQrCode()
-  #       if status:
-  #         print("__createFileWidthb64 Kbis", value)
-  #       else:
-  #         if objectFile: objectFile.delete()
-  #         return {"uploadFile":"Error", "messages":f"{value}"}
-  #     return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
-  #   except:
-  #     if objectFile: objectFile.delete()
-  #     return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
 
   @classmethod
   def removeOldFile(cls, suppress, objectFile):
