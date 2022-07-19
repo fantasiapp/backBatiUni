@@ -55,8 +55,10 @@ class TreatFile:
       html = request.content.decode()
       soup = BeautifulSoup(html, features="html.parser")
       for link in soup.findAll('a'):
+        print("before", link)
         if "/entreprise-societe/" in link:
           linkKbis = "https:/"+link
+          print("after", linkKbis)
 
       textInHtml = soup.get_text()
       lines = (line.strip() for line in textInHtml.splitlines())
@@ -74,33 +76,27 @@ class TreatFile:
 
 
   def __computeResultFromQrCode(self, link, lines):
-    print("__computeResultFromQrCode")
+    print("__computeResultFromQrCode", link)
     response = {"link":link}
     linesStrip = [line.strip() for line in lines if line.strip()]
     beforeDate, beforeName, beforeRcs = False, False, False
     for line in linesStrip:
-      print("line", line, self.beforeNameKbis, self.beforeNameKbis == line)
       if beforeDate:
         response["kBisDate"] = line[0:10]
-        print("kBisDate", line)
         beforeDate = False
       if beforeName:
         response["name"] = line
-        print("beforeNameKbis", line)
         beforeName = False
       if beforeRcs:
         response["RCS"] = line
-        print("beforeRcsKbis", line)
         beforeRcs = False
+      
       if line == self.beforeDateKbis:
         beforeDate = True
-        print("beforeDate")
       if line == self.beforeNameKbis:
         beforeName = True
-        print("beforeNameKbis")
       if line == self.beforeRcsKbis:
         beforeRcs = True
-        print("beforeRcsKbis")
 
     print("lines", linesStrip)
     return response
