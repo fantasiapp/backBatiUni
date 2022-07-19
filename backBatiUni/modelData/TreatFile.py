@@ -77,7 +77,6 @@ class TreatFile:
 
 
   def __computeResultFromQrCode(self, link, linesStrip):
-    print("__computeResultFromQrCode", link)
     response = self.__computeResultFromKbisWithLink(link)
     # linesStrip = [line.strip() for line in lines if line.strip()]
     beforeDate, beforeName, beforeRcs = False, False, False
@@ -117,6 +116,7 @@ class TreatFile:
       lines = [line.strip() for line in textInHtml.splitlines() if line.strip()]
       chunks = "\n".join(lines)
       for line in lines:
+        print(line)
         if beforeAddress:
           address += line + "\n"
           print(line, address)
@@ -124,7 +124,7 @@ class TreatFile:
           beforeAddress = True
         if self.afterAddressKbis in line:
           beforeAddress = False
-          
+
       if address: result["address"] = address.strip("\n")
     return result
     
