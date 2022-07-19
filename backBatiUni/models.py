@@ -1055,7 +1055,7 @@ class File(CommonModel):
     print("createFile")
     userProfile = UserProfile.objects.get(userNameInternal=user)
     objectFile = None
-    path, name, mission = cls.getPathAndName(name, nature, userProfile, ext, post, mission, supervision)
+    path, name, mission = TreatFile.getPathAndName(name, nature, userProfile, ext, post, mission, supervision)
     company = userProfile.Company if not post and not supervision else None
     objectFile = File.objects.filter(nature=nature, name=name, Company=company, Post=post, Mission=mission, Supervision=supervision)
     if objectFile:
