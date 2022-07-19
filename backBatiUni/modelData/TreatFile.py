@@ -78,30 +78,31 @@ class TreatFile:
     response = {"link":link}
     linesStrip = [line.strip() for line in lines if line]
     beforeDate, beforeName, beforeRcs = False, False, False
-    print("linesStrip", linesStrip)
     for line in linesStrip:
-      print("line")
+      print("line", line)
       if line == self.beforeDateKbis:
         beforeDate = True
         print("beforeDate")
       if beforeDate:
         response["kBisDate"] = line[0:11]
         print("kBisDate", line)
+        beforeDate = False
       if line == self.beforeNameKbis:
         beforeName = True
         print("beforeNameKbis")
       if beforeName:
         response["name"] = line
         print("beforeNameKbis", line)
+        beforeName = False
       if line == self.beforeRcsKbis:
         beforeRcs = True
         print("beforeRcsKbis")
       if beforeRcs:
         response["RCS"] = line
         print("beforeRcsKbis", line)
+        beforeRcs = False
 
     print("lines", linesStrip)
-    print("response", response)
     return response
     
 
