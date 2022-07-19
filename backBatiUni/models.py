@@ -938,6 +938,7 @@ class File(CommonModel):
   Post = models.ForeignKey(Post, verbose_name="Annonce associée", related_name='selectPost', on_delete=models.PROTECT, null=True, default=None)
   Mission = models.ForeignKey(Mission, verbose_name="Mission associée", related_name='selectMission', on_delete=models.PROTECT, null=True, default=None)
   Supervision = models.ForeignKey(Supervision, verbose_name="Suivi associé", on_delete=models.PROTECT, null=True, default=None)
+  """A supprimer une fois le transfert sur TreatFile terminé"""
   dictPath = {"userImage":"./files/avatars/", "labels":"./files/labels/", "admin":"./files/admin/", "post":"./files/posts/", "supervision":"./files/supervisions/", "contract":"./files/contracts/"}
   authorizedExtention = {"png":"png", "PNG":"png", "jpg":"jpg", "JPG":"jpg", "jpeg":"jpg", "JPEG":"jpg", "svg":"svg", "SVG":"svg", "pdf":"pdf", "PDF":"pdf", "HEIC":"heic", "heic":"heic"}
 
