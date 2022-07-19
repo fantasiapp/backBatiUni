@@ -1076,25 +1076,25 @@ class File(CommonModel):
       return TreatFile.createFileWidthb64(objectFile, fileStr, user, queryName)
     return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), user, True)}
 
-  @classmethod
-  def getPathAndName(cls, name, nature, userProfile, ext, post, mission, supervision):
-    path= None
-    if nature == "userImage":
-      path = cls.dictPath[nature] + userProfile.Company.name + '_' + str(userProfile.Company.id) + '.' + ext
-    if nature in ["labels", "admin"]:
-      path = cls.dictPath[nature] + name + '_' + str(userProfile.Company.id) + '.' + ext
-    if nature == "post":
-      path = cls.dictPath[nature] + name + '_' + str(post.id) + '.' + ext
-    if nature == "supervision":
-      endName = '_' + str(mission.id) if mission else '_N'
-      endName += '_' + str(supervision.id) if supervision else '_N'
-      objectFiles = File.objects.filter(nature=nature, Supervision=supervision)
-      endName += "_" + str(len(objectFiles))
-      name +=  endName
-      path = cls.dictPath[nature] + name + '.' + ext
-    if nature == "contract":
-      path = cls.dictPath[nature] + name + '_' + str(mission.id) + '.' + ext
-    return path, name, mission
+  # @classmethod
+  # def getPathAndName(cls, name, nature, userProfile, ext, post, mission, supervision):
+  #   path= None
+  #   if nature == "userImage":
+  #     path = cls.dictPath[nature] + userProfile.Company.name + '_' + str(userProfile.Company.id) + '.' + ext
+  #   if nature in ["labels", "admin"]:
+  #     path = cls.dictPath[nature] + name + '_' + str(userProfile.Company.id) + '.' + ext
+  #   if nature == "post":
+  #     path = cls.dictPath[nature] + name + '_' + str(post.id) + '.' + ext
+  #   if nature == "supervision":
+  #     endName = '_' + str(mission.id) if mission else '_N'
+  #     endName += '_' + str(supervision.id) if supervision else '_N'
+  #     objectFiles = File.objects.filter(nature=nature, Supervision=supervision)
+  #     endName += "_" + str(len(objectFiles))
+  #     name +=  endName
+  #     path = cls.dictPath[nature] + name + '.' + ext
+  #   if nature == "contract":
+  #     path = cls.dictPath[nature] + name + '_' + str(mission.id) + '.' + ext
+  #   return path, name, mission
 
 class BlockedCandidate(CommonModel):
   blocker = models.ForeignKey(Company, verbose_name='Company who is blocking', related_name='blocking', on_delete=models.PROTECT, null=True, default=None)
