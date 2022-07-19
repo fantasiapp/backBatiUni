@@ -3,8 +3,9 @@ import requests
 import os
 import cv2
 
-class DetectQrCode:
+class TreatFile:
   file = None
+  headersQrCode = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
 
   def __init__(self, file):
     self.file = file
@@ -27,16 +28,19 @@ class DetectQrCode:
     print("getPages", listPage)
     return listPage
 
-  def readQrCode (self):
-    print("readQrCodeStart")
-    print("readQrCodeStart", self.getPages)
+  def __getUrlFromQrCode (self):
     for page in self.getPages:
       image = cv2.imread(page)
-      print("image")
       decoder = cv2.QRCodeDetector()
-      print("decoder")
-      data, _, _ = decoder.detectAndDecode(image)
-      print("data")
-      if data: return data
-      print()
+      url, _, _ = decoder.detectAndDecode(image)
+      if url: return url
     return False
+
+  def readFromQrCode(self):
+    url = self.__getUrlFromQrCode()
+    request = requests.get(url, headers=self.headersQrCode)
+    html = request.content.decode()
+    print(html)
+
+
+  

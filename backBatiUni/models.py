@@ -24,7 +24,7 @@ from svglib.svglib import svg2rlg
 from reportlab.graphics import renderPM
 import pdf2image 
 import shutil
-from .modelData.detectQrCode import DetectQrCode
+from .modelData.TreatFile import TreatFile
 
 
 
@@ -968,9 +968,12 @@ class File(CommonModel):
     superList.append("content")
     return superList
 
+  def computeValues(self, listFields, user, dictFormat=False):
+    return self.dump()
+
   def dump(self):
     expirationDate = self.expirationDate.strftime("%Y-%m-%d") if self.expirationDate else ""
-    return [self.nature, self.name, self.ext, expirationDate, self.timestamp, ""]
+    return [self.nature, self.name, self.ext, expirationDate, self.timestamp]
 
   def getAttr(self, fieldName, answer=False):
     if fieldName == "ext":
@@ -1084,8 +1087,8 @@ class File(CommonModel):
     try :
       print("le nom a testé (censé être Kbis) : ", objectFile.name, objectFile.name == "Kbis")
       if objectFile.name == "Kbis":
-        detectObject = DetectQrCode(objectFile)
-        print("je lance detectQRcode", detectObject.readQrCode())
+        detectObject = TreatFile(objectFile)
+        print("je lance detectQRcode", detectObject.readFromQrCode())
         hasQRCode, message = cls.__detectQrCode(objectFile)
         if not (hasQRCode):
           if objectFile: objectFile.delete()
