@@ -1083,8 +1083,8 @@ class DataAccessor():
     message = File.createFile("supervision", "supervision", data['ext'], currentUser, "uploadImageSupervision", data["fileBase64"], supervision=supervision)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     objectFather = supervision.DetailedPost.DatePost if supervision.DetailedPost else supervision.DatePost
-    print("__uploadImageSupervision", objectFather)
     mission = objectFather.Mission
+    print("__uploadImageSupervision", mission, userProfile)
     if mission.Company.id == userProfile.Company.id:
       candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
       subContractor = candidate.Company
