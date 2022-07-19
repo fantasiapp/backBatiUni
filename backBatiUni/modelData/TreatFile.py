@@ -2,6 +2,7 @@ import requests
 # from ..models import File
 import os
 import cv2
+from bs4 import BeautifulSoup
 
 class TreatFile:
   file = None
@@ -28,6 +29,8 @@ class TreatFile:
     print("getPages", listPage)
     return listPage
 
+  """Fonctions associées au QR Code"""
+
   def __getUrlFromQrCode (self):
     for page in self.getPages:
       image = cv2.imread(page)
@@ -40,6 +43,9 @@ class TreatFile:
     url = self.__getUrlFromQrCode()
     request = requests.get(url, headers=self.headersQrCode)
     html = request.content.decode()
+    soup = BeautifulSoup(html, features="html.parser")
+    for script in soup(["script", "style"]):
+          script.extract()  
     print(html)
 
 
