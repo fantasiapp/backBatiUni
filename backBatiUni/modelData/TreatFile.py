@@ -54,8 +54,9 @@ class TreatFile:
         return (False, "unrecognize url")
       html = request.content.decode()
       soup = BeautifulSoup(html, features="html.parser")
-      for link in soup.findAll('a'):
-        print("before", link)
+      for element in soup.findAll('a'):
+        link = element.get('href')
+        print("before", link, element)
         if "/entreprise-societe/" in link:
           linkKbis = "https:/"+link
           print("after", linkKbis)
