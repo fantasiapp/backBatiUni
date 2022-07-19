@@ -97,10 +97,12 @@ class TreatFile:
   def __computeResultFromKbisWithLink(self, link):
     result = {}
     if link:
+      print(link, self.headersKbis)
       try:
         request = requests.get(link, headers=self.headersKbis)
       except:
         request = None
+    print("request", request)
     if request:
       html = request.content.decode()
       soup = BeautifulSoup(html, features="html.parser")
