@@ -1071,32 +1071,33 @@ class File(CommonModel):
       objectFile = cls.objects.create(nature=nature, name=name, path=path, ext=ext, Company=company, expirationDate=expirationDate, Post=post, Mission=mission, Supervision=supervision)
     print("createFile, fileStr", len(fileStr) if fileStr else "No file")
     if fileStr:
-      return cls.__createFileWidthb64(objectFile, fileStr, user, queryName)
+      return TreatFile.createFileWidthb64(objectFile, fileStr, user, queryName)
     return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), user, True)}
 
-  @classmethod
-  def __createFileWidthb64(cls, objectFile, fileStr, currentUser, queryName):
-    file = None
-    try:
-      file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if objectFile.ext != "txt" else fileStr
-      with open(objectFile.path, "wb") as outfile:
-        outfile.write(file.file.getbuffer())
-    except:
-      if objectFile: objectFile.delete()
-      return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
-    try :
-      print("le nom a testé (censé être Kbis) : ", objectFile.name, objectFile.name == "Kbis")
-      if objectFile.name == "Kbis":
-        detectObject = TreatFile(objectFile)
-        print("je lance detectQRcode", print(detectObject.readFromQrCode()))
-        hasQRCode, message = cls.__detectQrCode(objectFile)
-        if not (hasQRCode):
-          if objectFile: objectFile.delete()
-          return {"uploadFile":"Error", "messages":f"{message}"}
-      return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
-    except:
-      if objectFile: objectFile.delete()
-      return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
+  # @classmethod
+  # def __createFileWidthb64(cls, objectFile, fileStr, currentUser, queryName):
+  #   file = None
+  #   try:
+  #     file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if objectFile.ext != "txt" else fileStr
+  #     with open(objectFile.path, "wb") as outfile:
+  #       outfile.write(file.file.getbuffer())
+  #   except:
+  #     if objectFile: objectFile.delete()
+  #     return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
+  #   try :
+  #     print("le nom a testé (censé être Kbis) : ", objectFile.name, objectFile.name == "Kbis")
+  #     if objectFile.name == "Kbis":
+  #       detectObject = TreatFile(objectFile)
+  #       status, value = detectObject.readFromQrCode()
+  #       if status:
+  #         print("__createFileWidthb64 Kbis", value)
+  #       else:
+  #         if objectFile: objectFile.delete()
+  #         return {"uploadFile":"Error", "messages":f"{value}"}
+  #     return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
+  #   except:
+  #     if objectFile: objectFile.delete()
+  #     return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
 
   @classmethod
   def removeOldFile(cls, suppress, objectFile):
