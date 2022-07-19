@@ -48,38 +48,28 @@ class TreatFile:
     print("readFromQrCode")
     url, linkKbis = self.__getUrlFromQrCode(), None
     if url:
-      print("start")
       try:
         request = requests.get(url, headers=self.headersKbis)
       except:
-        return (False, "Le KBis n'est pas reconnu")
+        return (False, "unrecognize url")
       html = request.content.decode()
-      print("html")
       soup = BeautifulSoup(html, features="html.parser")
-      print("soup")
       for link in soup.findAll('a'):
         if "/entreprise-societe/" in link:
           linkKbis = "https:/"+link
-      print("link")
-      # for script in soup(["script", "style"]):
-      #       script.extract()
+
       textInHtml = soup.get_text()
-      print("text")
       lines = (line.strip() for line in textInHtml.splitlines())
-      chunks = (phrase.strip() for line in lines for phrase in line.split("  ") if line)
+      chunks = (phrase.strip() for line in lines for phrase in line.split("  ") if line.strip())
       finalText = '\n'.join(chunk for chunk in chunks if chunk)
-      print("finalText")
 
       if 'La commande est supérieure à 3 mois' in finalText :
-        print("3 months")
         return (False, "Le KBis est obsolette, il date de plus de 3 mois")
       if 'Aucun document trouvé pour ce code de vérification' in finalText :
-        print("unknown")
         return (False, "Le KBis n'est pas reconnu")
       print("result")
       result = self.__computeResultFromQrCode(linkKbis, textInHtml.splitlines())
       return (True, result)
-    print("no url")
     return (False, "Votre KBis n'est pas reconnu")
 
 
@@ -90,18 +80,25 @@ class TreatFile:
     beforeDate, beforeName, beforeRcs = False, False, False
     print("linesStrip", linesStrip)
     for line in linesStrip:
+      print("line")
       if line == self.beforeDateKbis:
         beforeDate = True
+        print("beforeDate")
       if beforeDate:
         response["kBisDate"] = line[0:11]
+        print("kBisDate", line)
       if line == self.beforeNameKbis:
         beforeName = True
+        print("beforeNameKbis")
       if beforeName:
         response["name"] = line
+        print("beforeNameKbis", line)
       if line == self.beforeRcsKbis:
         beforeRcs = True
+        print("beforeRcsKbis")
       if beforeRcs:
         response["RCS"] = line
+        print("beforeRcsKbis", line)
 
     print("lines", linesStrip)
     print("response", response)
