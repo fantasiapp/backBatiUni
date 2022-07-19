@@ -15,6 +15,9 @@ class SubscriptionManager():
 
         priceId = request.data["priceId"]
 
+        stripeProduct = stripe.Product.retrieve(request.data["product"])
+        price = stripe.Price.retrieve(priceId)
+
         try:
             # Create the subscription. Note we're expanding the Subscription's
             # latest invoice and that invoice's payment_intent
@@ -31,6 +34,9 @@ class SubscriptionManager():
             return {
                     "subscriptionId": subscription.id, 
                     "clientSecret": subscription.latest_invoice.payment_intent.client_secret,
+                    "price": price.unit_amount,
+                    "productName": stripeProduct.name,
+                    
             }
 
         except Exception as e:
