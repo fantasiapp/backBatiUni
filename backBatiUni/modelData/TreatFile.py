@@ -8,7 +8,7 @@ class TreatFile:
   file = None
   headersKbis = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
   beforeDateKbis = "Document commandé sur infogreffe le :"
-  beforeNameKbis = "Dénomination"
+  beforeNameKbis = "Dénomination :"
   beforeRcsKbis = "N° d’immatriculation :"
 
   def __init__(self, file):
