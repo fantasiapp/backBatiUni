@@ -50,9 +50,8 @@ class TreatFile:
     if url:
       print("start")
       try:
-        request = requests.get(url, headers=self.headersQrCode)
+        request = requests.get(url, headers=self.headersKbis)
       except:
-        print("unkwon 1")
         return (False, "Le KBis n'est pas reconnu")
       html = request.content.decode()
       print("html")
