@@ -63,9 +63,6 @@ class TreatFile:
       textInHtml = soup.get_text()
       lines = [line.strip() for line in textInHtml.splitlines() if line.strip()]
       finalText = "\n".join(lines)
-      # lines = (line.strip() for line in textInHtml.splitlines())
-      # chunks = (phrase.strip() for line in lines for phrase in line.split("  ") if line.strip())
-      # finalText = '\n'.join(chunk for chunk in chunks if chunk)
 
       if 'La commande est supérieure à 3 mois' in finalText :
         return (False, "Le KBis est obsolette, il date de plus de 3 mois")
@@ -76,11 +73,10 @@ class TreatFile:
     return (False, "Votre KBis n'est pas reconnu")
 
 
-  def __computeResultFromQrCode(self, link, linesStrip):
+  def __computeResultFromQrCode(self, link, lines):
     response = self.__computeResultFromKbisWithLink(link)
-    # linesStrip = [line.strip() for line in lines if line.strip()]
     beforeDate, beforeName, beforeRcs = False, False, False
-    for line in linesStrip:
+    for line in lines:
       if beforeDate:
         response["kBisDate"] = line[0:10]
         beforeDate = False
@@ -114,7 +110,7 @@ class TreatFile:
       soup = BeautifulSoup(html, features="html.parser")
       textInHtml = soup.get_text()
       lines = [line.strip() for line in textInHtml.splitlines() if line.strip()]
-      chunks = "\n".join(lines)
+
       for line in lines:
         print(line)
         if beforeAddress:
