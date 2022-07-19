@@ -106,7 +106,7 @@ class TreatFile:
         request = None
     print("request", request)
     if request:
-      beforeAddress, address, beforeSiret = False, "", False
+      beforeAddress, address, siretKbis = False, "", False
       html = request.content.decode()
       soup = BeautifulSoup(html, features="html.parser")
       textInHtml = soup.get_text()
