@@ -32,6 +32,7 @@ class SubscriptionManager():
                 expand=['latest_invoice.payment_intent'],
             )
             return {
+                    "createSubscription": "OK",
                     "subscriptionId": subscription.id, 
                     "clientSecret": subscription.latest_invoice.payment_intent.client_secret,
                     "price": price.unit_amount,
