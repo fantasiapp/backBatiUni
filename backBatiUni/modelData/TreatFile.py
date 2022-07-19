@@ -48,7 +48,12 @@ class TreatFile:
     print("readFromQrCode")
     url, linkKbis = self.__getUrlFromQrCode(), None
     if url:
-      request = requests.get(url, headers=self.headersQrCode)
+      print("start")
+      try:
+        request = requests.get(url, headers=self.headersQrCode)
+      except:
+        print("unkwon 1")
+        return (False, "Le KBis n'est pas reconnu")
       html = request.content.decode()
       print("html")
       soup = BeautifulSoup(html, features="html.parser")
@@ -68,10 +73,10 @@ class TreatFile:
 
       if 'La commande est supérieure à 3 mois' in finalText :
         print("3 months")
-        return (False, "Votre KBis est obsolette, il date de plus de 3 mois")
+        return (False, "Le KBis est obsolette, il date de plus de 3 mois")
       if 'Aucun document trouvé pour ce code de vérification' in finalText :
         print("unknown")
-        return (False, "Votre KBis n'est pas reconnu")
+        return (False, "Le KBis n'est pas reconnu")
       print("result")
       result = self.__computeResultFromQrCode(linkKbis, textInHtml.splitlines())
       return (True, result)
