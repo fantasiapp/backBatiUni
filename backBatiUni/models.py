@@ -968,12 +968,12 @@ class File(CommonModel):
     superList.append("content")
     return superList
 
-  def computeValues(self, listFields, user, dictFormat=False):
-    return self.dump()
+  # def computeValues(self, listFields, user, dictFormat=False):
+  #   return self.dump()
 
   def dump(self):
     expirationDate = self.expirationDate.strftime("%Y-%m-%d") if self.expirationDate else ""
-    return [self.nature, self.name, self.ext, expirationDate, self.timestamp]
+    return [self.nature, self.name, self.ext, expirationDate, self.timestamp, ""]
 
   def getAttr(self, fieldName, answer=False):
     if fieldName == "ext":
