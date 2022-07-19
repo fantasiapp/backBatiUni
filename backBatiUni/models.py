@@ -1085,7 +1085,7 @@ class File(CommonModel):
       print("le nom a testé (censé être Kbis) : ", objectFile.name, objectFile.name == "Kbis")
       if objectFile.name == "Kbis":
         detectObject = DetectQrCode(objectFile)
-        print("je lance detectQRcode", len(detectObject.getPages))
+        print("je lance detectQRcode", detectObject.readQrCode())
         hasQRCode, message = cls.__detectQrCode(objectFile)
         if not (hasQRCode):
           if objectFile: objectFile.delete()
