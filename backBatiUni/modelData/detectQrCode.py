@@ -11,6 +11,7 @@ class DetectQrCode:
 
   @property
   def getPages(self):
+    print("getPages")
     listPage = []
     filePath = self.file.path
     pathSplit = filePath.split('.')
@@ -23,12 +24,13 @@ class DetectQrCode:
         listPage.append(path + pages)
     else :
       listPage = [filePath]
+    print("getPages", listPage)
     return listPage
 
   def readQrCode (self):
     print("readQrCodeStart")
+    print("readQrCodeStart", self.getPages)
     for page in self.getPages:
-      print("readQrCodeStart", self.getPages)
       image = cv2.imread(page)
       print("image")
       decoder = cv2.QRCodeDetector()
