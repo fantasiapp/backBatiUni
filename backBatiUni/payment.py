@@ -48,17 +48,4 @@ class PaymentManager():
         except Exception as e:
             return {"Error": str(e)}
 
-    @classmethod
-    def fetchPrice(cls, request):
-        print(request)
-        try:
-            prices = stripe.Price.list(
-                active = True,
-                product = request.data["product"]
-            )
-            return {
-                "fetchPrices": "OK",
-                "prices": prices
-            }
-        except Exception as e:
-            return {"Error": str(e)}
+    
