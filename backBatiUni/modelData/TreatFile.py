@@ -41,12 +41,26 @@ class TreatFile:
 
   def readFromQrCode(self):
     url = self.__getUrlFromQrCode()
-    request = requests.get(url, headers=self.headersQrCode)
-    html = request.content.decode()
-    soup = BeautifulSoup(html, features="html.parser")
-    for script in soup(["script", "style"]):
-          script.extract()  
-    print(html)
+    if url:
+      request = requests.get(url, headers=self.headersQrCode)
+      html = request.content.decode()
+      soup = BeautifulSoup(html, features="html.parser")
+      for script in soup(["script", "style"]):
+            script.extract()
+      textInHtml = soup.get_text()
+      lines = (line.strip() for line in textInHtml.splitlines())
+      chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+      finalText = '\n'.join(chunk for chunk in chunks if chunk)
+      
+
+      if 'La commande est supérieure à 3 mois' in finalText :
+        return (False, "Votre KBis est obsolette, il date de plus de 3 mois")
+      if 'Aucun document trouvé pour ce code de vérification' in finalText :
+        print("finalText", finalText)
+        return (False, "Votre KBis n'est pas reconnu")
+      return (True, "")
+    return (False, "Votre KBis n'est pas reconnu")
+    
 
 
   
