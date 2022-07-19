@@ -44,9 +44,8 @@ class TreatFile:
     return listPage
 
   @classmethod
-  def createFile(cls, nature, name, ext, user, queryName, fileStr, expirationDate = None, post=None, mission=None, supervision=None, suppress = False):
+  def createFile(cls, nature, name, ext, userProfile, queryName, fileStr, expirationDate = None, post=None, mission=None, supervision=None, suppress = False):
     print("createFile")
-    userProfile = UserProfile.objects.get(userNameInternal=user)
     objectFile = None
     path, name, mission = TreatFile.__getPathAndName(name, nature, userProfile, ext, post, mission, supervision)
     company = userProfile.Company if not post and not supervision else None
