@@ -46,6 +46,7 @@ class TreatFile:
     if url:
       request = requests.get(url, headers=self.headersQrCode)
       html = request.content.decode()
+      print(html)
       soup = BeautifulSoup(html, features="html.parser")
       for script in soup(["script", "style"]):
             script.extract()
