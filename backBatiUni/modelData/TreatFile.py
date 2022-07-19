@@ -42,21 +42,20 @@ class TreatFile:
     return False
 
   def readFromQrCode(self):
-    url = self.__getUrlFromQrCode()
+    url, linkKbis = self.__getUrlFromQrCode(), None
     if url:
       request = requests.get(url, headers=self.headersQrCode)
       html = request.content.decode()
-      for line in html:
-        print("line", line)
-      print("lineHtml")
+
       soup = BeautifulSoup(html, features="html.parser")
       for link in soup.findAll('a'):
-        print("link", link.get('href'))
+        if "/entreprise-societe/" in link:
+          linkKbis = "https:/"+link
       for script in soup(["script", "style"]):
             script.extract()
       textInHtml = soup.get_text()
       lines = (line.strip() for line in textInHtml.splitlines())
-      chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
+      chunks = (phrase.strip() for line in lines for phrase in line.split("  ") if line)
       finalText = '\n'.join(chunk for chunk in chunks if chunk)
       
 
@@ -64,9 +63,14 @@ class TreatFile:
         return (False, "Votre KBis est obsolette, il date de plus de 3 mois")
       if 'Aucun document trouvé pour ce code de vérification' in finalText :
         return (False, "Votre KBis n'est pas reconnu")
-      print("finalText", finalText)
-      return (True, "")
+      result = self.__computeResultFromQrCode(linkKbis, chunks)
+      return (True, result)
     return (False, "Votre KBis n'est pas reconnu")
+
+
+  def __computeResultFromQrCode(self, link, chunks):
+    print("chunks", chunks)
+    return {"link":link}
     
 
 
