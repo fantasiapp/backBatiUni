@@ -507,6 +507,7 @@ class DataAccessor():
   @classmethod
   def __addNewNotificationForMessage(cls, userProfile, mission, message):
     candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
+    print("__addNewNotificationForMessage", candidate, userProfile)
     if userProfile.Company.id == candidate.Company.id:
       company = mission.Company
       subContractor = candidate.Company
@@ -1084,7 +1085,6 @@ class DataAccessor():
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     objectFather = supervision.DetailedPost.DatePost if supervision.DetailedPost else supervision.DatePost
     mission = objectFather.Mission
-    print("__uploadImageSupervision", mission, userProfile)
     if mission.Company.id == userProfile.Company.id:
       candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
       subContractor = candidate.Company
