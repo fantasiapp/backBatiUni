@@ -45,7 +45,9 @@ class TreatFile:
     return False
 
   def readFromQrCode(self):
+    print("readFromQrCode")
     url, linkKbis = self.__getUrlFromQrCode(), None
+    print("url", url)
     if url:
       request = requests.get(url, headers=self.headersQrCode)
       html = request.content.decode()
