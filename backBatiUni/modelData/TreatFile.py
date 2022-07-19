@@ -113,17 +113,19 @@ class TreatFile:
       lines = [line.strip() for line in textInHtml.splitlines() if line.strip()]
 
       for line in lines:
+        print("line", line)
         if self.afterAddressKbis in line:
           beforeAddress = False
         elif beforeAddress:
           address += line + "\n"
-          print("address", line, address)
         elif siretKbis:
           result["Siret"] = line
           siretKbis = False
         elif self.beforeAddressKbis in line:
+          print("beforeAddressKbis")
           beforeAddress = True
         elif self.afterAddressKbis in line:
+          print("afterAddressKbis")
           beforeAddress = False
         elif self.beforeSiretKbis in line:
           siretKbis = True
