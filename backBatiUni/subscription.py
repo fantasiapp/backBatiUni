@@ -13,7 +13,7 @@ class SubscriptionManager():
         company = Company.objects.get(id = userProfile.Company.id)
         customerId = company.stripeCustomerId
 
-        priceId = request.priceId
+        priceId = request.data["priceId"]
 
         try:
             # Create the subscription. Note we're expanding the Subscription's
