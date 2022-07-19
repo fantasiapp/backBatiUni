@@ -20,6 +20,8 @@ class TreatFile:
   beforeSiretKbis = "Siret"
   obsoleteKbis = 'La commande est supérieure à 3 mois'
   noDocumentKbis = 'Aucun document trouvé pour ce code de vérification'
+  dictPath = {"userImage":"./files/avatars/", "labels":"./files/labels/", "admin":"./files/admin/", "post":"./files/posts/", "supervision":"./files/supervisions/", "contract":"./files/contracts/"}
+  authorizedExtention = {"png":"png", "PNG":"png", "jpg":"jpg", "JPG":"jpg", "jpeg":"jpg", "JPEG":"jpg", "svg":"svg", "SVG":"svg", "pdf":"pdf", "PDF":"pdf", "HEIC":"heic", "heic":"heic"}
 
   def __init__(self, file):
     self.file = file
