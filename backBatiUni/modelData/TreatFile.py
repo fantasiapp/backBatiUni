@@ -3,6 +3,8 @@ import requests
 import os
 import cv2
 from bs4 import BeautifulSoup
+from django.core.files.base import ContentFile
+import base64
 
 class TreatFile:
   file = None
@@ -34,6 +36,32 @@ class TreatFile:
     else :
       listPage = [filePath]
     return listPage
+
+
+  @classmethod
+  def createFileWidthb64(cls, objectFile, fileStr, currentUser, queryName):
+    file = None
+    try:
+      file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if objectFile.ext != "txt" else fileStr
+      with open(objectFile.path, "wb") as outfile:
+        outfile.write(file.file.getbuffer())
+    except:
+      if objectFile: objectFile.delete()
+      return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
+    try :
+      print("le nom a testé (censé être Kbis) : ", objectFile.name, objectFile.name == "Kbis")
+      if objectFile.name == "Kbis":
+        detectObject = TreatFile(objectFile)
+        status, value = detectObject.readFromQrCode()
+        if status:
+          print("__createFileWidthb64 Kbis", value)
+        else:
+          if objectFile: objectFile.delete()
+          return {"uploadFile":"Error", "messages":f"{value}"}
+      return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
+    except:
+      if objectFile: objectFile.delete()
+      return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
 
   """Fonctions associées au QR Code"""
 
@@ -113,24 +141,23 @@ class TreatFile:
       lines = [line.strip() for line in textInHtml.splitlines() if line.strip()]
 
       for line in lines:
-        print("line", line)
         if self.afterAddressKbis in line:
           beforeAddress = False
+
         elif beforeAddress:
-          address += line + "\n"
+          address += line + ", "
         elif siretKbis:
           result["Siret"] = line
           siretKbis = False
+        
         elif self.beforeAddressKbis in line and not address:
-          print("beforeAddressKbis")
           beforeAddress = True
         elif self.afterAddressKbis in line:
-          print("afterAddressKbis")
           beforeAddress = False
         elif self.beforeSiretKbis in line:
           siretKbis = True
 
-      if address: result["address"] = address.strip("\n")
+      if address: result["address"] = address.strip(", ")
     return result
     
 
