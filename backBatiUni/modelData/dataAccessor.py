@@ -1084,7 +1084,7 @@ class DataAccessor():
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     objectFather = supervision.DetailedPost.DatePost if supervision.DetailedPost else supervision.DatePost
     print("__uploadImageSupervision", objectFather)
-    mission = objectFather.mission
+    mission = objectFather.Mission
     if mission.Company.id == userProfile.Company.id:
       candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
       subContractor = candidate.Company
