@@ -6,7 +6,10 @@ from bs4 import BeautifulSoup
 
 class TreatFile:
   file = None
-  headersQrCode = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
+  headersKbis = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
+  beforeDateKbis = "Document commandé sur infogreffe le :"
+  beforeNameKbis = "Dénomination"
+  beforeRcsKbis = "N° d’immatriculation :"
 
   def __init__(self, file):
     self.file = file
@@ -69,8 +72,26 @@ class TreatFile:
 
 
   def __computeResultFromQrCode(self, link, lines):
-    print("lines", lines)
-    return {"link":link}
+    response = {"link":link}
+    linesStrip = [line.strip() for line in lines if line]
+    beforeDate, beforeName, beforeRcs = False, False, False
+    for line in linesStrip:
+      if line == self.beforeDateKbis:
+        beforeDate = True
+      if beforeDate:
+        response["kBisDate"] = line[0:11]
+      if line == self.beforeNameKbis:
+        beforeName = True
+      if beforeName:
+        response["name"] = line
+      if line == self.beforeRcsKbis:
+        beforeRcs = True
+      if beforeRcs:
+        response["RCS"] = line
+
+    print("lines", linesStrip)
+    print("response", response)
+    return response
     
 
 
