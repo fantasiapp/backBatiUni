@@ -1088,9 +1088,9 @@ class DataAccessor():
     if mission.Company.id == userProfile.Company.id:
       candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
       subContractor = candidate.Company
-      profile = UserProfile.objects.filter(Company=subContractor)
+      profile = UserProfile.objects.get(Company=subContractor)
     else:
-      profile = UserProfile.objects.filter(Company=mission.Company)
+      profile = UserProfile.objects.get(Company=mission.Company)
     cls.__addNewNotificationForMessage(profile, objectFather.Mission, f"Une nouvelle image pour le chantier du {objectFather.Mission.address} vous attend.")
     return message
 
