@@ -18,6 +18,8 @@ class TreatFile:
   beforeAddressKbis = "Siège social"
   afterAddressKbis = "Voir le plan"
   beforeSiretKbis = "Siret"
+  obsoleteKbis = 'La commande est supérieure à 3 mois'
+  noDocumentKbis = 'Aucun document trouvé pour ce code de vérification'
 
   def __init__(self, file):
     self.file = file
@@ -60,7 +62,7 @@ class TreatFile:
       print("le nom a testé (censé être Kbis) : ", objectFile.name, objectFile.name == "Kbis")
       if objectFile.name == "Kbis":
         detectObject = TreatFile(objectFile)
-        status, value = detectObject.readFromQrCode()
+        status, value = detectObject.__readFromQrCode()
         if status:
           print("__createFileWidthb64 Kbis", value)
         else:
@@ -83,7 +85,7 @@ class TreatFile:
         return url
     return False
 
-  def readFromQrCode(self):
+  def __readFromQrCode(self):
     url, linkKbis = self.__getUrlFromQrCode(), None
     if url:
       try:
@@ -95,19 +97,19 @@ class TreatFile:
       for element in soup.findAll('a'):
         link = element.get('href')
         if self.linkElementKbis in link:
-          linkKbis = "https://www.infogreffe.fr" + link
+          linkKbis = self.startLinkKbis + link
 
       textInHtml = soup.get_text()
       lines = [line.strip() for line in textInHtml.splitlines() if line.strip()]
       finalText = "\n".join(lines)
 
-      if 'La commande est supérieure à 3 mois' in finalText :
-        return (False, "Le KBis est obsolette, il date de plus de 3 mois")
-      if 'Aucun document trouvé pour ce code de vérification' in finalText :
-        return (False, "Le KBis n'est pas reconnu")
-      result = self.__computeResultFromQrCode(linkKbis, lines)
-      return (True, result)
-    return (False, "Votre KBis n'est pas reconnu")
+      if self.obsoleteKbis in finalText :
+        return False, "Le KBis est obsolette, il date de plus de 3 mois"
+      if self.noDocumentKbis in finalText :
+        return False, "Le KBis n'est pas reconnu"
+      if linkKbis:
+        return True, self.__computeResultFromQrCode(linkKbis, lines)
+    return False, "Le KBis n'est pas reconnu"
 
 
   def __computeResultFromQrCode(self, link, lines):
