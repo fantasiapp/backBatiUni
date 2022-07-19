@@ -81,18 +81,18 @@ class TreatFile:
       if beforeDate:
         response["kBisDate"] = line[0:10]
         beforeDate = False
-      if beforeName:
+      elif beforeName:
         response["name"] = line
         beforeName = False
-      if beforeRcs:
+      elif beforeRcs:
         response["RCS"] = line
         beforeRcs = False
       
-      if line == self.beforeDateKbis:
+      elif line == self.beforeDateKbis:
         beforeDate = True
-      if line == self.beforeNameKbis:
+      elif line == self.beforeNameKbis:
         beforeName = True
-      if line == self.beforeRcsKbis:
+      elif line == self.beforeRcsKbis:
         beforeRcs = True
     return response
 
@@ -113,13 +113,14 @@ class TreatFile:
       lines = [line.strip() for line in textInHtml.splitlines() if line.strip()]
 
       for line in lines:
-        if beforeAddress:
+        if self.afterAddressKbis in line:
+          beforeAddress = False
+        elif beforeAddress:
           address += line + "\n"
           print("address", line, address)
         elif siretKbis:
           result["Siret"] = line
           siretKbis = False
-
         elif self.beforeAddressKbis in line:
           beforeAddress = True
         elif self.afterAddressKbis in line:
