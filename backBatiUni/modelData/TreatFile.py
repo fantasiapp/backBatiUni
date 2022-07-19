@@ -121,7 +121,7 @@ class TreatFile:
         elif siretKbis:
           result["Siret"] = line
           siretKbis = False
-        elif self.beforeAddressKbis in line:
+        elif self.beforeAddressKbis in line and not address:
           print("beforeAddressKbis")
           beforeAddress = True
         elif self.afterAddressKbis in line:

@@ -1099,66 +1099,6 @@ class File(CommonModel):
       return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
 
   @classmethod
-  def __detectQrCode(cls, file) :
-
-    
-    list_pages = []
-    file_path = file.path
-    pathSplit = file_path.split('.')
-    pathSplit.pop(-1)
-
-    if file.ext == "pdf":
-      file.encodedStringListForPdf()
-      path = '.'.join(pathSplit)+'/'
-      listDir = os.listdir('.'.join(pathSplit)+'/')
-      for pages in listDir:
-        list_pages.append(path + pages)
-    else :
-      list_pages = [file_path]
-
-    # print("la liste des pages", list_pages)
-    for i in range(len(list_pages)):
-      # Detect if the document has a QR Code
-      # print("le file path", list_pages[i])
-      img = cv2.imread(list_pages[i])
-      # print("l'img", img)
-      decoder = cv2.QRCodeDetector()
-      # print("on a passé decoder", decoder)
-      data, points, _ = decoder.detectAndDecode(img)
-      # print("le data ", data)
-      if data:
-        # print("decoded data ",data)
-        pass
-      elif i < len(list_pages):
-        continue
-      else:
-          print('Le QR Code nest pas reconnaissable')
-          return (False, "Votre KBis ne contient pas de QR code ou bien ou il n'est pas lisible.")
-          
-      # Read URL 
-      headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
-      f = requests.get(data, headers=headers)
-      html = f.content.decode()
-      soup = BeautifulSoup(html, features="html.parser")
-      for script in soup(["script", "style"]):
-          script.extract()  
-      text = soup.get_text()
-      lines = (line.strip() for line in text.splitlines())
-      chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
-      text = '\n'.join(chunk for chunk in chunks if chunk)
-      # print(text)
-      if 'La commande est supérieure à 3 mois' in text :
-          # print('La commande est supérieure à 3 mois')
-          return (False, "Votre KBis est obsolette, il date de plus de 3 mois")
-      elif 'Aucun document trouvé pour ce code de vérification' in text :
-          # print('Aucun document trouvé pour ce code de vérification')
-          return (False, "Votre KBis n'est pas reconnu")
-      elif 'Ce code de vérification a déjà été utilisé, vous ne pouvez plus consulter le document.'in text:
-        return (True, "")
-      return True
-    return (False, "Votre KBis n'est pas reconnu")
-
-  @classmethod
   def removeOldFile(cls, suppress, objectFile):
     oldPath = objectFile.path
     if os.path.exists(oldPath) and suppress:
