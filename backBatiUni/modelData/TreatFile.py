@@ -66,15 +66,18 @@ class TreatFile:
         return (False, "Votre KBis est obsolette, il date de plus de 3 mois")
       if 'Aucun document trouvé pour ce code de vérification' in finalText :
         return (False, "Votre KBis n'est pas reconnu")
+      print("result")
       result = self.__computeResultFromQrCode(linkKbis, textInHtml.splitlines())
       return (True, result)
     return (False, "Votre KBis n'est pas reconnu")
 
 
   def __computeResultFromQrCode(self, link, lines):
+    print("__computeResultFromQrCode")
     response = {"link":link}
     linesStrip = [line.strip() for line in lines if line]
     beforeDate, beforeName, beforeRcs = False, False, False
+    print("linesStrip", linesStrip)
     for line in linesStrip:
       if line == self.beforeDateKbis:
         beforeDate = True
