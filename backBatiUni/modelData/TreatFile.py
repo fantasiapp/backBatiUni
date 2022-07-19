@@ -56,8 +56,8 @@ class TreatFile:
       if 'La commande est supérieure à 3 mois' in finalText :
         return (False, "Votre KBis est obsolette, il date de plus de 3 mois")
       if 'Aucun document trouvé pour ce code de vérification' in finalText :
-        print("finalText", finalText)
         return (False, "Votre KBis n'est pas reconnu")
+      print("finalText", finalText)
       return (True, "")
     return (False, "Votre KBis n'est pas reconnu")
     
