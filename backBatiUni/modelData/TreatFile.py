@@ -16,7 +16,6 @@ class TreatFile:
 
   @property
   def getPages(self):
-    print("getPages")
     listPage = []
     filePath = self.file.path
     pathSplit = filePath.split('.')
@@ -29,7 +28,6 @@ class TreatFile:
         listPage.append(path + pages)
     else :
       listPage = [filePath]
-    print("getPages", listPage)
     return listPage
 
   """Fonctions associées au QR Code"""
@@ -45,7 +43,6 @@ class TreatFile:
     return False
 
   def readFromQrCode(self):
-    print("readFromQrCode")
     url, linkKbis = self.__getUrlFromQrCode(), None
     if url:
       try:
@@ -56,10 +53,8 @@ class TreatFile:
       soup = BeautifulSoup(html, features="html.parser")
       for element in soup.findAll('a'):
         link = element.get('href')
-        print("before", link, element)
         if "/entreprise-societe/" in link:
           linkKbis = "https:/"+link
-          print("after", linkKbis)
 
       textInHtml = soup.get_text()
       lines = (line.strip() for line in textInHtml.splitlines())
@@ -70,7 +65,6 @@ class TreatFile:
         return (False, "Le KBis est obsolette, il date de plus de 3 mois")
       if 'Aucun document trouvé pour ce code de vérification' in finalText :
         return (False, "Le KBis n'est pas reconnu")
-      print("result")
       result = self.__computeResultFromQrCode(linkKbis, textInHtml.splitlines())
       return (True, result)
     return (False, "Votre KBis n'est pas reconnu")
@@ -78,7 +72,7 @@ class TreatFile:
 
   def __computeResultFromQrCode(self, link, lines):
     print("__computeResultFromQrCode", link)
-    response = {"link":link}
+    response = self.__computeResultFromKbisWithLink(link)
     linesStrip = [line.strip() for line in lines if line.strip()]
     beforeDate, beforeName, beforeRcs = False, False, False
     for line in linesStrip:
@@ -98,9 +92,24 @@ class TreatFile:
         beforeName = True
       if line == self.beforeRcsKbis:
         beforeRcs = True
-
-    print("lines", linesStrip)
     return response
+
+  def __computeResultFromKbisWithLink(self, link):
+    result = {}
+    if link:
+      try:
+        request = requests.get(link, headers=self.headersKbis)
+      except:
+        request = None
+    if request:
+      html = request.content.decode()
+      soup = BeautifulSoup(html, features="html.parser")
+      textInHtml = soup.get_text()
+      lines = [line.strip() for line in textInHtml.splitlines() if line.strip]
+      chunks = "\n".join(lines)
+      for line in lines:
+        print(line)
+    return result
     
 
 
