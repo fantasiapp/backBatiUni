@@ -12,8 +12,9 @@ class TreatFile:
   beforeRcsKbis = "N° d’immatriculation :"
   linkElementKbis = "/entreprise-societe/"
   startLinkKbis = "https://www.infogreffe.fr"
-  beforeAddressKbis = "SIÈGE SOCIAL"
+  beforeAddressKbis = "Siège social"
   afterAddressKbis = "Voir le plan"
+  beforeSiretKbis = "Siret"
 
   def __init__(self, file):
     self.file = file
@@ -105,21 +106,26 @@ class TreatFile:
         request = None
     print("request", request)
     if request:
-      beforeAddress, address = False, ""
+      beforeAddress, address, beforeSiret = False, "", False
       html = request.content.decode()
       soup = BeautifulSoup(html, features="html.parser")
       textInHtml = soup.get_text()
       lines = [line.strip() for line in textInHtml.splitlines() if line.strip()]
 
       for line in lines:
-        print(line)
         if beforeAddress:
           address += line + "\n"
-          print(line, address)
-        if self.beforeAddressKbis in line:
+          print("address", line, address)
+        elif siretKbis:
+          result["Siret"] = line
+          siretKbis = False
+
+        elif self.beforeAddressKbis in line:
           beforeAddress = True
-        if self.afterAddressKbis in line:
+        elif self.afterAddressKbis in line:
           beforeAddress = False
+        elif self.beforeSiretKbis in line:
+          siretKbis = True
 
       if address: result["address"] = address.strip("\n")
     return result
