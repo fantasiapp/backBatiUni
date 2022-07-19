@@ -1,5 +1,5 @@
 import requests
-from ..models import File
+# from ..models import File
 import os
 import cv2
 from bs4 import BeautifulSoup
