@@ -10,6 +10,8 @@ class TreatFile:
   beforeDateKbis = "Document commandé sur infogreffe le :"
   beforeNameKbis = "Dénomination :"
   beforeRcsKbis = "N° d’immatriculation :"
+  linkElementKbis = "/entreprise-societe/"
+  startLinkKbis = "https://www.infogreffe.fr"
 
   def __init__(self, file):
     self.file = file
@@ -53,8 +55,8 @@ class TreatFile:
       soup = BeautifulSoup(html, features="html.parser")
       for element in soup.findAll('a'):
         link = element.get('href')
-        if "/entreprise-societe/" in link:
-          linkKbis = "https:/"+link
+        if self.linkElementKbis in link:
+          linkKbis = "https://www.infogreffe.fr" + link
 
       textInHtml = soup.get_text()
       lines = (line.strip() for line in textInHtml.splitlines())
