@@ -69,7 +69,7 @@ class TreatFile:
 
 
   def __computeResultFromQrCode(self, link, lines):
-    print("chunks", lines)
+    print("lines", lines)
     return {"link":link}
     
 
