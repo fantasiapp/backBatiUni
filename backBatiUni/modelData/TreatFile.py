@@ -36,7 +36,9 @@ class TreatFile:
       image = cv2.imread(page)
       decoder = cv2.QRCodeDetector()
       url, _, _ = decoder.detectAndDecode(image)
-      if url: return url
+      if url:
+        print("url", url)
+        return url
     return False
 
   def readFromQrCode(self):
