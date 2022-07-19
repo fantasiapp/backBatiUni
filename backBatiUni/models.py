@@ -1062,7 +1062,6 @@ class File(CommonModel):
       objectFile = objectFile[0]
       treatFile = TreatFile(objectFile)
       treatFile.removeOldFile(suppress)
-      # cls.removeOldFile(suppress, objectFile)
       objectFile.path = path
       objectFile.timestamp = datetime.datetime.now().timestamp()
       objectFile.ext = ext
@@ -1075,15 +1074,6 @@ class File(CommonModel):
     if fileStr:
       return TreatFile.createFileWidthb64(objectFile, fileStr, user, queryName)
     return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), user, True)}
-
-  @classmethod
-  def removeOldFile(cls, suppress, objectFile):
-    oldPath = objectFile.path
-    if os.path.exists(oldPath) and suppress:
-      os.remove(oldPath)
-      if objectFile.ext == "pdf":
-        pathToRemove = objectFile.path.replace(".pdf", "/")
-        shutil.rmtree(pathToRemove, ignore_errors=True)
 
   @classmethod
   def getPathAndName(cls, name, nature, userProfile, ext, post, mission, supervision):

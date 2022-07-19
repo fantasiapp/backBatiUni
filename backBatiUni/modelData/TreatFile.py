@@ -1,5 +1,5 @@
 import requests
-# from ..models import File
+from ..models import File
 import os
 import cv2
 from bs4 import BeautifulSoup
@@ -40,6 +40,26 @@ class TreatFile:
       listPage = [filePath]
     return listPage
 
+  @classmethod
+  def getPathAndName(cls, name, nature, userProfile, ext, post, mission, supervision):
+    path= None
+    if nature == "userImage":
+      path = cls.dictPath[nature] + userProfile.Company.name + '_' + str(userProfile.Company.id) + '.' + ext
+    if nature in ["labels", "admin"]:
+      path = cls.dictPath[nature] + name + '_' + str(userProfile.Company.id) + '.' + ext
+    if nature == "post":
+      path = cls.dictPath[nature] + name + '_' + str(post.id) + '.' + ext
+    if nature == "supervision":
+      endName = '_' + str(mission.id) if mission else '_N'
+      endName += '_' + str(supervision.id) if supervision else '_N'
+      objectFiles = File.objects.filter(nature=nature, Supervision=supervision)
+      endName += "_" + str(len(objectFiles))
+      name +=  endName
+      path = cls.dictPath[nature] + name + '.' + ext
+    if nature == "contract":
+      path = cls.dictPath[nature] + name + '_' + str(mission.id) + '.' + ext
+    return path, name, mission
+
   def removeOldFile(self, suppress):
     oldPath = self.file.path
     if os.path.exists(oldPath) and suppress:
@@ -59,7 +79,6 @@ class TreatFile:
       if objectFile: objectFile.delete()
       return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
     try :
-      print("le nom a testé (censé être Kbis) : ", objectFile.name, objectFile.name == "Kbis")
       if objectFile.name == "Kbis":
         detectObject = TreatFile(objectFile)
         status, value = detectObject.__readFromQrCode()
@@ -80,9 +99,7 @@ class TreatFile:
       image = cv2.imread(page)
       decoder = cv2.QRCodeDetector()
       url, _, _ = decoder.detectAndDecode(image)
-      if url:
-        print("url", url)
-        return url
+      if url: return url
     return False
 
   def __readFromQrCode(self):
@@ -108,36 +125,38 @@ class TreatFile:
       if self.noDocumentKbis in finalText :
         return False, "Le KBis n'est pas reconnu"
       if linkKbis:
-        return True, self.__computeResultFromQrCode(linkKbis, lines)
+        response = self.__computeResultFromQrCode(linkKbis, lines)
+        if response:
+          return True, response
     return False, "Le KBis n'est pas reconnu"
 
 
   def __computeResultFromQrCode(self, link, lines):
     response = self.__computeResultFromKbisWithLink(link)
-    beforeDate, beforeName, beforeRcs = False, False, False
-    for line in lines:
-      if beforeDate:
-        response["kBisDate"] = line[0:10]
-        beforeDate = False
-      elif beforeName:
-        response["name"] = line
-        beforeName = False
-      elif beforeRcs:
-        response["RCS"] = line
-        beforeRcs = False
-      
-      elif line == self.beforeDateKbis:
-        beforeDate = True
-      elif line == self.beforeNameKbis:
-        beforeName = True
-      elif line == self.beforeRcsKbis:
-        beforeRcs = True
+    if response:
+      beforeDate, beforeName, beforeRcs = False, False, False
+      for line in lines:
+        if beforeDate:
+          response["kBisDate"] = line[0:10]
+          beforeDate = False
+        elif beforeName:
+          response["name"] = line
+          beforeName = False
+        elif beforeRcs:
+          response["RCS"] = line
+          beforeRcs = False
+        
+        elif line == self.beforeDateKbis:
+          beforeDate = True
+        elif line == self.beforeNameKbis:
+          beforeName = True
+        elif line == self.beforeRcsKbis:
+          beforeRcs = True
     return response
 
   def __computeResultFromKbisWithLink(self, link):
     result = {}
     if link:
-      print(link, self.headersKbis)
       try:
         request = requests.get(link, headers=self.headersKbis)
       except:
