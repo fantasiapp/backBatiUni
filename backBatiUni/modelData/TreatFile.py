@@ -79,9 +79,9 @@ class TreatFile:
     linesStrip = [line.strip() for line in lines if line.strip()]
     beforeDate, beforeName, beforeRcs = False, False, False
     for line in linesStrip:
-      print("line", line)
+      print("line", line, self.beforeNameKbis, self.beforeNameKbis == line)
       if beforeDate:
-        response["kBisDate"] = line[0:11]
+        response["kBisDate"] = line[0:10]
         print("kBisDate", line)
         beforeDate = False
       if beforeName:
