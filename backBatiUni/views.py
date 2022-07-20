@@ -131,7 +131,7 @@ class Webhook(DefaultView):
           }
           DataAccessor.dataPost(json.dumps(boostPostDict), False)
       elif event['type'] ==  'customer.subscription.created':
-        DataAccessor.dataPost({"action": "subscribeUser"})
+        DataAccessor.dataPost({"action": "subscribeUser"}, False)
         return Response({"Error": f"Not implemented yet"})
       elif event['type'] ==  'customer.subscription.updated':
         return Response({"Error": f"Not implemented yet"})

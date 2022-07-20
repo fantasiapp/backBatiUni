@@ -34,6 +34,10 @@ class SubscriptionManager():
                     'type': 'subscription'
                 }
             )
+            stripe.PaymentIntent.modify(subscription.latest_invoice.payment_intent.id,
+                                        metadata={
+                                            'type': 'subscription'
+                                        })
             return {
                     "createSubscription": "OK",
                     "subscriptionId": subscription.id, 
