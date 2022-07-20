@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from django.core.files.base import ContentFile
 import base64
 from shutil import rmtree
+from pdf2image import convert_from_path
 
 class TreatFile:
   file = None
@@ -93,6 +94,32 @@ class TreatFile:
     except:
       if objectFile: objectFile.delete()
       return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
+
+  """Fonctions associées au formatage d'images"""
+
+  def encodedStringListForPdf(self):
+    print("encodedStringListForPdf")
+    referencepath = os.getcwd()
+    path = self.file.path.replace(".pdf", "/")
+    split = self.file.path.split("/")
+    nameFile = split[-1]
+    localPath = f"./{split[1]}/{split[2]}/"
+    if not os.path.isdir(path):
+      os.mkdir(path)
+      os.chdir(localPath)
+      try:
+        images = convert_from_path(f"{nameFile}")
+        os.chdir(referencepath)
+        for index in range(len(images)):
+          images[index].save(f'{path}page_{str(index)}.jpg', 'JPEG')
+      except:
+        print("error : no PDF to convert")
+      os.chdir(referencepath)
+    listFiles, listEncode  = [os.path.join(path, file) for file in os.listdir(path)], []
+    for file in listFiles:
+      with open(file, "rb") as fileData:
+        listEncode.append(base64.b64encode(fileData.read()))
+    return [encodedString.decode("utf-8") for encodedString in listEncode]
 
   """Fonctions associées au QR Code"""
 

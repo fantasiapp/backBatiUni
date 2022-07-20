@@ -10,7 +10,7 @@ import os
 import base64
 import datetime
 from django.apps import apps
-from pdf2image import convert_from_path
+
 import requests
 from django.core.files.base import ContentFile
 import whatimage
@@ -981,8 +981,9 @@ class File(CommonModel):
       if self.ext == "pdf":
         return "jpg"
     if fieldName == "file":
+      treatFile = TreatFile(self)
       if self.ext == "pdf":
-        return self.encodedStringListForPdf()
+        return treatFile.encodedStringListForPdf()
       if self.ext.lower() == "heic":
         return [self.decodeHeic()]
       if self.ext.lower() == "svg":
@@ -1000,28 +1001,28 @@ class File(CommonModel):
       return None
 
 
-  def encodedStringListForPdf(self):
-    referencepath = os.getcwd()
-    path = self.path.replace(".pdf", "/")
-    split = self.path.split("/")
-    nameFile = split[-1]
-    localPath = f"./{split[1]}/{split[2]}/"
-    if not os.path.isdir(path):
-      os.mkdir(path)
-      os.chdir(localPath)
-      try:
-        images = convert_from_path(f"{nameFile}")
-        os.chdir(referencepath)
-        for index in range(len(images)):
-          images[index].save(f'{path}page_{str(index)}.jpg', 'JPEG')
-      except:
-        print("error : no PDF to convert")
-      os.chdir(referencepath)
-    listFiles, listEncode  = [os.path.join(path, file) for file in os.listdir(path)], []
-    for file in listFiles:
-      with open(file, "rb") as fileData:
-        listEncode.append(base64.b64encode(fileData.read()))
-    return [encodedString.decode("utf-8") for encodedString in listEncode]
+  # def encodedStringListForPdf(self):
+  #   referencepath = os.getcwd()
+  #   path = self.path.replace(".pdf", "/")
+  #   split = self.path.split("/")
+  #   nameFile = split[-1]
+  #   localPath = f"./{split[1]}/{split[2]}/"
+  #   if not os.path.isdir(path):
+  #     os.mkdir(path)
+  #     os.chdir(localPath)
+  #     try:
+  #       images = convert_from_path(f"{nameFile}")
+  #       os.chdir(referencepath)
+  #       for index in range(len(images)):
+  #         images[index].save(f'{path}page_{str(index)}.jpg', 'JPEG')
+  #     except:
+  #       print("error : no PDF to convert")
+  #     os.chdir(referencepath)
+  #   listFiles, listEncode  = [os.path.join(path, file) for file in os.listdir(path)], []
+  #   for file in listFiles:
+  #     with open(file, "rb") as fileData:
+  #       listEncode.append(base64.b64encode(fileData.read()))
+  #   return [encodedString.decode("utf-8") for encodedString in listEncode]
 
   def decodeHeic(self):
     equivJpg = self.path.replace(f"{self.ext}", "jpg")
