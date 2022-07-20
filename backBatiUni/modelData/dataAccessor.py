@@ -507,6 +507,7 @@ class DataAccessor():
   @classmethod
   def __addNewNotificationForMessage(cls, userProfile, mission, message):
     candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
+    print("__addNewNotificationForMessage", candidate, userProfile)
     if userProfile.Company.id == candidate.Company.id:
       company = mission.Company
       subContractor = candidate.Company
@@ -637,8 +638,7 @@ class DataAccessor():
 
   @classmethod
   def createContract(cls, mission, user):
-    userProfile = UserProfile.objects.get(userNameInternal=user)
-    TreatFile.createFile("contract", "contract", "png", userProfile, "createContract", None, mission=mission)
+    File.createFile("contract", "contract", "png", user, "createContract", None, mission=mission)
     contractImage = File.objects.get(nature="contract", Mission=mission)
     source = "./files/documents/contractUnsigned.png"
     dest = contractImage.path
@@ -1038,8 +1038,7 @@ class DataAccessor():
       else:
         supervision = supervision[0]
     print("__createObjectFile", len(data["fileBase64"]) if "fileBase" in data else None)
-    userProfile = UserProfile.objects.get(userNameInternal=currentUser)
-    return TreatFile.createFile(data["nature"], data["name"], data['ext'], userProfile, queryName, data["fileBase64"], expirationDate=expirationDate, post=post, mission=mission, supervision=supervision)
+    return File.createFile(data["nature"], data["name"], data['ext'], currentUser, queryName, data["fileBase64"], expirationDate=expirationDate, post=post, mission=mission, supervision=supervision)
 
   @classmethod
   def __testUploadFile(cls, data):
@@ -1072,8 +1071,7 @@ class DataAccessor():
     ext = data["ext"] if "ext" in data and data["ext"] != "???" else objectFile.ext
     suppress = "fileBase64" in data and len(data["fileBase64"]) != 0
     fileStr = data["fileBase64"] if suppress else None
-    userProfile = UserProfile.objects.get(userNameInternal=currentUser)
-    return TreatFile.createFile(nature, name, ext, userProfile, "modifyFile", fileStr, expirationDate=expirationDate, post=post, mission=mission, supervision=supervision, suppress=suppress)
+    return File.createFile(nature, name, ext, currentUser, "modifyFile", fileStr, expirationDate=expirationDate, post=post, mission=mission, supervision=supervision, suppress=suppress)
 
   @classmethod
   def __uploadImageSupervision(cls, data, currentUser):
@@ -1083,8 +1081,7 @@ class DataAccessor():
     if testMessage:
       return testMessage
     supervision = Supervision.objects.get(id=data["supervisionId"])
-    userProfile = UserProfile.objects.get(userNameInternal=currentUser)
-    message = TreatFile.createFile("supervision", "supervision", data['ext'], userProfile, "uploadImageSupervision", data["fileBase64"], supervision=supervision)
+    message = File.createFile("supervision", "supervision", data['ext'], currentUser, "uploadImageSupervision", data["fileBase64"], supervision=supervision)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     objectFather = supervision.DetailedPost.DatePost if supervision.DetailedPost else supervision.DatePost
     mission = objectFather.Mission

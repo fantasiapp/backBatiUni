@@ -1051,50 +1051,30 @@ class File(CommonModel):
       return file[0].getAttr("file")
     return {}
 
-  # @classmethod
-  # def createFile(cls, nature, name, ext, user, queryName, fileStr, expirationDate = None, post=None, mission=None, supervision=None, suppress = False):
-  #   print("createFile")
-  #   userProfile = UserProfile.objects.get(userNameInternal=user)
-  #   objectFile = None
-  #   path, name, mission = TreatFile.getPathAndName(name, nature, userProfile, ext, post, mission, supervision)
-  #   company = userProfile.Company if not post and not supervision else None
-  #   objectFile = File.objects.filter(nature=nature, name=name, Company=company, Post=post, Mission=mission, Supervision=supervision)
-  #   if objectFile:
-  #     objectFile = objectFile[0]
-  #     treatFile = TreatFile(objectFile)
-  #     treatFile.removeOldFile(suppress)
-  #     objectFile.path = path
-  #     objectFile.timestamp = datetime.datetime.now().timestamp()
-  #     objectFile.ext = ext
-  #     if expirationDate:
-  #       objectFile.expirationDate = expirationDate
-  #     objectFile.save()
-  #   else:
-  #     objectFile = cls.objects.create(nature=nature, name=name, path=path, ext=ext, Company=company, expirationDate=expirationDate, Post=post, Mission=mission, Supervision=supervision)
-  #   print("createFile, fileStr", len(fileStr) if fileStr else "No file")
-  #   if fileStr:
-  #     return TreatFile.createFileWidthb64(objectFile, fileStr, user, queryName)
-  #   return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), user, True)}
-
-  # @classmethod
-  # def getPathAndName(cls, name, nature, userProfile, ext, post, mission, supervision):
-  #   path= None
-  #   if nature == "userImage":
-  #     path = cls.dictPath[nature] + userProfile.Company.name + '_' + str(userProfile.Company.id) + '.' + ext
-  #   if nature in ["labels", "admin"]:
-  #     path = cls.dictPath[nature] + name + '_' + str(userProfile.Company.id) + '.' + ext
-  #   if nature == "post":
-  #     path = cls.dictPath[nature] + name + '_' + str(post.id) + '.' + ext
-  #   if nature == "supervision":
-  #     endName = '_' + str(mission.id) if mission else '_N'
-  #     endName += '_' + str(supervision.id) if supervision else '_N'
-  #     objectFiles = File.objects.filter(nature=nature, Supervision=supervision)
-  #     endName += "_" + str(len(objectFiles))
-  #     name +=  endName
-  #     path = cls.dictPath[nature] + name + '.' + ext
-  #   if nature == "contract":
-  #     path = cls.dictPath[nature] + name + '_' + str(mission.id) + '.' + ext
-  #   return path, name, mission
+  @classmethod
+  def createFile(cls, nature, name, ext, user, queryName, fileStr, expirationDate = None, post=None, mission=None, supervision=None, suppress = False):
+    print("createFile")
+    userProfile = UserProfile.objects.get(userNameInternal=user)
+    objectFile = None
+    path, name, mission = TreatFile.getPathAndName(name, nature, userProfile, ext, post, mission, supervision)
+    company = userProfile.Company if not post and not supervision else None
+    objectFile = File.objects.filter(nature=nature, name=name, Company=company, Post=post, Mission=mission, Supervision=supervision)
+    if objectFile:
+      objectFile = objectFile[0]
+      treatFile = TreatFile(objectFile)
+      treatFile.removeOldFile(suppress)
+      objectFile.path = path
+      objectFile.timestamp = datetime.datetime.now().timestamp()
+      objectFile.ext = ext
+      if expirationDate:
+        objectFile.expirationDate = expirationDate
+      objectFile.save()
+    else:
+      objectFile = cls.objects.create(nature=nature, name=name, path=path, ext=ext, Company=company, expirationDate=expirationDate, Post=post, Mission=mission, Supervision=supervision)
+    print("createFile, fileStr", len(fileStr) if fileStr else "No file")
+    if fileStr:
+      return TreatFile.createFileWidthb64(objectFile, fileStr, user, queryName)
+    return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), user, True)}
 
 class BlockedCandidate(CommonModel):
   blocker = models.ForeignKey(Company, verbose_name='Company who is blocking', related_name='blocking', on_delete=models.PROTECT, null=True, default=None)
