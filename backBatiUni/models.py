@@ -17,6 +17,7 @@ from svglib.svglib import svg2rlg
 # import pdf2image 
 # import shutil
 from .modelData.TreatFile import TreatFile
+from geocoding import getCoordinatesFrom
 
 
 
@@ -1014,9 +1015,27 @@ class File(CommonModel):
     print("createFile, fileStr", len(fileStr) if fileStr else "No file")
     if fileStr:
       returnValue, update = TreatFile.createFileWidthb64(objectFile, fileStr, user, queryName)
+      if update : cls.__updateWithKbis(company, objectFile, update)
       print("value to update", update)
       return returnValue
     return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), user, True)}
+
+  @classmethod
+  def __updateWithKbis(cls, company, objectFile, update):
+    "A vérifier si les Kbis sont les mêmes"
+    if os.getenv('PATH_MIDDLE'):
+      dictCoord = getCoordinatesFrom(update["address"])
+      if dictCoord["getCoordinatesFrom"] == "OK":
+        company.address = dictCoord["address"]
+        company.latitude = dictCoord["latitude"]
+        company.longitude = dictCoord["longitude"]
+        company.save()
+      else:
+        company.latitude = 0.0
+        company.longitude = 0.0
+    objectFile.expirationDate = datetime.strptime(update["kBisDate"], "%Y-%m-%d")
+    objectFile.save()
+
 
 
   @classmethod
