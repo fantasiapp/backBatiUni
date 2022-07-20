@@ -14,11 +14,11 @@ from .modelData.TreatFile import TreatFile
 
 import sys
 from dotenv import load_dotenv
-# load_dotenv()
-# if os.getenv('PATH_MIDDLE'):
-#   sys.path.append(os.getenv('PATH_MIDDLE'))
-#   from profileScraping import getEnterpriseDataFrom
-#   from geocoding import getCoordinatesFrom # argument str address
+load_dotenv()
+if os.getenv('PATH_MIDDLE'):
+  sys.path.append(os.getenv('PATH_MIDDLE'))
+  from profileScraping import getEnterpriseDataFrom
+  from geocoding import getCoordinatesFrom # argument str address
 
 
 
