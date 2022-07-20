@@ -1081,6 +1081,7 @@ class DataAccessor():
     testMessage = cls.__testUploadFile(data)
     if testMessage:
       return testMessage
+    print("__uploadImageSupervision", data["supervisionId"])
     supervision = Supervision.objects.get(id=data["supervisionId"])
     message = File.createFile("supervision", "supervision", data['ext'], currentUser, "uploadImageSupervision", data["fileBase64"], supervision=supervision)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
