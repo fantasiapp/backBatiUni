@@ -34,13 +34,14 @@ class TreatFile:
     pathSplit = filePath.split('.')
     pathSplit.pop(-1)
     if self.file.ext == "pdf":
-      self.file.encodedStringListForPdf()
+      self.encodedStringListForPdf()
       path = '.'.join(pathSplit)+'/'
       listDir = os.listdir('.'.join(pathSplit)+'/')
       for pages in listDir:
         listPage.append(path + pages)
     else :
       listPage = [filePath]
+    print(listPage)
     return listPage
 
   @classmethod
@@ -85,9 +86,7 @@ class TreatFile:
     try :
       print(objectFile, objectFile.name)
       if objectFile.name == "Kbis":
-        print("seceond try 1")
         detectObject = TreatFile(objectFile)
-        print("seceond try 2")
         status, value = detectObject.__readFromQrCode()
         print("seceond try 3")
         if status:
