@@ -85,6 +85,7 @@ class TreatFile:
         outfile.write(file.file.getbuffer())
     except:
       if objectFile: objectFile.delete()
+      print("exit 1")
       return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
     try :
       if objectFile.name == "Kbis":
@@ -92,10 +93,12 @@ class TreatFile:
         status, value = detectObject.__readFromQrCode()
         if not status:
           if objectFile: objectFile.delete()
+        print("exit 2")
         return {"uploadFile":"Error", "messages":f"{value}"}
       return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
     except:
       if objectFile: objectFile.delete()
+      print("exit 3")
       return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
 
   """Fonctions associées au formatage d'images"""
