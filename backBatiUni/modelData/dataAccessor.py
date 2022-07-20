@@ -997,7 +997,8 @@ class DataAccessor():
       isCompany = file.nature in ["admin", "labels"]
       if not Path(file.path).is_file():
         return {"deleteFile":"Error", "messages":f"No file with path {file.path}"}
-      os.remove(file.path)
+      # os.remove(file.path)
+      TreatFile(file).removeOldFile()
       file.delete()
       response = {"deleteFile":"OK", "id":id}
       if isCompany:

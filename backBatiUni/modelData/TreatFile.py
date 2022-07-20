@@ -64,6 +64,7 @@ class TreatFile:
     return path, name, mission
 
   def removeOldFile(self, suppress):
+    print("removeOldFile")
     oldPath = self.file.path
     if os.path.exists(oldPath) and suppress:
       os.remove(oldPath)
