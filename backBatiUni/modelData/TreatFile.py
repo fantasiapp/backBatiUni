@@ -80,6 +80,7 @@ class TreatFile:
         outfile.write(file.file.getbuffer())
     except:
       if objectFile: objectFile.delete()
+      print("first try failure")
       return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
     try :
       if objectFile.name == "Kbis":
@@ -89,9 +90,12 @@ class TreatFile:
           print("__createFileWidthb64 Kbis", value)
         else:
           if objectFile: objectFile.delete()
+          print("no answer from __createFileWidthb64")
           return {"uploadFile":"Error", "messages":f"{value}"}
+      print("success")
       return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
     except:
+      print("second try failure")
       if objectFile: objectFile.delete()
       return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
 
