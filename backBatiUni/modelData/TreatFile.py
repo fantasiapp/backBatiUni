@@ -84,8 +84,11 @@ class TreatFile:
       return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
     try :
       if objectFile.name == "Kbis":
+        print("seceond try 1")
         detectObject = TreatFile(objectFile)
+        print("seceond try 2")
         status, value = detectObject.__readFromQrCode()
+        print("seceond try 3")
         if status:
           print("__createFileWidthb64 Kbis", value)
         else:
