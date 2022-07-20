@@ -1035,7 +1035,7 @@ class File(CommonModel):
       else:
         company.latitude = 0.0
         company.longitude = 0.0
-    objectFile.expirationDate = datetime.datetime.strptime(update["kBisDate"], "%Y-%m-%d")
+    objectFile.expirationDate = datetime.datetime.strptime(update["kBisDate"], "%d/%m/%Y")
     objectFile.save()
 
 
