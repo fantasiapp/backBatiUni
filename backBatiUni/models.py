@@ -14,11 +14,11 @@ from .modelData.TreatFile import TreatFile
 
 import sys
 from dotenv import load_dotenv
-load_dotenv()
-if os.getenv('PATH_MIDDLE'):
-  sys.path.append(os.getenv('PATH_MIDDLE'))
-  from profileScraping import getEnterpriseDataFrom
-  from geocoding import getCoordinatesFrom # argument str address
+# load_dotenv()
+# if os.getenv('PATH_MIDDLE'):
+#   sys.path.append(os.getenv('PATH_MIDDLE'))
+#   from profileScraping import getEnterpriseDataFrom
+#   from geocoding import getCoordinatesFrom # argument str address
 
 
 
@@ -1035,7 +1035,7 @@ class File(CommonModel):
       else:
         company.latitude = 0.0
         company.longitude = 0.0
-    objectFile.expirationDate = datetime.strptime(update["kBisDate"], "%Y-%m-%d")
+    objectFile.expirationDate = datetime.datetime.strptime(update["kBisDate"], "%Y-%m-%d")
     objectFile.save()
 
 
