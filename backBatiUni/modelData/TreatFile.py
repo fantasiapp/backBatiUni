@@ -6,7 +6,6 @@ from bs4 import BeautifulSoup
 from django.core.files.base import ContentFile
 import base64
 from shutil import rmtree
-from datetime import datetime
 
 class TreatFile:
   file = None
@@ -44,31 +43,7 @@ class TreatFile:
     return listPage
 
   @classmethod
-  def createFile(cls, nature, name, ext, userProfile, queryName, fileStr, expirationDate = None, post=None, mission=None, supervision=None, suppress = False):
-    print("createFile")
-    objectFile = None
-    path, name, mission = TreatFile.__getPathAndName(name, nature, userProfile, ext, post, mission, supervision)
-    company = userProfile.Company if not post and not supervision else None
-    objectFile = File.objects.filter(nature=nature, name=name, Company=company, Post=post, Mission=mission, Supervision=supervision)
-    if objectFile:
-      objectFile = objectFile[0]
-      treatFile = TreatFile(objectFile)
-      treatFile.__removeOldFile(suppress)
-      objectFile.path = path
-      objectFile.timestamp = datetime.now().timestamp()
-      objectFile.ext = ext
-      if expirationDate:
-        objectFile.expirationDate = expirationDate
-      objectFile.save()
-    else:
-      objectFile = cls.objects.create(nature=nature, name=name, path=path, ext=ext, Company=company, expirationDate=expirationDate, Post=post, Mission=mission, Supervision=supervision)
-    print("createFile, fileStr", len(fileStr) if fileStr else "No file")
-    if fileStr:
-      return TreatFile.__createFileWidthb64(objectFile, fileStr, user, queryName)
-    return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), user, True)}
-
-  @classmethod
-  def __getPathAndName(cls, name, nature, userProfile, ext, post, mission, supervision):
+  def getPathAndName(cls, name, nature, userProfile, ext, post, mission, supervision):
     path= None
     if nature == "userImage":
       path = cls.dictPath[nature] + userProfile.Company.name + '_' + str(userProfile.Company.id) + '.' + ext
@@ -87,7 +62,7 @@ class TreatFile:
       path = cls.dictPath[nature] + name + '_' + str(mission.id) + '.' + ext
     return path, name, mission
 
-  def __removeOldFile(self, suppress):
+  def removeOldFile(self, suppress):
     oldPath = self.file.path
     if os.path.exists(oldPath) and suppress:
       os.remove(oldPath)
@@ -96,7 +71,7 @@ class TreatFile:
         rmtree(pathToRemove, ignore_errors=True)
 
   @classmethod
-  def __createFileWidthb64(cls, objectFile, fileStr, currentUser, queryName):
+  def createFileWidthb64(cls, objectFile, fileStr, currentUser, queryName):
     file = None
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if objectFile.ext != "txt" else fileStr
