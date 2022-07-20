@@ -47,7 +47,7 @@ def queryForToken(userName, password):
     return False
 
 def getDocStr(index = 0):
-  file = ["./files/documents/Qualibat.jpeg", "./files/documents/Kbis.png", "./files/documents/Plan.png", "./files/documents/IMG_2465.HEIC", "./files/documents/Etex.svg", "./files/documents/batiUni.png", "./files/documents/Fantasiapp.png", "./files/documents/logoFantasiapp.png"]
+  file = ["./files/documents/Qualibat.jpeg", "./files/documents/Kbis.png", "./files/documents/Plan.png", "./files/documents/IMG_2465.HEIC", "./files/documents/Etex.svg", "./files/documents/batiUni.png", "./files/documents/Fantasiapp.png", "./files/documents/logoFantasiapp.png", "./files/documents/Kbis.pdf"]
   with open(file[index], "rb") as fileData:
     encoded_string = base64.b64encode(fileData.read())
   return encoded_string.decode("utf-8")
@@ -98,8 +98,8 @@ def executeQuery():
         role = 1 if random.random() < 0.5 else 2
         lastName = "Traitant" if role == 2 else "Entreprise"
         jobs = [math.floor(1 + random.random() * 40), math.floor(41 + random.random() * 40), math.floor(81 + random.random() * 60)]
-        company = {"id":companyId, 'name':establishmentValue[0], 'address': establishmentValue[1], 'activity': establishmentValue[2], 'siret': establishmentValue[3], 'ntva': establishmentValue[4]}
-        post = {"action":"register", "firstname":firstName, "lastname":lastName, "email":mail, "password":"pwd", "company":company, "Role":role,"proposer":"","jobs":jobs}
+        # company = {"id":companyId, 'name':establishmentValue[0], 'address': establishmentValue[1], 'activity': establishmentValue[2], 'siret': establishmentValue[3], 'ntva': establishmentValue[4]}
+        post = {"action":"register", "firstname":firstName, "lastname":lastName, "email":mail, "password":"pwd", "company":establishmentValue[0], "siret": '85342059400014', "Role":role,"proposer":"","jobs":jobs}
         userProfile = requests.post(url, headers=headers, json=post)
         success = json.loads(userProfile.text)
         if success['register'] == "OK":
@@ -132,11 +132,13 @@ def executeQuery():
 
     generalData = requests.get(url, headers=headersStart, params={"action":"getGeneralData"})
     generalData = json.loads(generalData.text)
-
     for companyId, value in labelList.items():
+      print("company", emailList[companyId])
       tokenForImage = queryForToken(emailList[companyId], "pwd")
       headersForImage = {'Authorization': f'Token {tokenForImage}'}
       url = f'{address}/data/'
+      file = {'action':"uploadFile", "ext":"pdf", "name":"Kbis", "fileBase64":getDocStr(8), "nature":"admin", "expirationDate":"2022-07-12"}
+      data = requests.post(url, headers=headersForImage, json=file)
       for labelValues in value:
         for tupleLabel in labelValues.values():
           fileName = generalData["LabelValues"][str(tupleLabel[0])]
