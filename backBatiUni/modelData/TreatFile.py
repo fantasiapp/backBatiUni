@@ -91,6 +91,7 @@ class TreatFile:
       if objectFile.name == "Kbis":
         detectObject = TreatFile(objectFile)
         status, value = detectObject.__readFromQrCode()
+        print("status", value)
         if not status:
           if objectFile: objectFile.delete()
           print("exit 2")
