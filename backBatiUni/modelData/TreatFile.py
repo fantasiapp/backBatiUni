@@ -136,7 +136,9 @@ class TreatFile:
     return False
 
   def __readFromQrCode(self):
+    print("__readFromQrCode")
     url, linkKbis = self.__getUrlFromQrCode(), None
+    print("__readFromQrCode", url)
     if url:
       try:
         request = requests.get(url, headers=self.headersKbis)
