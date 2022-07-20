@@ -900,7 +900,7 @@ class Supervision(CommonModel):
 
   def dump(self):
     files = [file.id for file in File.objects.filter(Supervision = self)]
-    return [self.author, self.companyId, self.date.strftime("%Y-%m-%d") if self.date else "", self.timestamp, self.comment, files]
+    return [self.author, self.companyId, self.timestamp, self.comment, files]
 
 
 class InviteFriend(CommonModel):
