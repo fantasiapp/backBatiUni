@@ -93,8 +93,8 @@ class TreatFile:
         status, value = detectObject.__readFromQrCode()
         if not status:
           if objectFile: objectFile.delete()
-        print("exit 2")
-        return {"uploadFile":"Error", "messages":f"{value}"}
+          print("exit 2")
+          return {"uploadFile":"Error", "messages":f"{value}"}
       return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
     except:
       if objectFile: objectFile.delete()
