@@ -1,5 +1,3 @@
-# from this import d
-# import cv2
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -8,16 +6,20 @@ import base64
 import datetime
 from django.apps import apps
 import requests
-# from django.core.files.base import ContentFile
 from time import sleep, time
 from copy import deepcopy
 import json
 from svglib.svglib import svg2rlg
-# from reportlab.graphics import renderPM
-# import pdf2image 
-# import shutil
 from .modelData.TreatFile import TreatFile
-from geocoding import getCoordinatesFrom
+
+import sys
+from dotenv import load_dotenv
+load_dotenv()
+if os.getenv('PATH_MIDDLE'):
+  sys.path.append(os.getenv('PATH_MIDDLE'))
+  from profileScraping import getEnterpriseDataFrom
+  from geocoding import getCoordinatesFrom # argument str address
+
 
 
 
