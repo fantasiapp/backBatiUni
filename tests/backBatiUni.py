@@ -133,7 +133,6 @@ def executeQuery():
     generalData = requests.get(url, headers=headersStart, params={"action":"getGeneralData"})
     generalData = json.loads(generalData.text)
     for companyId, value in labelList.items():
-      print("company", emailList[companyId])
       tokenForImage = queryForToken(emailList[companyId], "pwd")
       headersForImage = {'Authorization': f'Token {tokenForImage}'}
       url = f'{address}/data/'

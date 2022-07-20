@@ -2,6 +2,7 @@ from email.headerregistry import ContentTransferEncodingHeader
 from lib2to3.pgen2 import token
 from this import d
 from django.forms import EmailInput
+from numpy import isin
 import stripe
 
 from backBatiUni.settings import STRIPE_API_KEY
@@ -475,6 +476,8 @@ class DataAccessor():
     author = f'{userProfile.firstName} {userProfile.lastName}'
     datePost, detailedPost, mission = None, None, None
     kwargs = {"DetailedPost":None, "author":author, "companyId":userProfile.Company.id,"comment":"", "timestamp": timezone.now().timestamp()}
+    if not "detailedPostId" in data and not "datePostId" in data:
+      return {"createSupervision":"Error", "messages":"No detailedPostId and No datePostId"}
     if "detailedPostId" in data and data["detailedPostId"]:
       detailedPost = DetailedPost.objects.get(id=data["detailedPostId"])
       kwargs["DetailedPost"] = detailedPost
@@ -1038,7 +1041,6 @@ class DataAccessor():
         return {queryName:"Error", "messages":f"no supervision with id {data['Supervision']}"}
       else:
         supervision = supervision[0]
-    print("__createObjectFile", len(data["fileBase64"]) if "fileBase" in data else None)
     return File.createFile(data["nature"], data["name"], data['ext'], currentUser, queryName, data["fileBase64"], expirationDate=expirationDate, post=post, mission=mission, supervision=supervision)
 
   @classmethod
@@ -1086,6 +1088,8 @@ class DataAccessor():
     message = File.createFile("supervision", "supervision", data['ext'], currentUser, "uploadImageSupervision", data["fileBase64"], supervision=supervision)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     objectFather = supervision.DetailedPost.DatePost if supervision.DetailedPost else supervision.DatePost
+    if not isinstance(objectFather, DatePost):
+      return {"uploadImageSupervision":"Error", "messages":"No detailedPost or DatePost in supervision"}
     mission = objectFather.Mission
     if mission.Company.id == userProfile.Company.id:
       candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
