@@ -77,25 +77,25 @@ class TreatFile:
 
   @classmethod
   def createFileWidthb64(cls, objectFile, fileStr, currentUser, queryName):
-    file = None
+    file, value = None, None
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if objectFile.ext != "txt" else fileStr
       with open(objectFile.path, "wb") as outfile:
         outfile.write(file.file.getbuffer())
     except:
       if objectFile: objectFile.delete()
-      return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
+      return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}, None
     try :
       if objectFile.name == "Kbis":
         detectObject = TreatFile(objectFile)
         status, value = detectObject.__readFromQrCode()
         if not status:
           if objectFile: objectFile.delete()
-          return {"uploadFile":"Error", "messages":f"{value}"}
-      return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
+          return {"uploadFile":"Error", "messages":f"{value}"}, None
+      return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}, value
     except:
       if objectFile: objectFile.delete()
-      return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
+      return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}, None
 
   """Fonctions associées au formatage d'images"""
 

@@ -1013,7 +1013,9 @@ class File(CommonModel):
       objectFile = cls.objects.create(nature=nature, name=name, path=path, ext=ext, Company=company, expirationDate=expirationDate, Post=post, Mission=mission, Supervision=supervision)
     print("createFile, fileStr", len(fileStr) if fileStr else "No file")
     if fileStr:
-      return TreatFile.createFileWidthb64(objectFile, fileStr, user, queryName)
+      returnValue, update = TreatFile.createFileWidthb64(objectFile, fileStr, user, company, queryName)
+      print("value to update", update)
+      return returnValue
     return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), user, True)}
 
 
