@@ -7,6 +7,10 @@ from django.core.files.base import ContentFile
 import base64
 from shutil import rmtree
 from pdf2image import convert_from_path
+import whatimage
+import pyheif
+from PIL import Image
+from cairosvg import svg2png
 
 class TreatFile:
   file = None
@@ -118,6 +122,27 @@ class TreatFile:
       with open(file, "rb") as fileData:
         listEncode.append(base64.b64encode(fileData.read()))
     return [encodedString.decode("utf-8") for encodedString in listEncode]
+
+
+  def decodeHeic(self):
+    equivJpg = self.file.path.replace(f"{self.file.ext}", "jpg")
+    if not os.path.exists(equivJpg):
+      with open(self.file.path, "rb") as fileData:
+        bytesIo = fileData.read()
+        imageType = whatimage.identify_image(bytesIo)
+        if imageType in ['heic', 'avif']:
+          image = pyheif.read_heif(bytesIo)
+          picture = Image.frombytes(mode=image.mode, size=image.size, data=image.data)
+          picture.save(equivJpg, format="jpeg")
+    return self.file.readFile(equivJpg)
+
+  def decodeSvg(self):
+    equivJpg = self.file.path.replace(f"{self.file.ext}", "png")
+    if not os.path.exists(equivJpg):
+      with open(self.file.path, "rb") as fileData:
+        bytesIo = fileData.read()
+        svg2png(bytestring=bytesIo, write_to=equivJpg)
+    return self.file.readFile(equivJpg)
 
   """Fonctions associées au QR Code"""
 

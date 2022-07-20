@@ -1,8 +1,5 @@
-from ast import DictComp
-from fileinput import isstdin
-from this import d
-from bs4 import BeautifulSoup
-import cv2
+# from this import d
+# import cv2
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -10,20 +7,15 @@ import os
 import base64
 import datetime
 from django.apps import apps
-
 import requests
-from django.core.files.base import ContentFile
-import whatimage
-import pyheif
-from PIL import Image
-from cairosvg import svg2png
+# from django.core.files.base import ContentFile
 from time import sleep, time
 from copy import deepcopy
 import json
 from svglib.svglib import svg2rlg
-from reportlab.graphics import renderPM
-import pdf2image 
-import shutil
+# from reportlab.graphics import renderPM
+# import pdf2image 
+# import shutil
 from .modelData.TreatFile import TreatFile
 
 
@@ -985,9 +977,9 @@ class File(CommonModel):
       if self.ext == "pdf":
         return treatFile.encodedStringListForPdf()
       if self.ext.lower() == "heic":
-        return [self.decodeHeic()]
+        return [treatFile.decodeHeic()]
       if self.ext.lower() == "svg":
-        return [self.decodeSvg()]
+        return [treatFile.decodeSvg()]
       return [self.readFile(self.path)]
     return getattr(self, fieldName, answer)
 
@@ -999,50 +991,6 @@ class File(CommonModel):
     except ValueError:
       print("readFile", os.getcwd(), os.listdir('files/avatars'))
       return None
-
-
-  # def encodedStringListForPdf(self):
-  #   referencepath = os.getcwd()
-  #   path = self.path.replace(".pdf", "/")
-  #   split = self.path.split("/")
-  #   nameFile = split[-1]
-  #   localPath = f"./{split[1]}/{split[2]}/"
-  #   if not os.path.isdir(path):
-  #     os.mkdir(path)
-  #     os.chdir(localPath)
-  #     try:
-  #       images = convert_from_path(f"{nameFile}")
-  #       os.chdir(referencepath)
-  #       for index in range(len(images)):
-  #         images[index].save(f'{path}page_{str(index)}.jpg', 'JPEG')
-  #     except:
-  #       print("error : no PDF to convert")
-  #     os.chdir(referencepath)
-  #   listFiles, listEncode  = [os.path.join(path, file) for file in os.listdir(path)], []
-  #   for file in listFiles:
-  #     with open(file, "rb") as fileData:
-  #       listEncode.append(base64.b64encode(fileData.read()))
-  #   return [encodedString.decode("utf-8") for encodedString in listEncode]
-
-  def decodeHeic(self):
-    equivJpg = self.path.replace(f"{self.ext}", "jpg")
-    if not os.path.exists(equivJpg):
-      with open(self.path, "rb") as fileData:
-        bytesIo = fileData.read()
-        imageType = whatimage.identify_image(bytesIo)
-        if imageType in ['heic', 'avif']:
-          image = pyheif.read_heif(bytesIo)
-          picture = Image.frombytes(mode=image.mode, size=image.size, data=image.data)
-          picture.save(equivJpg, format="jpeg")
-    return self.readFile(equivJpg)
-
-  def decodeSvg(self):
-    equivJpg = self.path.replace(f"{self.ext}", "png")
-    if not os.path.exists(equivJpg):
-      with open(self.path, "rb") as fileData:
-        bytesIo = fileData.read()
-        svg2png(bytestring=bytesIo, write_to=equivJpg)
-    return self.readFile(equivJpg)
 
   @classmethod
   def findAvatar(cls, user):
