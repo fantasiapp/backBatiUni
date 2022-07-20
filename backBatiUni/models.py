@@ -996,7 +996,7 @@ class File(CommonModel):
   def createFile(cls, nature, name, ext, user, queryName, fileStr, expirationDate = None, post=None, mission=None, supervision=None, suppress = False):
     userProfile = UserProfile.objects.get(userNameInternal=user)
     objectFile = None
-    path, name, mission = TreatFile.getPathAndName(name, nature, userProfile, ext, post, mission, supervision)
+    path, name, mission = cls.__getPathAndName(name, nature, userProfile, ext, post, mission, supervision)
     company = userProfile.Company if not post and not supervision else None
     objectFile = File.objects.filter(nature=nature, name=name, Company=company, Post=post, Mission=mission, Supervision=supervision)
     if objectFile:
@@ -1015,6 +1015,27 @@ class File(CommonModel):
     if fileStr:
       return TreatFile.createFileWidthb64(objectFile, fileStr, user, queryName)
     return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), user, True)}
+
+
+  @classmethod
+  def __getPathAndName(cls, name, nature, userProfile, ext, post, mission, supervision):
+    path= None
+    if nature == "userImage":
+      path = cls.dictPath[nature] + userProfile.Company.name + '_' + str(userProfile.Company.id) + '.' + ext
+    if nature in ["labels", "admin"]:
+      path = cls.dictPath[nature] + name + '_' + str(userProfile.Company.id) + '.' + ext
+    if nature == "post":
+      path = cls.dictPath[nature] + name + '_' + str(post.id) + '.' + ext
+    if nature == "supervision":
+      endName = '_' + str(mission.id) if mission else '_N'
+      endName += '_' + str(supervision.id) if supervision else '_N'
+      objectFiles = File.objects.filter(nature=nature, Supervision=supervision)
+      endName += "_" + str(len(objectFiles))
+      name +=  endName
+      path = cls.dictPath[nature] + name + '.' + ext
+    if nature == "contract":
+      path = cls.dictPath[nature] + name + '_' + str(mission.id) + '.' + ext
+    return path, name, mission
 
 class BlockedCandidate(CommonModel):
   blocker = models.ForeignKey(Company, verbose_name='Company who is blocking', related_name='blocking', on_delete=models.PROTECT, null=True, default=None)
