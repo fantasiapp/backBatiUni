@@ -720,11 +720,6 @@ class Notification(CommonModel):
     for notification in Notification.objects.all():
       RamData.ramStructure["Company"]["Notification"][notification.Company.id].append(notification.id)
 
-  # def computeValues(copy
-  # self, listFields, user, dictFormat=False):
-  #   print("computeValue, notifications", [notification.id for notification in self.filter(user)])
-  #   return [notification.id for notification in self.filter(user)]
-
   class Meta:
     verbose_name = "Notification"
   
@@ -961,9 +956,6 @@ class File(CommonModel):
     superList.append("content")
     return superList
 
-  # def computeValues(self, listFields, user, dictFormat=False):
-  #   return self.dump()
-
   def dump(self):
     expirationDate = self.expirationDate.strftime("%Y-%m-%d") if self.expirationDate else ""
     return [self.nature, self.name, self.ext, expirationDate, self.timestamp, ""]
@@ -1002,7 +994,6 @@ class File(CommonModel):
 
   @classmethod
   def createFile(cls, nature, name, ext, user, queryName, fileStr, expirationDate = None, post=None, mission=None, supervision=None, suppress = False):
-    print("createFile")
     userProfile = UserProfile.objects.get(userNameInternal=user)
     objectFile = None
     path, name, mission = TreatFile.getPathAndName(name, nature, userProfile, ext, post, mission, supervision)
