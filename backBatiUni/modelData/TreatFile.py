@@ -83,6 +83,7 @@ class TreatFile:
       print("first try failure")
       return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
     try :
+      print(objectFile, objectFile.name)
       if objectFile.name == "Kbis":
         print("seceond try 1")
         detectObject = TreatFile(objectFile)
