@@ -118,6 +118,7 @@ class Webhook(DefaultView):
     jsonString = jsonBin.decode("utf8")
     event = json.loads(jsonString)
     print("Webhook", event['type'])
+    print("event", event)
     # Handle the event
     if event:
       if event['type'] == 'payment_intent.succeeded':
@@ -130,14 +131,15 @@ class Webhook(DefaultView):
           }
           DataAccessor.dataPost(json.dumps(boostPostDict), False)
       elif event['type'] ==  'customer.subscription.created':
+        DataAccessor.dataPost({"action": "subscribeUser"})
         return Response({"Error": f"Not implemented yet"})
       elif event['type'] ==  'customer.subscription.updated':
         return Response({"Error": f"Not implemented yet"})
       elif event['type'] ==  'customer.subscription.deleted':
         return Response({"Error": f"Not implemented yet"})      
-    # else:
+      else:
         # Unexpected event type
-        # print(f"Unhandled event type {event['type']}")
+        print(f"Unhandled event type {event['type']}")
 
     return Response({"webhook-payment": "OK"})
 
