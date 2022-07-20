@@ -143,7 +143,9 @@ class TreatFile:
       try:
         request = requests.get(url, headers=self.headersKbis)
       except:
+        print( "unrecognize url")
         return (False, "unrecognize url")
+      print(request)
       html = request.content.decode()
       soup = BeautifulSoup(html, features="html.parser")
       for element in soup.findAll('a'):
