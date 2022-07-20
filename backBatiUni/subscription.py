@@ -30,7 +30,14 @@ class SubscriptionManager():
                 payment_behavior='default_incomplete',
                 payment_settings={'save_default_payment_method': 'on_subscription'},
                 expand=['latest_invoice.payment_intent'],
+                metadata={
+                    'type': 'subscription'
+                }
             )
+            stripe.PaymentIntent.modify(subscription.latest_invoice.payment_intent.id,
+                                        metadata={
+                                            'type': 'subscription'
+                                        })
             return {
                     "createSubscription": "OK",
                     "subscriptionId": subscription.id, 
@@ -42,6 +49,10 @@ class SubscriptionManager():
 
         except Exception as e:
             return {"Error": str(e)}
+
+    @classmethod
+    def updateSubscription(cls, request, user=False):
+        return {"Error": "Not yet implemented"}
 
     @classmethod
     def cancelSubscription(cls, request):

@@ -213,6 +213,7 @@ class DataAccessor():
       elif data["action"] == "notificationViewed": return cls.__notificationViewed(data, currentUser)
       elif data["action"] == "notificationPostViewed": return cls.__notificationPostViewed(data, currentUser)
       elif data["action"] == "boostPost": return cls.__boostPost(data, currentUser)
+      elif data["action"] == "subscribeUser": return cls.__subscribeUser(data, currentUser)
       return {"dataPost":"Error", "messages":f"unknown action in post {data['action']}"}
     return {"dataPost":"Error", "messages":"no action in post"}
 
@@ -1273,7 +1274,9 @@ class DataAccessor():
         return {"boostPost":"OK"}
     return {"boostPost":"Error", "messages":f"No post with id {'postId'}"}
     
-
+  @classmethod
+  def __subscribeUser(cls, data, user):
+    return {"subscribeUser": "Not implemented yet"}
 
   @classmethod
   def forgetPassword(cls, email):
