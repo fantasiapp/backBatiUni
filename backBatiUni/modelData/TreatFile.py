@@ -41,7 +41,6 @@ class TreatFile:
         listPage.append(path + pages)
     else :
       listPage = [filePath]
-    print(listPage)
     return listPage
 
   @classmethod
@@ -81,31 +80,22 @@ class TreatFile:
         outfile.write(file.file.getbuffer())
     except:
       if objectFile: objectFile.delete()
-      print("first try failure")
       return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
     try :
-      print(objectFile, objectFile.name)
       if objectFile.name == "Kbis":
         detectObject = TreatFile(objectFile)
         status, value = detectObject.__readFromQrCode()
-        print("seceond try 3")
-        if status:
-          print("__createFileWidthb64 Kbis", value)
-        else:
+        if not status:
           if objectFile: objectFile.delete()
-          print("no answer from __createFileWidthb64")
-          return {"uploadFile":"Error", "messages":f"{value}"}
-      print("success")
+        return {"uploadFile":"Error", "messages":f"{value}"}
       return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}
     except:
-      print("second try failure")
       if objectFile: objectFile.delete()
       return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}
 
   """Fonctions associées au formatage d'images"""
 
   def encodedStringListForPdf(self):
-    print("encodedStringListForPdf")
     referencepath = os.getcwd()
     path = self.file.path.replace(".pdf", "/")
     split = self.file.path.split("/")
@@ -139,16 +129,12 @@ class TreatFile:
     return False
 
   def __readFromQrCode(self):
-    print("__readFromQrCode")
     url, linkKbis = self.__getUrlFromQrCode(), None
-    print("__readFromQrCode", url)
     if url:
       try:
         request = requests.get(url, headers=self.headersKbis)
       except:
-        print( "unrecognize url")
         return (False, "unrecognize url")
-      print(request)
       html = request.content.decode()
       soup = BeautifulSoup(html, features="html.parser")
       for element in soup.findAll('a'):
