@@ -19,7 +19,7 @@ userName, password = "jlw", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 5
+numberCompanies = 20
 emailList, missionList, emailListPME, emailListST, detailedPost, candidateToUnapply, labelList = {}, {}, [], [], {}, None, {}
 
 arguments = sys.argv
@@ -69,15 +69,25 @@ def executeQuery():
     post3 = {"firstname":"Eric","lastname":"Entreprise","email":"pme@g.com","password":"pwd","company": 'PME', 'siret': '85342059400014',"Role":1,"proposer":"","jobs":[1,2,9], "action":"register"}
     post4 = {"firstname":"a","lastname":"a","email":"both@g.com","password":"pwd","company": 'both', 'siret': '85342059400014', "Role":3,"proposer":"","jobs":[1,2,80], "action":"register"}
     post5 = {"firstname":"Tanguy","lastname":"Traitant","email":"st2@g.com","password":"pwd","company": 'Sous-traitant 2', 'siret': '85342059400014', "Role":2,"proposer":"","jobs":[1,2,80], "action":"register"}
-    for post in [post1, post2, post3, post4, post5]:
+    listPost = [post1, post2, post3, post4, post5]
+    for post in listPost:
       response = requests.post(url, headers=headersStart, json=post)
+      
 
-  elif query == "registerConfirm":
     requests.get(f'{address}/initialize/', headers=headersStart, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
     requests.get(f'{address}/initialize/', headers=headersStart, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
     requests.get(f'{address}/initialize/', headers=headersStart, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
     requests.get(f'{address}/initialize/', headers=headersStart, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
     response = requests.get(f'{address}/initialize/', headers=headersStart, params={"action":"registerConfirm", "token":"A secret code to check 9243672519"})
+
+    url = f'{address}/data/'
+    for post in listPost:
+      tokenForImage = queryForToken(post["email"], "pwd")
+      headersForImage = {'Authorization': f'Token {tokenForImage}'}
+      file = {'action':"uploadFile", "ext":"pdf", "name":"Kbis", "fileBase64":getDocStr(8), "nature":"admin", "expirationDate":now}
+      requests.post(url, headers=headersForImage, json=file)
+
+
 
   elif query == "getGeneralData":
     response = requests.get(url, headers=headersStart, params={"action":"getGeneralData"})
@@ -136,7 +146,7 @@ def executeQuery():
       tokenForImage = queryForToken(emailList[companyId], "pwd")
       headersForImage = {'Authorization': f'Token {tokenForImage}'}
       url = f'{address}/data/'
-      file = {'action':"uploadFile", "ext":"pdf", "name":"Kbis", "fileBase64":getDocStr(8), "nature":"admin", "expirationDate":"2022-07-12"}
+      file = {'action':"uploadFile", "ext":"pdf", "name":"Kbis", "fileBase64":getDocStr(8), "nature":"admin", "expirationDate":now}
       data = requests.post(url, headers=headersForImage, json=file)
       for labelValues in value:
         for tupleLabel in labelValues.values():
@@ -477,7 +487,7 @@ def executeQuery():
   else:
     print("no answer")
 if query == "all":
-  keys = ["buildDB", "register", "registerConfirm", "getGeneralData", "registerMany", "removeLabelForCompany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "deletePost", "modifyPost", "getPost", "setFavorite", "removeFavorite", "uploadFile", "modifyFile", "downloadFile", "switchDraft", "isViewed", "applyPost", "unapplyPost", "handleCandidateForPost", "signContract", "modifyMissionDate", "validateMissionDate", "createSupervision", "uploadImageSupervision", "modifyDetailedPost", "modifyDisponibility", "closeMission", "closeMissionST", "boostPost", "blockCompany", "askRecommandation", "giveRecommandation", "giveNotificationToken"]#
+  keys = ["buildDB", "register", "getGeneralData", "registerMany", "removeLabelForCompany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "deletePost", "modifyPost", "getPost", "setFavorite", "removeFavorite", "uploadFile", "modifyFile", "downloadFile", "switchDraft", "isViewed", "applyPost", "unapplyPost", "handleCandidateForPost", "signContract", "modifyMissionDate", "validateMissionDate", "createSupervision", "uploadImageSupervision", "modifyDetailedPost", "modifyDisponibility", "closeMission", "closeMissionST", "boostPost", "blockCompany", "askRecommandation", "giveRecommandation", "giveNotificationToken"]#
   for key in keys:
     query = key
     executeQuery()

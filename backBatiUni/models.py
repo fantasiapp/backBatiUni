@@ -1017,8 +1017,12 @@ class File(CommonModel):
     print("createFile, fileStr", len(fileStr) if fileStr else "No file")
     if fileStr:
       returnValue, update = TreatFile.createFileWidthb64(objectFile, fileStr, user, queryName)
-      if update : cls.__updateWithKbis(company, objectFile, update)
-      print("value to update", update)
+      if update and update["siret"] != company.siret:
+        TreatFile(objectFile).removeOldFile()
+        objectFile.delete()
+        return {queryName:"warning", "messages":"Le numéro de Siret n'est pas conforme"}
+      else:
+        cls.__updateWithKbis(company, objectFile, update)
       return returnValue
     return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), user, True)}
 
