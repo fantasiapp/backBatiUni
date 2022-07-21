@@ -1084,6 +1084,7 @@ class DataAccessor():
 
   @classmethod
   def __updateUserInfo(cls, data, user):
+    print("modifyUser", data)
     valuesSaved = {"JobForCompany":{}, "LabelForCompany":{}}
     message, userProfile = None, UserProfile.objects.get(userNameInternal=user)
     if "UserProfile" in data and data["UserProfile"]:
