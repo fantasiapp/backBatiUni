@@ -1089,6 +1089,7 @@ class DataAccessor():
     message, userProfile = None, UserProfile.objects.get(userNameInternal=user)
     if "UserProfile" in data and data["UserProfile"]:
       valuesSaved = cls.__setValuesForUser(data["UserProfile"], user, message, userProfile, valuesSaved)
+      print("modifyUser", valuesSaved)
       if message:
         return {"modifyUser":"Warning", "messages":message}
       company = userProfile.Company
