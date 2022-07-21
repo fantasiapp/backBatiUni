@@ -61,19 +61,15 @@ class DataAccessor():
 
   @classmethod
   def register(cls, data):
-    print("register", data)
     if "again" in data and data["again"]:
       return cls.registerAgain(data)
     message = cls.__registerCheck(data, {})
     if message:
-      print("register message", message)
       return {"register":"Warning", "messages":message}
     token = SmtpConnector(cls.portSmtp).register(data["firstname"], data["lastname"], data["email"])
-    print("register", token, cls.portSmtp)
     if token != "token not received":
       userProfile = cls.__registerAction(data, token)
       cls.__checkIfHaveBeenInvited(userProfile, data['proposer'], data['email'])
-      print("register", "OK")
       return {"register":"OK"}
     cls.__registerAction(data, "empty token")
     return {"register":"Error", "messages":"token not received"}
@@ -130,16 +126,11 @@ class DataAccessor():
 
   @classmethod
   def __registerAction(cls, data, token):
-    print("stripe", stripe)
-    print("stripe api key", STRIPE_API_KEY)
-    print("registerAction", data)
     if not "@" in data["email"]:
-      data["email"] += "@g.com" 
-    print("registerAction stripe", data["company"], data["email"])
+      data["email"] += "@g.com"
+    print(stripe.api_key)
     customer = stripe.Customer.create(name = data["company"], email = data["email"])
     company = Company.objects.create(name=data["company"], siret=data['siret'], stripeCustomerId = customer.id)
-    # company = Company.objects.create(name=companyData['name'], address=companyData['address'], companyMail=data["email"], activity=companyData['activity'], ntva=companyData['ntva'], siret=companyData['siret'], stripeCustomerId = "")
-    # cls.__getGeoCoordinates(company)
     company.Role = Role.objects.get(id=data['Role'])
     company.save()
     proposer = None
@@ -219,7 +210,6 @@ class DataAccessor():
   @classmethod
   def __uploadPost(cls, dictData, currentUser):
     kwargs, listObject = cls.__createPostKwargs(dictData, currentUser)
-    print("uploadPost", kwargs)
     if "uploadPost" in kwargs and kwargs["uploadPost"] == "Error":
       return kwargs
     objectPost = Post.objects.create(**kwargs)
@@ -231,7 +221,6 @@ class DataAccessor():
     postDump = {objectPost.id:objectPost.computeValues(objectPost.listFields(), currentUser, True)}
     datePostDump = [{date.id:date.computeValues(date.listFields(), currentUser, True) for date in DatePost.objects.filter(Post = objectPost)}]
     detailedPostDump = [{detailedPost.id:detailedPost.computeValues(detailedPost.listFields(), currentUser, True) for detailedPost in DetailedPost.objects.filter(Post = objectPost)}]
-    print("uploadPost", datePostDump)
     return {"uploadPost":"OK", "Post":postDump, "DatePost":datePostDump, "DetailedPost":detailedPostDump}
 
   @classmethod
@@ -329,7 +318,6 @@ class DataAccessor():
 
   @classmethod
   def applyPost(cls, postId, amount, unitOfTime, currentUser):
-    print("applyPost", postId)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     subContractor = userProfile.Company
     contact = userProfile.firstName + " " + userProfile.lastName
@@ -363,7 +351,6 @@ class DataAccessor():
 
   @classmethod
   def candidateViewed(cls, candidateId, currentUser):
-    print("candidateViewed", candidateId)
     candidate = Candidate.objects.get(id=candidateId)
     candidate.isViewed = True
     candidate.save()
@@ -376,7 +363,6 @@ class DataAccessor():
 
   @classmethod
   def __createDetailedPost(cls, data, currentUser):
-    print("createDetailedPost", data)
     kwargs, post, mission, detailedPost2 = {"Post":None, "Mission":None, "content":None}, None, None, None
     datePost = DatePost.objects.get(id=data["dateId"])
     if not datePost.validated:
@@ -398,7 +384,6 @@ class DataAccessor():
 
   @classmethod
   def __modifyDetailedPost(cls, data, currentUser):
-    print("modifyDetailedPost", data)
     datePostId = data["datePostId"] if "datePostId" in data and data["datePostId"] else None
     unset = data["unset"] if "unset" in data else False
     data = data["detailedPost"]
@@ -465,7 +450,6 @@ class DataAccessor():
 
   @classmethod
   def __createSupervision(cls, data, currentUser):
-    print("createSupervision", data)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     author = f'{userProfile.firstName} {userProfile.lastName}'
     datePost, detailedPost, mission = None, None, None
@@ -504,7 +488,6 @@ class DataAccessor():
   @classmethod
   def __addNewNotificationForMessage(cls, userProfile, mission, message):
     candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
-    print("__addNewNotificationForMessage", candidate, userProfile)
     if userProfile.Company.id == candidate.Company.id:
       company = mission.Company
       subContractor = candidate.Company
@@ -529,13 +512,10 @@ class DataAccessor():
 
   @classmethod
   def __modifySupervision(cls, data, currentUser):
-    print("modifySupervision", data, currentUser.id)
     return {"modifySupervision":"Warning", "messages":"Work in progress"}
 
   @classmethod
   def __deleteSupervision(cls, data, currentUser):
-    """A mettre à jour si nécessaire"""
-    print("deleteSupervision", data, currentUser.id)
     supervision = Supervision.objects.get(id=data["supervisionId"])
     if supervision.SupervisionAssociated:
       return {"deleteSupervision":"Warning", "messages":"Ce post possède des messages associés"}
@@ -553,7 +533,6 @@ class DataAccessor():
     favorite = FavoritePost.objects.filter(UserProfile=userProfile, postId=postId)
     if favorite and value == "false":
         favorite[0].delete()
-        print("favoritePost deleted", postId, value, UserProfile.id)
     elif value == "true" and not favorite:
       FavoritePost.objects.create(UserProfile=userProfile, postId=postId)
     return {"setFavorite":"OK"}
@@ -563,7 +542,6 @@ class DataAccessor():
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     viewPost = ViewPost.objects.filter(UserProfile=userProfile, postId=postId)
     if not viewPost:
-      print("isViewed", userProfile.id, postId)
       ViewPost.objects.create(UserProfile=userProfile, postId=postId)
     return {"isViewed":"OK"}
 
@@ -693,9 +671,7 @@ class DataAccessor():
 
   @classmethod
   def signContract(cls, missionId, view, currentUser):
-    print("signContract", missionId)
     mission = Mission.objects.get(id=missionId)
-    print("signContract contractId", mission.contract)
     contractImage = File.objects.get(id=mission.contract)
     if view == "PME":
       source = "./files/documents/ContractSignedST_PME.png" if mission.signedBySubContractor else "./files/documents/ContractSignedPME.png"
@@ -717,7 +693,6 @@ class DataAccessor():
 
   @classmethod
   def uploadSupervision(cls, detailedPostId, comment, currentUser):
-    print("uploadSupervision", detailedPostId, comment, currentUser)
     detailed = DetailedPost.objects.get(id=detailedPostId)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     if detailed.Post:
@@ -740,7 +715,6 @@ class DataAccessor():
 
   @classmethod
   def __modifyMissionDate(cls, data, currentUser):
-    print("modifyMissionDate", data)
     mission, subContractor = cls.__modifyMissionTimeTable(data)
     return cls.__modifyMissionDateAction(data, currentUser, mission, subContractor)
 
@@ -796,7 +770,6 @@ class DataAccessor():
 
   @classmethod
   def __validateMissionDate(cls, data, currentUser):
-    print("validateMissionDate", data)
     mission, answer = cls.__validateMissionTimeTable(data)
     if answer:
       return {"validateMissionDate":"OK", "update":"yes", "type":"Mission", "Mission":{mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}}
@@ -859,10 +832,8 @@ class DataAccessor():
 
   @classmethod
   def __closeMission(cls, data, currentUser):
-    print("closeMission", data)
     mission = Mission.objects.get(id=data["missionId"])
     if mission.isClosed:
-      print("mission is closed")
       return {"closeMission":"Error ", "Error":f"Mission of id {mission.id} is allready closed."}
     mission.quality = data["qualityStars"]
     mission.qualityComment = data["qualityComment"]
@@ -877,10 +848,8 @@ class DataAccessor():
 
   @classmethod
   def __closeMissionST(cls, data, currentUser):
-    print("closeMission", data)
     mission = Mission.objects.get(id=data["missionId"])
     if mission.vibeST + mission.securityST + mission.organisationST != 0:
-      print("mission ST is quoted")
       return {"closeMission":"Error ", "Error":f"Mission of id {mission.id} is allready quoted."}
     mission.vibeST = data["vibeSTStars"] 
     mission.vibeCommentST = data["vibeSTComment"]
@@ -894,7 +863,6 @@ class DataAccessor():
 
   @classmethod
   def __notificationViewed(cls, data, currentUser):
-    print("__notificationViewed", data)
     company = Company.objects.filter(id=data["companyId"])
     if not company:
       return {"notificationViewed":"Error", "messages":f"{data['companyId']} does not exist"}
@@ -904,12 +872,10 @@ class DataAccessor():
       notification.hasBeenViewed = True
       notification.save()
     response = {"notificationViewed":"OK", "Notification":[{notification.id:notification.computeValues(notification.listFields(), currentUser, dictFormat=True)} for notification in notifications]}
-    print("response", response)
     return response
 
   @classmethod
   def __notificationPostViewed(cls, data, currentUser):
-    print("__notificationViewed", data)
     company = UserProfile.objects.get(userNameInternal=currentUser).Company
     post = Post.objects.get(id=data["postId"])
     notifications = Notification.objects.filter(Post=post, Role=data["role"], category="supervision") | Notification.objects.filter(Mission=post, Role=data["role"], category="supervision")
@@ -934,7 +900,6 @@ class DataAccessor():
     else:
       Notification.createAndSend(Company=company, subContractor=subContractor, title="Modification de la mission", nature="ST", Role="PME", content=f"La société {subContractor.name} vient de vous évaluer pour le chantier du {mission.address}.", timestamp=datetime.now().timestamp())
       listMission = [(mission.vibeST + mission.securityST + mission.organisationST) / 3 for mission in Mission.objects.filter(Company=company, isClosed=True)]
-      print("listMission", listMission)
       company.starsPME = round(sum(listMission)/len(listMission)) if len(listMission) else 0
       company.save()
     return False
@@ -952,7 +917,6 @@ class DataAccessor():
         kwargs["draft"] = True
         kwargs["boostTimestamp"] = 0
         duplicate = Post.objects.create(**kwargs)
-        print("duplicatePost", kwargs)
         for datePost in DatePost.objects.filter(Post=post) | DatePost.objects.filter(Mission=post):
           datePostNew = DatePost.objects.create(Post=duplicate, date=datePost.date)
           datePostList.append({datePostNew.id:datePostNew.computeValues(datePostNew.listFields(), currentUser, dictFormat=True)})
@@ -988,7 +952,6 @@ class DataAccessor():
 
   @classmethod
   def deleteFile(cls, id, currentUser):
-    print("deleteFile", id)
     file = File.objects.filter(id=id)
     if file:
       file = file[0]
@@ -1002,13 +965,11 @@ class DataAccessor():
       if isCompany:
         company = UserProfile.objects.get(userNameInternal=currentUser).Company
         response["Company"] = {company.id:company.computeValues(company.listFields(), currentUser, True)}
-        print("deleteFile", response)
       return response
     return {"deleteFile":"Error", "messages":f"No file width id {id}"}
 
   @classmethod
   def __uploadFile(cls, data, currentUser, queryName="uploadFile"):
-    print("uploadFile")
     testMessage = cls.__testUploadFile(data)
     if testMessage:
       return testMessage
@@ -1059,8 +1020,6 @@ class DataAccessor():
 
   @classmethod
   def __modifyFile(cls, data, currentUser):
-    print("modifyFile", list(data.keys()), "fileId", data["fileId"])
-    print("modifyFile")
     objectFile = File.objects.get(id=data["fileId"])
     expirationDate = datetime.strptime(data["expirationDate"], "%Y-%m-%d") if "expirationDate" in data and data["expirationDate"] else None
     post, mission, supervision= objectFile.Post, objectFile.Mission, objectFile.Supervision
@@ -1078,7 +1037,6 @@ class DataAccessor():
     testMessage = cls.__testUploadFile(data)
     if testMessage:
       return testMessage
-    print("__uploadImageSupervision", data["supervisionId"])
     supervision = Supervision.objects.get(id=data["supervisionId"])
     message = File.createFile("supervision", "supervision", data['ext'], currentUser, "uploadImageSupervision", data["fileBase64"], supervision=supervision)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
@@ -1122,7 +1080,6 @@ class DataAccessor():
 
   @classmethod
   def __updateUserInfo(cls, data, user):
-    print("__updateUserInfo", user, data)
     valuesSaved = {"JobForCompany":{}, "LabelForCompany":{}}
     message, userProfile = None, UserProfile.objects.get(userNameInternal=user)
     if "UserProfile" in data and data["UserProfile"]:
@@ -1168,7 +1125,6 @@ class DataAccessor():
 
   @classmethod
   def __changeUserProfileName(cls, user, userProfile, newUserName):
-    print("__changeUserProfileName", userProfile, newUserName)
     sameLogin = User.objects.filter(username=newUserName)
     if len(sameLogin) == 1:
       if sameLogin[0].id == user.id: return None
@@ -1214,7 +1170,6 @@ class DataAccessor():
 
   @classmethod
   def removeLabelForCompany(cls, labelId, user):
-    print("removeLabelForCompany", user, labelId)
     company = UserProfile.objects.get(userNameInternal=user).Company
     label = LabelForCompany.objects.get(id=labelId)
     file = File.objects.filter(nature="labels", Company=company, name=label.Label.name)
@@ -1228,7 +1183,6 @@ class DataAccessor():
 
   @classmethod
   def __modifyDisponibility(cls, listValue, user):
-    print("modifyDisponibility", listValue)
     company, messages = UserProfile.objects.get(userNameInternal=user).Company, {}
     if company.Role.id == 1:
       return {"modifyDisponibility":"Error", "messages":f"User company is not sub contractor {company.name}"}
@@ -1248,11 +1202,9 @@ class DataAccessor():
 
   @classmethod
   def __boostPost(cls, dictValue, user=False):
-    print("boostPost")
     post = Post.objects.filter(id=dictValue["postId"])
     if post:
       post = post[0]
-      print("duration", dictValue["duration"])
       if dictValue["duration"]:
         date = datetime.now() + timedelta(days=dictValue["duration"], hours=0)
       else:
@@ -1322,7 +1274,6 @@ class DataAccessor():
   def askRecommandation(cls, mail, currentUser, view):
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     response = SmtpConnector(cls.portSmtp).askRecomandation(mail, userProfile.firstName, userProfile.lastName, userProfile.Company.name, userProfile.Company.id, view)
-    print("askRecommandation dataAccessor", response)
 
     if "status" in response and response["status"]:
       return  {"askRecommandation":"OK", "messages": f"Demande de recommandation envoyée"}
@@ -1331,7 +1282,6 @@ class DataAccessor():
   @classmethod
   def giveRecommandation(cls, data):
     del data["action"]
-    print("giveRecommandation", data)
     company = Company.objects.get(id=data["companyRecommanded"])
     name = "Un sous-traitant à la recherche d'une entreprise" if data['view'] == "ST" else "Une entreprise à la recherche de sous-traitances"
     data['view'] = Role.objects.get(name = name)
@@ -1360,14 +1310,12 @@ class DataAccessor():
   #   else:
   #     Notification.createAndSend(Company=company, subContractor=subContractor, title="Modification de la mission", nature="ST", Role="PME", content=f"La société {subContractor.name} vient de vous évaluer pour le chantier du {mission.address}.", timestamp=datetime.now().timestamp())
   #     listMission = [(mission.vibeST + mission.securityST + mission.organisationST) / 3 for mission in Mission.objects.filter(Company=company, isClosed=True)]
-  #     print("listMission", listMission)
   #     company.starsPME = round(sum(listMission)/len(listMission)) if len(listMission) else 0
   #     company.save()
   #   return False
 
   @classmethod
   def giveNotificationToken(cls, token, currentUser):
-    print("giveNotificationToken", token, currentUser.id)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     userProfile.tokenNotification = token
     userProfile.save()
