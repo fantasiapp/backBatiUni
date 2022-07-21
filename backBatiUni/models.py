@@ -1016,7 +1016,7 @@ class File(CommonModel):
       objectFile = cls.objects.create(nature=nature, name=name, path=path, ext=ext, Company=company, expirationDate=expirationDate, Post=post, Mission=mission, Supervision=supervision)
     if fileStr:
       returnValue, update = TreatFile.createFileWidthb64(objectFile, fileStr, user, queryName)
-      if company and update and update["Siret"].strip("") != company.siret.strip(""):
+      if company and update and update["Siret"].replace(" ", "") != company.siret.replace(" ", ""):
         print("createFile", returnValue, update, update["Siret"].strip(""), company.siret.strip(""))
         TreatFile(objectFile).removeOldFile(True)
         objectFile.delete()
