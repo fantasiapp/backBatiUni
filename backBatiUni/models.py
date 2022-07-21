@@ -1029,9 +1029,10 @@ class File(CommonModel):
 
   @classmethod
   def __updateWithKbis(cls, company, objectFile, update):
-    "A vérifier si les Kbis sont les mêmes"
     if os.getenv('PATH_MIDDLE'):
+      print("__updateWithKbis", update["address"])
       dictCoord = getCoordinatesFrom(update["address"])
+      print("__updateWithKbis", dictCoord)
       if dictCoord["getCoordinatesFrom"] == "OK":
         company.address = dictCoord["address"]
         company.latitude = dictCoord["latitude"]
