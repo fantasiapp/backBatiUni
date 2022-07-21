@@ -1084,12 +1084,10 @@ class DataAccessor():
 
   @classmethod
   def __updateUserInfo(cls, data, user):
-    print("modifyUser", data)
     valuesSaved = {"JobForCompany":{}, "LabelForCompany":{}}
     message, userProfile = None, UserProfile.objects.get(userNameInternal=user)
     if "UserProfile" in data and data["UserProfile"]:
       valuesSaved = cls.__setValuesForUser(data["UserProfile"], user, message, userProfile, valuesSaved)
-      print("modifyUser", valuesSaved)
       if message:
         return {"modifyUser":"Warning", "messages":message}
       company = userProfile.Company
@@ -1103,7 +1101,6 @@ class DataAccessor():
     
   @classmethod
   def __setValuesForUser(cls, dictValue, user, message, objectInstance, valuesSaved):
-    print("__setValuesForUser", objectInstance)
     for fieldName, value in dictValue.items():
       valueToSave = value
       if fieldName != "id": 
@@ -1127,7 +1124,6 @@ class DataAccessor():
             valueToSave = float(value) if value else None
             
           if valueToSave != objectInstance.getAttr(fieldName):
-            print("save", objectInstance, fieldName, valueToSave)
             objectInstance.setAttr(fieldName, valueToSave)
             objectInstance.save()
     return valuesSaved
