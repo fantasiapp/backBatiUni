@@ -1022,7 +1022,7 @@ class File(CommonModel):
         TreatFile(objectFile).removeOldFile(True)
         objectFile.delete()
         return {queryName:"warning", "messages":"Le numéro de Siret n'est pas conforme"}
-      else:
+      elif update:
         cls.__updateWithKbis(company, objectFile, update)
       return returnValue
     return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), user, True)}
