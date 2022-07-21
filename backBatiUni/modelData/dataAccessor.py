@@ -131,7 +131,7 @@ class DataAccessor():
     if not "@" in data["email"]:
       data["email"] += "@g.com"
     test1 = os.getenv('STRIPE_API_KEY')
-    test2 = os.getenv('DB_NAME')
+    test2 = os.getenv('PORT_SMTP')
     print("stripe key inside", stripe.api_key, test1, test2)
     customer = stripe.Customer.create(name = data["company"], email = data["email"])
     company = Company.objects.create(name=data["company"], siret=data['siret'], stripeCustomerId = customer.id)
