@@ -1103,6 +1103,7 @@ class DataAccessor():
     
   @classmethod
   def __setValuesForUser(cls, dictValue, user, message, objectInstance, valuesSaved):
+    print("__setValuesForUser", objectInstance)
     for fieldName, value in dictValue.items():
       valueToSave = value
       if fieldName != "id": 
@@ -1124,7 +1125,9 @@ class DataAccessor():
             valueToSave = int(value) if value else None
           elif fieldObject and isinstance(fieldObject, models.FloatField):
             valueToSave = float(value) if value else None
+            
           if valueToSave != objectInstance.getAttr(fieldName):
+            print("save", objectInstance, fieldName, valueToSave)
             objectInstance.setAttr(fieldName, valueToSave)
             objectInstance.save()
     return valuesSaved
