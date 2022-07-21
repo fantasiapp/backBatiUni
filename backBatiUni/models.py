@@ -1018,7 +1018,7 @@ class File(CommonModel):
     if fileStr:
       returnValue, update = TreatFile.createFileWidthb64(objectFile, fileStr, user, queryName)
       print(company)
-      if company and update and update["siret"] != company.siret:
+      if company and update and update["Siret"] != company.siret:
         TreatFile(objectFile).removeOldFile(True)
         objectFile.delete()
         return {queryName:"warning", "messages":"Le numéro de Siret n'est pas conforme"}
