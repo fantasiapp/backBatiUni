@@ -415,6 +415,28 @@ class UserProfile(CommonModel):
   def filter(cls, user):
     return [UserProfile.objects.get(userNameInternal=user)]
 
+  def computeValues(self, listFields, user, dictFormat=False):
+    values = []
+    for field in listFields:
+      if field == "Company": values.append(self.Company.id if self.Company else "")
+      elif field == "userName": values.append(self.userNameInternal.username if self.userNameInternal else "")
+      elif field == "firstName": values.append(self.firstName)
+      elif field == "lastName": values.append(self.lastName)
+      elif field == "proposer": values.append(self.proposer if self.proposer else "")
+      elif field == "cellPhone": values.append(self.cellPhone if self.cellPhone else "")
+      elif field == "tokenNotification": values.append(self.tokenNotification if self.tokenNotification else "")
+      elif field == "email": values.append(self.email)
+      elif field == "function": values.append(self.function if self.function else "")
+      elif field == "tokenFriend": values.append(self.tokenFriend)
+
+      elif field in self.manyToManyObject:
+        if field == "FavoritePost":
+          listModel = [favorite.postId for favorite in FavoritePost.objects.filter(UserProfile=self)]
+        else:
+          listModel = [viewed.postId for viewed in ViewPost.objects.filter(UserProfile=self)]
+        values.append(listModel)
+    return values
+
 class FavoritePost(CommonModel):
   UserProfile = models.ForeignKey(UserProfile, related_name='UserProfileforFavorite', on_delete=models.PROTECT, null=True, default=None)
   postId = models.IntegerField("id du Post", blank=True, null=True, default=None)

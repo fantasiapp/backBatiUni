@@ -19,7 +19,7 @@ userName, password = "jlw", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 5
+numberCompanies = 20
 emailList, missionList, emailListPME, emailListST, detailedPost, candidateToUnapply, labelList = {}, {}, [], [], {}, None, {}
 
 arguments = sys.argv
@@ -292,7 +292,7 @@ def executeQuery():
       response = requests.post(url, headers=headers, json=post)
     elif query == "uploadFile":
       file1 = {'action':"uploadFile", "ext":"png", "name":"qualibat", "fileBase64":getDocStr(0), "nature":"labels", "expirationDate":"2022-02-12"}
-      file2 = {'action':"uploadFile", "ext":"png", "name":"Kbis", "fileBase64":getDocStr(1), "nature":"admin", "expirationDate":"2022-02-12"}
+      file2 = {'action':"uploadFile", "ext":"pdf", "name":"Kbis", "fileBase64":getDocStr(8), "nature":"admin", "expirationDate":"2022-07-12"}
       file4 = {'action':"uploadFile", "ext":"svg", "name":"Document technique", "fileBase64":getDocStr(4), "nature":"post", "Post":2}
       file5 = {'action':"uploadFile", "ext":"jpg", "name":"Plan", "fileBase64":getDocStr(2), "nature":"post", "Post":2}
       requests.post(url, headers=headersPme, json=file2)
@@ -305,8 +305,8 @@ def executeQuery():
       for file in [file1, file2, file4, file5]:
         response = requests.post(url, headers=headers, json=file)
         data = json.loads(response.text)
-    elif query == "modifyFile":
-      response = requests.post(url, headers=headers, json={'action':"modifyFile", "fileId":4, "expirationDate":"2022-12-12"})
+    # elif query == "modifyFile":
+    #   response = requests.post(url, headers=headers, json={'action':"modifyFile", "fileId":4, "expirationDate":"2022-12-12"})
     elif query == "downloadFile":
       requests.get(url, headers=headers, params={"action":"downloadFile", "id":1})
       response = None
@@ -487,7 +487,7 @@ def executeQuery():
   else:
     print("no answer")
 if query == "all":
-  keys = ["buildDB", "register", "getGeneralData", "registerMany", "removeLabelForCompany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "deletePost", "modifyPost", "getPost", "setFavorite", "removeFavorite", "uploadFile", "modifyFile", "downloadFile", "switchDraft", "isViewed", "applyPost", "unapplyPost", "handleCandidateForPost", "signContract", "modifyMissionDate", "validateMissionDate", "createSupervision", "uploadImageSupervision", "modifyDetailedPost", "modifyDisponibility", "closeMission", "closeMissionST", "boostPost", "blockCompany", "askRecommandation", "giveRecommandation", "giveNotificationToken"]#
+  keys = ["buildDB", "register", "getGeneralData", "registerMany", "removeLabelForCompany", "modifyUser", "changeUserImage", "getUserData", "uploadPost", "deletePost", "modifyPost", "getPost", "setFavorite", "removeFavorite", "uploadFile", "modifyFile", "downloadFile", "switchDraft", "isViewed", "applyPost", "unapplyPost", "handleCandidateForPost", "signContract", "modifyMissionDate", "validateMissionDate", "createSupervision", "uploadImageSupervision", "modifyDetailedPost", "modifyDisponibility", "closeMission", "closeMissionST", "boostPost", "blockCompany", "askRecommandation", "giveRecommandation", "giveNotificationToken"]# 
   for key in keys:
     query = key
     executeQuery()
