@@ -32,6 +32,7 @@ import requests
 from bs4 import BeautifulSoup
 
 stripe.api_key = os.getenv('STRIPE_API_KEY')
+print("stripe key", stripe.api_key)
 
 class DataAccessor():
   loadTables = {"user":[UserProfile, Company, JobForCompany, LabelForCompany, File, Post, Candidate, DetailedPost, DatePost, Mission, Disponibility, Supervision, Notification, BlockedCandidate, Recommandation], "general":[Job, Role, Label]}
@@ -126,8 +127,10 @@ class DataAccessor():
 
   @classmethod
   def __registerAction(cls, data, token):
+    print("register action")
     if not "@" in data["email"]:
       data["email"] += "@g.com"
+    print("stripe key inside", stripe.api_key)
     customer = stripe.Customer.create(name = data["company"], email = data["email"])
     company = Company.objects.create(name=data["company"], siret=data['siret'], stripeCustomerId = customer.id)
     company.Role = Role.objects.get(id=data['Role'])
