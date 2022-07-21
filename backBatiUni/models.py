@@ -1014,11 +1014,10 @@ class File(CommonModel):
       objectFile.save()
     else:
       objectFile = cls.objects.create(nature=nature, name=name, path=path, ext=ext, Company=company, expirationDate=expirationDate, Post=post, Mission=mission, Supervision=supervision)
-    print("createFile, fileStr", len(fileStr) if fileStr else "No file")
     if fileStr:
       returnValue, update = TreatFile.createFileWidthb64(objectFile, fileStr, user, queryName)
-      print(company)
-      if company and update and update["Siret"] != company.siret:
+      print("createFile", returnValue, update)
+      if company and update and update["Siret"].strip() != company.siret.strip():
         TreatFile(objectFile).removeOldFile(True)
         objectFile.delete()
         return {queryName:"warning", "messages":"Le numéro de Siret n'est pas conforme"}
@@ -1030,9 +1029,7 @@ class File(CommonModel):
   @classmethod
   def __updateWithKbis(cls, company, objectFile, update):
     if os.getenv('PATH_MIDDLE'):
-      print("__updateWithKbis", update["address"])
       dictCoord = getCoordinatesFrom(update["address"])
-      print("__updateWithKbis", dictCoord)
       if dictCoord["getCoordinatesFrom"] == "OK":
         company.address = dictCoord["address"]
         company.latitude = dictCoord["latitude"]

@@ -33,13 +33,6 @@ from bs4 import BeautifulSoup
 
 stripe.api_key = STRIPE_API_KEY
 
-
-# load_dotenv()
-# if os.getenv('PATH_MIDDLE'):
-#   sys.path.append(os.getenv('PATH_MIDDLE'))
-#   from profileScraping import getEnterpriseDataFrom
-#   from geocoding import getCoordinatesFrom # argument str address
-
 class DataAccessor():
   loadTables = {"user":[UserProfile, Company, JobForCompany, LabelForCompany, File, Post, Candidate, DetailedPost, DatePost, Mission, Disponibility, Supervision, Notification, BlockedCandidate, Recommandation], "general":[Job, Role, Label]}
   dictTable = {}
@@ -570,6 +563,7 @@ class DataAccessor():
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     viewPost = ViewPost.objects.filter(UserProfile=userProfile, postId=postId)
     if not viewPost:
+      print("isViewed", userProfile.id, postId)
       ViewPost.objects.create(UserProfile=userProfile, postId=postId)
     return {"isViewed":"OK"}
 
