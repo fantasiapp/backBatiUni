@@ -1037,7 +1037,7 @@ class File(CommonModel):
     else:
       objectFile = cls.objects.create(nature=nature, name=name, path=path, ext=ext, Company=company, expirationDate=expirationDate, Post=post, Mission=mission, Supervision=supervision)
     if fileStr:
-      returnValue, update = TreatFile.createFileWidthb64(objectFile, fileStr, user, queryName, expirationDate)
+      returnValue, update = TreatFile.createFileWidthb64(objectFile, fileStr, user, queryName)
       if update:
         if company and update["Siret"].replace(" ", "") != company.siret.replace(" ", ""):
           print("createFile", returnValue, update, update["Siret"].strip(""), company.siret.strip(""))
@@ -1048,10 +1048,7 @@ class File(CommonModel):
         returnValue["companyId"] = company.id
       elif update:
         cls.__updateWithKbis(company, objectFile, update)
-        # """Un patch horible car la date est mise trop tard"""
-        # if "KbisDate" in returnValue:
-        #   returnValue[objectFile.id][3] = update["kBisDate"]
-        # print("createFile", returnValue)
+
       return returnValue
     return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), user, True)}
 
