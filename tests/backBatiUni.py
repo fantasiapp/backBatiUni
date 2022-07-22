@@ -12,8 +12,6 @@ import math
 from datetime import datetime, timedelta, date
 import stripe
 
-stripe.api_key = 'sk_test_51LI7b7GPflszP2pB2F62OC6fyGjgMOTVhQDI19vVqDYEONZmLdDi9KXlQ3bkdgl23t5HsH0FABc7rMHmINenlwV100GfMpz5ec'
-
 # userName, password = "st@g.com", "pwd"
 userName, password = "jlw", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
@@ -43,6 +41,8 @@ if len(arguments) > 1:
 if len(arguments) > 2:
   query = arguments[2]
 
+stripe.api_key = STRIPE_API_KEY
+
 def queryForToken(userName, password):
   tokenUrl = f'{address}/api-token-auth/'
   headers = {'Content-Type': 'application/json'}
@@ -71,7 +71,6 @@ def executeQuery():
       token = queryForToken("jlw", "pwd")
       print("user jlw", address)
       if host != "local":
-        stripe.api_key = STRIPE_API_KEY
         while customers := stripe.Customer.list(limit=100):
           for customer in customers.data:
               stripe.Customer.delete(customer.id)
