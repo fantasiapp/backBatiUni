@@ -1048,7 +1048,7 @@ class File(CommonModel):
         returnValue["companyId"] = company.id
       elif update:
         cls.__updateWithKbis(company, objectFile, update)
-
+      print("returnValue", returnValue)
       return returnValue
     return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), user, True)}
 

@@ -68,17 +68,12 @@ class TreatFile:
       return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}, None
     try :
       if objectFile.name == "Kbis":
-        print("createFileWidthb64 Kbis")
         status, value = detectObject.__readFromQrCode()
-        print("createFileWidthb64 Kbis", value)
         objectFile.expirationDate = datetime.strptime(value["kBisDate"], "%d/%m/%Y")
-        print("date", datetime.strptime(value["kBisDate"],"%d/%m/%Y"))
         objectFile.save()
-        print("createFileWidthb64 Kbis", status, value)
         if not status:
           if objectFile: objectFile.delete()
           return {"uploadFile":"Error", "messages":f"{value}"}, None
-      print("createFileWidthb64 response", {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}, value)
       return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}, value
     except:
       if objectFile:
@@ -171,7 +166,6 @@ class TreatFile:
 
   def __computeResultFromQrCode(self, link, lines):
     response = self.__computeResultFromKbisWithLink(link)
-    print("__computeResultFromQrCode, response")
     if response:
       beforeDate, beforeName, beforeRcs = False, False, False
       for line in lines:
