@@ -70,6 +70,7 @@ class TreatFile:
       if objectFile.name == "Kbis":
         print("createFileWidthb64 Kbis")
         status, value = detectObject.__readFromQrCode()
+        print("createFileWidthb64 Kbis", value)
         objectFile.expirationDate = datetime.strptime(value["kBisDate"], "%Y-%m-%d")
         objectFile.save()
         print("createFileWidthb64 Kbis", status, value)
