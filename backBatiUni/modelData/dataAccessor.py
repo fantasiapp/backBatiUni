@@ -62,6 +62,7 @@ class DataAccessor():
 
   @classmethod
   def register(cls, data):
+    print("register")
     if "again" in data and data["again"]:
       return cls.registerAgain(data)
     message = cls.__registerCheck(data, {})
