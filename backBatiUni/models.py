@@ -1045,10 +1045,9 @@ class File(CommonModel):
           objectFile.delete()
           return {queryName:"warning", "messages":"Le numéro de Siret n'est pas conforme"}
         returnValue["address"] = update["address"]
-        returnValue["companyId"] = company.id
+        returnValue["companyId"] = {company.id:company.computeValues(company.listFields(), user, True)}
       elif update:
         cls.__updateWithKbis(company, objectFile, update)
-      print("returnValue", returnValue)
       return returnValue
     return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), user, True)}
 
