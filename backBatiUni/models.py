@@ -1040,14 +1040,12 @@ class File(CommonModel):
       returnValue, update = TreatFile.createFileWidthb64(objectFile, fileStr, user, queryName)
       if update:
         if company and update["Siret"].replace(" ", "") != company.siret.replace(" ", ""):
-          print("createFile", returnValue, update, update["Siret"].strip(""), company.siret.strip(""))
           TreatFile(objectFile).removeOldFile(True)
           objectFile.delete()
           return {queryName:"warning", "messages":"Le numéro de Siret n'est pas conforme"}
-        returnValue["address"] = update["address"]
-        returnValue["companyId"] = {company.id:company.computeValues(company.listFields(), user, True)}
-      elif update:
         cls.__updateWithKbis(company, objectFile, update)
+        returnValue["Company"] = {company.id:company.computeValues(company.listFields(), user, True)}
+      print("returnValue", returnValue)
       return returnValue
     return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), user, True)}
 
