@@ -71,7 +71,8 @@ class TreatFile:
         print("createFileWidthb64 Kbis")
         status, value = detectObject.__readFromQrCode()
         print("createFileWidthb64 Kbis", value)
-        objectFile.expirationDate = datetime.strptime(value["kBisDate"], "%Y-%m-%d")
+        objectFile.expirationDate = datetime.strptime(value["kBisDate"], "%m/%d/%Y")
+        print("date", datetime.strptime(value["kBisDate"], "%m/%d/%Y"))
         objectFile.save()
         print("createFileWidthb64 Kbis", status, value)
         if not status:
@@ -180,6 +181,7 @@ class TreatFile:
 
   def __computeResultFromQrCode(self, link, lines):
     response = self.__computeResultFromKbisWithLink(link)
+    print("__computeResultFromQrCode, response")
     if response:
       beforeDate, beforeName, beforeRcs = False, False, False
       for line in lines:
