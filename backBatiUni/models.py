@@ -1045,6 +1045,10 @@ class File(CommonModel):
         return {queryName:"warning", "messages":"Le numéro de Siret n'est pas conforme"}
       elif update:
         cls.__updateWithKbis(company, objectFile, update)
+        """Un patch horible car la date est mise trop tard"""
+        if "KbisDate" in returnValue:
+          returnValue[objectFile.id][3] = update["kBisDate"]
+        print("createFile", returnValue)
       return returnValue
     return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), user, True)}
 
@@ -1062,8 +1066,6 @@ class File(CommonModel):
         company.longitude = 0.0
     objectFile.expirationDate = datetime.datetime.strptime(update["kBisDate"], "%d/%m/%Y")
     objectFile.save()
-
-
 
   @classmethod
   def __getPathAndName(cls, name, nature, userProfile, ext, post, mission, supervision):

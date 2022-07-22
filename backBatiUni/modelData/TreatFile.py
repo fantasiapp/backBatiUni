@@ -11,6 +11,7 @@ import whatimage
 import pyheif
 from PIL import Image
 from cairosvg import svg2png
+from datetime import datetime
 
 class TreatFile:
   file = None
@@ -47,26 +48,6 @@ class TreatFile:
       listPage = [filePath]
     return listPage
 
-  @classmethod
-  def getPathAndName(cls, name, nature, userProfile, ext, post, mission, supervision):
-    path= None
-    if nature == "userImage":
-      path = cls.dictPath[nature] + userProfile.Company.name + '_' + str(userProfile.Company.id) + '.' + ext
-    if nature in ["labels", "admin"]:
-      path = cls.dictPath[nature] + name + '_' + str(userProfile.Company.id) + '.' + ext
-    if nature == "post":
-      path = cls.dictPath[nature] + name + '_' + str(post.id) + '.' + ext
-    if nature == "supervision":
-      endName = '_' + str(mission.id) if mission else '_N'
-      endName += '_' + str(supervision.id) if supervision else '_N'
-      objectFiles = File.objects.filter(nature=nature, Supervision=supervision)
-      endName += "_" + str(len(objectFiles))
-      name +=  endName
-      path = cls.dictPath[nature] + name + '.' + ext
-    if nature == "contract":
-      path = cls.dictPath[nature] + name + '_' + str(mission.id) + '.' + ext
-    return path, name, mission
-
   def removeOldFile(self, suppress):
     oldPath = self.file.path
     if os.path.exists(oldPath) and suppress:
@@ -88,7 +69,9 @@ class TreatFile:
     try :
       if objectFile.name == "Kbis":
         print("createFileWidthb64 Kbis")
-        status, value = detectObject.__readFromQrCode()
+        status, value = detectObject.__readFromQrCode()-
+        objectFile.expirationDate = datetime.strptime(value["kBisDate"], "%Y-%m-%d")
+        objectFile.save()
         print("createFileWidthb64 Kbis", status, value)
         if not status:
           if objectFile: objectFile.delete()
