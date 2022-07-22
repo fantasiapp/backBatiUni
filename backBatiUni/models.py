@@ -9,7 +9,7 @@ import requests
 from time import sleep, time
 from copy import deepcopy
 import json
-from svglib.svglib import svg2rlg
+# from svglib.svglib import svg2rlg
 from .modelData.TreatFile import TreatFile
 
 import sys
