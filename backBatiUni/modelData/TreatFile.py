@@ -143,10 +143,13 @@ class TreatFile:
 
   def __readFromQrCode(self):
     url, linkKbis = self.__getUrlFromQrCode(), None
+    print("__readFromQrCode", url)
     if url:
       try:
+        print("_readFromQrCode try1 OK")
         request = requests.get(url, headers=self.headersKbis)
       except:
+        print("_readFromQrCode try1")
         return (False, "unrecognize url")
       html = request.content.decode()
       soup = BeautifulSoup(html, features="html.parser")
@@ -154,19 +157,23 @@ class TreatFile:
         link = element.get('href')
         if self.linkElementKbis in link:
           linkKbis = self.startLinkKbis + link
-
+      print("trace2")
       textInHtml = soup.get_text()
       lines = [line.strip() for line in textInHtml.splitlines() if line.strip()]
       finalText = "\n".join(lines)
-
+      print("trace3")
       if self.obsoleteKbis in finalText :
+        print("1")
         return False, "Le KBis est obsolette, il date de plus de 3 mois"
       if self.noDocumentKbis in finalText :
+        print("2")
         return False, "Le KBis n'est pas reconnu"
       if linkKbis:
         response = self.__computeResultFromQrCode(linkKbis, lines)
         if response:
+          print("3")
           return True, response
+    print("4")
     return False, "Le KBis n'est pas reconnu"
 
 
