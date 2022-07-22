@@ -169,6 +169,7 @@ class TreatFile:
         print("2")
         return False, "Le KBis n'est pas reconnu"
       if linkKbis:
+        print("link", linkKbis)
         response = self.__computeResultFromQrCode(linkKbis, lines)
         if response:
           print("3")
