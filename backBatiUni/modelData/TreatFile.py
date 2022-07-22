@@ -91,6 +91,7 @@ class TreatFile:
         if not status:
           if objectFile: objectFile.delete()
           return {"uploadFile":"Error", "messages":f"{value}"}, None
+      print("createFileWidthb64 response", {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}, value)
       return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}, value
     except:
       if objectFile:

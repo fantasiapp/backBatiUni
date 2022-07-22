@@ -19,7 +19,7 @@ userName, password = "jlw", "pwd"
 # userName, password = "jeanluc.walter@fantasiapp.com", "123456Aa"
 address = 'http://localhost:8000'
 query = "token"
-numberCompanies = 50
+numberCompanies = 10
 emailList, missionList, emailListPME, emailListST, detailedPost, candidateToUnapply, labelList = {}, {}, [], [], {}, None, {}
 
 arguments = sys.argv
@@ -276,7 +276,7 @@ def executeQuery():
           
 
     elif query == "modifyPost":
-      post = {'action':"modifyPost", "id":1, "address":"126 rue de Paris 92100 Boulogne", "Job":5, "numberOfPeople":2, "dueDate":f"2022-03-15", "startDate":f"2022-03-16", "endDate":f"2022-04-28", "manPower":False, "counterOffer":False, "hourlyStart":"07:00", "hourlyEnd":"17:00", "currency":"€", "description":"Deuxième description d'un chantier", "amount":24456.10, "DetailedPost":["salle de bain", "douche", "lavabo"], "DatePost":[f"2022-06-15", f"2022-06-16", f"2022-06-17"]}
+      post = {'action':"modifyPost", "id":1, "address":"126 rue de Paris 92100 Boulogne", "Job":5, "numberOfPeople":2, "dueDate":f"2022-{nextMonth}-15", "startDate":f"2022-{nextMonth}-16", "endDate":f"2022-{nextMonth}-28", "manPower":False, "counterOffer":False, "hourlyStart":"07:00", "hourlyEnd":"17:00", "currency":"€", "description":"Deuxième description d'un chantier", "amount":24456.10, "DetailedPost":["salle de bain", "douche", "lavabo"], "DatePost":[f"2022-{nextMonth}-15", f"2022-{nextMonth}-16", f"2022-{nextMonth}-17"]}
       response = requests.post(url, headers=headers, json=post)
     elif query == "setFavorite":
       requests.get(url, headers=headers, params={'action':"setFavorite", "value":"true", "Post":2})
@@ -293,7 +293,7 @@ def executeQuery():
       response = requests.get(url, headers=headers, params={'action':"setFavorite", "value":"false", "Post":3})
     elif query == "deletePost":
       print("deletePost")
-      post = {'action':"uploadPost", "address":"129 rue de Paris 92100 Boulogne", "Job":9, "numberOfPeople":3, "dueDate":f"2022-02-15", "startDate":f"2022-02-16", "endDate":f"2022-02-28", "manPower":True, "counterOffer":True, "hourlyStart":"7:30", "hourlyEnd":"17:30", "currency":"€", "description":"Première description d'un chantier", "amount":65243.10, "DetailedPost":["lavabo", "baignoire"]}
+      post = {'action':"uploadPost", "address":"129 rue de Paris 92100 Boulogne", "Job":9, "numberOfPeople":3, "dueDate":f"2022-{nextMonth}-15", "startDate":f"2022-{nextMonth}-16", "endDate":f"2022-{nextMonth}-28", "manPower":True, "counterOffer":True, "hourlyStart":"7:30", "hourlyEnd":"17:30", "currency":"€", "description":"Première description d'un chantier", "amount":65243.10, "DetailedPost":["lavabo", "baignoire"]}
       response = requests.post(url, headers=headers, json=post)
       for key in json.loads(response.text).keys():
         if key != "uploadPost":
