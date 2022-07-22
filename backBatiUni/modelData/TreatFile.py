@@ -87,7 +87,9 @@ class TreatFile:
       return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}, None
     try :
       if objectFile.name == "Kbis":
+        print("createFileWidthb64 Kbis")
         status, value = detectObject.__readFromQrCode()
+        print("createFileWidthb64 Kbis", status, value)
         if not status:
           if objectFile: objectFile.delete()
           return {"uploadFile":"Error", "messages":f"{value}"}, None
