@@ -131,7 +131,6 @@ class Webhook(DefaultView):
           DataAccessor.dataPost(json.dumps(boostPostDict), False)
           return Response({"payment_intent.succeeded": "OK"})
       elif event['type'] ==  'customer.subscription.created':
-        print(event)
         subscribeDict = {
           "action": "updateSubscribe",
           "status": event['data']['object']['status'],
@@ -141,7 +140,6 @@ class Webhook(DefaultView):
         DataAccessor.dataPost(json.dumps(subscribeDict), False)
         return Response({"Error": f"Not implemented yet"}, status=400)
       elif event['type'] ==  'customer.subscription.updated':
-        print(event)
         updateSubscribeDict = {
           "action": "updateSubscribe",
           "status": event['data']['object']['status'],
