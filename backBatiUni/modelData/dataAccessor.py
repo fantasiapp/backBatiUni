@@ -207,6 +207,8 @@ class DataAccessor():
       elif data["action"] == "notificationPostViewed": return cls.__notificationPostViewed(data, currentUser)
       elif data["action"] == "boostPost": return cls.__boostPost(data, currentUser)
       elif data["action"] == "subscribeUser": return cls.__subscribeUser(data, currentUser)
+      elif data["action"] == "updateSubscribeUser": return cls.__updateSubscribeUser(data, currentUser)
+
       return {"dataPost":"Error", "messages":f"unknown action in post {data['action']}"}
     return {"dataPost":"Error", "messages":"no action in post"}
 
@@ -1232,6 +1234,14 @@ class DataAccessor():
     
   @classmethod
   def __subscribeUser(cls, data, user):
+    company = Company.objects.get(stripeCustomerId = data["stripeCustomerId"])
+    company.stripeSubscriptionId = data["id"]
+    company.stripeSubscriptionStatus = data["status"]
+    company.save()
+    return {"subscribeUser": "OK"}
+
+  @classmethod
+  def __updateSubscribeUser(cls, data, user):
     company = Company.objects.get(stripeCustomerId = data["stripeCustomerId"])
     company.stripeSubscriptionId = data["id"]
     company.stripeSubscriptionStatus = data["status"]
