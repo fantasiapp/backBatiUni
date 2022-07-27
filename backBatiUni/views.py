@@ -111,7 +111,7 @@ class Payment(DefaultView):
 class Webhook(DefaultView):
   permission_classes = (AllowAny,)
   def get(self, request):
-    return Response({"Error": f"Not implemented yet"})
+    return Response({"Error": f"Not implemented yet"}, status=400)
 
   def post(self, request):
     jsonBin = request.body
@@ -129,21 +129,22 @@ class Webhook(DefaultView):
             "duration": int(payment_intent["metadata"]["duration"])
           }
           DataAccessor.dataPost(json.dumps(boostPostDict), False)
+          return Response({"payment_intent.succeeded": "OK"})
       elif event['type'] ==  'customer.subscription.created':
         subscribeDict = {
           "action": "subscribe"
         }
         DataAccessor.dataPost(json.dumps(subscribeDict), False)
-        return Response({"Error": f"Not implemented yet"})
+        return Response({"Error": f"Not implemented yet"}, status=400)
       elif event['type'] ==  'customer.subscription.updated':
-        return Response({"Error": f"Not implemented yet"})
+        return Response({"Error": f"Not implemented yet"}, status=400)
       elif event['type'] ==  'customer.subscription.deleted':
-        return Response({"Error": f"Not implemented yet"})      
+        return Response({"Error": f"Not implemented yet"}, status=400)      
       else:
         # Unexpected event type
         print(f"Unhandled event type {event['type']}")
 
-    return Response({"Error": "Not yet implemented"})
+    return Response({"Error": "Not yet implemented"}, status=400)
 
 class Subscription(DefaultView):
   def get(self, request):
