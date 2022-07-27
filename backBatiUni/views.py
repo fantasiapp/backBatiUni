@@ -132,7 +132,7 @@ class Webhook(DefaultView):
           return Response({"payment_intent.succeeded": "OK"})
       elif event['type'] ==  'customer.subscription.created':
         subscribeDict = {
-          "action": "updateSubscribe",
+          "action": "subscribeUser",
           "status": event['data']['object']['status'],
           "id": event['data']['object']['id'],
           "stripeCustomerId": event['data']['object']['customer']
@@ -141,7 +141,7 @@ class Webhook(DefaultView):
         return Response({"Error": f"Not implemented yet"}, status=400)
       elif event['type'] ==  'customer.subscription.updated':
         updateSubscribeDict = {
-          "action": "updateSubscribe",
+          "action": "updateSubscribeUser",
           "status": event['data']['object']['status'],
           "id": event['data']['object']['id'],
           "stripeCustomerId": event['data']['object']['customer']
