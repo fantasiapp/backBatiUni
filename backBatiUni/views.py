@@ -133,7 +133,10 @@ class Webhook(DefaultView):
       elif event['type'] ==  'customer.subscription.created':
         print(event)
         subscribeDict = {
-          "action": "subscribe"
+          "action": "subscribe",
+          "status": event.data.object.status,
+          "id": event.data.object.id,
+          "stripeCustomerId": event.data.object.customer
         }
         DataAccessor.dataPost(json.dumps(subscribeDict), False)
         return Response({"Error": f"Not implemented yet"}, status=400)

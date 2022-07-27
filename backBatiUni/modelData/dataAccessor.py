@@ -1232,7 +1232,11 @@ class DataAccessor():
     
   @classmethod
   def __subscribeUser(cls, data, user):
-    return {"subscribeUser": "Not implemented yet"}
+    company = Company.objects.get(stripeCustomerId = data["stripeCustomerId"])
+    company.stripeSubscriptionId = data["id"]
+    company.stripeSubscriptionStatus = data["status"]
+    company.save()
+    return {"subscribeUser": "OK"}
 
   @classmethod
   def forgetPassword(cls, email):
