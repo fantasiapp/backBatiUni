@@ -486,7 +486,8 @@ class DataAccessor():
     if cls.__isDatePostNotValidated(datePost, detailedPost):
       return {"createSupervision":"Warning", "messages":"Date en attente de confirmation."}
     supervision = Supervision.objects.create(**kwargs)
-    cls.__addNewNotificationForMessage(userProfile, mission, f"Un nouveau message pour le chantier du {mission.address} vous attend.")
+    if "comment" in data and data["comment"]:
+      cls.__addNewNotificationForMessage(userProfile, mission, f"Un nouveau message pour le chantier du {mission.address} vous attend.")
     if supervision:
       return  cls.__supervisionAnswer(supervision, currentUser)
     return {"createSupervision":"Warning", "messages":"La supervision n'a pas été créée"}
@@ -1054,13 +1055,6 @@ class DataAccessor():
     objectFather = supervision.DetailedPost.DatePost if supervision.DetailedPost else supervision.DatePost
     if not isinstance(objectFather, DatePost):
       return {"uploadImageSupervision":"Error", "messages":"No detailedPost or DatePost in supervision"}
-    mission = objectFather.Mission
-    if mission.Company.id == userProfile.Company.id:
-      candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
-      subContractor = candidate.Company
-    #   profile = UserProfile.objects.get(Company=subContractor)
-    # else:
-    #   profile = UserProfile.objects.get(Company=mission.Company)
     profile = UserProfile.objects.get(userNameInternal=currentUser)
     cls.__addNewNotificationForMessage(profile, objectFather.Mission, f"Une nouvelle image pour le chantier du {objectFather.Mission.address} vous attend.")
     return message
