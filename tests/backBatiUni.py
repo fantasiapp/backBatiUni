@@ -72,6 +72,7 @@ def executeQuery():
       print("user jlw", address)
       if host != "local":
         while customers := stripe.Customer.list(limit=100):
+          print("supress 100 customer")
           for customer in customers.data:
               stripe.Customer.delete(customer.id)
         response = requests.get(f'{address}/createBase/', headers= {'Authorization': f'Token {token}'}, params={"action":"reload" if query == "buildDB" else "emptyDB"})
@@ -120,8 +121,9 @@ def executeQuery():
         role = 1 if random.random() < 0.5 else 2
         lastName = "Traitant" if role == 2 else "Entreprise"
         jobs = [math.floor(1 + random.random() * 40), math.floor(41 + random.random() * 40), math.floor(81 + random.random() * 60)]
+        size = math.floor(1 * 20 * random.random())
         # company = {"id":companyId, 'name':establishmentValue[0], 'address': establishmentValue[1], 'activity': establishmentValue[2], 'siret': establishmentValue[3], 'ntva': establishmentValue[4]}
-        post = {"action":"register", "firstname":firstName, "lastname":lastName, "email":mail, "password":"pwd", "company":establishmentValue[0], "siret": '85342059400014', "Role":role,"proposer":"","jobs":jobs}
+        post = {"action":"register", "firstname":firstName, "lastname":lastName, "email":mail, "password":"pwd", "company":establishmentValue[0], "siret": '85342059400014', "Role":role,"proposer":"","jobs":jobs, "size":size}
         userProfile = requests.post(url, headers=headers, json=post)
         success = json.loads(userProfile.text)
         if success['register'] == "OK":
