@@ -132,11 +132,21 @@ class Webhook(DefaultView):
           return Response({"payment_intent.succeeded": "OK"})
       elif event['type'] ==  'customer.subscription.created':
         subscribeDict = {
-          "action": "subscribe"
+          "action": "subscribeUser",
+          "status": event['data']['object']['status'],
+          "id": event['data']['object']['id'],
+          "stripeCustomerId": event['data']['object']['customer']
         }
         DataAccessor.dataPost(json.dumps(subscribeDict), False)
         return Response({"Error": f"Not implemented yet"}, status=400)
       elif event['type'] ==  'customer.subscription.updated':
+        updateSubscribeDict = {
+          "action": "updateSubscribeUser",
+          "status": event['data']['object']['status'],
+          "id": event['data']['object']['id'],
+          "stripeCustomerId": event['data']['object']['customer']
+        }
+        DataAccessor.dataPost(json.dumps(updateSubscribeDict), False)
         return Response({"Error": f"Not implemented yet"}, status=400)
       elif event['type'] ==  'customer.subscription.deleted':
         return Response({"Error": f"Not implemented yet"}, status=400)      
