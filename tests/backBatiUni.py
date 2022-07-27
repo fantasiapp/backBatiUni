@@ -121,9 +121,8 @@ def executeQuery():
         role = 1 if random.random() < 0.5 else 2
         lastName = "Traitant" if role == 2 else "Entreprise"
         jobs = [math.floor(1 + random.random() * 40), math.floor(41 + random.random() * 40), math.floor(81 + random.random() * 60)]
-        size = math.floor(1 * 20 * random.random())
         # company = {"id":companyId, 'name':establishmentValue[0], 'address': establishmentValue[1], 'activity': establishmentValue[2], 'siret': establishmentValue[3], 'ntva': establishmentValue[4]}
-        post = {"action":"register", "firstname":firstName, "lastname":lastName, "email":mail, "password":"pwd", "company":establishmentValue[0], "siret": '85342059400014', "Role":role,"proposer":"","jobs":jobs, "size":size}
+        post = {"action":"register", "firstname":firstName, "lastname":lastName, "email":mail, "password":"pwd", "company":establishmentValue[0], "siret": '85342059400014', "Role":role,"proposer":"","jobs":jobs}
         userProfile = requests.post(url, headers=headers, json=post)
         success = json.loads(userProfile.text)
         if success['register'] == "OK":
@@ -144,10 +143,11 @@ def executeQuery():
         capital = str(math.floor(10000 + random.random() * 100000))
         revenue = str(math.floor(100000 + random.random() * 1000000))
         amount = math.floor(8 + random.random() * 70)
+        size = math.floor(1 + 20 * random.random())
         webSite = "https://monWebSite.fr"
         JobForCompany = [[math.floor(1 + random.random() * 40), math.floor(1 + random.random() * 4)], [math.floor(41 + random.random() * 40), math.floor(1 + random.random() * 4)], [math.floor(81 + random.random() * 40), math.floor(1 + random.random() * 4)]]
         LabelForCompany = [[math.floor(1 + random.random() * 9), dateForLabel], [math.floor(10 + random.random() * 9), dateForLabel], [math.floor(20 + random.random() * 3), dateForLabel]]
-        post = {'action': 'modifyUser', 'UserProfile': {'id': companyId, 'cellPhone': '0629350418', 'Company': {'capital': capital, 'revenue': revenue, "webSite": webSite, "amount":amount, 'companyPhone': '0892976415', "allQualifications":True, 'JobForCompany':JobForCompany, 'LabelForCompany':LabelForCompany}}}
+        post = {'action': 'modifyUser', 'UserProfile': {'id': companyId, 'cellPhone': '0629350418', 'Company': {'capital': capital, 'revenue': revenue, "webSite": webSite, "amount":amount, 'companyPhone': '0892976415', "allQualifications":True, 'JobForCompany':JobForCompany, 'LabelForCompany':LabelForCompany, "size":size}}}
         response = requests.post(f'{address}/data/', headers=headers, json=post)
         if companyId in emailList:
           data = json.loads(response.text)
@@ -207,13 +207,28 @@ def executeQuery():
       response = requests.post(url, headers=headers, json=post)
 
     elif query == "modifyUser":
-      now = f"2022-06-12"
-      post1 = {'action': 'modifyUser', 'UserProfile': {'id': 3, 'cellPhone': '0629350418', 'Company': {'capital': '307130', 'companyPhone': '0892976415', "amount":'28', 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]]}}}
-      post2 = {'action': 'modifyUser', 'UserProfile': {'id': 6, 'cellPhone': '0628340317', 'Company': {'capital': '207130', 'companyPhone': '0891966314', "amount":'52', 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]]}}}
-      requests.post(url, headers=headers, json=post1)
-      response = tokenSt2 = queryForToken("st2@g.com", "pwd")
-      headersSt2 = {'Authorization': f'Token {tokenSt2}'}
-      response = requests.post(url, headers=headersSt2, json=post2)
+      data1 = {
+        "headers":headers,
+        "post":{'action': 'modifyUser', 'UserProfile': {'id': 3, 'cellPhone': '0629350418', 'Company': {'capital': '307130', 'companyPhone': '0892976415', "amount":'28', 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]], "size":9}}}
+      }
+      data2 = {
+        "headers":{'Authorization': f'Token {queryForToken("pme@g.com", "pwd")}'},
+        "post":{'action': 'modifyUser', 'UserProfile': {'id': 4, 'cellPhone': '0629350418', 'Company': {'capital': '407130', 'companyPhone': '0892976415', "amount":'28', 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]], "size":10}}}
+      }
+      data3 = {
+        "headers":{'Authorization': f'Token {queryForToken("st2@g.com", "pwd")}'},
+        "post":{'action': 'modifyUser', 'UserProfile': {'id': 5, 'cellPhone': '0628340317', 'Company': {'capital': '507130', 'companyPhone': '0891966314', "amount":'52', 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]], "size":11}}}
+      }
+      data4 = {
+        "headers":{'Authorization': f'Token {queryForToken("both@g.com", "pwd")}'},
+        "post":{'action': 'modifyUser', 'UserProfile': {'id': 6, 'cellPhone': '0628340317', 'Company': {'capital': '607130', 'companyPhone': '0891966314', "amount":'52', 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]], "size":12}}}
+      }
+      data5 = {
+        "headers":{'Authorization': f'Token {queryForToken("aa@g.com", "pwd")}'},
+        "post":{'action': 'modifyUser', 'UserProfile': {'id': 2, 'cellPhone': '0628340317', 'Company': {'capital': '707130', 'companyPhone': '0891966314', "amount":'52', 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]], "size":13}}}
+      }
+      for data in [data1, data2, data3, data4, data5]:
+        response = requests.post(url, headers=data["headers"], json=data["post"])
 
     elif query == "changeUserImage":
       tokenPme = queryForToken("pme@g.com", "pwd")
@@ -293,10 +308,9 @@ def executeQuery():
     elif query == "removeFavorite":
       response = requests.get(url, headers=headers, params={'action':"setFavorite", "value":"false", "Post":3})
     elif query == "deletePost":
-      print("deletePost")
       post = {'action':"uploadPost", "address":"129 rue de Paris 92100 Boulogne", "Job":9, "numberOfPeople":3, "dueDate":f"2022-{nextMonth}-15", "startDate":f"2022-{nextMonth}-16", "endDate":f"2022-{nextMonth}-28", "manPower":True, "counterOffer":True, "hourlyStart":"7:30", "hourlyEnd":"17:30", "currency":"€", "description":"Première description d'un chantier", "amount":65243.10, "DetailedPost":["lavabo", "baignoire"]}
       response = requests.post(url, headers=headers, json=post)
-      for key in json.loads(response.text).keys():
+      for key in json.loads(response.text)["Post"].keys():
         if key != "uploadPost":
           response = requests.get(url, headers=headers, params={"action":"deletePost", "id":key})
     elif query == "modifyDisponibility":
