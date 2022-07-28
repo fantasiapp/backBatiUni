@@ -395,12 +395,13 @@ class DataAccessor():
 
   @classmethod
   def __modifyDetailedPost(cls, data, currentUser):
-    print("modifyDetailedPost", data)
+    userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     datePostId = data["datePostId"] if "datePostId" in data and data["datePostId"] else None
     unset = data["unset"] if "unset" in data else False
     data = data["detailedPost"]
     datePost = DatePost.objects.get(id=datePostId) if datePostId else None
     detailedPost = DetailedPost.objects.get(id=data["id"])
+    mission = datePost.Mission if datePost else detailedPost.Mission
     if not unset:
       if not detailedPost.DatePost or datePost.id != detailedPost.DatePost.id:
         detailedPost = DetailedPost.objects.create(
@@ -412,6 +413,7 @@ class DataAccessor():
         if field in data:
             setattr(detailedPost, field, data[field])
       detailedPost.save()
+      cls.__addNewNotificationForMessage(userProfile, mission, f"Une tâche pour le chantier du {mission.address} a été modifiée", title="Tâche", category="detailedPost")
       return cls.__detailedPostComputeAnswer(detailedPost, currentUser)
     else:
       """retrait d'une detailed post"""
@@ -423,6 +425,7 @@ class DataAccessor():
         return {"modifyDetailedPost":"Warning", "messages":"Cette tâche est évaluée."}
       detailedPost.delete()
       datePostDump = {datePost.id:datePost.computeValues(datePost.listFields(), currentUser, True)}
+      cls.__addNewNotificationForMessage(userProfile, mission, f"Une tâche pour le chantier du {mission.address} a été supprimée", title="Tâche", category="detailedPost")
       return {"modifyDetailedPost":"OK", "deleted":"yes", "detailedPostId":detailedPostId, "datePost":datePostDump}
 
   @classmethod
@@ -499,7 +502,7 @@ class DataAccessor():
     return not datePost.validated if datePost else False
 
   @classmethod
-  def __addNewNotificationForMessage(cls, userProfile, mission, message):
+  def __addNewNotificationForMessage(cls, userProfile, mission, message, title="Nouveau message", category="supervision"):
     candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
     if userProfile.Company.id == candidate.Company.id:
       company = mission.Company
@@ -511,7 +514,7 @@ class DataAccessor():
       subContractor = mission.Company
       nature = "PME"
       role = "ST"
-    Notification.createAndSend(Mission=mission, Company=company, title="Nouveau message", category="supervision", subContractor=subContractor, nature=nature, Role=role, content=message, timestamp=datetime.now().timestamp())
+    Notification.createAndSend(Mission=mission, Company=company, title=title, category=category, subContractor=subContractor, nature=nature, Role=role, content=message, timestamp=datetime.now().timestamp())
 
   @classmethod
   def __supervisionAnswer(cls, supervision, currentUser):
