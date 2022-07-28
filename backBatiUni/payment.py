@@ -27,6 +27,7 @@ class PaymentManager():
             # Create a PaymentIntent with the order amount and currency
             intent = stripe.PaymentIntent.create(
                 customer = customerId,
+                description="Boost Post " + request.data['post'],
                 setup_future_usage = "off_session",
                 amount=price.unit_amount,
                 currency='eur',
