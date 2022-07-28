@@ -684,7 +684,9 @@ class DataAccessor():
 
   @classmethod
   def signContract(cls, missionId, view, currentUser):
+    print("signContract", missionId, view)
     mission = Mission.objects.get(id=missionId)
+    print(mission)
     contractImage = File.objects.get(id=mission.contract)
     if view == "PME":
       source = "./files/documents/ContractSignedST_PME.png" if mission.signedBySubContractor else "./files/documents/ContractSignedPME.png"
