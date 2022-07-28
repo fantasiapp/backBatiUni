@@ -429,6 +429,7 @@ class UserProfile(CommonModel):
       elif field == "email": values.append(self.email)
       elif field == "function": values.append(self.function if self.function else "")
       elif field == "tokenFriend": values.append(self.tokenFriend)
+      elif field == "isAdmin": values.append(self.isAdmin)
 
       elif field in self.manyToManyObject:
         if field == "FavoritePost":
