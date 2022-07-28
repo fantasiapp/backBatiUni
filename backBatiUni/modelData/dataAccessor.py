@@ -684,9 +684,7 @@ class DataAccessor():
 
   @classmethod
   def signContract(cls, missionId, view, currentUser):
-    print("signContract", missionId, view)
     mission = Mission.objects.get(id=missionId)
-    print(mission)
     contractImage = File.objects.get(id=mission.contract)
     if view == "PME":
       source = "./files/documents/ContractSignedST_PME.png" if mission.signedBySubContractor else "./files/documents/ContractSignedPME.png"
@@ -1047,11 +1045,13 @@ class DataAccessor():
 
   @classmethod
   def __uploadImageSupervision(cls, data, currentUser):
+    print("uploadImageSupervision")
     data["name"] = "name"
     data["nature"] = "supervision"
     testMessage = cls.__testUploadFile(data)
     if testMessage:
       return testMessage
+    print("uploadImageSupervision", testMessage)
     supervision = Supervision.objects.get(id=data["supervisionId"])
     message = File.createFile("supervision", "supervision", data['ext'], currentUser, "uploadImageSupervision", data["fileBase64"], supervision=supervision)
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
@@ -1257,7 +1257,8 @@ class DataAccessor():
     return {"forgetPassword":"Warning", "messages":f"L'adressse du couriel {email} n'est pas reconnue"}
 
   @classmethod
-  def inviteFriend(cls, email, register, currentUser):
+  def inviteFriend(cls, email, register, isParrain, currentUser):
+    """Cette requête est envoyée deux fois, la deuxième efface le token"""
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     if register == "false":
       userProfile.tokenFriend = ''
@@ -1269,7 +1270,8 @@ class DataAccessor():
     token = secrets.token_urlsafe(10)
     response = SmtpConnector(cls.portSmtp).inviteFriend(email, token, userProfile.firstName, userProfile.lastName, userProfile.Company.name)
     if "status" in response and response["status"]:
-      InviteFriend.objects.create(invitationAuthor=userProfile, emailTarget=email, token=token)
+      isParrainBool = isParrain != "false"
+      InviteFriend.objects.create(invitationAuthor=userProfile, emailTarget=email, isParrain=isParrainBool, token=token)
       userProfile.tokenFriend = token
       userProfile.save()
       return  {"inviteFriend":"OK", "messages": f"Invitation envoyé", "token":token}

@@ -381,6 +381,7 @@ class UserProfile(CommonModel):
   password = models.CharField("Mot de passe", max_length=128, blank=True, null=True, default="Inconnu")
   function = models.CharField("Fonction dans l'entreprise", max_length=128, blank=True, null=True, default="")
   tokenFriend = models.CharField("Token pour invitation d'ami", max_length=128, blank=True, null=True, default="")
+  isAdmin = models.BooleanField("Est administrateur", null=False, default=False)
   manyToManyObject = ["FavoritePost", "ViewPost"]
 
   class Meta:
@@ -777,9 +778,7 @@ class Notification(CommonModel):
     headers= {'Content-Type': 'application/json', 'Authorization': f'key = {cls.key}'}
     for token in tokenList:
       post = {"notification":{"title":notification.title, "body":notification.content}, "to":token}
-      print("createAndSend", cls.url, headers, post)
-      response = requests.post(cls.url, headers=headers, json=post)
-      print("createAndSend",response)
+      requests.post(cls.url, headers=headers, json=post)
 
 
 
@@ -936,6 +935,7 @@ class InviteFriend(CommonModel):
   token = models.CharField('token', max_length=64, null=False, default="")
   invitedUser = models.ForeignKey(UserProfile, related_name='Invited', on_delete=models.PROTECT, null=True, default=None)
   date = models.DateField(verbose_name="Date de l'inscription", null=True, default=None)
+  isParrain = models.BooleanField("Est un codeParrain", null=False, default=True)
 
 
   class Meta:
