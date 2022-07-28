@@ -55,7 +55,7 @@ def queryForToken(userName, password):
     return False
 
 def getDocStr(index = 0):
-  file = ["./files/documents/Qualibat.jpeg", "./files/documents/Kbis.png", "./files/documents/Plan.png", "./files/documents/IMG_2465.HEIC", "./files/documents/Etex.svg", "./files/documents/batiUni.png", "./files/documents/Fantasiapp.png", "./files/documents/logoFantasiapp.png", "./files/documents/Kbis.pdf"]
+  file = ["./files/documents/Qualibat.jpeg", "./files/documents/Kbis.png", "./files/documents/Plan.png", "./files/documents/IMG_2465.HEIC", "./files/documents/Etex.svg", "./files/documents/BatiUni.png", "./files/documents/Fantasiapp.png", "./files/documents/logoFantasiapp.png", "./files/documents/Kbis.pdf"]
   with open(file[index], "rb") as fileData:
     encoded_string = base64.b64encode(fileData.read())
   return encoded_string.decode("utf-8")
@@ -96,9 +96,19 @@ def executeQuery():
     url = f'{address}/data/'
     for post in listPost:
       tokenForImage = queryForToken(post["email"], "pwd")
+      dateForLabel = (datetime.now() + timedelta(days=100, hours=0)).strftime("%Y-%m-%d")
       headersForImage = {'Authorization': f'Token {tokenForImage}'}
-      file = {'action':"uploadFile", "ext":"pdf", "name":"Kbis", "fileBase64":getDocStr(8), "nature":"admin", "expirationDate":now}
-      requests.post(url, headers=headersForImage, json=file)
+      file1 = {'action':"uploadFile", "ext":"pdf", "name":"Kbis", "fileBase64":getDocStr(8), "nature":"admin"}
+      file2 = {'action':"uploadFile", "ext":"pdf", "name":"Trav Dis", "fileBase64":getDocStr(8), "nature":"admin", "expirationDate":now}
+      file3 = {'action':"uploadFile", "ext":"pdf", "name":"RC + DC", "fileBase64":getDocStr(8), "nature":"admin", "expirationDate":now}
+      file4 = {'action':"uploadFile", "ext":"pdf", "name":"URSSAF", "fileBase64":getDocStr(8), "nature":"admin", "expirationDate":now}
+      file5 = {'action':"uploadFile", "ext":"pdf", "name":"Congés Payés", "fileBase64":getDocStr(8), "nature":"admin", "expirationDate":now}
+      file6 = {'action':"uploadFile", "ext":"pdf", "name":"Impôts", "fileBase64":getDocStr(8), "nature":"admin", "expirationDate":now}
+      file7 = {'action':"uploadFile", "ext":"png", "name":"qualibat", "fileBase64":getDocStr(0), "nature":"labels", "expirationDate":dateForLabel}
+      file8 = {'action':"uploadFile", "ext":"png", "name":"qualiElec", "fileBase64":getDocStr(0), "nature":"labels", "expirationDate":dateForLabel}
+      file9 = {'action':"uploadFile", "ext":"png", "name":"artisanArt", "fileBase64":getDocStr(0), "nature":"labels", "expirationDate":dateForLabel}
+      for file in [file1, file2, file3, file4, file5, file6, file7, file8, file9]:
+        requests.post(url, headers=headersForImage, json=file)
 
 
 
@@ -160,7 +170,7 @@ def executeQuery():
       tokenForImage = queryForToken(emailList[companyId], "pwd")
       headersForImage = {'Authorization': f'Token {tokenForImage}'}
       url = f'{address}/data/'
-      file = {'action':"uploadFile", "ext":"pdf", "name":"Kbis", "fileBase64":getDocStr(8), "nature":"admin", "expirationDate":now}
+      file = {'action':"uploadFile", "ext":"pdf", "name":"Kbis", "fileBase64":getDocStr(8), "nature":"admin"}
       data = requests.post(url, headers=headersForImage, json=file)
       for labelValues in value:
         for tupleLabel in labelValues.values():
@@ -209,23 +219,23 @@ def executeQuery():
     elif query == "modifyUser":
       data1 = {
         "headers":headers,
-        "post":{'action': 'modifyUser', 'UserProfile': {'id': 3, 'cellPhone': '0629350418', 'Company': {'capital': '307130', 'companyPhone': '0892976415', "amount":'28', 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]], "size":9}}}
+        "post":{'action': 'modifyUser', 'UserProfile': {'id': 3, 'cellPhone': '0629350418', "function": "Chef de Chantier", 'Company': {'capital': '307130', 'companyPhone': '0892976415', "revenue":"1200000", "amount":'28', 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]], "size":9}}}
       }
       data2 = {
         "headers":{'Authorization': f'Token {queryForToken("pme@g.com", "pwd")}'},
-        "post":{'action': 'modifyUser', 'UserProfile': {'id': 4, 'cellPhone': '0629350418', 'Company': {'capital': '407130', 'companyPhone': '0892976415', "amount":'28', 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]], "size":10}}}
+        "post":{'action': 'modifyUser', 'UserProfile': {'id': 4, 'cellPhone': '0629350418', "function": "Chef de Chantier", 'Company': {'capital': '407130', 'companyPhone': '0892976415', "revenue":"1300000", "amount":'28', 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]], "size":10}}}
       }
       data3 = {
         "headers":{'Authorization': f'Token {queryForToken("st2@g.com", "pwd")}'},
-        "post":{'action': 'modifyUser', 'UserProfile': {'id': 5, 'cellPhone': '0628340317', 'Company': {'capital': '507130', 'companyPhone': '0891966314', "amount":'52', 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]], "size":11}}}
+        "post":{'action': 'modifyUser', 'UserProfile': {'id': 5, 'cellPhone': '0628340317', "function": "Chef de Chantier", 'Company': {'capital': '507130', 'companyPhone': '0891966314', "revenue":"1400000", "amount":'52', 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]], "size":11}}}
       }
       data4 = {
         "headers":{'Authorization': f'Token {queryForToken("both@g.com", "pwd")}'},
-        "post":{'action': 'modifyUser', 'UserProfile': {'id': 6, 'cellPhone': '0628340317', 'Company': {'capital': '607130', 'companyPhone': '0891966314', "amount":'52', 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]], "size":12}}}
+        "post":{'action': 'modifyUser', 'UserProfile': {'id': 6, 'cellPhone': '0628340317', "function": "Chef de Chantier", 'Company': {'capital': '607130', 'companyPhone': '0891966314', "revenue":"1500000", "amount":'52', 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]], "size":12}}}
       }
       data5 = {
         "headers":{'Authorization': f'Token {queryForToken("aa@g.com", "pwd")}'},
-        "post":{'action': 'modifyUser', 'UserProfile': {'id': 2, 'cellPhone': '0628340317', 'Company': {'capital': '707130', 'companyPhone': '0891966314', "amount":'52', 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]], "size":13}}}
+        "post":{'action': 'modifyUser', 'UserProfile': {'id': 2, 'cellPhone': '0628340317', "function": "Chef de Chantier", 'Company': {'capital': '707130', 'companyPhone': '0891966314', "revenue":"1600000", "amount":'52', 'JobForCompany':[[4,2], [5,3], [77,4]], 'LabelForCompany':[[1,now], [2,now]], "size":13}}}
       }
       for data in [data1, data2, data3, data4, data5]:
         response = requests.post(url, headers=data["headers"], json=data["post"])
@@ -233,14 +243,18 @@ def executeQuery():
     elif query == "changeUserImage":
       tokenPme = queryForToken("pme@g.com", "pwd")
       headersPme = {'Authorization': f'Token {tokenPme}'}
-      post = {'action':"changeUserImage", "ext":"png", "name":"image", "imageBase64":getDocStr(5)}
+      post = {'action':"changeUserImage", "ext":"png", "name":"image", "fileBase64":getDocStr(5)}
       requests.post(url, headers=headersPme, json=post)
       tokenSt2 = queryForToken("st2@g.com", "pwd")
       headersSt2 = {'Authorization': f'Token {tokenSt2}'}
-      post = {'action':"changeUserImage", "ext":"png", "name":"image", "imageBase64":getDocStr(7)}
+      post = {'action':"changeUserImage", "ext":"png", "name":"image", "fileBase64":getDocStr(7)}
       response = requests.post(url, headers=headersSt2, json=post)
-      post = {'action':"changeUserImage", "ext":"png", "name":"image", "imageBase64":getDocStr(6)}
+      post = {'action':"changeUserImage", "ext":"png", "name":"image", "fileBase64":getDocStr(6)}
       requests.post(url, headers=headers, json=post)
+      post = {'action':"changeUserImage", "ext":"png", "name":"image", "fileBase64":getDocStr(5)}
+      tokenBoth = queryForToken("both@g.com", "pwd")
+      headersBoth = {'Authorization': f'Token {tokenBoth}'}
+      requests.post(url, headers=headersBoth, json=post)
 
     elif query == "uploadPost":
       post1 = {'action':"uploadPost", "longitude":2.237779 , "latitude":48.848776, "address":"128 rue de Paris 92100 Boulogne", "Job":6, "numberOfPeople":3, "dueDate":f"2022-{nextMonth}-15", "startDate":f"2022-{nextMonth}-16", "endDate":f"2022-{nextMonth}-28", "DatePost":[f"2022-{nextMonth}-26", f"2022-{nextMonth}-27", f"2022-{nextMonth}-28"], "manPower":True, "counterOffer":True, "hourlyStart":"07:30", "hourlyEnd":"17:30", "currency":"€", "description":"Première description d'un chantier", "amount":65243.10, "DetailedPost":["lavabo", "baignoire"]}
@@ -289,6 +303,10 @@ def executeQuery():
             missionList[id] = {"mail":mail, "counterOffer":counterOffer, "amount":post["amount"]}
             post["draft"] = False
           requests.post(url, headers=headersNew, json=post)
+        file1 = {'action':"uploadFile", "ext":"svg", "name":"Document technique", "fileBase64":getDocStr(4), "nature":"post", "Post":2}
+        file2 = {'action':"uploadFile", "ext":"jpg", "name":"Plan", "fileBase64":getDocStr(2), "nature":"post", "Post":2}
+        for file in [file1, file2]:
+          requests.post(url, headers=headers, json=file)
           
 
     elif query == "modifyPost":
@@ -317,20 +335,13 @@ def executeQuery():
       post = {'action':"modifyDisponibility", "disponibility":[[f"2022-{nextMonth}-13", "Disponible"], [f"2022-{nextMonth}-14", "Disponible Sous Conditions"], [f"2022-{nextMonth}-15", "Non Disponible"]]}
       response = requests.post(url, headers=headers, json=post)
     elif query == "uploadFile":
-      file1 = {'action':"uploadFile", "ext":"png", "name":"qualibat", "fileBase64":getDocStr(0), "nature":"labels", "expirationDate":f"2022-02-12"}
-      file2 = {'action':"uploadFile", "ext":"pdf", "name":"Kbis", "fileBase64":getDocStr(8), "nature":"admin", "expirationDate":f"2022-{nextMonth}-12"}
-      file4 = {'action':"uploadFile", "ext":"svg", "name":"Document technique", "fileBase64":getDocStr(4), "nature":"post", "Post":2}
-      file5 = {'action':"uploadFile", "ext":"jpg", "name":"Plan", "fileBase64":getDocStr(2), "nature":"post", "Post":2}
-      requests.post(url, headers=headersPme, json=file2)
-      tokenSt2 = queryForToken("st2@g.com", "pwd")
-      headersSt2 = {'Authorization': f'Token {tokenSt2}'}
-      requests.post(url, headers=headersSt2, json=file2)
-      tokenBoth = queryForToken("both@g.com", "pwd")
-      headersBoth = {'Authorization': f'Token {tokenSt2}'}
-      requests.post(url, headers=headersBoth, json=file2)
-      for file in [file1, file2, file4, file5]:
+      file1 = {'action':"uploadFile", "ext":"svg", "name":"Document technique", "fileBase64":getDocStr(4), "nature":"post", "Post":2}
+      file2 = {'action':"uploadFile", "ext":"jpg", "name":"Plan", "fileBase64":getDocStr(2), "nature":"post", "Post":2}
+      for file in [file1, file2]:
         response = requests.post(url, headers=headers, json=file)
         data = json.loads(response.text)
+
+      
     elif query == "modifyFile":
       response = requests.post(url, headers=headers, json={'action':"modifyFile", "fileId":4, "expirationDate":f"2022-12-12"})
     elif query == "downloadFile":
@@ -474,7 +485,7 @@ def executeQuery():
       post = {"action":"closeMission", "missionId": 4, "qualityStars":4, "qualityComment":"très bon travail", "securityStars":4, "securityComment":"Un vrai sous-traitant qualibat", "organisationStars":5, "organisationComment":"Une organisation parfaite"}
       response = requests.post(url, headers=headers, json=post)
     elif query == "closeMissionST":
-      post = {"action":"closeMissionST", "missionId": 4, "vibeSTStars":2, "vibeSTComment":"Ambiance moyenne", "securitySTStars":2, "securitySTComment":"une sécurité faible", "organisationSTStars":2, "organisationSTComment":"Une organisation inexistante"}
+      post = {"action":"closeMissionST", "missionId": 4, "vibeSTStars":5, "vibeSTComment":"Ambiance excellente", "securitySTStars":5, "securitySTComment":"une sécurité parfaite", "organisationSTStars":5, "organisationSTComment":"Une organisation impeccable"}
       response = requests.post(url, headers=headers, json=post)
     elif query == "notificationViewed":
       post = {"action":"notificationViewed", "companyId": 4, "role":"PME"}

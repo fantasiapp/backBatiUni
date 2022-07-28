@@ -395,6 +395,7 @@ class DataAccessor():
 
   @classmethod
   def __modifyDetailedPost(cls, data, currentUser):
+    print("modifyDetailedPost", data)
     datePostId = data["datePostId"] if "datePostId" in data and data["datePostId"] else None
     unset = data["unset"] if "unset" in data else False
     data = data["detailedPost"]
