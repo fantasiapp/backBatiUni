@@ -220,7 +220,6 @@ class CreateNewDataBase:
     for table in CreateNewDataBase.listTable.values():
       table.objects.all().delete()
       tableName = table.objects.model._meta.db_table
-      print(tableName)
       self.cursor.execute(f"ALTER TABLE {tableName} AUTO_INCREMENT=1;")
     for user in User.objects.all():
       if user.username != "jlw":

@@ -713,6 +713,7 @@ class DataAccessor():
     mission.save()
     return {"signContract":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
 
+  @classmethod
   def test(cls):
     return {"test":"OK"}
 
