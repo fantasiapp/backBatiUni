@@ -1318,6 +1318,7 @@ class DataAccessor():
       else:
         kwargs[key] = value
     reco = Recommandation.objects.create(**kwargs)
+    print("give recommandation", company.name, company.id, role, f"la société {reco.companyNameRecommanding} vient de vous recommander")
     Notification.createAndSend(Company=company, title="Recommandation", nature="alert", Role=role, content=f"la société {reco.companyNameRecommanding} vient de vous recommander", timestamp=datetime.now().timestamp())
     return {"giveRecommandation":"OK", "messages":"Recommandation recorded"}
 
