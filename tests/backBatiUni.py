@@ -41,7 +41,8 @@ if len(arguments) > 1:
 if len(arguments) > 2:
   query = arguments[2]
 
-stripe.api_key = STRIPE_API_KEY
+if host != "local":
+  stripe.api_key = STRIPE_API_KEY
 
 def queryForToken(userName, password):
   tokenUrl = f'{address}/api-token-auth/'
@@ -68,14 +69,15 @@ def executeQuery():
   nextMonth = '%02d' % today.month
 
   if query in ["emptyDB", "buildDB"]:
-      token = queryForToken("jlw", "pwd")
-      print("user jlw", address)
-      if host != "local":
-        while customers := stripe.Customer.list(limit=100):
-          print("supress 100 customer")
-          for customer in customers.data:
-              stripe.Customer.delete(customer.id)
-        response = requests.get(f'{address}/createBase/', headers= {'Authorization': f'Token {token}'}, params={"action":"reload" if query == "buildDB" else "emptyDB"})
+    token = queryForToken("jlw", "pwd")
+    print("user jlw", address)
+    if host != "local":
+      while customers := stripe.Customer.list(limit=100):
+        print("supress 100 customer")
+        for customer in customers.data:
+            stripe.Customer.delete(customer.id)
+    response = requests.get(f'{address}/createBase/', headers= {'Authorization': f'Token {token}'}, params={"action":"reload" if query == "buildDB" else "emptyDB"})
+
   elif query == "register":
     post1 = {"firstname":"Augustin","lastname":"Alleaume","email":"aa@g.com","password":"pwd","company": 'BATOUNO', 'siret': '85342059400014',"Role":3,"proposer":"","jobs":[1,2,80], "action":"register"}
     post2 = {"firstname":"Théophile","lastname":"Traitant","email":"st@g.com","password":"pwd","company":'Sous-traitant', 'siret': '85342059400014', "Role":2, "proposer":"","jobs":[1,2,80], "action":"register"}
@@ -505,10 +507,7 @@ def executeQuery():
       response = requests.get(url, headers=headers, params={"action":"duplicatePost", "id":22})
         # response = requests.get(url, headers=headers, params={"action":"blockCompany", "companyId":1, "status":"true"})
     elif query == "test":
-      post = {"action":"createSupervision", "datePostId":10, "content":"Réparer le lavabo une nouvelle fois"}
-      post = {"action":"createDetailedPost", "postId":3, "content":"Réparer le lavabo une nouvelle fois", "dateId":10}
-      url = f'{address}/api-token-auth/'
-      response = requests.post(url, headers={}, json={"username":"pme@g.com", "password":"pwd"})
+      response = requests.get(url, headers=headers, params={"action":"test"})
   if response and query != "downloadFile":
     data = json.loads(response.text)
     print("data", data)

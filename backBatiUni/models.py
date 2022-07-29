@@ -896,7 +896,6 @@ class Supervision(CommonModel):
   DatePost = models.ForeignKey(DatePost, verbose_name='Tâche associée', on_delete=models.PROTECT, null=True, default=None)
   author = models.CharField("Nom de l'auteur du message", max_length=256, null=True, default=None)
   companyId = models.IntegerField("Id de la companie emettrice", blank=True, null=False, default=None)
-  # date = models.DateField(verbose_name="Date du suivi", null=False, default=timezone.now())
   timestamp = models.FloatField(verbose_name="Timestamp de mise à jour", null=False, default=0.0)
   comment = models.CharField("Commentaire sur le suivi", max_length=4906, null=True, default=None)
   manyToManyObject = ["File"]

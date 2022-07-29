@@ -713,6 +713,9 @@ class DataAccessor():
     mission.save()
     return {"signContract":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
 
+  def test(cls):
+    return {"test":"OK"}
+
   @classmethod
   def uploadSupervision(cls, detailedPostId, comment, currentUser):
     detailed = DetailedPost.objects.get(id=detailedPostId)
@@ -964,13 +967,16 @@ class DataAccessor():
 
   @classmethod
   def downloadFile(cls, id, currentUser):
-    file = File.objects.get(id=id)
-    content = file.getAttr("file")
-    listFields = file.listFields()
-    fileList = file.computeValues(listFields, currentUser)
-    indexContent = listFields.index("content")
-    fileList[indexContent] = content
-    return {"downloadFile":"OK", id:fileList}
+    file = File.objects.filter(id=id)
+    if file:
+      file = file[0]
+      content = file.getAttr("file")
+      listFields = file.listFields()
+      fileList = file.computeValues(listFields, currentUser)
+      indexContent = listFields.index("content")
+      fileList[indexContent] = content
+      return {"downloadFile":"OK", id:fileList}
+    return {"downloadFile":"Error", "messages":f"{id} does not exist"}
 
   @classmethod
   def deleteFile(cls, id, currentUser):

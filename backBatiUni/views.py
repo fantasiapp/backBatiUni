@@ -48,6 +48,7 @@ class Data(DefaultView):
       elif action == "askRecommandation": return DefaultView.myResponse(DataAccessor.askRecommandation(request.GET["email"], currentUser, request.GET["view"]))
       elif action == "giveNotificationToken": return DefaultView.myResponse(DataAccessor.giveNotificationToken(request.GET["token"], currentUser))
       elif action == "unapplyPost": return DefaultView.myResponse(DataAccessor.unapplyPost(request.GET["postId"], request.GET["candidateId"], currentUser))
+      elif action == "test": return DefaultView.myResponse(DataAccessor.test())
       return DefaultView.myResponse({"data GET":"Error", "messages":{"action":action}})
     return DefaultView.myResponse({"data GET":"Warning", "messages":"La confirmation par mail n'est pas réalisée."})
 
