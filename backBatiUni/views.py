@@ -34,7 +34,6 @@ class Data(DefaultView):
       elif action == "deletePost": return DefaultView.myResponse(DataAccessor.deletePost(request.GET["id"]))
       elif action == "downloadFile": return DefaultView.myResponse(DataAccessor.downloadFile(request.GET["id"], currentUser))
       elif action == "deleteFile": return DefaultView.myResponse(DataAccessor.deleteFile(request.GET["id"], currentUser))
-      elif action == "getPost": return DefaultView.myResponse(DataAccessor.getPost(currentUser))
       elif action == "removeLabelForCompany": return DefaultView.myResponse(DataAccessor.removeLabelForCompany(request.GET["labelId"], currentUser))
       elif action == "handleCandidateForPost": return DefaultView.myResponse(DataAccessor.handleCandidateForPost(request.GET["Candidate"], request.GET["response"], currentUser))
       elif action == "blockCompany": return DefaultView.myResponse(DataAccessor.blockCompany(request.GET["companyId"], request.GET["status"], currentUser))
@@ -45,7 +44,7 @@ class Data(DefaultView):
       elif action == "applyPost": return DefaultView.myResponse(DataAccessor.applyPost(request.GET["Post"], request.GET["amount"] if "amount" in request.GET else 0.0, request.GET["devis"] if "devis" in request.GET else "Prix Total", currentUser))
       elif action == "setFavorite": return DefaultView.myResponse(DataAccessor.setFavorite(request.GET["Post"], request.GET["value"], currentUser))
       elif action == "isViewed": return DefaultView.myResponse(DataAccessor.isViewed(request.GET["Post"], currentUser))
-      elif action == "inviteFriend": return DefaultView.myResponse(DataAccessor.inviteFriend(request.GET["mail"], request.GET["register"], currentUser))
+      elif action == "inviteFriend": return DefaultView.myResponse(DataAccessor.inviteFriend(request.GET["mail"], request.GET["register"], request.GET["isParrain"], currentUser))
       elif action == "askRecommandation": return DefaultView.myResponse(DataAccessor.askRecommandation(request.GET["email"], currentUser, request.GET["view"]))
       elif action == "giveNotificationToken": return DefaultView.myResponse(DataAccessor.giveNotificationToken(request.GET["token"], currentUser))
       elif action == "unapplyPost": return DefaultView.myResponse(DataAccessor.unapplyPost(request.GET["postId"], request.GET["candidateId"], currentUser))
@@ -130,9 +129,6 @@ class Webhook(DefaultView):
           }
           DataAccessor.dataPost(json.dumps(boostPostDict), False)
           return Response({"payment_intent.succeeded": "OK"})
-        if payment_intent["metadata"]["type"] == "subscription":
-          return Response({"payment_intent.succeeded": "OK"})
-
       elif event['type'] ==  'customer.subscription.created':
         subscribeDict = {
           "action": "subscribeUser",
@@ -141,8 +137,7 @@ class Webhook(DefaultView):
           "stripeCustomerId": event['data']['object']['customer']
         }
         DataAccessor.dataPost(json.dumps(subscribeDict), False)
-        return Response({"customer.subscription.created": "OK"})
-
+        return Response({"Error": f"Not implemented yet"}, status=400)
       elif event['type'] ==  'customer.subscription.updated':
         updateSubscribeDict = {
           "action": "updateSubscribeUser",
@@ -151,8 +146,7 @@ class Webhook(DefaultView):
           "stripeCustomerId": event['data']['object']['customer']
         }
         DataAccessor.dataPost(json.dumps(updateSubscribeDict), False)
-        return Response({"customer.subscription.updated": "OK"})
-
+        return Response({"Error": f"Not implemented yet"}, status=400)
       elif event['type'] ==  'customer.subscription.deleted':
         return Response({"Error": f"Not implemented yet"}, status=400)      
       else:

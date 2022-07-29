@@ -572,10 +572,6 @@ class DataAccessor():
     return {"isViewed":"OK"}
 
   @classmethod
-  def getPost(cls, currentUser):
-    return {objectPost.id:objectPost.computeValues(objectPost.listFields(), currentUser, dictFormat=True) for objectPost in Post.objects.all()}
-
-  @classmethod
   def deletePost(cls, id):
     post = Post.objects.filter(id=id)
     if post:
