@@ -182,7 +182,7 @@ class DataAccessor():
       if data["action"] == "modifyPwd": return cls.__modifyPwd(data, currentUser)
       elif data["action"] == "modifyUser": return cls.__updateUserInfo(data, currentUser)
       elif data["action"] == "changeUserImage": return cls.__changeUserImage(data, currentUser)
-      elif data["action"] == "deleteUserImage": return cls.__deleteUserImage(data, currentUser)
+      elif data["action"] == "deleteUserImage": return cls.__deleteUserImage(currentUser)
       elif data["action"] == "uploadPost": return cls.__uploadPost(data, currentUser)
       elif data["action"] == "modifyPost": return cls.__modifyPost(data, currentUser)
       elif data["action"] == "createDetailedPost": return cls.__createDetailedPost(data, currentUser)
