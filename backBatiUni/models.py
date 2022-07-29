@@ -1022,7 +1022,6 @@ class File(CommonModel):
 
   @classmethod
   def createFile(cls, nature, name, ext, user, queryName, fileStr, expirationDate = None, post=None, mission=None, supervision=None, suppress = False):
-    print("createFile", queryName)
     userProfile = UserProfile.objects.get(userNameInternal=user)
     objectFile = None
     path, name, mission = cls.__getPathAndName(name, nature, userProfile, ext, post, mission, supervision)
@@ -1041,10 +1040,8 @@ class File(CommonModel):
     else:
       objectFile = cls.objects.create(nature=nature, name=name, path=path, ext=ext, Company=company, expirationDate=expirationDate, Post=post, Mission=mission, Supervision=supervision)
     if fileStr:
-      print("create File", len(fileStr))
       returnValue, update = TreatFile.createFileWidthb64(objectFile, fileStr, user, queryName)
       if update:
-        print("create File update", update)
         if company and update["Siret"].replace(" ", "") != company.siret.replace(" ", ""):
           TreatFile(objectFile).removeOldFile(True)
           objectFile.delete()

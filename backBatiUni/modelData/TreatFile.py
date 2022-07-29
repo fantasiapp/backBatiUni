@@ -58,19 +58,15 @@ class TreatFile:
 
   @classmethod
   def createFileWidthb64(cls, objectFile, fileStr, currentUser, queryName):
-    print("createFileWidthb64", objectFile.path, objectFile.ext, objectFile.name)
     file, value, detectObject = None, None, TreatFile(objectFile)
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if objectFile.ext != "txt" else fileStr
-      print("createFileWidthb64 success", objectFile.path)
       with open(objectFile.path, "wb") as outfile:
         outfile.write(file.file.getbuffer())
     except:
-      print("On ne peut pas le noter")
       if objectFile: objectFile.delete()
       return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}, None
     try :
-      print("second try")
       if objectFile.name == "Kbis":
         print("KbisTest")
         status, value = detectObject.__readFromQrCode()
@@ -135,12 +131,13 @@ class TreatFile:
   """Fonctions associées au QR Code"""
 
   def __getUrlFromQrCode (self):
-    print("__getUrlFromQrCode",type(self.getPages), isinstance(self.getPages, list))
+    print("__getUrlFromQrCode",type(self.getPages))
     for page in self.getPages:
       print("inside loop", page)
       image = cv2.imread(page)
       decoder = cv2.QRCodeDetector()
       url, _, _ = decoder.detectAndDecode(image)
+      print("url", url)
       if url: return url
     return False
 
