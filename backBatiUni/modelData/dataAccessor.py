@@ -182,6 +182,7 @@ class DataAccessor():
       if data["action"] == "modifyPwd": return cls.__modifyPwd(data, currentUser)
       elif data["action"] == "modifyUser": return cls.__updateUserInfo(data, currentUser)
       elif data["action"] == "changeUserImage": return cls.__changeUserImage(data, currentUser)
+      elif data["action"] == "deleteUserImage": return cls.__deleteUserImage(data, currentUser)
       elif data["action"] == "uploadPost": return cls.__uploadPost(data, currentUser)
       elif data["action"] == "modifyPost": return cls.__modifyPost(data, currentUser)
       elif data["action"] == "createDetailedPost": return cls.__createDetailedPost(data, currentUser)
@@ -212,6 +213,17 @@ class DataAccessor():
     dictData["name"] = "image"
     dictData["nature"] = "userImage"
     return cls.__uploadFile(dictData, currentUser, queryName="changeUserImage")
+  
+
+  @classmethod
+  def __deleteUserImage(cls, currentUser):
+    userProfile = UserProfile.objects.get(userNameInternal=currentUser)
+    file = File.objects.filter(nature="userImage", Company=userProfile.company)
+    if file:
+      TreatFile(file).removeOldFile(True)
+      file.delete()
+      return {"deleteUserImage":"OK"}
+    return {"deleteUserImage":"Error", "messages":f"No file to be deleted"}
 
   @classmethod
   def __uploadPost(cls, dictData, currentUser):

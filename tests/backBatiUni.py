@@ -257,6 +257,13 @@ def executeQuery():
       headersBoth = {'Authorization': f'Token {tokenBoth}'}
       requests.post(url, headers=headersBoth, json=post)
 
+    elif query == "deleteUserImage":
+      tokenPme = queryForToken("pme@g.com", "pwd")
+      headersPme = {'Authorization': f'Token {tokenPme}'}
+      response = requests.post(url, headers=headersPme, json={"action":"deleteUserImage"})
+      post = {'action':"changeUserImage", "ext":"png", "name":"image", "fileBase64":getDocStr(5)}
+      requests.post(url, headers=headersPme, json=post)
+
     elif query == "uploadPost":
       post1 = {'action':"uploadPost", "longitude":2.237779 , "latitude":48.848776, "address":"128 rue de Paris 92100 Boulogne", "Job":6, "numberOfPeople":3, "dueDate":f"2022-{nextMonth}-15", "startDate":f"2022-{nextMonth}-16", "endDate":f"2022-{nextMonth}-28", "DatePost":[f"2022-{nextMonth}-26", f"2022-{nextMonth}-27", f"2022-{nextMonth}-28"], "manPower":True, "counterOffer":True, "hourlyStart":"07:30", "hourlyEnd":"17:30", "currency":"€", "description":"Première description d'un chantier", "amount":65243.10, "DetailedPost":["lavabo", "baignoire"]}
       post2 = {'action':"uploadPost", "longitude":2.324877 , "latitude":48.841625, "address":"106 rue du Cherche-Midi 75006 Paris", "Job":5, "numberOfPeople":1, "dueDate":f"2022-{nextMonth}-15", "startDate":f"2022-{nextMonth}-16", "endDate":f"2022-04-28", "DatePost":[f"2022-{nextMonth}-16", f"2022-{nextMonth}-17", f"2022-{nextMonth}-18"], "manPower":False, "counterOffer":True, "hourlyStart":"07:00", "hourlyEnd":"17:00", "currency":"€", "description":"Deuxième description d'un chantier", "amount":23456.10, "DetailedPost":["radiateur", "Chaudière"]}
