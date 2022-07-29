@@ -1022,6 +1022,7 @@ class File(CommonModel):
 
   @classmethod
   def createFile(cls, nature, name, ext, user, queryName, fileStr, expirationDate = None, post=None, mission=None, supervision=None, suppress = False):
+    print("createFile", queryName)
     userProfile = UserProfile.objects.get(userNameInternal=user)
     objectFile = None
     path, name, mission = cls.__getPathAndName(name, nature, userProfile, ext, post, mission, supervision)

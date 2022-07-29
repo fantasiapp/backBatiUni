@@ -58,9 +58,11 @@ class TreatFile:
 
   @classmethod
   def createFileWidthb64(cls, objectFile, fileStr, currentUser, queryName):
+    print("createFileWidthb64", objectFile.path)
     file, value, detectObject = None, None, TreatFile(objectFile)
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if objectFile.ext != "txt" else fileStr
+      print("createFileWidthb64 success", objectFile.path)
       with open(objectFile.path, "wb") as outfile:
         outfile.write(file.file.getbuffer())
     except:
