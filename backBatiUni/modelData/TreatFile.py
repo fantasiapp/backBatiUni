@@ -58,7 +58,7 @@ class TreatFile:
 
   @classmethod
   def createFileWidthb64(cls, objectFile, fileStr, currentUser, queryName):
-    print("createFileWidthb64", objectFile.path)
+    print("createFileWidthb64", objectFile.path, objectFile.ext, objectFile.name)
     file, value, detectObject = None, None, TreatFile(objectFile)
     try:
       file = ContentFile(base64.urlsafe_b64decode(fileStr), name=objectFile.path) if objectFile.ext != "txt" else fileStr
@@ -66,6 +66,7 @@ class TreatFile:
       with open(objectFile.path, "wb") as outfile:
         outfile.write(file.file.getbuffer())
     except:
+      print("On ne peut pas le noter")
       if objectFile: objectFile.delete()
       return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}, None
     try :
