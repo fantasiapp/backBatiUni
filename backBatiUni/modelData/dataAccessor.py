@@ -715,8 +715,9 @@ class DataAccessor():
     return {"signContract":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
 
   @classmethod
-  def test(cls):
-    contract = BuildContract()
+  def test(cls, currentUser):
+    userProfile = UserProfile.objects.get(userNameInternal=currentUser)
+    contract = BuildContract(userProfile)
     return {"test":"OK"}
 
   @classmethod
