@@ -70,7 +70,9 @@ class TreatFile:
       if objectFile: objectFile.delete()
       return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}, None
     try :
+      print("second try")
       if objectFile.name == "Kbis":
+        print("KbisTest")
         status, value = detectObject.__readFromQrCode()
         objectFile.expirationDate = datetime.strptime(value["kBisDate"], "%d/%m/%Y")
         objectFile.save()
@@ -142,6 +144,7 @@ class TreatFile:
 
   def __readFromQrCode(self):
     url, linkKbis = self.__getUrlFromQrCode(), None
+    print("__readFromQrCode", url, linkKbis)
     if url:
       try:
         request = requests.get(url, headers=self.headersKbis)
