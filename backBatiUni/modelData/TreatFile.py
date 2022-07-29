@@ -81,9 +81,9 @@ class TreatFile:
           return {"uploadFile":"Error", "messages":f"{value}"}, None
       return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}, value
     except:
-      if objectFile:
-        detectObject.removeOldFile(True)
-        objectFile.delete()
+      # if objectFile:
+      #   detectObject.removeOldFile(True)
+      #   objectFile.delete()
       return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}, None
 
   """Fonctions associées au formatage d'images"""
