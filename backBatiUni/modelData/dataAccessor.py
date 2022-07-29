@@ -221,7 +221,7 @@ class DataAccessor():
     file = File.objects.filter(nature="userImage", Company=userProfile.Company)
     if file:
       TreatFile(file[0]).removeOldFile(True)
-      file.delete()
+      file[0].delete()
       return {"deleteUserImage":"OK"}
     return {"deleteUserImage":"Error", "messages":f"No file to be deleted"}
 
