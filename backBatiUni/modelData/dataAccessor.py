@@ -4,6 +4,7 @@ from this import d
 from django.forms import EmailInput
 from numpy import isin
 import stripe
+from backBatiUni.modelData.buildContract import BuildContract
 
 from backBatiUni.settings import STRIPE_API_KEY
 from ..models import *
@@ -715,6 +716,7 @@ class DataAccessor():
 
   @classmethod
   def test(cls):
+    contract = BuildContract()
     return {"test":"OK"}
 
   @classmethod
