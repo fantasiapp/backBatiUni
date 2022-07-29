@@ -64,19 +64,15 @@ class DataAccessor():
   def register(cls, data):
     print("register")
     if "again" in data and data["again"]:
-      print("again")
       return cls.registerAgain(data)
     message = cls.__registerCheck(data, {})
     if message:
-      print("message", message)
       return {"register":"Warning", "messages":message}
     token = SmtpConnector(cls.portSmtp).register(data["firstname"], data["lastname"], data["email"])
     if token != "token not received":
       userProfile = cls.__registerAction(data, token)
       cls.__checkIfHaveBeenInvited(userProfile, data['proposer'], data['email'])
-      print("register OK")
       return {"register":"OK"}
-    print("empty token")
     cls.__registerAction(data, "empty token")
     return {"register":"Error", "messages":"token not received"}
 
@@ -137,7 +133,6 @@ class DataAccessor():
       data["email"] += "@g.com"
     test1 = os.getenv('STRIPE_API_KEY')
     test2 = os.getenv('PORT_SMTP')
-    print("stripe key inside", stripe.api_key, test1, test2)
     customer = stripe.Customer.create(name = data["company"], email = data["email"])
     company = Company.objects.create(name=data["company"], siret=data['siret'], stripeCustomerId = customer.id)
     company.Role = Role.objects.get(id=data['Role'])
@@ -1016,7 +1011,6 @@ class DataAccessor():
         return {queryName:"Error", "messages":f"no supervision with id {data['Supervision']}"}
       else:
         supervision = supervision[0]
-    print("__createObjectFile", data["nature"], data["ext"])
     return File.createFile(data["nature"], data["name"], data['ext'], currentUser, queryName, data["fileBase64"], expirationDate=expirationDate, post=post, mission=mission, supervision=supervision)
 
   @classmethod
@@ -1052,16 +1046,13 @@ class DataAccessor():
 
   @classmethod
   def __uploadImageSupervision(cls, data, currentUser):
-    print("uploadImageSupervision")
     data["name"] = "name"
     data["nature"] = "supervision"
     testMessage = cls.__testUploadFile(data)
     if testMessage:
       return testMessage
-    print("uploadImageSupervision", testMessage)
     supervision = Supervision.objects.get(id=data["supervisionId"])
     message = File.createFile("supervision", "supervision", data['ext'], currentUser, "uploadImageSupervision", data["fileBase64"], supervision=supervision)
-    userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     objectFather = supervision.DetailedPost.DatePost if supervision.DetailedPost else supervision.DatePost
     if not isinstance(objectFather, DatePost):
       return {"uploadImageSupervision":"Error", "messages":"No detailedPost or DatePost in supervision"}
@@ -1314,6 +1305,7 @@ class DataAccessor():
   def giveRecommandation(cls, data):
     del data["action"]
     company = Company.objects.get(id=data["companyRecommanded"])
+    role = data['view']
     name = "Un sous-traitant à la recherche d'une entreprise" if data['view'] == "ST" else "Une entreprise à la recherche de sous-traitances"
     data['view'] = Role.objects.get(name = name)
     if Recommandation.objects.filter(companyRecommanded=company, companyNameRecommanding=data['companyNameRecommanding'], view=data['view']):
@@ -1326,6 +1318,7 @@ class DataAccessor():
       else:
         kwargs[key] = value
     Recommandation.objects.create(**kwargs)
+    Notification.createAndSend(Company=company, title="Recommandation", nature="alert", Role=role, content=f"la société {company.name} vient de vous recommander", timestamp=datetime.now().timestamp())
     return {"giveRecommandation":"OK", "messages":"Recommandation recorded"}
 
   # @classmethod

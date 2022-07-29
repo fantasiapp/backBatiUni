@@ -77,9 +77,9 @@ class TreatFile:
           return {"uploadFile":"Error", "messages":f"{value}"}, None
       return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), currentUser, True)}, value
     except:
-      # if objectFile:
-      #   detectObject.removeOldFile(True)
-      #   objectFile.delete()
+      if objectFile:
+        detectObject.removeOldFile(True)
+        objectFile.delete()
       return {queryName:"Warning", "messages":"Le fichier ne peut être sauvegardé"}, None
 
   """Fonctions associées au formatage d'images"""
@@ -131,13 +131,10 @@ class TreatFile:
   """Fonctions associées au QR Code"""
 
   def __getUrlFromQrCode (self):
-    print("__getUrlFromQrCode",type(self.getPages))
     for page in self.getPages:
-      print("inside loop", page)
       image = cv2.imread(page)
       decoder = cv2.QRCodeDetector()
       url, _, _ = decoder.detectAndDecode(image)
-      print("url", url)
       if url: return url
     return False
 

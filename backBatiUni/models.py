@@ -1048,7 +1048,6 @@ class File(CommonModel):
           return {queryName:"warning", "messages":"Le numéro de Siret n'est pas conforme"}
         cls.__updateWithKbis(company, objectFile, update)
         returnValue["Company"] = {company.id:company.computeValues(company.listFields(), user, True)}
-      print("returnValue", returnValue)
       return returnValue
     return {queryName:"OK", objectFile.id:objectFile.computeValues(objectFile.listFields(), user, True)}
 
