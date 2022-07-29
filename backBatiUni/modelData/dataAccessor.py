@@ -218,7 +218,7 @@ class DataAccessor():
   @classmethod
   def __deleteUserImage(cls, currentUser):
     userProfile = UserProfile.objects.get(userNameInternal=currentUser)
-    file = File.objects.filter(nature="userImage", Company=userProfile.company)
+    file = File.objects.filter(nature="userImage", Company=userProfile.Company)
     if file:
       TreatFile(file).removeOldFile(True)
       file.delete()
