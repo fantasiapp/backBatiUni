@@ -135,7 +135,9 @@ class TreatFile:
   """Fonctions associées au QR Code"""
 
   def __getUrlFromQrCode (self):
+    print("__getUrlFromQrCode",type(self.getPages), isinstance(self.getPages, list))
     for page in self.getPages:
+      print("inside loop", page)
       image = cv2.imread(page)
       decoder = cv2.QRCodeDetector()
       url, _, _ = decoder.detectAndDecode(image)
