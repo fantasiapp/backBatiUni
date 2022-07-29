@@ -374,6 +374,7 @@ class DataAccessor():
 
   @classmethod
   def __createDetailedPost(cls, data, currentUser):
+    userProfile = UserProfile.objects.get(userNameInternal=currentUser)
     kwargs, post, mission, detailedPost2 = {"Post":None, "Mission":None, "content":None}, None, None, None
     datePost = DatePost.objects.get(id=data["dateId"])
     if not datePost.validated:
@@ -390,7 +391,9 @@ class DataAccessor():
     kwargs["DatePost"] = datePost
     del kwargs["Mission"]
     detailedPost = DetailedPost.objects.create(**kwargs)
-    return cls.__detailedPostComputeAnswer(detailedPost, currentUser, "createDetailedPost", detailedPost2)
+    if mission and "content" in data and data["content"]:
+      cls.__addNewNotificationForMessage(userProfile, mission, f"Une tâche pour le chantier du {mission.address} a été crée", title="Tâche", category="detailedPost")
+      return cls.__detailedPostComputeAnswer(detailedPost, currentUser, "createDetailedPost", detailedPost2)
     # return {"createDetailedPost":"Warning", "messages":"La tâche n'a pas été créée"}
 
   @classmethod
