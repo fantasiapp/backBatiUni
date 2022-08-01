@@ -4,8 +4,9 @@ class BuildContract(FPDF):
 
   def __init__(self, userProfile):
     self.userProfile = userProfile
+    print(self.userProfile.Company.name)
     file = File.objects.filter(nature="userImage", Company=self.userProfile.Company)
-    print(file)
+    print("buildContract", file)
 
     pdf = FPDF('P', 'mm', 'A4')
     pdf.add_page()
