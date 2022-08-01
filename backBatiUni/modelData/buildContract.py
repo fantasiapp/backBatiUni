@@ -23,13 +23,21 @@ class MyPdf(FPDF):
     # Line break
     self.ln(20)
 
+  def footer(self):
+        # Position at 1.5 cm from bottom
+        self.set_y(-15)
+        # Arial italic 8
+        self.set_font('Arial', 'I', 8)
+        # Page number
+        self.cell(0, 10, 'Page ' + str(self.page_no()) + '/{nb}', 0, 0, 'C')
+
 class BuildContract:
 
   def __init__(self, userProfile):
     pdf = MyPdf('P', 'mm', 'A4')
     pdf.userProfile = userProfile
 
-    # pdf.alias_nb_pages()
+    pdf.alias_nb_pages()
     pdf.add_page()
     pdf.set_font('Times', '', 12)
     for i in range(1, 41):
