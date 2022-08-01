@@ -15,11 +15,11 @@ class MyPdf(FPDF):
       file = file[0]
       self.image(file.path, 10, 8, 33)
       print("header", file.path)
-    self.set_font('Arial', 'B', 15)
+    self.set_font('Arial', 'BIU', 15)
     # Move to the right
-    self.cell(80)
+    self.cell(60, 40)
     # Title
-    self.cell(30, 10, 'Title', 1, 0, 'C')
+    self.cell(30, 20, 'ACCORD – CADRE DE SOUS-TRAITANCE', 1, 0, 'C')
     # Line break
     self.ln(20)
 
