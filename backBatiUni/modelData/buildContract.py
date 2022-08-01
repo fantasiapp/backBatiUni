@@ -26,7 +26,7 @@ class MyPdf(FPDF):
 class BuildContract:
 
   def __init__(self, userProfile):
-    pdf = MyPdf('P', 'mm', 'A4', userProfile=userProfile)
+    pdf = MyPdf(userProfile)
 
     pdf.alias_nb_pages()
     pdf.add_page()
