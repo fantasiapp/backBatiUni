@@ -150,6 +150,12 @@ class Webhook(DefaultView):
         DataAccessor.dataPost(json.dumps(updateSubscribeDict), False)
         return Response({"customer.subscription.updated": "OK"})
       elif event['type'] ==  'customer.subscription.deleted':
+        deleteSubscribeDict = {
+          "action": "deleteSubscribeUser",
+          "id": event['data']['object']['id'],
+          "stripeCustomerId": event['data']['object']['customer']
+        }
+        DataAccessor.dataPost(json.dumps())
         return Response({"Error": f"Not implemented yet"}, status=400)      
       else:
         # Unexpected event type
