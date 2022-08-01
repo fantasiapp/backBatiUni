@@ -1099,9 +1099,10 @@ class DataAccessor():
   def __modifyPwd(cls, data, currentUser):
     if data['oldPwd'] == data['newPwd']:
       return {"modifyPwd":"Warning", "messages":{"oldPwd", "L'ancien et le nouveau mot de passe sont identiques"}}
-    print("checkPassword", data)
-    currentUser.set_password(data['newPwd'])
-    currentUser.save()
+    print("checkPassword", data, currentUser.check_password(data['oldPwd']))
+    if currentUser.check_password(data['oldPwd']):
+      currentUser.set_password(data['newPwd'])
+      currentUser.save()
     return {"modifyPwd":"OK"}
 
   @classmethod
