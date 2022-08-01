@@ -2,11 +2,11 @@ from fpdf import FPDF
 from ..models import *
 class MyPdf(FPDF):
 
-  def __init__(self):
-    self.userProfile = None
-    print(self.userProfile.Company.name)
-    file = File.objects.filter(nature="userImage", Company=self.userProfile.Company)
-    print("buildContract", file)
+  # def __init__(self):
+  #   self.userProfile = None
+  #   print(self.userProfile.Company.name)
+  #   file = File.objects.filter(nature="userImage", Company=self.userProfile.Company)
+  #   print("buildContract", file)
 
   def header(self):
     print("header")
