@@ -34,7 +34,8 @@ class MyPdf(FPDF):
 class BuildContract:
   part1Title = "Désignation des parties contractantes"
   part1SubTitle1 = "ENTRE LES SOUSSIGNÉES :"
-  __part1ST1Text1 = "La Société $Company$, société par actions simplifié $Capital$, $Address$, $Siret$, $represent$"
+  __part1ST1Text1 = "La Société $Company$, société par actions simplifié $Capital$, $Address$, $Siret$, $Represent$"
+  part1ST1Text2 = "Ci-après dénommée « l’Entrepreneur Principal »"
 
   def __init__(self, userProfile):
     self.userProfile = userProfile
@@ -83,7 +84,7 @@ class BuildContract:
     represent = f"représentée aux fins des présentes par Monsieur {self.userProfile.firstName} {self.userProfile.lastName}"
     if self.userProfile.function:
       represent += f" agissant en tant que {self.userProfile.function}"
-    return represent + " ,dûment habilité,"
+    return represent + " ,dûment habilité."
 
 
   def translateText(self, str):
