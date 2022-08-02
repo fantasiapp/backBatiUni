@@ -19,7 +19,7 @@ class MyPdf(FPDF):
       file = file[0]
       self.image(file.path, 10, 8, 33)
       print("header", file.path)
-    self.set_font('"NotoSans"', 'BI', 15)
+    self.set_font('"Arial"', 'BI', 15)
     # Move to the right
     self.cell(60, 40)
     # Title
@@ -39,10 +39,10 @@ class BuildContract:
 
   def __init__(self, userProfile):
     pdf = MyPdf('P', 'mm', 'A4')
-    pdf.add_font("NotoSans", style="", fname="NotoSans-Regular.ttf", uni=True)
-    pdf.add_font("NotoSans", style="B", fname="NotoSans-Bold.ttf", uni=True)
-    pdf.add_font("NotoSans", style="I", fname="NotoSans-Italic.ttf", uni=True)
-    pdf.add_font("NotoSans", style="BI", fname="NotoSans-BoldItalic.ttf", uni=True)
+    # pdf.add_font("NotoSans", style="", fname="NotoSans-Regular.ttf", uni=True)
+    # pdf.add_font("NotoSans", style="B", fname="NotoSans-Bold.ttf", uni=True)
+    # pdf.add_font("NotoSans", style="I", fname="NotoSans-Italic.ttf", uni=True)
+    # pdf.add_font("NotoSans", style="BI", fname="NotoSans-BoldItalic.ttf", uni=True)
     pdf.userProfile = userProfile
 
     pdf.alias_nb_pages()
