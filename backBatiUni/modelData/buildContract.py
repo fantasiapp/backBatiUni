@@ -22,7 +22,8 @@ class MyPdf(FPDF):
     # Move to the right
     self.cell(60, 40)
     # Title
-    char =  u"ACCORD – CADRE DE SOUS-TRAITANCE".encode('utf-8')
+    char =  u"ACCORD – CADRE DE SOUS-TRAITANCE".encode('iso-8859-1')
+    print(char)
     char =  "ACCORD – CADRE DE SOUS-TRAITANCE".encode('utf-8')
     print(char, char.decode('iso-8859-1'))
     # self.cell(30, 20, u"ACCORD – CADRE DE SOUS-TRAITANCE".encode('utf-8').decode('iso-8859-1'), 1, 0, 'C')
