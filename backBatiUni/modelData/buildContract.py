@@ -15,7 +15,7 @@ class MyPdf(FPDF):
     print("header")
     file = File.objects.filter(nature="userImage", Company=self.userProfile.Company)
     if file:
-      self.set_xy(5,5)
+      self.set_xy(-5,-5)
       file = file[0]
       self.image(file.path, 10, 8, 33)
       print("header", file.path)
