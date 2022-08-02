@@ -57,10 +57,12 @@ class SubscriptionManager():
     @classmethod
     def cancelSubscription(cls, request):
         try:
-            deletedSubscription = stripe.Subscription.delete(request.susbscriptionId)
+            canceledSubscription = stripe.Subscription.modify(
+                request.susbscriptionId,
+                cancel_at_period_end=True)
 
             return {
-                "subscriptionId": deletedSubscription.id
+                "subscriptionId": canceledSubscription.id
             }
         except Exception as e:
             return {"Error": str(e)}
@@ -77,5 +79,16 @@ class SubscriptionManager():
                 "fetchPrices": "OK",
                 "prices": prices
             }
+        except Exception as e:
+            return {"Error": str(e)}
+
+    @classmethod
+    def fetchSubscriptionDetails(cls, request):
+        print(request)
+        try:
+            subscribption = stripe.Subscription.get(
+                request.data["subscriptionId"]
+            )
+            print("subscription details :", subscribption)
         except Exception as e:
             return {"Error": str(e)}
