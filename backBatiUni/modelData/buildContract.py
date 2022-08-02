@@ -39,7 +39,10 @@ class BuildContract:
 
     pdf.alias_nb_pages()
     pdf.add_page()
-    self.cell(190, 10, "Désignation des parties contractantes", 0, 1, 'L')
+    pdf.set_font('Arial', 'B', 14)
+    pdf.cell(190, 10, "Désignation des parties contractantes", 0, 1, 'L')
+    pdf.set_font('Arial', 'B', 12)
+    pdf.cell(190, 10, "ENTRE LES SOUSSIGNÉES :")
     pdf.set_font('Times', '', 12)
     for i in range(1, 41):
       pdf.cell(0, 10, 'Printing line number ' + str(i), 0, 0.7)
