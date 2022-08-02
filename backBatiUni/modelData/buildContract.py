@@ -23,10 +23,10 @@ class MyPdf(FPDF):
     self.cell(60, 40)
     # Title
     char =  u"ACCORD – CADRE DE SOUS-TRAITANCE".encode('utf-8')
-    print(char)
-    char =  u"ACCORD – CADRE DE SOUS-TRAITANCE".encode('iso-8859-1')
-    print("latin", char)
-    self.cell(30, 20, u"ACCORD – CADRE DE SOUS-TRAITANCE".encode('utf-8').decode('iso-8859-1'), 1, 0, 'C')
+    char =  "ACCORD – CADRE DE SOUS-TRAITANCE"
+    print(char, char.decode('iso-8859-1'))
+    # self.cell(30, 20, u"ACCORD – CADRE DE SOUS-TRAITANCE".encode('utf-8').decode('iso-8859-1'), 1, 0, 'C')
+    self.cel()
     # Line break
     self.ln(20)
 
@@ -37,6 +37,7 @@ class MyPdf(FPDF):
         self.set_font('Arial', 'I', 8)
         # Page number
         self.cell(0, 10, 'Page ' + str(self.page_no()) + '/{nb}', 0, 0, 'C')
+
 
 class BuildContract:
   def __init__(self, userProfile):
@@ -49,3 +50,10 @@ class BuildContract:
     for i in range(1, 41):
       pdf.cell(0, 10, 'Printing line number ' + str(i), 0, 1)
     pdf.output('./files/documents/tuto1.pdf', 'F')
+
+def specialChar(string):
+    latinStr = u'{string}'.encode('utf-8').decode('iso-8859-1')
+    for key, value in {'â€“':"-"}.item():
+      latinStr.replace(key, value)
+    print(latinStr)
+    return latinStr
