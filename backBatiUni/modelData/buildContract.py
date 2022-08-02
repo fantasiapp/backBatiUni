@@ -32,9 +32,9 @@ class MyPdf(FPDF):
 
 
 class BuildContract:
-  Part1Title = "Désignation des parties contractantes"
-  Part1SubTitle1 = "ENTRE LES SOUSSIGNÉES :"
-  Part1ST1Text1 = "La Société ALLEAUME ET GOULART, société par actions simplifiée au capital 100 000,00 euros, ayant son siège social au 9-11 rue Vintimille 75009 Paris, immatriculée au RCS de Paris et identifiée sous le numéro 732 039 417, représentée aux fins des présentes par Monsieur Hubert ALLEAUME agissant en tant que Président, dûment habilité,"
+  part1Title = "Désignation des parties contractantes"
+  part1SubTitle1 = "ENTRE LES SOUSSIGNÉES :"
+  __part1ST1Text1 = "La Société ALLEAUME ET GOULART, société par actions simplifiée au capital 100 000,00 euros, ayant son siège social au 9-11 rue Vintimille 75009 Paris, immatriculée au RCS de Paris et identifiée sous le numéro 732 039 417, représentée aux fins des présentes par Monsieur Hubert ALLEAUME agissant en tant que Président, dûment habilité,"
 
   def __init__(self, userProfile):
     pdf = MyPdf('P', 'mm', 'A4')
@@ -53,6 +53,21 @@ class BuildContract:
     for i in range(1, 41):
       pdf.cell(0, 6, 'Printing line number ' + str(i), 0, 1)
     pdf.output('./files/documents/tuto1.pdf', 'F')
+
+  @property
+  def part1ST1Text1(self):
+    return self.translateText(self.__Part1ST1Text1)
+
+  @property
+  def __findCompany(self):
+    return "BatiUni"
+
+  def translateText(self, str):
+    translated = str
+    listTranslation = {"$Company$": self.__findCompany}
+    for key, method in listTranslation.items():
+      translated.replace(key, method)
+    return translated
 
 def specialChar(string):
     latinStr = string.encode('utf-8').decode('iso-8859-1')
