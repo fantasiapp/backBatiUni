@@ -86,9 +86,13 @@ class SubscriptionManager():
     def fetchSubscriptionDetails(cls, request):
         print(request)
         try:
-            subscribption = stripe.Subscription.retrieve(
+            subscription = stripe.Subscription.retrieve(
                 request.data["subscriptionId"]
             )
-            print("subscription details :", subscribption)
+            print("subscription details :", subscription)
+            return {
+                "fetchSubscriptionDetails": "OK",
+                "subscriptionDetails": subscription
+            }
         except Exception as e:
             return {"Error": str(e)}
