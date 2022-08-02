@@ -18,12 +18,9 @@ class MyPdf(FPDF):
       self.set_xy(-5,-5)
       file = file[0]
       self.image(file.path, 10, 8, 33)
-      print("header", file.path)
     self.set_font('Arial', 'BI', 15)
-    # Move to the right
-    self.set_xy(50,20)
+    self.set_xy(60,20)
     self.cell(120, 10, "ACCORD - CADRE DE SOUS-TRAITANCE", 1, 0, 'C')
-    # Line break
     self.ln(20)
 
   def footer(self):
