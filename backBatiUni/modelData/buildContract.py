@@ -1,6 +1,6 @@
 import fpdf
 from fpdf import FPDF
-# from ..models import *
+from ..models import *
 
 
 class MyPdf(FPDF):
@@ -55,3 +55,5 @@ def specialChar(string):
       latinStr.replace(key, value)
     print(latinStr)
     return latinStr
+
+
