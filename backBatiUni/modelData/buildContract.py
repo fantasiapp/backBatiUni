@@ -21,12 +21,8 @@ class MyPdf(FPDF):
     self.set_font('Arial', 'BI', 15)
     # Move to the right
     self.cell(60, 40)
-    # Title
-    char =  u"ACCORD – CADRE DE SOUS-TRAITANCE".encode('iso-8859-1')
-    print(char)
-    char =  "ACCORD – CADRE DE SOUS-TRAITANCE".encode('utf-8')
-    print(char, char.decode('iso-8859-1'))
-    # self.cell(30, 20, u"ACCORD – CADRE DE SOUS-TRAITANCE".encode('utf-8').decode('iso-8859-1'), 1, 0, 'C')
+    
+    self.cell(60, 20, "ACCORD - CADRE DE SOUS-TRAITANCE", 1, 0, 'C')
     self.cel()
     # Line break
     self.ln(20)
@@ -53,8 +49,9 @@ class BuildContract:
     pdf.output('./files/documents/tuto1.pdf', 'F')
 
 def specialChar(string):
-    latinStr = u'{string}'.encode('utf-8').decode('iso-8859-1')
-    for key, value in {'â€“':"-"}.item():
+    latinStr = string.encode('utf-8').decode('iso-8859-1')
+    print(latinStr)
+    for key, value in {'â':"-"}.items():
       latinStr.replace(key, value)
     print(latinStr)
     return latinStr
