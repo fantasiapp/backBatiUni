@@ -66,8 +66,8 @@ class BuildContract:
   def translateText(self, str):
     translated = str
     listTranslation = {"$Company$": self.__findCompany}
-    for key, method in listTranslation.items():
-      translated.replace(key, method)
+    for key, value in listTranslation.items():
+      translated = translated.replace(key, value)
     return translated
 
 def specialChar(string):
