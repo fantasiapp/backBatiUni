@@ -5,15 +5,9 @@ from ..models import *
 
 class MyPdf(FPDF):
 
-  # def __init__(self):
-  #   self.userProfile = None
-  #   print(self.userProfile.Company.name)
-  #   file = File.objects.filter(nature="userImage", Company=self.userProfile.Company)
-  #   print("buildContract", file)
-
   def header(self):
     print("header")
-    file = File.objects.filter(nature="userImage", Company=self.userProfile.Company)
+    file = File.objects.filter(nature="userImage", Company=self.pmeProfile.Company)
     if file:
       file = file[0]
       self.image(file.path, 10, 8, 33)
@@ -36,11 +30,12 @@ class BuildContract:
   part1SubTitle1 = "ENTRE LES SOUSSIGNÉES :"
   __part1ST1Text1 = "La Société $Company$, société par actions simplifié $Capital$, $Address$, $Siret$, $Represent$"
   part1ST1Text2 = "Ci-après dénommée « l’Entrepreneur Principal »"
+  part1ST1Text3 = "D'UNE PART"
 
-  def __init__(self, userProfile):
-    self.userProfile = userProfile
+  def __init__(self, pmeProfile):
+    self.pmeProfile = pmeProfile
     pdf = MyPdf('P', 'mm', 'A4')
-    pdf.userProfile = userProfile
+    pdf.pmeProfile = pmeProfile
     pdf.alias_nb_pages()
     pdf.add_page()
     pdf.set_font('Arial', 'BU', 14)
@@ -53,6 +48,8 @@ class BuildContract:
     pdf.ln(5)
     pdf.set_font('Arial', 'I', 12)
     pdf.cell(190, 10, self.part1ST1Text2, 0, 1, 'L')
+    pdf.set_font('Arial', '', 12)
+    pdf.cell(190, 10, self.part1ST1Text3, 0, 1, 'R')
 
     for i in range(1, 41):
       pdf.cell(0, 6, 'Printing line number ' + str(i), 0, 1)
@@ -64,28 +61,28 @@ class BuildContract:
 
   @property
   def __findCompany(self):
-    return self.userProfile.Company.name
+    return self.pmeProfile.Company.name
 
   @property
   def __findCapital(self):
-    if self.userProfile.Company.capital:
-      capital = f"{self.userProfile.Company.capital:,}".replace(",", " ")
+    if self.pmeProfile.Company.capital:
+      capital = f"{self.pmeProfile.Company.capital:,}".replace(",", " ")
       return f'au capital de {capital} euros'
     return ""
 
   @property
   def __findAddress(self):
-    return f"ayant son siège social au {self.userProfile.Company.address}"
+    return f"ayant son siège social au {self.pmeProfile.Company.address}"
 
   @property
   def __findSiret(self):
-    return f"identifiée par son numéro de Siret : {self.userProfile.Company.siret}"
+    return f"identifiée par son numéro de Siret : {self.pmeProfile.Company.siret}"
 
   @property
   def __findRepresent(self):
-    represent = f"représentée aux fins des présentes par Monsieur {self.userProfile.firstName} {self.userProfile.lastName}"
-    if self.userProfile.function:
-      represent += f" agissant en tant que {self.userProfile.function}"
+    represent = f"représentée aux fins des présentes par Monsieur {self.pmeProfile.firstName} {self.pmeProfile.lastName}"
+    if self.pmeProfile.function:
+      represent += f" agissant en tant que {self.pmeProfile.function}"
     return represent + ", dûment habilité."
 
 
