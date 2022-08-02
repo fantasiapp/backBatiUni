@@ -86,7 +86,7 @@ class SubscriptionManager():
     def fetchSubscriptionDetails(cls, request):
         print(request)
         try:
-            subscribption = stripe.Subscription.get(
+            subscribption = stripe.Subscription.retrieve(
                 request.data["subscriptionId"]
             )
             print("subscription details :", subscribption)
