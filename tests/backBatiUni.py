@@ -507,7 +507,7 @@ def executeQuery():
       response = requests.get(url, headers=headers, params={"action":"duplicatePost", "id":22})
         # response = requests.get(url, headers=headers, params={"action":"blockCompany", "companyId":1, "status":"true"})
     elif query == "test":
-      response = requests.get(url, headers=headers, params={"action":"test"})
+      response = requests.get(url, headers=headers, params={"action":"test", "missionId":})
   if response and query != "downloadFile":
     data = json.loads(response.text)
     print("data", data)

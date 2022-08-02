@@ -205,7 +205,6 @@ class DataAccessor():
       elif data["action"] == "boostPost": return cls.__boostPost(data, currentUser)
       elif data["action"] == "subscribeUser": return cls.__subscribeUser(data, currentUser)
       elif data["action"] == "updateSubscribeUser": return cls.__updateSubscribeUser(data, currentUser)
-      elif data["action"] == "deleteSubscribeUser": return cls.__deleteSubscribeUser(data, currentUser)
 
       return {"dataPost":"Error", "messages":f"unknown action in post {data['action']}"}
     return {"dataPost":"Error", "messages":"no action in post"}
@@ -716,9 +715,11 @@ class DataAccessor():
     return {"signContract":"OK", mission.id:mission.computeValues(mission.listFields(), currentUser, dictFormat=True)}
 
   @classmethod
-  def test(cls, currentUser):
-    userProfile = UserProfile.objects.get(userNameInternal=currentUser)
-    contract = BuildContract(userProfile)
+  def test(cls, currentUser, missionId):
+    mission = Mission.objects.get(id=missionId)
+    pmeCompany = mission.Company
+    pmeProfile = UserProfile.objects.get(Company=pmeCompany)
+    BuildContract(pmeProfile=pmeProfile)
     return {"test":"OK"}
 
   @classmethod
@@ -1099,7 +1100,7 @@ class DataAccessor():
   @classmethod
   def __modifyPwd(cls, data, currentUser):
     if data['oldPwd'] == data['newPwd']:
-      return {"modifyPwd":"Warning", "messages":{"L'ancien et le nouveau mot de passe sont identiques"}}
+      return {"modifyPwd":"Warning", "messages":{"Ancien et nouveau mot de passe identiques"}}
     if currentUser.check_password(data['oldPwd']):
       currentUser.set_password(data['newPwd'])
       currentUser.save()
@@ -1263,15 +1264,7 @@ class DataAccessor():
     company.stripeSubscriptionId = data["id"]
     company.stripeSubscriptionStatus = data["status"]
     company.save()
-    return {"updateSubscribeUser": "OK"}
-
-  @classmethod
-  def __deleteSubscribeUser(cls, data, user):
-    company = Company.objects.get(stripeCustomerId = data["stripeCustomerId"])
-    company.stripeSubscriptionId = None
-    company.stripeSubscriptionStatus = None
-    company.save()
-    return {"deleteSubscribeUser": "OK"}
+    return {"subscribeUser": "OK"}
 
   @classmethod
   def forgetPassword(cls, email):
