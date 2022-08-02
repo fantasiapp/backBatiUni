@@ -38,15 +38,10 @@ class BuildContract:
 
   def __init__(self, userProfile):
     pdf = MyPdf('P', 'mm', 'A4')
-    # pdf.add_font("NotoSans", style="", fname="NotoSans-Regular.ttf", uni=True)
-    # pdf.add_font("NotoSans", style="B", fname="NotoSans-Bold.ttf", uni=True)
-    # pdf.add_font("NotoSans", style="I", fname="NotoSans-Italic.ttf", uni=True)
-    # pdf.add_font("NotoSans", style="BI", fname="NotoSans-BoldItalic.ttf", uni=True)
     pdf.userProfile = userProfile
 
     pdf.alias_nb_pages()
     pdf.add_page()
-    fpdf.set_global("SYSTEM_TTFONTS", os.path.join(os.path.dirname(__file__),'fonts'))
     pdf.set_font('Times', '', 12)
     for i in range(1, 41):
       pdf.cell(0, 10, 'Printing line number ' + str(i), 0, 1)
