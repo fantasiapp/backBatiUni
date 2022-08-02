@@ -3,6 +3,7 @@ from fpdf import FPDF
 from ..models import *
 
 # fpdf.set_global("SYSTEM_TTFONTS", os.path.join(os.path.dirname(__file__),'fonts'))
+fpdf.set_global("SYSTEM_TTFONTS", os.path.join(os.path.dirname(__file__),'fonts'))
 
 class MyPdf(FPDF):
 
