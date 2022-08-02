@@ -20,6 +20,7 @@ class MyPdf(FPDF):
       print("header", file.path)
     self.set_font('Arial', 'BI', 15)
     # Move to the right
+    self.set_x(-40)
     self.cell(120, 20)
     
     self.cell(120, 20, "ACCORD - CADRE DE SOUS-TRAITANCE", 1, 0, 'C')
