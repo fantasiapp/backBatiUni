@@ -34,9 +34,10 @@ class MyPdf(FPDF):
 class BuildContract:
   part1Title = "Désignation des parties contractantes"
   part1SubTitle1 = "ENTRE LES SOUSSIGNÉES :"
-  __part1ST1Text1 = "La Société ALLEAUME ET GOULART, société par actions simplifiée au capital 100 000,00 euros, ayant son siège social au 9-11 rue Vintimille 75009 Paris, immatriculée au RCS de Paris et identifiée sous le numéro 732 039 417, représentée aux fins des présentes par Monsieur Hubert ALLEAUME agissant en tant que Président, dûment habilité,"
+  __part1ST1Text1 = "La Société ALLEAUME ET GOULART, société par actions simplifié au capital 100 000,00 euros, ayant son siège social au 9-11 rue Vintimille 75009 Paris, immatriculée au RCS de Paris et identifiée sous le numéro 732 039 417, représentée aux fins des présentes par Monsieur Hubert ALLEAUME agissant en tant que Président, dûment habilité,"
 
   def __init__(self, userProfile):
+    self.userProfile = userProfile
     pdf = MyPdf('P', 'mm', 'A4')
     pdf.userProfile = userProfile
     pdf.alias_nb_pages()
