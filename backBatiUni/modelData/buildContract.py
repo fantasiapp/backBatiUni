@@ -23,7 +23,7 @@ class MyPdf(FPDF):
     self.cell(60, 40)
     # Title
     char =  u"ACCORD – CADRE DE SOUS-TRAITANCE".encode('utf-8')
-    char =  "ACCORD – CADRE DE SOUS-TRAITANCE"
+    char =  u"ACCORD – CADRE DE SOUS-TRAITANCE"
     print(char, char.decode('iso-8859-1'))
     # self.cell(30, 20, u"ACCORD – CADRE DE SOUS-TRAITANCE".encode('utf-8').decode('iso-8859-1'), 1, 0, 'C')
     self.cel()
