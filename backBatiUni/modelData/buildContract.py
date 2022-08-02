@@ -34,7 +34,7 @@ class MyPdf(FPDF):
 class BuildContract:
   part1Title = "Désignation des parties contractantes"
   part1SubTitle1 = "ENTRE LES SOUSSIGNÉES :"
-  __part1ST1Text1 = "La Société $Company$, société par actions simplifié $Capital$, $Address$, $Siret$, représentée aux fins des présentes par Monsieur Hubert ALLEAUME agissant en tant que Président, dûment habilité,"
+  __part1ST1Text1 = "La Société $Company$, société par actions simplifié $Capital$, $Address$, $Siret$, $represent$"
 
   def __init__(self, userProfile):
     self.userProfile = userProfile
