@@ -155,7 +155,7 @@ class Webhook(DefaultView):
           "id": event['data']['object']['id'],
           "stripeCustomerId": event['data']['object']['customer']
         }
-        DataAccessor.dataPost(json.dumps())
+        DataAccessor.dataPost(json.dumps(deleteSubscribeDict))
         return Response({"Error": f"Not implemented yet"}, status=400)      
       else:
         # Unexpected event type
@@ -179,4 +179,6 @@ class Subscription(DefaultView):
         return Response(SubscriptionManager.cancelSubscription(request))
       if data["action"] == "fetchPrice":
         return Response(SubscriptionManager.fetchPrice(request))
+      if data["action"] == "fetchSubscriptionDetails":
+        return Response(SubscriptionManager.fetchSubscriptionDetails(request))
     return Response({"Error": f"Not implemented yet"})
