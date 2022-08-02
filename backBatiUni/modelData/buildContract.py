@@ -19,7 +19,7 @@ class MyPdf(FPDF):
       file = file[0]
       self.image(file.path, 10, 8, 33)
       print("header", file.path)
-    self.set_font('"Arial"', 'BI', 15)
+    self.set_font('Arial', 'BI', 15)
     # Move to the right
     self.cell(60, 40)
     # Title
