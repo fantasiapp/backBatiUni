@@ -2,8 +2,6 @@ import fpdf
 from fpdf import FPDF
 from ..models import *
 
-# fpdf.set_global("SYSTEM_TTFONTS", os.path.join(os.path.dirname(__file__),'fonts'))
-fpdf.set_global("SYSTEM_TTFONTS", os.path.join(os.path.dirname(__file__),'fonts'))
 
 class MyPdf(FPDF):
 
@@ -24,8 +22,7 @@ class MyPdf(FPDF):
     # Move to the right
     self.cell(60, 40)
     # Title
-    # self.cell(30, 20, 'ACCORD – CADRE DE SOUS-TRAITANCE', 1, 0, 'C')
-    self.write_html("<B>hello</B> <I>world äöü &auml;</I>", font="Arial", newline=True)
+    self.cell(30, 20, 'ACCORD – CADRE DE SOUS-TRAITANCE'.decode('utf8').encode('latin1'), 1, 0, 'C')
     # Line break
     self.ln(20)
 
@@ -49,6 +46,7 @@ class BuildContract:
 
     pdf.alias_nb_pages()
     pdf.add_page()
+    fpdf.set_global("SYSTEM_TTFONTS", os.path.join(os.path.dirname(__file__),'fonts'))
     pdf.set_font('Times', '', 12)
     for i in range(1, 41):
       pdf.cell(0, 10, 'Printing line number ' + str(i), 0, 1)
