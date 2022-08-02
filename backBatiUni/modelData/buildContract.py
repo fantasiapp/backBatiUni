@@ -24,7 +24,7 @@ class MyPdf(FPDF):
     # Title
     char =  u"ACCORD – CADRE DE SOUS-TRAITANCE".encode('utf-8')
     print(char)
-    self.cell(30, 20, u"ACCORD – CADRE DE SOUS-TRAITANCE".encode('utf-8').decode('windows-1252'), 1, 0, 'C')
+    self.cell(30, 20, u"ACCORD – CADRE DE SOUS-TRAITANCE".encode('utf-8').decode('latin-1'), 1, 0, 'C')
     # Line break
     self.ln(20)
 
