@@ -44,7 +44,7 @@ class BuildContract:
     pdf.set_xy(20,0)
     pdf.set_font('Arial', 'B', 14)
     pdf.cell(190, 10, self.Part1Title, 0, 1, 'L')
-    self.set_xy(10,0)
+    pdf.set_xy(10,0)
     pdf.set_font('Arial', 'BU', 12)
     pdf.cell(190, 10, self.Part1SubTitle1, 0, 1, 'L')
     pdf.set_font('Arial', '', 12)
