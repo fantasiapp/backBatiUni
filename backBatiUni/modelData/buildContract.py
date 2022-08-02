@@ -34,7 +34,7 @@ class MyPdf(FPDF):
 class BuildContract:
   part1Title = "Désignation des parties contractantes"
   part1SubTitle1 = "ENTRE LES SOUSSIGNÉES :"
-  __part1ST1Text1 = "La Société $Company$, société par actions simplifié $Capital$, ayant son siège social au $Address$, $Siret$, représentée aux fins des présentes par Monsieur Hubert ALLEAUME agissant en tant que Président, dûment habilité,"
+  __part1ST1Text1 = "La Société $Company$, société par actions simplifié $Capital$, $Address$, $Siret$, représentée aux fins des présentes par Monsieur Hubert ALLEAUME agissant en tant que Président, dûment habilité,"
 
   def __init__(self, userProfile):
     self.userProfile = userProfile
@@ -72,16 +72,23 @@ class BuildContract:
 
   @property
   def __findAddress(self):
-    return self.userProfile.Company.address
+    return f"ayant son siège social au {self.userProfile.Company.address}"
 
   @property
   def __findSiret(self):
-    return self.userProfile.Company.siret
+    return f"identifiée par son numéro de Siret : {self.userProfile.Company.siret}"
+
+  @property
+  def __findRepresent(self):
+    represent = f"représentée aux fins des présentes par Monsieur {self.userProfile.firstName} {self.userProfile.lastName}"
+    if self.userProfile.function:
+      represent += f" agissant en tant que {self.userProfile.function}"
+    return represent + " ,dûment habilité,"
 
 
   def translateText(self, str):
     translated = str
-    listTranslation = {"$Company$": self.__findCompany, "$Capital$":self.__findCapital, "$Address$":self.__findAddress, "$Siret":self.__findSiret}
+    listTranslation = {"$Company$": self.__findCompany, "$Capital$":self.__findCapital, "$Address$":self.__findAddress, "$Siret$":self.__findSiret, "$Represent$":self.__findRepresent}
     for key, value in listTranslation.items():
       translated = translated.replace(key, value)
     return translated
