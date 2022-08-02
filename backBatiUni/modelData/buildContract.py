@@ -23,7 +23,6 @@ class MyPdf(FPDF):
     self.cell(60, 40)
     
     self.cell(60, 20, "ACCORD - CADRE DE SOUS-TRAITANCE", 1, 0, 'C')
-    self.cel()
     # Line break
     self.ln(20)
 
