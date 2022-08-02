@@ -51,6 +51,8 @@ class BuildContract:
     pdf.set_font('Arial', '', 12)
     pdf.multi_cell(190, 5, self.part1ST1Text1)
     pdf.ln(5)
+    pdf.set_font('Arial', 'I', 12)
+    pdf.cell(190, 10, self.part1ST1Text2, 0, 1, 'L')
 
     for i in range(1, 41):
       pdf.cell(0, 6, 'Printing line number ' + str(i), 0, 1)
@@ -84,7 +86,7 @@ class BuildContract:
     represent = f"représentée aux fins des présentes par Monsieur {self.userProfile.firstName} {self.userProfile.lastName}"
     if self.userProfile.function:
       represent += f" agissant en tant que {self.userProfile.function}"
-    return represent + " ,dûment habilité."
+    return represent + ", dûment habilité."
 
 
   def translateText(self, str):
