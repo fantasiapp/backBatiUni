@@ -66,7 +66,7 @@ class BuildContract:
   @property
   def __findCapital(self):
     if self.userProfile.Company.capital:
-      return f'au capital de {"{:,d}".format(self.userProfile.Company.capital)} €'
+      return f'au capital de {"{:,2}".format(self.userProfile.Company.capital)} €'
     return ""
 
 
