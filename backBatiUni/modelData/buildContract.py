@@ -21,8 +21,7 @@ class MyPdf(FPDF):
     self.set_font('Arial', 'BI', 15)
     # Move to the right
     self.set_xy(20,20)
-    # self.cell(120, 20)
-    self.cell(w=120, h=20, txt="ACCORD - CADRE DE SOUS-TRAITANCE", border=1, ln=0, center=True)
+    self.cell(120, 10, "ACCORD - CADRE DE SOUS-TRAITANCE", 1, 0, 'C')
     # Line break
     self.ln(20)
 
