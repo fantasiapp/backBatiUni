@@ -33,7 +33,8 @@ class MyPdf(FPDF):
 
 
 class BuildContract:
-  titlePar1 = "Désignation des parties contractantes"
+  Part1Title = "Désignation des parties contractantes"
+  Part1SubTitle1 = "ENTRE LES SOUSSIGNÉES :"
 
   def __init__(self, userProfile):
     pdf = MyPdf('P', 'mm', 'A4')
@@ -42,12 +43,12 @@ class BuildContract:
     pdf.alias_nb_pages()
     pdf.add_page()
     pdf.set_font('Arial', 'B', 14)
-    pdf.cell(190, 10, "Désignation des parties contractantes", 0, 1, 'L')
+    pdf.cell(190, 10, self.Part1Title, 0, 1, 'L')
     pdf.set_font('Arial', 'B', 12)
-    pdf.cell(190, 10, "ENTRE LES SOUSSIGNÉES :")
+    pdf.cell(190, 10, "ENTRE LES SOUSSIGNÉES :", 0, 1, 'L')
     pdf.set_font('Times', '', 12)
     for i in range(1, 41):
-      pdf.cell(0, 7, 'Printing line number ' + str(i), 0, 1)
+      pdf.cell(0, 6, 'Printing line number ' + str(i), 0, 1)
     pdf.output('./files/documents/tuto1.pdf', 'F')
 
 def specialChar(string):
