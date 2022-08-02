@@ -42,12 +42,12 @@ class BuildContract:
     pdf.alias_nb_pages()
     pdf.add_page()
     pdf.set_font('Arial', 'BU', 14)
-    pdf.cell(190, 10, self.Part1Title, 0, 1, 'L')
+    pdf.cell(190, 10, self.part1Title, 0, 1, 'L')
     pdf.set_x(10)
     pdf.set_font('Arial', 'BU', 12)
-    pdf.cell(190, 10, self.Part1SubTitle1, 0, 1, 'L')
+    pdf.cell(190, 10, self.part1SubTitle1, 0, 1, 'L')
     pdf.set_font('Arial', '', 12)
-    pdf.multi_cell(190, 5, self.Part1ST1Text1)
+    pdf.multi_cell(190, 5, self.part1ST1Text1)
     pdf.ln(5)
 
     for i in range(1, 41):
@@ -56,11 +56,11 @@ class BuildContract:
 
   @property
   def part1ST1Text1(self):
-    return self.translateText(self.__Part1ST1Text1)
+    return self.translateText(self.__part1ST1Text1)
 
   @property
   def __findCompany(self):
-    return "BatiUni"
+    return self.userProfile.Company.name
 
   def translateText(self, str):
     translated = str
