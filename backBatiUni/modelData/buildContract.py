@@ -24,6 +24,8 @@ class MyPdf(FPDF):
     # Title
     char =  u"ACCORD – CADRE DE SOUS-TRAITANCE".encode('utf-8')
     print(char)
+    char =  u"ACCORD – CADRE DE SOUS-TRAITANCE".encode('iso-8859-1')
+    print("latin", char)
     self.cell(30, 20, u"ACCORD – CADRE DE SOUS-TRAITANCE".encode('utf-8').decode('iso-8859-1'), 1, 0, 'C')
     # Line break
     self.ln(20)
@@ -37,7 +39,6 @@ class MyPdf(FPDF):
         self.cell(0, 10, 'Page ' + str(self.page_no()) + '/{nb}', 0, 0, 'C')
 
 class BuildContract:
-
   def __init__(self, userProfile):
     pdf = MyPdf('P', 'mm', 'A4')
     pdf.userProfile = userProfile
