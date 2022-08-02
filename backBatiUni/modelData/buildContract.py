@@ -47,6 +47,7 @@ class BuildContract:
     pdf.set_font('Arial', 'BU', 12)
     pdf.cell(190, 10, self.Part1SubTitle1, 0, 1, 'L')
     pdf.set_font('Arial', '', 12)
+    pdf.multi_cell(190, 0.7, self.Part1ST1Text1, 0, 1, 'L')
 
     for i in range(1, 41):
       pdf.cell(0, 6, 'Printing line number ' + str(i), 0, 1)
