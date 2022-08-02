@@ -19,8 +19,8 @@ class MyPdf(FPDF):
       self.image(file.path, 10, 8, 33)
     self.set_font('Arial', 'BI', 15)
     self.set_xy(60,20)
-    self.cell(120, 10, "ACCORD - CADRE DE SOUS-TRAITANCE", 1, 5, 'C')
-    self.ln(20)
+    self.cell(120, 10, "ACCORD - CADRE DE SOUS-TRAITANCE", 1, 1, 'C')
+    self.ln(30)
 
   def footer(self):
         # Position at 1.5 cm from bottom
