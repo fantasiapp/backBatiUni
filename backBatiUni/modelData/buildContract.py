@@ -15,7 +15,6 @@ class MyPdf(FPDF):
     print("header")
     file = File.objects.filter(nature="userImage", Company=self.userProfile.Company)
     if file:
-      self.set_xy(-5,-5)
       file = file[0]
       self.image(file.path, 10, 8, 33)
     self.set_font('Arial', 'BI', 15)
@@ -42,11 +41,11 @@ class BuildContract:
     pdf.userProfile = userProfile
     pdf.alias_nb_pages()
     pdf.add_page()
-    pdf.set_font('Arial', 'B', 14)
+    pdf.set_font('Arial', 'BU', 14)
     pdf.cell(190, 10, self.Part1Title, 0, 1, 'L')
     pdf.set_x(10)
     pdf.set_font('Arial', 'BU', 12)
-    pdf.cell(190, 10, self.Part1SubTitle1, 0, 1, 'L')
+    pdf.cell(190, 10, self.Part1SubTitle1, 0, 1, 'L', new_x=15)
     pdf.set_font('Arial', '', 12)
     for i in range(1, 41):
       pdf.cell(0, 6, 'Printing line number ' + str(i), 0, 1)
