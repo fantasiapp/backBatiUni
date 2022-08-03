@@ -33,8 +33,10 @@ class BuildContract:
   part1ST1Text2 = "Ci-après dénommée « l'Entrepreneur Principal »"
   part1ST2Text2 = "Ci-après dénommée « le Sous-Traitant »"
   part1ST1Text3 = "D'UNE PART"
-  part1ST2Text3 = "L’entrepreneur Principal et le Sous-Traitant étant ci-après dénommés ensemble les « Parties » ou individuellement une « Partie »."
+  part1ST2Text3 = "L'entrepreneur Principal et le Sous-Traitant étant ci-après dénommés ensemble les « Parties » ou individuellement une « Partie »."
   part1ST2Text4 = "D'AUTRE PART"
+  part2Subtitle1 = "EXPOSÉ PRÉALABLE"
+  part2Text1 = "La société ALLEAUME ET GOULART, dans le cadre de sons activité de Contractant Général, ci-après l'Entrepreneur Principal, se voit confier par des maîtres d'ouvrages, des missions de conception – réalisation de l'aménagement de locaux à usage de bureaux, activités ou commerce, ci-après le « Contrat Principal »."
 
   def __init__(self, pmeProfile, stProfile):
     self.pmeProfile = pmeProfile
@@ -45,6 +47,7 @@ class BuildContract:
     pdf.add_page()
     self.writePart1Text1(pdf)
     self.writePart1Text2(pdf)
+    self.writePart2(pdf)
 
     for i in range(1, 41):
       pdf.cell(0, 6, 'Printing line number ' + str(i), 0, 1)
@@ -76,8 +79,13 @@ class BuildContract:
     pdf.cell(190, 10, self.part1ST2Text4, 0, 1, 'R')
     pdf.ln(20)
 
+  def writePart2(self, pdf):
+    pdf.set_font('Arial', 'BU', 12)
+    pdf.cell(190, 10, self.part2Subtitle1, 0, 1, 'L')
+    pdf.set_font('Arial', '', 12)
+
+# Utilitaires
   def part1ST1Text1(self, nature="pme"):
-    print("part1ST1Text1", self.__part1ST1Text1, nature)
     return self.translateText(self.__part1ST1Text1, nature)
 
   def __findCompany(self, nature):
