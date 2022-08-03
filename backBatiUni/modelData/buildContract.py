@@ -44,7 +44,7 @@ class BuildContract:
   part2Title2 = "IL A AINSI ETE ARRETE ET CONVENU CE QUI SUIT :"
 
   art01Title = "ARTICLE I : OBJET DU CONTRAT"
-  artO1Par1 = "I.1. Le présent accord – cadre de sous-traitance, ci-après « le Contrat », définit les conditions générales de la collaboration entre les Parties donnant lieu à des missions de sous-traitance que l'Entrepreneur Principal confie au Sous-Traitant, opération par opération, et que ce dernier s'engage à exécuter, pour mener à bien l'exécution de tout Contrat Principal confié par un maître d'ouvrage ci-après « le Maître d'Ouvrage » à l'Entrepreneur Principal. A ce titre, il est expressément convenu entre les Parties que l'Entrepreneur Principal n'est en aucun cas lié au Sous-Traitant par une obligation d'exclusivité et quil pourra confier des missions de sous-traitance pour l'exécution de tout Contrat Principal à tout sous-traitant de sons choix."
+  artO1Par1 = "I.1. Le présent accord - cadre de sous-traitance, ci-après « le Contrat », définit les conditions générales de la collaboration entre les Parties donnant lieu à des missions de sous-traitance que l'Entrepreneur Principal confie au Sous-Traitant, opération par opération, et que ce dernier s'engage à exécuter, pour mener à bien l'exécution de tout Contrat Principal confié par un maître d'ouvrage ci-après « le Maître d'Ouvrage » à l'Entrepreneur Principal. A ce titre, il est expressément convenu entre les Parties que l'Entrepreneur Principal n'est en aucun cas lié au Sous-Traitant par une obligation d'exclusivité et quil pourra confier des missions de sous-traitance pour l'exécution de tout Contrat Principal à tout sous-traitant de sons choix."
   artO1Par2 = "I.2. Les conditions particulières de chaque mission de sous-traitance confiée par l'Entrepreneur Principal au Sous-Traitant seront quant à elles précisées sur les bons de commande écrits établis pour chaque mission, ci-après « le Bon de Commande » qui complétera les présentes conditions générales. Chaque Bon de Commande, communiqué par l’Entrepreneur Principal avant le démarrage de chaque mission, comprendra obligatoirement le devis descriptif du Sous-Traitant, la mention de la date de démarrage et de la date de réception des travaux sous-traités le montant et les modalités de paiement du prix de la mission de sous-traitance."
   artO1Par3 = "I.3. Les Parties reconnaissent expressément que le sort de toute mission de sous-traitance sera dépendant du sort du Contrat Principal ; en conséquence, la prise d’effet du Contrat Principal conditionnera la prise d’effet de la mission de sous-traitance. De la même façon, toute évolution du Contrat Principal, pour quelque motif que ce soit, entraînera celle de la mission de sous-traitance, ce que le Sous-traitant accepte expressément."
   artO1Par4 = "I.4. Il est rappelé que chaque mission de sous-traitance est soumise, notamment aux dispositions de la loi n° 71-584 du 16 juillet 1971 et à celles de la loi n°75-1334 du 31 décembre 1975, et plus généralement aux dispositions légales et réglementaires applicables à la sous-traitance."
@@ -52,7 +52,7 @@ class BuildContract:
 # Le Contrat est conclu pour une durée indéterminée. Il entrera en vigueur à 
 # compter du jour de sa signature. Il pourra être résilié dans les conditions 
 # indiquées à l’article VIII ci-après.
-# ARTICLE III – DOCUMENTS CONTRACTUELS – HIERARCHIE 
+# ARTICLE III - DOCUMENTS CONTRACTUELS - HIERARCHIE 
 # III.1. Les Parties reconnaissent expressément être liées par les 
 # documents contractuels suivants      :  
 # 1. Le Contrat et ses annexes,
