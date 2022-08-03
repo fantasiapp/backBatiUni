@@ -87,11 +87,7 @@ class BuildContract:
   art05SubTitle3 = "V.3. Assurances"
   artO5Par13 = "Le Sous-Traitant a l’obligation de souscrire toutes les assurances obligatoires (responsabilité civile professionnelle et assurance de garantie décennale) préalablement au commencement de sa mission et devra être à même d’en justifier à première demande de l’Entrepreneur Principal."
   art05SubTitle3 = "V.4. Indépendance Economique"
-# Le Sous-Traitant déclare et garantit que le chiffre d’affaires pouvant être 
-# généré par le présent Contrat, cumulé à celui généré par tous les contrats 
-# existant avec l’Entrepreneur Principal au jour de la signature des présentes, 
-# n’est pas susceptible de représenter une part de son chiffre d’affaires global 
-# supérieure à 25 %.
+  artO5Par14 = "Le Sous-Traitant déclare et garantit que le chiffre d’affaires pouvant être généré par le présent Contrat, cumulé à celui généré par tous les contrats existant avec l’Entrepreneur Principal au jour de la signature des présentes, n’est pas susceptible de représenter une part de son chiffre d’affaires global supérieure à 25 %."
 # Si à quelque moment que ce soit, le pourcentage que représente le volume 
 # d’affaire réalisé avec l’Entrepreneur Principal, tous contrats et commandes 
 # confondus, devait excéder le pourcentage susvisé, le Sous-Traitant s’engage à 
@@ -234,6 +230,10 @@ class BuildContract:
     pdf.multi_cell(190, 10, self.art05Title)
     pdf.ln(5)
     dictData = {"title":self.art05SubTitle1, "paragraphs":[self.artO5Par01, self.artO5Par02, self.artO5Par03, self.artO5Par04, self.artO5Par05, self.artO5Par06, self.artO5Par07, self.artO5Par08, self.artO5Par09, self.artO5Par10, self.artO5Par11, self.artO5Par12]}
+    self.writeArticleGeneric(pdf, dictData)
+    dictData = {"title":self.art05SubTitle2, "paragraphs":[self.artO5Par13]}
+    self.writeArticleGeneric(pdf, dictData)
+    dictData = {"title":self.art05SubTitle3, "paragraphs":[self.artO5Par14]}
     self.writeArticleGeneric(pdf, dictData)
 
 # Utilitaires
