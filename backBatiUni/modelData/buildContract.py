@@ -150,16 +150,18 @@ class BuildContract:
     dictData = {"title":self.artO3ST, "paragraphs":[self.artO3Par1, self.artO3Par2, self.artO3Par3, self.artO3Par4, self.artO3Par5, self.artO3Par6, self.artO3Par7, self.artO3Par8]}
     self.writeArticleGeneric(pdf, dictData)
 
+# Utilitaires
   def writeArticleGeneric(self, pdf, dictData):
     pdf.set_font('Arial', 'BU', 12)
-    pdf.cell(190, 10, dictData["title"], 0, 1, 'L')
+    title = dictData["title"].replace("’", "'")
+    pdf.cell(190, 10, title, 0, 1, 'L')
     pdf.set_font('Arial', '', 12)
     for paragraph in dictData["paragraphs"]:
-      pdf.multi_cell(190, 5, paragraph)
+      parClean = paragraph.replace("’", "'")
+      pdf.multi_cell(190, 5, parClean)
       pdf.ln(2)
     pdf.ln(10)
 
-# Utilitaires
   def part1ST1Text1(self, nature="pme"):
     return self.translateText(self.__part2Text1, nature)
 
