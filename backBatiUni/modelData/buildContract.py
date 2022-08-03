@@ -51,7 +51,7 @@ class BuildContract:
     pdf.set_font('Arial', 'BU', 12)
     pdf.cell(190, 10, self.part1SubTitle1, 0, 1, 'L')
     pdf.set_font('Arial', '', 12)
-    pdf.multi_cell(190, 5, self.part1ST1Text1)
+    pdf.multi_cell(190, 5, self.part1ST1Text1("pme"))
     pdf.ln(5)
     pdf.set_font('Arial', 'I', 12)
     pdf.cell(190, 10, self.part1ST1Text2, 0, 1, 'L')
@@ -59,6 +59,7 @@ class BuildContract:
     pdf.cell(190, 10, self.part1ST1Text3, 0, 1, 'R')
 
   def part1ST1Text1(self, nature="pme"):
+    print("part1ST1Text1", self.__part1ST1Text1, nature)
     return self.translateText(self.__part1ST1Text1, nature)
 
   def __findCompany(self, nature):
