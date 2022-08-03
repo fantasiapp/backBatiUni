@@ -33,12 +33,13 @@ class BuildContract:
   part1ST1Text2 = "Ci-après dénommée « l'Entrepreneur Principal »"
   part1ST2Text2 = "Ci-après dénommée « le Sous-Traitant »"
   part1ST1Text3 = "D'UNE PART"
+  part1ST2Text3 = "D'AUTRE PART"
 
   def __init__(self, pmeProfile, stProfile):
     self.pmeProfile = pmeProfile
+    self.stProfile = stProfile
     pdf = MyPdf('P', 'mm', 'A4')
     pdf.pmeProfile = pmeProfile
-    pdf.stProfile = stProfile
     pdf.alias_nb_pages()
     pdf.add_page()
     self.writePart1Text1(pdf)
@@ -67,6 +68,8 @@ class BuildContract:
     pdf.ln(5)
     pdf.set_font('Arial', 'I', 12)
     pdf.cell(190, 10, self.part1ST2Text2, 0, 1, 'L')
+    pdf.set_font('Arial', '', 12)
+    pdf.cell(190, 10, self.part1ST2Text3, 0, 1, 'R')
     
   def part1ST1Text1(self, nature="pme"):
     print("part1ST1Text1", self.__part1ST1Text1, nature)
