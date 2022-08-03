@@ -85,21 +85,21 @@ class BuildContract:
   art05SubTitle2 = "V.2. Indépendance juridique"
   artO5Par13 = "Le Sous-Traitant agit en tant qu’entrepreneur indépendant et assume de ce fait toutes les charges occasionnées par les prestations ou travaux sous-traités, notamment : recrutement de la main d’œuvre, versement des salaires et des charges y afférentes, paiements des taxes, des impôts et des primes d’assurances, la présente énumération n’étant pas limitative."
   art05SubTitle3 = "V.3. Assurances"
-  artO5Par13 = "Le Sous-Traitant a l’obligation de souscrire toutes les assurances obligatoires (responsabilité civile professionnelle et assurance de garantie décennale) préalablement au commencement de sa mission et devra être à même d’en justifier à première demande de l’Entrepreneur Principal."
-  art05SubTitle3 = "V.4. Indépendance Economique"
-  artO5Par14 = "Le Sous-Traitant déclare et garantit que le chiffre d’affaires pouvant être généré par le présent Contrat, cumulé à celui généré par tous les contrats existant avec l’Entrepreneur Principal au jour de la signature des présentes, n’est pas susceptible de représenter une part de son chiffre d’affaires global supérieure à 25 %."
-  artO5Par15 = "Si à quelque moment que ce soit, le pourcentage que représente le volume d’affaire réalisé avec l’Entrepreneur Principal, tous contrats et commandes confondus, devait excéder le pourcentage susvisé, le Sous-Traitant s’engage à en informer immédiatement et par écrit l’Entrepreneur Principal."
-  artO5Par16 = "Le non-respect de cette hypothèse, le Sous-Traitant s’engage à mettre en œuvre toutes les mesures nécessaires pour diversifier sa clientèle et ainsi ne plus dépasser le pourcentage susvisé."
-  artO5Par17 = "En tout état de cause, le Sous-Traitant est informé du fait que, quelle que soit la manière dont le dépassement du pourcentage susvisé serait porté à la connaissance de l’Entrepreneur Principal, ce dernier pourra mettre en œuvre un plan de réduction, au fil du temps, de son volume de commandes global auprès du Sous-Traitant."
-  art05SubTitle4 = "V.5. Incessibilité et non délégation des missions de sous-traitance"
-  artO5Par18 = "Il est précisé que, de convention expresse entre les Parties :"
-  artO5Par19 = "*   Sauf accord contraire exprès écrit préalable avec l’Entrepreneur Principal, le Sous-Traitant ne pourra céder, faire apport, co-traiter ou sous-traiter tout ou partie de sa mission de sous-traitance telle que définie dans le Bon de Commande. Si le Sous-Traitant viole cette interdiction, l’Entrepreneur Principal sera en droit d’exiger l’exécution complète de ladite mission par le Sous-Traitant ou, à défaut, pourra résilier le Contrat en application de l’article VIII.3 du présent Contrat."
-  artO5Par20 = "*   La responsabilité du Contrat de sous-traitance ne peut en aucun cas être déléguée."
-  artO5Par21 = "*   La sous-traitance au-delà du deuxième rang est expressément interdite."
-  artO5Par22 = "*   En cas d’intervention d’un sous-traitant de second rang expressément autorisée par l’Entreprise Principal, le Sous-traitant s’engage à respecter les dispositions de la loi n° 75-1334 du 31 décembre 1975 dans ses rapports avec son sous-traitant, à transmettre à l’Entrepreneur Principal l’intégralité des documents à jour demandés contractuellement par lui au sous-traitant de second rang et à faire respecter par le sous-traitant de second rang l’intégralité des obligations générales fixées au présent article."
-  artO5Par23 = "*   A défaut, l’Entrepreneur Principal sera en droit de résilier le Contrat par application de l’article VIII.3 des présentes."
-  artO5Par24 = "*   Dans l’hypothèse où il serait autorisé à sous-traiter une partie de sa mission, le Sous-Traitant demeurera seul responsable envers l’Entrepreneur Principal de l’exécution de tous les travaux qui lui auront été confiés. Il ne pourra arguer d’une quelconque faute du sous-traitant de second rang pour dégager sa responsabilité."
-# V.6   -   Obligations sociales et fiscales du Sous-Traitant   
+  artO5Par14 = "Le Sous-Traitant a l’obligation de souscrire toutes les assurances obligatoires (responsabilité civile professionnelle et assurance de garantie décennale) préalablement au commencement de sa mission et devra être à même d’en justifier à première demande de l’Entrepreneur Principal."
+  art05SubTitle4 = "V.4. Indépendance Economique"
+  artO5Par15 = "Le Sous-Traitant déclare et garantit que le chiffre d’affaires pouvant être généré par le présent Contrat, cumulé à celui généré par tous les contrats existant avec l’Entrepreneur Principal au jour de la signature des présentes, n’est pas susceptible de représenter une part de son chiffre d’affaires global supérieure à 25 %."
+  artO5Par16 = "Si à quelque moment que ce soit, le pourcentage que représente le volume d’affaire réalisé avec l’Entrepreneur Principal, tous contrats et commandes confondus, devait excéder le pourcentage susvisé, le Sous-Traitant s’engage à en informer immédiatement et par écrit l’Entrepreneur Principal."
+  artO5Par17 = "Le non-respect de cette hypothèse, le Sous-Traitant s’engage à mettre en œuvre toutes les mesures nécessaires pour diversifier sa clientèle et ainsi ne plus dépasser le pourcentage susvisé."
+  artO5Par18 = "En tout état de cause, le Sous-Traitant est informé du fait que, quelle que soit la manière dont le dépassement du pourcentage susvisé serait porté à la connaissance de l’Entrepreneur Principal, ce dernier pourra mettre en œuvre un plan de réduction, au fil du temps, de son volume de commandes global auprès du Sous-Traitant."
+  art05SubTitle5 = "V.5. Incessibilité et non délégation des missions de sous-traitance"
+  artO5Par19 = "Il est précisé que, de convention expresse entre les Parties :"
+  artO5Par20 = "*   Sauf accord contraire exprès écrit préalable avec l’Entrepreneur Principal, le Sous-Traitant ne pourra céder, faire apport, co-traiter ou sous-traiter tout ou partie de sa mission de sous-traitance telle que définie dans le Bon de Commande. Si le Sous-Traitant viole cette interdiction, l’Entrepreneur Principal sera en droit d’exiger l’exécution complète de ladite mission par le Sous-Traitant ou, à défaut, pourra résilier le Contrat en application de l’article VIII.3 du présent Contrat."
+  artO5Par21 = "*   La responsabilité du Contrat de sous-traitance ne peut en aucun cas être déléguée."
+  artO5Par22 = "*   La sous-traitance au-delà du deuxième rang est expressément interdite."
+  artO5Par23 = "*   En cas d’intervention d’un sous-traitant de second rang expressément autorisée par l’Entreprise Principal, le Sous-traitant s’engage à respecter les dispositions de la loi n° 75-1334 du 31 décembre 1975 dans ses rapports avec son sous-traitant, à transmettre à l’Entrepreneur Principal l’intégralité des documents à jour demandés contractuellement par lui au sous-traitant de second rang et à faire respecter par le sous-traitant de second rang l’intégralité des obligations générales fixées au présent article."
+  artO5Par24 = "*   A défaut, l’Entrepreneur Principal sera en droit de résilier le Contrat par application de l’article VIII.3 des présentes."
+  artO5Par25 = "*   Dans l’hypothèse où il serait autorisé à sous-traiter une partie de sa mission, le Sous-Traitant demeurera seul responsable envers l’Entrepreneur Principal de l’exécution de tous les travaux qui lui auront été confiés. Il ne pourra arguer d’une quelconque faute du sous-traitant de second rang pour dégager sa responsabilité."
+  art05SubTitle6 = "V.6 Obligations sociales et fiscales du Sous-Traitant "
 # Le Sous-Traitant s’engage expressément à respecter l’ensemble des 
 # dispositions de la loi n°91-1383 du 31 décembre 1991 concernant la lutte contre 
 # le travail dissimulé, de ses décrets d’application et de tous textes législatifs ou 
@@ -204,9 +204,11 @@ class BuildContract:
     self.writeArticleGeneric(pdf, dictData)
     dictData = {"title":self.art05SubTitle2, "paragraphs":[self.artO5Par13]}
     self.writeArticleGeneric(pdf, dictData)
-    dictData = {"title":self.art05SubTitle3, "paragraphs":[self.artO5Par14, self.artO5Par16, self.artO5Par17]}
+    dictData = {"title":self.art05SubTitle3, "paragraphs":[self.artO5Par14]}
     self.writeArticleGeneric(pdf, dictData)
-    dictData = {"title":self.art05SubTitle4, "paragraphs":[self.artO5Par18, self.artO5Par19, self.artO5Par20, self.artO5Par20, self.artO5Par21, self.artO5Par22, self.artO5Par23]}
+    dictData = {"title":self.art05SubTitle4, "paragraphs":[self.artO5Par15, self.artO5Par16, self.artO5Par17, self.artO5Par18]}
+    self.writeArticleGeneric(pdf, dictData)
+    dictData = {"title":self.art05SubTitle4, "paragraphs":[self.artO5Par19, self.artO5Par20, self.artO5Par20, self.artO5Par21, self.artO5Par22, self.artO5Par23, self.artO5Par24, self.artO5Par25]}
     self.writeArticleGeneric(pdf, dictData)
 
 # Utilitaires
