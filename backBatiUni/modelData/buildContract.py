@@ -67,8 +67,30 @@ class BuildContract:
   artO4Par1 = "Avant le début de l’exécution des travaux sous-traités au Sous-Traitant, l’Entrepreneur Principal doit faire savoir au Sous-Traitant si le Maître d’Ouvrage l’a accepté et s’il a agréé ses conditions de paiement ;"
   artO4Par2 = "L’Entrepreneur Principal s’engage à fournir au Sous-traitant en temps utile tous les plans et documents nécessaires à l’exécution de sa mission de sous-traitance ;"
   artO4Par3 = "L’Entrepreneur Principal s’interdit de donner quelque ordre ou directive que ce soit ou d’effectuer quelque contrôle que ce soit vis-à-vis du personnel du Sous-Traitant sur lequel il ne dispose d’aucun pouvoir disciplinaire ni réglementaire."
+  
+  art05Title = "V.1. Obligation Générales"
+  artO5Par1 = "   *   Le Sous-Traitant s’engage à mener à bonne fin l’exécution de ses prestations de sous-traitance, dans le cadre de son obligation de résultat ;"
+  artO5Par2 = "   *   Le Sous-Traitant s’engage à justifier à première demande de ses compétences professionnelles par tout moyen à sa convenance ;"
+  artO5Par3 = "   *   Le Sous-Traitant s’engage à faire preuve d’une exigence de qualité maximale dans l’exécution de ses prestations et notamment en matière de matériaux et autres fournitures utilisés."
+  artO5Par4 = "   *   Le Sous-Traitant s’engage à respecter en toutes circonstances ses obligations de bonne foi et de loyauté vis-à-vis de l’Entrepreneur Principal."
+  artO5Par5 = "   *   Le Sous-Traitant s’engage à exécuter ses prestations selon les règles de l’art de sa profession, dans le respect des plans et descriptifs fournis par l’Entrepreneur Principal et des spécifications définies dans les cahiers des charges ainsi que suivant les indications résultant des rendez-vous de chantier et réunions de pilotage. De plus, il devra impérativement respecter les délais d’exécution des travaux et le calendrier d’exécution desdits travaux, même recalés ou décalés, ces dispositions formant une condition essentielle du Contrat, ce que le Sous-Traitant reconnait expressément ;"
+  artO5Par6 = "   *   Le Sous-Traitant s’engage à informer sans délai l’Entrepreneur Principal en cas de retard dans l’exécution de ses prestations ;"
+  artO5Par7 = "   *   Le Sous-Traitant sera responsable des dommages de toutes natures causés à l’occasion de l’exécution de ses prestations et garantit l’Entrepreneur Principal de tous recours et actions à son encontre de ce chef ;"
+  artO5Par8 = "   *   Le Sous-Traitant s’engage à faire toutes les observations opportunes au regard des règles de l’art de sa profession sur les documents et instructions qui sont portés à sa connaissance, ainsi que sur la nature des existants ;"
+  artO5Par9 = "   *   Le Sous-Traitant s’engage à prendre pleine connaissance de l’immeuble existant et le cas échéant, du plan de masse et de tous les plans et documents utiles à la réalisation des travaux, ainsi que des sites, de ses contraintes vis-à-vis des mitoyennetés, de l’influence et de l’état des propriétés avoisinantes, et notamment de tous éléments généraux et locaux en relation avec l’exécution des travaux ;"
+  artO5Par10 = "   *   Le Sous-Traitant s’engage à apprécier exactement toutes les conditions générales et particulières d’exécution de ses prestations, ainsi que l’incidence des travaux des différents corps d’état sur ses propres travaux. En conséquence, il ne bénéficiera d’aucune indemnité en cas de difficulté d’exécution de ses prestations ultérieure, de quelque ordre que ce soit ; A défaut d’observations portées à la connaissance de l’Entrepreneur Principal sous 48 heures, il sera réputé avoir accepté les conditions d’exécution de ses prestations purement et simplement ;"
+  artO5Par11 = "   *   Le Sous-Traitant s’engage à fournir l’intégralité des documents à jour demandés par l’Entrepreneur Principal tant aux termes du présent Contrat, de ses annexes qu’à ceux du Bon de Commande, dans les délais impartis, sous peine de résiliation de sa mission de sous-traitance dans les conditions fixées à l’article VIII.3. Ci-après ; Le Sout-Traitant devra fournir lesdits documents en original lors de la signature du Bon de Commande ;"
+  artO5Par12 = "   *   Le Sous-Traitant devra remettre régulièrement, tout au long de l’exécution de sa mission de sous-traitance lesdits documents mis à jour aux échéances contractuelles prévues ainsi qu’à la première demande de l’Entrepreneur Principal."
+# V.2. Indépendance juridique
+# Le Sous-Traitant agit en tant qu’entrepreneur indépendant et assume de ce fait
+# toutes les charges occasionnées par les prestations ou travaux sous-traités, 
+# notamment : recrutement de la main d’œuvre, versement des salaires et des 
+# charges y afférentes, paiements des taxes, des impôts et des primes 
+# d’assurances, la présente énumération n’étant pas limitative.
+# V.3. Assurances
+# Le Sous-Traitant a l’obligation de souscrire toutes les assurances obligatoires 
+# (responsabilité civile professionnelle et assurance de garantie décennale) 
 
-# # ARTICLE V – OBLIGATIONS DU SOUS TRAITANT
 
   def __init__(self, pmeProfile, stProfile):
     self.pmeProfile = pmeProfile
@@ -148,6 +170,10 @@ class BuildContract:
 
   def writeArticle04(self, pdf):
     dictData = {"title":self.art04Title, "paragraphs":[self.artO4Par1, self.artO4Par2, self.artO4Par3]}
+    self.writeArticleGeneric(pdf, dictData)
+
+  def writeArticle05(self, pdf):
+    dictData = {"title":self.art05Title, "paragraphs":[self.artO5Par1, self.artO5Par2, self.artO5Par3, self.artO5Par4, self.artO5Par5, self.artO5Par6, self.artO5Par7, self.artO5Par8, self.artO5Par9, self.artO5Par10, self.artO5Par11, self.artO5Par12]}
     self.writeArticleGeneric(pdf, dictData)
 
 # Utilitaires
