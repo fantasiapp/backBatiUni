@@ -88,18 +88,9 @@ class BuildContract:
   artO5Par13 = "Le Sous-Traitant a l’obligation de souscrire toutes les assurances obligatoires (responsabilité civile professionnelle et assurance de garantie décennale) préalablement au commencement de sa mission et devra être à même d’en justifier à première demande de l’Entrepreneur Principal."
   art05SubTitle3 = "V.4. Indépendance Economique"
   artO5Par14 = "Le Sous-Traitant déclare et garantit que le chiffre d’affaires pouvant être généré par le présent Contrat, cumulé à celui généré par tous les contrats existant avec l’Entrepreneur Principal au jour de la signature des présentes, n’est pas susceptible de représenter une part de son chiffre d’affaires global supérieure à 25 %."
-# Si à quelque moment que ce soit, le pourcentage que représente le volume 
-# d’affaire réalisé avec l’Entrepreneur Principal, tous contrats et commandes 
-# confondus, devait excéder le pourcentage susvisé, le Sous-Traitant s’engage à 
-# en informer immédiatement et par écrit l’Entrepreneur Principal.
-# Le non-respect de cette hypothèse, le Sous-Traitant s’engage à mettre en 
-# œuvre toutes les mesures nécessaires pour diversifier sa clientèle et ainsi ne plus
-# dépasser le pourcentage susvisé.
-# En tout état de cause, le Sous-Traitant est informé du fait que, quelle que soit 
-# la manière dont le dépassement du pourcentage susvisé serait porté à la 
-# connaissance de l’Entrepreneur Principal, ce dernier pourra mettre en œuvre 
-# un plan de réduction, au fil du temps, de son volume de commandes global 
-# auprès du Sous-Traitant.
+  artO5Par15 = "Si à quelque moment que ce soit, le pourcentage que représente le volume d’affaire réalisé avec l’Entrepreneur Principal, tous contrats et commandes confondus, devait excéder le pourcentage susvisé, le Sous-Traitant s’engage à en informer immédiatement et par écrit l’Entrepreneur Principal."
+  artO5Par16 = "Le non-respect de cette hypothèse, le Sous-Traitant s’engage à mettre en œuvre toutes les mesures nécessaires pour diversifier sa clientèle et ainsi ne plus dépasser le pourcentage susvisé."
+  artO5Par17 = "En tout état de cause, le Sous-Traitant est informé du fait que, quelle que soit la manière dont le dépassement du pourcentage susvisé serait porté à la connaissance de l’Entrepreneur Principal, ce dernier pourra mettre en œuvre un plan de réduction, au fil du temps, de son volume de commandes global auprès du Sous-Traitant."
 # V.5. Incessibilité et non délégation des missions de sous-traitance
 # Il est précisé que, de convention expresse entre les Parties :
 # Sauf accord contraire exprès écrit préalable avec l’Entrepreneur 
@@ -233,7 +224,7 @@ class BuildContract:
     self.writeArticleGeneric(pdf, dictData)
     dictData = {"title":self.art05SubTitle2, "paragraphs":[self.artO5Par13]}
     self.writeArticleGeneric(pdf, dictData)
-    dictData = {"title":self.art05SubTitle3, "paragraphs":[self.artO5Par14]}
+    dictData = {"title":self.art05SubTitle3, "paragraphs":[self.artO5Par14, self.artO5Par16, self.artO5Par17]}
     self.writeArticleGeneric(pdf, dictData)
 
 # Utilitaires
