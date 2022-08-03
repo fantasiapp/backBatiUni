@@ -75,7 +75,7 @@ class BuildContract:
     pdf.set_font('Arial', 'I', 12)
     pdf.cell(190, 10, self.part1ST2Text2, 0, 1, 'L')
     pdf.set_font('Arial', '', 12)
-    pdf.multi_cell(190, 10, self.part1ST2Text3, 0, 1, 'L')
+    pdf.multi_cell(190, 10, self.part1ST2Text3)
     pdf.ln(5)
     pdf.set_font('Arial', '', 12)
     pdf.cell(190, 10, self.part1ST2Text4, 0, 1, 'R')
