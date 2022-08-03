@@ -28,8 +28,10 @@ class MyPdf(FPDF):
 class BuildContract:
   part1Title = "Désignation des parties contractantes"
   part1SubTitle1 = "ENTRE LES SOUSSIGNÉES :"
+  part1SubTitle2 = "ET :"
   __part1ST1Text1 = "La Société $Company$, société par actions simplifié $Capital$, $Address$, $Siret$, $Represent$"
   part1ST1Text2 = "Ci-après dénommée « l'Entrepreneur Principal »"
+  part1ST2Text2 = "Ci-après dénommée « le Sous-Traitant »"
   part1ST1Text3 = "D'UNE PART"
 
   def __init__(self, pmeProfile, stProfile):
@@ -39,25 +41,33 @@ class BuildContract:
     pdf.stProfile = stProfile
     pdf.alias_nb_pages()
     pdf.add_page()
-    self.writePart1(pdf)
+    self.writePart1Text1(pdf)
+    self.writePart1Text2(pdf)
+
     for i in range(1, 41):
       pdf.cell(0, 6, 'Printing line number ' + str(i), 0, 1)
     pdf.output('./files/documents/tuto1.pdf', 'F')
 
-  def writePart1(self, pdf):
-    pdf.set_font('Arial', 'BU', 14)
-    pdf.cell(190, 10, self.part1Title, 0, 1, 'L')
-    pdf.set_x(10)
+  def writePart1Text1(self, pdf):
     pdf.set_font('Arial', 'BU', 12)
-    pdf.cell(190, 10, self.part1SubTitle1, 0, 1, 'L')
+    pdf.cell(190, 10, self.part1SubTitle2, 0, 1, 'L')
     pdf.set_font('Arial', '', 12)
-    pdf.multi_cell(190, 5, self.part1ST1Text1("pme"))
+    pdf.multi_cell(190, 5, self.part1ST1Text1("st"))
     pdf.ln(5)
     pdf.set_font('Arial', 'I', 12)
     pdf.cell(190, 10, self.part1ST1Text2, 0, 1, 'L')
     pdf.set_font('Arial', '', 12)
     pdf.cell(190, 10, self.part1ST1Text3, 0, 1, 'R')
 
+  def writePart1Text2(self, pdf):
+    pdf.set_font('Arial', 'BU', 12)
+    pdf.cell(190, 10, self.part1SubTitle2, 0, 1, 'L')
+    pdf.set_font('Arial', '', 12)
+    pdf.multi_cell(190, 5, self.part1ST1Text1("pme"))
+    pdf.ln(5)
+    pdf.set_font('Arial', 'I', 12)
+    pdf.cell(190, 10, self.part1ST2Text2, 0, 1, 'L')
+    
   def part1ST1Text1(self, nature="pme"):
     print("part1ST1Text1", self.__part1ST1Text1, nature)
     return self.translateText(self.__part1ST1Text1, nature)
