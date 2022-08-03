@@ -32,10 +32,11 @@ class BuildContract:
   part1ST1Text2 = "Ci-après dénommée « l'Entrepreneur Principal »"
   part1ST1Text3 = "D'UNE PART"
 
-  def __init__(self, pmeProfile):
+  def __init__(self, pmeProfile, stProfile):
     self.pmeProfile = pmeProfile
     pdf = MyPdf('P', 'mm', 'A4')
     pdf.pmeProfile = pmeProfile
+    pdf.stProfile = stProfile
     pdf.alias_nb_pages()
     pdf.add_page()
     self.writePart1(pdf)
@@ -57,40 +58,38 @@ class BuildContract:
     pdf.set_font('Arial', '', 12)
     pdf.cell(190, 10, self.part1ST1Text3, 0, 1, 'R')
 
-  @property
-  def part1ST1Text1(self):
-    return self.translateText(self.__part1ST1Text1)
+  def part1ST1Text1(self, nature="pme"):
+    return self.translateText(self.__part1ST1Text1, nature)
 
-  @property
-  def __findCompany(self):
-    return self.pmeProfile.Company.name
+  def __findCompany(self, nature):
+    return self.pmeProfile.Company.name if nature == "pme" else self.stProfile.Company.name
 
-  @property
-  def __findCapital(self):
-    if self.pmeProfile.Company.capital:
-      capital = f"{self.pmeProfile.Company.capital:,}".replace(",", " ")
+  def __findCapital(self, nature):
+    profile = self.pmeProfile if nature == "pme" else self.stProfile
+    if profile.Company.capital:
+      capital = f"{profile.Company.capital:,}".replace(",", " ").replace(".", ",")
       return f'au capital de {capital} euros'
     return ""
 
-  @property
-  def __findAddress(self):
-    return f"ayant son siège social au {self.pmeProfile.Company.address}"
+  def __findAddress(self, nature):
+    profile = self.pmeProfile if nature == "pme" else self.stProfile
+    return f"ayant son siège social au {profile.Company.address}"
 
-  @property
-  def __findSiret(self):
-    return f"identifiée par son numéro de Siret : {self.pmeProfile.Company.siret}"
+  def __findSiret(self, nature):
+    profile = self.pmeProfile if nature == "pme" else self.stProfile
+    return f"identifiée par son numéro de Siret : {profile.Company.siret}"
 
-  @property
-  def __findRepresent(self):
-    represent = f"représentée aux fins des présentes par Monsieur {self.pmeProfile.firstName} {self.pmeProfile.lastName}"
+  def __findRepresent(self, nature):
+    profile = self.pmeProfile if nature == "pme" else self.stProfile
+    represent = f"représentée aux fins des présentes par Monsieur {profile.firstName} {profile.lastName}"
     if self.pmeProfile.function:
-      represent += f" agissant en tant que {self.pmeProfile.function}"
+      represent += f" agissant en tant que {profile.function}"
     return represent + ", dûment habilité."
 
 
-  def translateText(self, str):
+  def translateText(self, str, nature):
     translated = str
-    listTranslation = {"$Company$": self.__findCompany, "$Capital$":self.__findCapital, "$Address$":self.__findAddress, "$Siret$":self.__findSiret, "$Represent$":self.__findRepresent}
+    listTranslation = {"$Company$": self.__findCompany(nature), "$Capital$":self.__findCapital(nature), "$Address$":self.__findAddress(nature), "$Siret$":self.__findSiret(nature), "$Represent$":self.__findRepresent(nature)}
     for key, value in listTranslation.items():
       translated = translated.replace(key, value)
     return translated
