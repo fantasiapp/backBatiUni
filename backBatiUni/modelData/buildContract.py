@@ -106,6 +106,7 @@ class BuildContract:
     self.writeArticle02(pdf)
     self.writeArticle03(pdf)
     self.writeArticle04(pdf)
+    self.writeArticle05(pdf)
 
     pdf.output('./files/documents/tuto1.pdf', 'F')
 
@@ -189,7 +190,7 @@ class BuildContract:
     pdf.ln(10)
 
   def part1ST1Text1(self, nature="pme"):
-    return self.translateText(self.__part2Text1, nature)
+    return self.translateText(self.__part1ST1Text1, nature)
 
   @property
   def part2Text1(self):
