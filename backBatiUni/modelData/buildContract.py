@@ -54,15 +54,16 @@ class BuildContract:
   
   art03Title = "ARTICLE III - DOCUMENTS CONTRACTUELS - HIÉRARCHIE"
   artO3ST = "III.1. Les Parties reconnaissent expressément être liées par les documents contractuels suivants :"
-  artO3Par1 = " 1. Le Contrat et ses annexes."
-  artO3Par2 = " 2. Le Bon de Commande comprenant le devis descriptif du Sous-Traitant."
-  artO3Par3 = " 3. Les plans et tous documents techniques par le Maître d'Ouvrage, l'Entrepreneur Principal, les bureaux techniques, le bureau de contrôle."
-  artO3Par4 = " 4. Les comptes-rendus de chantier."
-  artO3Par5 = " 5. Le calendrier d'exécution des travaux."
-  artO3Par6 = " 6. Tout avenant ou document valant avenant modificatif au Bon de Commande comme une demande d'intervention ou de travaux."
+  artO3Par1 = "    1. Le Contrat et ses annexes."
+  artO3Par2 = "    2. Le Bon de Commande comprenant le devis descriptif du Sous-Traitant."
+  artO3Par3 = "    3. Les plans et tous documents techniques par le Maître d'Ouvrage, l'Entrepreneur Principal, les bureaux techniques, le bureau de contrôle."
+  artO3Par4 = "    4. Les comptes-rendus de chantier."
+  artO3Par5 = "    5. Le calendrier d'exécution des travaux."
+  artO3Par6 = "    6. Tout avenant ou document valant avenant modificatif au Bon de Commande comme une demande d'intervention ou de travaux."
   artO3Par7 = "De convention expresse entre les Parties, les dispositions consignées dans les comptes rendus de chantier transmis au Sous-traitant auront une valeur contractuelle dans la mesure où elles n'auront pas été contestées par le Sous-traitant dans un délai de 48 heures après leur réception dont la preuve pourra être rapportée par tout moyen."
   artO3Par8 = "III.2. Les Parties conviennent qu’en cas de contradiction entre les différents documents contractuels susvisés, l’ordre de priorité s’établira dans l’ordre d’énonciation desdits documents ci-dessus."
-# ARTICLE IV – OBLIGATIONS DE L’ENTREPRENEUR PRINCIPAL
+
+  art03Title = "ARTICLE IV – OBLIGATIONS DE L’ENTREPRENEUR PRINCIPAL"
 # Avant le début de l’exécution des travaux sous-traités au Sous-Traitant, 
 # l’Entrepreneur Principal doit faire savoir au Sous-Traitant si le Maître 
 # d’Ouvrage l’a accepté et s’il a agréé ses conditions de paiement ;
@@ -153,11 +154,11 @@ class BuildContract:
 # Utilitaires
   def writeArticleGeneric(self, pdf, dictData):
     pdf.set_font('Arial', 'BU', 12)
-    title = dictData["title"].replace("’", "'")
+    title = dictData["title"].replace("’", "'").replace("–", "-")
     pdf.cell(190, 10, title, 0, 1, 'L')
     pdf.set_font('Arial', '', 12)
     for paragraph in dictData["paragraphs"]:
-      parClean = paragraph.replace("’", "'")
+      parClean = paragraph.replace("’", "'").replace("–", "-")
       pdf.multi_cell(190, 5, parClean)
       pdf.ln(2)
     pdf.ln(10)
