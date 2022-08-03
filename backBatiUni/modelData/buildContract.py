@@ -48,23 +48,18 @@ class BuildContract:
   artO1Par2 = "I.2. Les conditions particulières de chaque mission de sous-traitance confiée par l'Entrepreneur Principal au Sous-Traitant seront quant à elles précisées sur les bons de commande écrits établis pour chaque mission, ci-après « le Bon de Commande » qui complétera les présentes conditions générales. Chaque Bon de Commande, communiqué par l'Entrepreneur Principal avant le démarrage de chaque mission, comprendra obligatoirement le devis descriptif du Sous-Traitant, la mention de la date de démarrage et de la date de réception des travaux sous-traités le montant et les modalités de paiement du prix de la mission de sous-traitance."
   artO1Par3 = "I.3. Les Parties reconnaissent expressément que le sort de toute mission de sous-traitance sera dépendant du sort du Contrat Principal ; en conséquence, la prise d'effet du Contrat Principal conditionnera la prise d'effet de la mission de sous-traitance. De la même façon, toute évolution du Contrat Principal, pour quelque motif que ce soit, entraînera celle de la mission de sous-traitance, ce que le Sous-traitant accepte expressément."
   artO1Par4 = "I.4. Il est rappelé que chaque mission de sous-traitance est soumise, notamment aux dispositions de la loi n° 71-584 du 16 juillet 1971 et à celles de la loi n°75-1334 du 31 décembre 1975, et plus généralement aux dispositions légales et réglementaires applicables à la sous-traitance."
-# ARTICLE II      : DUREE   
-# Le Contrat est conclu pour une durée indéterminée. Il entrera en vigueur à 
-# compter du jour de sa signature. Il pourra être résilié dans les conditions 
-# indiquées à l'article VIII ci-après.
-# ARTICLE III - DOCUMENTS CONTRACTUELS - HIERARCHIE 
-# III.1. Les Parties reconnaissent expressément être liées par les 
-# documents contractuels suivants      :  
-# 1. Le Contrat et ses annexes,
-# 2. Le Bon de Commande comprenant le devis descriptif du Sous-
-# Traitant,
-# 3. Les plans et tous documents techniques par le Maître d'Ouvrage, 
-# l'Entrepreneur Principal, les bureaux techniques, le bureau de 
-# contrôle,
-# 4. Les comptes-rendus de chantier,
-# 5. Le calendrier d'exécution des travaux,
-# 6. Tout avenant ou document valant avenant modificatif au Bon de 
-# Commande comme une demande d'intervention ou de travaux.
+  
+  art02Title = "ARTICLE II : DURÉE"
+  artO2Par1 = "Le Contrat est conclu pour une durée indéterminée. Il entrera en vigueur à compter du jour de sa signature. Il pourra être résilié dans les conditions indiquées à l'article VIII ci-après."
+  
+  art03Title = "ARTICLE III - DOCUMENTS CONTRACTUELS - HIÉRARCHIE"
+  artO3ST = "III.1. Les Parties reconnaissent expressément être liées par les documents contractuels suivants :"
+  artO3Par1 = " 1. Le Contrat et ses annexes."
+  artO3Par2 = " 2. Le Bon de Commande comprenant le devis descriptif du Sous-Traitant."
+  artO3Par3 = " 3. Les plans et tous documents techniques par le Maître d'Ouvrage, l'Entrepreneur Principal, les bureaux techniques, le bureau de contrôle."
+  artO3Par4 = " 4. Les comptes-rendus de chantier."
+  artO3Par5 = " 5. Le calendrier d'exécution des travaux."
+  artO3Par6 = " 6. Tout avenant ou document valant avenant modificatif au Bon de Commande comme une demande d'intervention ou de travaux."
 
 # De convention expresse entre les Parties, les dispositions consignées dans les 
 # comptes rendus de chantier transmis au Sous-traitant auront une valeur 
@@ -85,9 +80,9 @@ class BuildContract:
     self.writePart1Text2(pdf)
     self.writePart2(pdf)
     self.writeArticle01(pdf)
+    self.writeArticle02(pdf)
+    self.writeArticle03(pdf)
 
-    for i in range(1, 41):
-      pdf.cell(0, 6, 'Printing line number ' + str(i), 0, 1)
     pdf.output('./files/documents/tuto1.pdf', 'F')
 
   def writePart1Text1(self, pdf):
@@ -136,6 +131,17 @@ class BuildContract:
 
   def writeArticle01(self, pdf):
     dictData = {"title":self.art01Title, "paragraphs":[self.artO1Par1, self.artO1Par2, self.artO1Par3, self.artO1Par4]}
+    self.writeArticleGeneric(pdf, dictData)
+
+  def writeArticle02(self, pdf):
+    dictData = {"title":self.art02Title, "paragraphs":[self.artO2Par1]}
+    self.writeArticleGeneric(pdf, dictData)
+
+  def writeArticle03(self, pdf):
+    pdf.set_font('Arial', 'BU', 12)
+    pdf.cell(190, 10, self.art01Title, 0, 1, 'L')
+    pdf.ln(5)
+    dictData = {"title":self.artO3ST, "paragraphs":[self.artO3Par1, self.artO3Par2, self.artO3Par3, self.artO3Par4, self.artO3Par5, self.artO3Par6]}
     self.writeArticleGeneric(pdf, dictData)
 
   def writeArticleGeneric(self, pdf, dictData):
