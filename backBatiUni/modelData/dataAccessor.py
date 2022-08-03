@@ -719,7 +719,9 @@ class DataAccessor():
     mission = Mission.objects.get(id=missionId)
     pmeCompany = mission.Company
     pmeProfile = UserProfile.objects.get(Company=pmeCompany)
-    stProfile = Candidate.objects.get(Mission=mission, isChoosen=True)
+    candidate = Candidate.objects.get(Mission=mission, isChoosen=True)
+    stCompany = candidate.Company
+    stProfile = UserProfile.objects.get(Company=stCompany)
     BuildContract(pmeProfile=pmeProfile, stProfile=stProfile)
     return {"test":"OK"}
 
