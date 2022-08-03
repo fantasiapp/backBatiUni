@@ -63,18 +63,12 @@ class BuildContract:
   artO3Par7 = "De convention expresse entre les Parties, les dispositions consignées dans les comptes rendus de chantier transmis au Sous-traitant auront une valeur contractuelle dans la mesure où elles n'auront pas été contestées par le Sous-traitant dans un délai de 48 heures après leur réception dont la preuve pourra être rapportée par tout moyen."
   artO3Par8 = "III.2. Les Parties conviennent qu’en cas de contradiction entre les différents documents contractuels susvisés, l’ordre de priorité s’établira dans l’ordre d’énonciation desdits documents ci-dessus."
 
-  art03Title = "ARTICLE IV – OBLIGATIONS DE L’ENTREPRENEUR PRINCIPAL"
-# Avant le début de l’exécution des travaux sous-traités au Sous-Traitant, 
-# l’Entrepreneur Principal doit faire savoir au Sous-Traitant si le Maître 
-# d’Ouvrage l’a accepté et s’il a agréé ses conditions de paiement ;
-# L’Entrepreneur Principal s’engage à fournir au Sous-traitant en temps utile 
-# tous les plans et documents nécessaires à l’exécution de sa mission de sous-
-# traitance ;
-# L’Entrepreneur Principal s’interdit de donner quelque ordre ou directive que 
-# ce soit ou d’effectuer quelque contrôle que ce soit vis-à-vis du personnel du 
-# Sous-Traitant sur lequel il ne dispose d’aucun pouvoir disciplinaire ni 
-# réglementaire.
-# ARTICLE V – OBLIGATIONS DU SOUS TRAITANT
+  art04Title = "ARTICLE IV – OBLIGATIONS DE L’ENTREPRENEUR PRINCIPAL"
+  artO4Par1 = "Avant le début de l’exécution des travaux sous-traités au Sous-Traitant, l’Entrepreneur Principal doit faire savoir au Sous-Traitant si le Maître d’Ouvrage l’a accepté et s’il a agréé ses conditions de paiement ;"
+  artO4Par2 = "L’Entrepreneur Principal s’engage à fournir au Sous-traitant en temps utile tous les plans et documents nécessaires à l’exécution de sa mission de sous-traitance ;"
+  artO4Par3 = "L’Entrepreneur Principal s’interdit de donner quelque ordre ou directive que ce soit ou d’effectuer quelque contrôle que ce soit vis-à-vis du personnel du Sous-Traitant sur lequel il ne dispose d’aucun pouvoir disciplinaire ni réglementaire."
+
+# # ARTICLE V – OBLIGATIONS DU SOUS TRAITANT
 
   def __init__(self, pmeProfile, stProfile):
     self.pmeProfile = pmeProfile
@@ -89,6 +83,7 @@ class BuildContract:
     self.writeArticle01(pdf)
     self.writeArticle02(pdf)
     self.writeArticle03(pdf)
+    self.writeArticle04(pdf)
 
     pdf.output('./files/documents/tuto1.pdf', 'F')
 
@@ -149,6 +144,10 @@ class BuildContract:
     pdf.multi_cell(190, 10, self.art03Title)
     pdf.ln(5)
     dictData = {"title":self.artO3ST, "paragraphs":[self.artO3Par1, self.artO3Par2, self.artO3Par3, self.artO3Par4, self.artO3Par5, self.artO3Par6, self.artO3Par7, self.artO3Par8]}
+    self.writeArticleGeneric(pdf, dictData)
+
+  def writeArticle04(self, pdf):
+    dictData = {"title":self.art04Title, "paragraphs":[self.artO4Par1, self.artO4Par2, self.artO4Par3]}
     self.writeArticleGeneric(pdf, dictData)
 
 # Utilitaires
