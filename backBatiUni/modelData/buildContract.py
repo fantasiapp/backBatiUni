@@ -91,34 +91,31 @@ class BuildContract:
   artO5Par15 = "Si à quelque moment que ce soit, le pourcentage que représente le volume d’affaire réalisé avec l’Entrepreneur Principal, tous contrats et commandes confondus, devait excéder le pourcentage susvisé, le Sous-Traitant s’engage à en informer immédiatement et par écrit l’Entrepreneur Principal."
   artO5Par16 = "Le non-respect de cette hypothèse, le Sous-Traitant s’engage à mettre en œuvre toutes les mesures nécessaires pour diversifier sa clientèle et ainsi ne plus dépasser le pourcentage susvisé."
   artO5Par17 = "En tout état de cause, le Sous-Traitant est informé du fait que, quelle que soit la manière dont le dépassement du pourcentage susvisé serait porté à la connaissance de l’Entrepreneur Principal, ce dernier pourra mettre en œuvre un plan de réduction, au fil du temps, de son volume de commandes global auprès du Sous-Traitant."
-# V.5. Incessibilité et non délégation des missions de sous-traitance
-# Il est précisé que, de convention expresse entre les Parties :
-# Sauf accord contraire exprès écrit préalable avec l’Entrepreneur 
-# Principal, le Sous-Traitant ne pourra céder, faire apport, co-traiter ou 
-# sous-traiter tout ou partie de sa mission de sous-traitance telle que définie 
-# dans le Bon de Commande.
-# Si le Sous-Traitant viole cette interdiction, l’Entrepreneur Principal 
-# sera en droit d’exiger l’exécution complète de ladite mission par le Sous-
-# Traitant ou, à défaut, pourra résilier le Contrat en application de l’article 
-# VIII.3 du présent Contrat.
-# La responsabilité du Contrat de sous-traitance ne peut en aucun cas être 
-# déléguée.
-# La sous-traitance au-delà du deuxième rang est expressément interdite.
-# En cas d’intervention d’un sous-traitant de second rang expressément 
-# autorisée par l’Entreprise Principal, le Sous-traitant s’engage à 
-# respecter les dispositions de la loi n° 75-1334 du 31 décembre 1975 dans 
-# ses rapports avec son sous-traitant, à transmettre à l’Entrepreneur 
-# Principal l’intégralité des documents à jour demandés contractuellement 
-# par lui au sous-traitant de second rang et à faire respecter par le sous-
-# traitant de second rang l’intégralité des obligations générales fixées au 
-# présent article.
-# A défaut, l’Entrepreneur Principal sera en droit de résilier le Contrat 
-# par application de l’article VIII.3 des présentes.
-# Dans l’hypothèse où il serait autorisé à sous-traiter une partie de sa 
-# mission, le Sous-Traitant demeurera seul responsable envers 
-# l’Entrepreneur Principal de l’exécution de tous les travaux qui lui auront
-# été confiés. Il ne pourra arguer d’une quelconque faute du sous-traitant de
-# second rang pour dégager sa responsabilité.
+  art05SubTitle4 = "V.5. Incessibilité et non délégation des missions de sous-traitance"
+  artO5Par17 = "Il est précisé que, de convention expresse entre les Parties :"
+Sauf accord contraire exprès écrit préalable avec l’Entrepreneur Principal, le Sous-Traitant ne pourra céder, faire apport, co-traiter ou sous-traiter tout ou partie de sa mission de sous-traitance telle que définie dans le Bon de Commande."
+Si le Sous-Traitant viole cette interdiction, l’Entrepreneur Principal 
+sera en droit d’exiger l’exécution complète de ladite mission par le Sous-
+Traitant ou, à défaut, pourra résilier le Contrat en application de l’article 
+VIII.3 du présent Contrat.
+La responsabilité du Contrat de sous-traitance ne peut en aucun cas être 
+déléguée.
+La sous-traitance au-delà du deuxième rang est expressément interdite.
+En cas d’intervention d’un sous-traitant de second rang expressément 
+autorisée par l’Entreprise Principal, le Sous-traitant s’engage à 
+respecter les dispositions de la loi n° 75-1334 du 31 décembre 1975 dans 
+ses rapports avec son sous-traitant, à transmettre à l’Entrepreneur 
+Principal l’intégralité des documents à jour demandés contractuellement 
+par lui au sous-traitant de second rang et à faire respecter par le sous-
+traitant de second rang l’intégralité des obligations générales fixées au 
+présent article.
+A défaut, l’Entrepreneur Principal sera en droit de résilier le Contrat 
+par application de l’article VIII.3 des présentes.
+Dans l’hypothèse où il serait autorisé à sous-traiter une partie de sa 
+mission, le Sous-Traitant demeurera seul responsable envers 
+l’Entrepreneur Principal de l’exécution de tous les travaux qui lui auront
+été confiés. Il ne pourra arguer d’une quelconque faute du sous-traitant de
+second rang pour dégager sa responsabilité.
 # V.6   -   Obligations sociales et fiscales du Sous-Traitant   
 # Le Sous-Traitant s’engage expressément à respecter l’ensemble des 
 # dispositions de la loi n°91-1383 du 31 décembre 1991 concernant la lutte contre 
@@ -230,11 +227,11 @@ class BuildContract:
 # Utilitaires
   def writeArticleGeneric(self, pdf, dictData):
     pdf.set_font('Arial', 'BU', 12)
-    title = dictData["title"].replace("’", "'").replace("–", "-")
+    title = dictData["title"].replace("’", "'").replace("–", "-").replace("œ", "oe")
     pdf.cell(190, 10, title, 0, 1, 'L')
     pdf.set_font('Arial', '', 12)
     for paragraph in dictData["paragraphs"]:
-      parClean = paragraph.replace("’", "'").replace("–", "-")
+      parClean = paragraph.replace("’", "'").replace("–", "-").replace("œ", "oe")
       pdf.multi_cell(190, 5, parClean)
       pdf.ln(2)
     pdf.ln(10)
