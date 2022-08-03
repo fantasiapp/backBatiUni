@@ -81,19 +81,12 @@ class BuildContract:
   artO5Par09 = "*   Le Sous-Traitant s’engage à prendre pleine connaissance de l’immeuble existant et le cas échéant, du plan de masse et de tous les plans et documents utiles à la réalisation des travaux, ainsi que des sites, de ses contraintes vis-à-vis des mitoyennetés, de l’influence et de l’état des propriétés avoisinantes, et notamment de tous éléments généraux et locaux en relation avec l’exécution des travaux ;"
   artO5Par10 = "*   Le Sous-Traitant s’engage à apprécier exactement toutes les conditions générales et particulières d’exécution de ses prestations, ainsi que l’incidence des travaux des différents corps d’état sur ses propres travaux. En conséquence, il ne bénéficiera d’aucune indemnité en cas de difficulté d’exécution de ses prestations ultérieure, de quelque ordre que ce soit ; A défaut d’observations portées à la connaissance de l’Entrepreneur Principal sous 48 heures, il sera réputé avoir accepté les conditions d’exécution de ses prestations purement et simplement ;"
   artO5Par11 = "*   Le Sous-Traitant s’engage à fournir l’intégralité des documents à jour demandés par l’Entrepreneur Principal tant aux termes du présent Contrat, de ses annexes qu’à ceux du Bon de Commande, dans les délais impartis, sous peine de résiliation de sa mission de sous-traitance dans les conditions fixées à l’article VIII.3. Ci-après ; Le Sout-Traitant devra fournir lesdits documents en original lors de la signature du Bon de Commande ;"
-  artO5Par12 = "*   Le Sous-Traitant devra remettre régulièrement, tout au long de l’exécution de sa mission de sous-traitance lesdits documents mis à jour aux échéances contractuelles prévues ainsi qu’à la première demande de l’Entrepreneur Principal."
-# V.2. Indépendance juridique
-# Le Sous-Traitant agit en tant qu’entrepreneur indépendant et assume de ce fait
-# toutes les charges occasionnées par les prestations ou travaux sous-traités, 
-# notamment : recrutement de la main d’œuvre, versement des salaires et des 
-# charges y afférentes, paiements des taxes, des impôts et des primes 
-# d’assurances, la présente énumération n’étant pas limitative.
-# V.3. Assurances
-# Le Sous-Traitant a l’obligation de souscrire toutes les assurances obligatoires 
-# (responsabilité civile professionnelle et assurance de garantie décennale) 
-# préalablement au commencement de sa mission et devra être à même d’en 
-# justifier à première demande de l’Entrepreneur Principal.
-# V.4. Indépendance Economique
+  artO5Par12 = "Le Sous-Traitant devra remettre régulièrement, tout au long de l’exécution de sa mission de sous-traitance lesdits documents mis à jour aux échéances contractuelles prévues ainsi qu’à la première demande de l’Entrepreneur Principal."
+  art05SubTitle2 = "V.2. Indépendance juridique"
+  artO5Par13 = "Le Sous-Traitant agit en tant qu’entrepreneur indépendant et assume de ce fait toutes les charges occasionnées par les prestations ou travaux sous-traités, notamment : recrutement de la main d’œuvre, versement des salaires et des charges y afférentes, paiements des taxes, des impôts et des primes d’assurances, la présente énumération n’étant pas limitative."
+  art05SubTitle3 = "V.3. Assurances"
+  artO5Par13 = "Le Sous-Traitant a l’obligation de souscrire toutes les assurances obligatoires (responsabilité civile professionnelle et assurance de garantie décennale) préalablement au commencement de sa mission et devra être à même d’en justifier à première demande de l’Entrepreneur Principal."
+  art05SubTitle3 = "V.4. Indépendance Economique"
 # Le Sous-Traitant déclare et garantit que le chiffre d’affaires pouvant être 
 # généré par le présent Contrat, cumulé à celui généré par tous les contrats 
 # existant avec l’Entrepreneur Principal au jour de la signature des présentes, 
