@@ -35,8 +35,8 @@ class BuildContract:
   part1ST1Text3 = "D'UNE PART"
   part1ST2Text3 = "L'entrepreneur Principal et le Sous-Traitant étant ci-après dénommés ensemble les « Parties » ou individuellement une « Partie »."
   part1ST2Text4 = "D'AUTRE PART"
-  part2Subtitle1 = "EXPOSÉ PRÉALABLE"
-  __part2Text1 = "La société ALLEAUME ET GOULART, dans le cadre de sons activité de Contractant Général, ci-après l'Entrepreneur Principal, se voit confier par des maîtres d'ouvrages, des missions de conception – réalisation de l'aménagement de locaux à usage de bureaux, activités ou commerce, ci-après le « Contrat Principal »."
+  part2title = "EXPOSÉ PRÉALABLE"
+  __part2Text = "La société ALLEAUME ET GOULART, dans le cadre de sons activité de Contractant Général, ci-après l'Entrepreneur Principal, se voit confier par des maîtres d'ouvrages, des missions de conception – réalisation de l'aménagement de locaux à usage de bureaux, activités ou commerce, ci-après le « Contrat Principal »."
 
   def __init__(self, pmeProfile, stProfile):
     self.pmeProfile = pmeProfile
@@ -54,8 +54,10 @@ class BuildContract:
     pdf.output('./files/documents/tuto1.pdf', 'F')
 
   def writePart1Text1(self, pdf):
+    pdf.set_font('Arial', 'BU', 14)
+    pdf.cell(190, 10, self.part1Title, 0, 1, 'L')
     pdf.set_font('Arial', 'BU', 12)
-    pdf.cell(190, 10, self.part1SubTitle2, 0, 1, 'L')
+    pdf.cell(190, 10, self.part1SubTitle1, 0, 1, 'L')
     pdf.set_font('Arial', '', 12)
     pdf.multi_cell(190, 5, self.part1ST1Text1("pme"))
     pdf.ln(5)
@@ -81,16 +83,17 @@ class BuildContract:
 
   def writePart2(self, pdf):
     pdf.set_font('Arial', 'BU', 12)
-    pdf.cell(190, 10, self.part2Subtitle1, 0, 1, 'L')
+    pdf.cell(190, 10, self.part2title, 0, 1, 'L')
     pdf.set_font('Arial', '', 12)
+    pdf.multi_cell(190, 5, self.part1ST1Text1("pme"))
 
 # Utilitaires
-  @property
-  def part1ST1Text1(self):
-    return self.translateText(self.__part2Text1, "pme")
-
   def part1ST1Text1(self, nature="pme"):
-    return self.translateText(self.__part1ST1Text1, nature)
+    return self.translateText(self.__part2Text1, nature)
+
+  @property
+  def part2Text(self):
+    return self.translateText(self.__part2Text, "pme")
 
   def __findCompany(self, nature):
     return self.pmeProfile.Company.name if nature == "pme" else self.stProfile.Company.name
