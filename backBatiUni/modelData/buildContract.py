@@ -36,7 +36,7 @@ class BuildContract:
   part1ST2Text3 = "L'entrepreneur Principal et le Sous-Traitant étant ci-après dénommés ensemble les « Parties » ou individuellement une « Partie »."
   part1ST2Text4 = "D'AUTRE PART"
   part2Subtitle1 = "EXPOSÉ PRÉALABLE"
-  part2Text1 = "La société ALLEAUME ET GOULART, dans le cadre de sons activité de Contractant Général, ci-après l'Entrepreneur Principal, se voit confier par des maîtres d'ouvrages, des missions de conception – réalisation de l'aménagement de locaux à usage de bureaux, activités ou commerce, ci-après le « Contrat Principal »."
+  __part2Text1 = "La société ALLEAUME ET GOULART, dans le cadre de sons activité de Contractant Général, ci-après l'Entrepreneur Principal, se voit confier par des maîtres d'ouvrages, des missions de conception – réalisation de l'aménagement de locaux à usage de bureaux, activités ou commerce, ci-après le « Contrat Principal »."
 
   def __init__(self, pmeProfile, stProfile):
     self.pmeProfile = pmeProfile
@@ -85,6 +85,10 @@ class BuildContract:
     pdf.set_font('Arial', '', 12)
 
 # Utilitaires
+  @property
+  def part1ST1Text1(self):
+    return self.translateText(self.__part2Text1, "pme")
+
   def part1ST1Text1(self, nature="pme"):
     return self.translateText(self.__part1ST1Text1, nature)
 
