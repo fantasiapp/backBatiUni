@@ -58,7 +58,7 @@ class SubscriptionManager():
     def cancelSubscription(cls, request):
         try:
             canceledSubscription = stripe.Subscription.modify(
-                request.subscriptionId,
+                request.data["subscriptionId"],
                 cancel_at_period_end=True)
 
             return {
