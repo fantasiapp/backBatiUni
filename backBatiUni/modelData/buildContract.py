@@ -35,8 +35,12 @@ class BuildContract:
   part1ST1Text3 = "D'UNE PART"
   part1ST2Text3 = "L'entrepreneur Principal et le Sous-Traitant étant ci-après dénommés ensemble les « Parties » ou individuellement une « Partie »."
   part1ST2Text4 = "D'AUTRE PART"
+
   part2title = "EXPOSÉ PRÉALABLE"
-  __part2Text1 = "La société $Company$, dans le cadre de sons activité de Contractant Général, ci-après l'Entrepreneur Principal, se voit confier par des maîtres d'ouvrages, des missions de conception - réalisation de l'aménagement de locaux à usage de bureaux, activités ou commerce, ci-après le « Contrat Principal »."
+  __part2Text1 = "La société $Company$, dans le cadre de son activité de Contractant Général, ci-après l'Entrepreneur Principal, se voit confier par des maîtres d'ouvrages, des missions de conception - réalisation de l'aménagement de locaux à usage de bureaux, activités ou commerce, ci-après le « Contrat Principal »."
+  part2Text2 = "Pour mener à bien ses missions, la société $Company$ sous-traite tout ou partie des prestations et/ou des travaux à des sous-traitants."
+  __part2Text3 = "La société $Company$, ci-après le Sous-Traitant, est une société spécialisée et dispose à ce titre des compétences, moyens et installations techniques, de la logistique et de l'expérience nécessaire à la réalisation de missions de sous-traitance pour le compte de l'Entrepreneur Principal."
+  part2Text4 = "L'Entrepreneur Principal et le Sous-Traitant se sont rapprochés et ont défini les conditions générales de leur collaboration aux termes du présent accord - cadre de sous-traitance, ci-après « le Contrat »."
 
   def __init__(self, pmeProfile, stProfile):
     self.pmeProfile = pmeProfile
@@ -87,6 +91,15 @@ class BuildContract:
     pdf.set_font('Arial', '', 12)
     pdf.multi_cell(190, 5, self.part2Text1)
     pdf.ln(2)
+    pdf.set_font('Arial', '', 12)
+    pdf.multi_cell(190, 5, self.part2Text2)
+    pdf.ln(2)
+    pdf.set_font('Arial', '', 12)
+    pdf.multi_cell(190, 5, self.part2Text3)
+    pdf.ln(2)
+    pdf.set_font('Arial', '', 12)
+    pdf.multi_cell(190, 5, self.part2Text4)
+    pdf.ln(2)
 
 # Utilitaires
   def part1ST1Text1(self, nature="pme"):
@@ -95,6 +108,10 @@ class BuildContract:
   @property
   def part2Text1(self):
     return self.translateText(self.__part2Text1, "pme")
+
+  @property
+  def part2Text3(self):
+    return self.translateText(self.__part2Text3, "st")
 
   def __findCompany(self, nature):
     return self.pmeProfile.Company.name if nature == "pme" else self.stProfile.Company.name
