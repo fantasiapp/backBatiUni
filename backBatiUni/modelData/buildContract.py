@@ -36,7 +36,7 @@ class BuildContract:
   part1ST2Text3 = "L'entrepreneur Principal et le Sous-Traitant étant ci-après dénommés ensemble les « Parties » ou individuellement une « Partie »."
   part1ST2Text4 = "D'AUTRE PART"
   part2title = "EXPOSÉ PRÉALABLE"
-  __part2Text = "La société ALLEAUME ET GOULART, dans le cadre de sons activité de Contractant Général, ci-après l'Entrepreneur Principal, se voit confier par des maîtres d'ouvrages, des missions de conception – réalisation de l'aménagement de locaux à usage de bureaux, activités ou commerce, ci-après le « Contrat Principal »."
+  __part2Text1 = "La société $Company$, dans le cadre de sons activité de Contractant Général, ci-après l'Entrepreneur Principal, se voit confier par des maîtres d'ouvrages, des missions de conception - réalisation de l'aménagement de locaux à usage de bureaux, activités ou commerce, ci-après le « Contrat Principal »."
 
   def __init__(self, pmeProfile, stProfile):
     self.pmeProfile = pmeProfile
@@ -92,8 +92,8 @@ class BuildContract:
     return self.translateText(self.__part2Text1, nature)
 
   @property
-  def part2Text(self):
-    return self.translateText(self.__part2Text, "pme")
+  def part2Text1(self):
+    return self.translateText(self.__part2Text1, "pme")
 
   def __findCompany(self, nature):
     return self.pmeProfile.Company.name if nature == "pme" else self.stProfile.Company.name
